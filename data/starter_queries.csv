@@ -1,0 +1,75 @@
+query,task,input_type,split
+"What type of land cover is visible in this satellite patch?",LAND_COVER_CLASSIFICATION,single_image,train
+"Classify the surface terrain and vegetation cover.",LAND_COVER_CLASSIFICATION,single_image,train
+"Identify whether this region contains arable land or forest.",LAND_COVER_CLASSIFICATION,single_image,train
+"What are the dominant land categories present?",LAND_COVER_CLASSIFICATION,single_image,train
+"Determine if this is an urban area, pasture, or wetland.",LAND_COVER_CLASSIFICATION,single_image,train
+"Is there industrial or commercial infrastructure here?",LAND_COVER_CLASSIFICATION,single_image,train
+"Predict the land-use classes for this Sentinel observation.",LAND_COVER_CLASSIFICATION,single_image,train
+"Identify the land-cover distribution in this tile.",LAND_COVER_CLASSIFICATION,single_image,train
+"Does this scene show coniferous forest or broad-leaved trees?",LAND_COVER_CLASSIFICATION,single_image,train
+"Classify all surface types detected in this scene.",LAND_COVER_CLASSIFICATION,single_image,val
+"What land-cover classes are present in this satellite image?",LAND_COVER_CLASSIFICATION,single_image,val
+"Detect the primary surface types across this patch.",LAND_COVER_CLASSIFICATION,single_image,val
+"Are there water bodies or arable fields visible?",LAND_COVER_CLASSIFICATION,single_image,val
+"How many distinct water bodies are visible in this scene?",SINGLE_IMAGE_VQA,single_image,train
+"Is there a river or reservoir present in the southern portion?",SINGLE_IMAGE_VQA,single_image,train
+"What color is the lake water in the center?",SINGLE_IMAGE_VQA,single_image,train
+"Are there residential buildings near the highway?",SINGLE_IMAGE_VQA,single_image,train
+"Is the airport runway paved or unpaved?",SINGLE_IMAGE_VQA,single_image,train
+"What is the approximate size of the largest agricultural parcel?",SINGLE_IMAGE_VQA,single_image,train
+"Is there any snow or cloud cover visible in this image?",SINGLE_IMAGE_VQA,single_image,train
+"Does this region appear densely populated or rural?",SINGLE_IMAGE_VQA,single_image,train
+"Are there ships docked along the coastline?",SINGLE_IMAGE_VQA,single_image,train
+"Is the water reservoir full or dry in this image?",SINGLE_IMAGE_VQA,single_image,val
+"How many bridges cross the river in this satellite image?",SINGLE_IMAGE_VQA,single_image,val
+"Is there dense vegetation surrounding the lake?",SINGLE_IMAGE_VQA,single_image,val
+"Generate a descriptive summary of this satellite scene.",SCENE_CAPTIONING,single_image,train
+"Describe the geographical landscape shown in this image.",SCENE_CAPTIONING,single_image,train
+"Provide a detailed textual caption for this Earth observation.",SCENE_CAPTIONING,single_image,train
+"Summarize the topography, water systems, and infrastructure.",SCENE_CAPTIONING,single_image,train
+"Give me a natural-language description of this remote-sensing tile.",SCENE_CAPTIONING,single_image,train
+"Describe the overall scene and surrounding terrain.",SCENE_CAPTIONING,single_image,train
+"Explain what can be seen from an overhead perspective here.",SCENE_CAPTIONING,single_image,train
+"Summarize what is happening in this aerial perspective.",SCENE_CAPTIONING,single_image,val
+"Describe the layout of urban fabric and natural land.",SCENE_CAPTIONING,single_image,val
+"Write a concise overview caption for this Sentinel image.",SCENE_CAPTIONING,single_image,val
+"Locate the reservoir and highlight its boundary with a mask.",VISUAL_GROUNDING,single_image,train
+"Find the industrial buildings and return their bounding boxes.",VISUAL_GROUNDING,single_image,train
+"Where is the agricultural parcel situated in this tile?",VISUAL_GROUNDING,single_image,train
+"Ground the river channel and trace its contour.",VISUAL_GROUNDING,single_image,train
+"Pinpoint the exact location of the deforestation patch.",VISUAL_GROUNDING,single_image,train
+"Where are the solar panel arrays located?",VISUAL_GROUNDING,single_image,train
+"Highlight the airport terminal on the satellite view.",VISUAL_GROUNDING,single_image,train
+"Where is the water body in this image?",VISUAL_GROUNDING,single_image,val
+"Locate the urban cluster and provide the bounding polygon.",VISUAL_GROUNDING,single_image,val
+"Show me the exact region where wetlands are detected.",VISUAL_GROUNDING,single_image,val
+"What changed in this area between 2024 and 2026?",CHANGE_DETECTION,temporal_pair,train
+"Detect land-cover modifications between these two acquisition dates.",CHANGE_DETECTION,temporal_pair,train
+"Has urban expansion occurred between time T1 and T2?",CHANGE_DETECTION,temporal_pair,train
+"Highlight areas of deforestation between the historical and recent passes.",CHANGE_DETECTION,temporal_pair,train
+"Produce a binary change map between image 1 and image 2.",CHANGE_DETECTION,temporal_pair,train
+"Compare both temporal observations and detect surface alterations.",CHANGE_DETECTION,temporal_pair,train
+"Did the water body recede or expand between the two dates?",CHANGE_DETECTION,temporal_pair,train
+"Identify newly constructed infrastructure since the baseline image.",CHANGE_DETECTION,temporal_pair,train
+"Map all vegetation loss between the before and after satellite passes.",CHANGE_DETECTION,temporal_pair,val
+"Detect all land modifications between 2017 and 2021.",CHANGE_DETECTION,temporal_pair,val
+"Compare these two satellite images and highlight what changed.",CHANGE_DETECTION,temporal_pair,val
+"Did the lake surface area shrink between the two dates?",CHANGE_VQA,temporal_pair,train
+"How much has urban construction grown compared to the previous year?",CHANGE_VQA,temporal_pair,train
+"Why does the vegetation index appear lower in the second image?",CHANGE_VQA,temporal_pair,train
+"Has the river channel shifted between T1 and T2?",CHANGE_VQA,temporal_pair,train
+"What caused the significant reflectance drop in the agricultural zone?",CHANGE_VQA,temporal_pair,train
+"Was the newly cleared land converted into residential or industrial use?",CHANGE_VQA,temporal_pair,train
+"Explain the reason for surface changes between the two observations.",CHANGE_VQA,temporal_pair,val
+"Did agricultural fields recover after the drought period?",CHANGE_VQA,temporal_pair,val
+"Compare radar backscatter and optical reflectance for this scene.",OPTICAL_SAR_FUSION,optical_sar_pair,train
+"Combine Sentinel-1 SAR and Sentinel-2 optical data for soil analysis.",OPTICAL_SAR_FUSION,optical_sar_pair,train
+"Analyze surface roughness using radar alongside optical vegetation indices.",OPTICAL_SAR_FUSION,optical_sar_pair,train
+"Fuse optical bands with VV/VH radar polarization channels.",OPTICAL_SAR_FUSION,optical_sar_pair,train
+"Can we penetrate through the cloud cover using the SAR image?",OPTICAL_SAR_FUSION,optical_sar_pair,train
+"Jointly reason over optical multispectral and radar backscatter.",OPTICAL_SAR_FUSION,optical_sar_pair,train
+"Cross-examine the Sentinel-1 and Sentinel-2 observations.",OPTICAL_SAR_FUSION,optical_sar_pair,train
+"Compare radar and optical observations for this region.",OPTICAL_SAR_FUSION,optical_sar_pair,val
+"Use complementary optical and SAR sensors to assess flood water.",OPTICAL_SAR_FUSION,optical_sar_pair,val
+"What additional insights does the SAR polarization provide over optical?",OPTICAL_SAR_FUSION,optical_sar_pair,val
