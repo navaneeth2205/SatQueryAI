@@ -92,11 +92,12 @@ def main():
     print(f"Input Supplied   : {input_note}")
     print(f"Routed Task      : {response.routed_task} ({response.routed_task_display})")
     print(f"Routing Conf     : {response.router_confidence * 100:.2f}%")
+    print(f"Execution Policy : {response.execution_policy}")
     print(f"Execution Status : {response.status}")
     print(f"\nFinal Answer     : {response.answer}")
 
     if response.evidence.detected_classes:
-        print(f"\nDetected Classes : {', '.join(response.evidence.detected_classes)}")
+        print(f"\nPredicted Classes: {', '.join(response.evidence.detected_classes)}")
 
     print("\n--- Evidence Summary ---")
     for pt in response.evidence.evidence_points:

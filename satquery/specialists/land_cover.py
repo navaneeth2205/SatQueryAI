@@ -3,7 +3,7 @@ Multimodal Land Cover Classification Specialist for SatQuery AI.
 
 Loads the validated 84-feature Random Forest model trained on paired
 Sentinel-1 (SAR) and Sentinel-2 (optical) observations from BigEarthNet-14k.
-Applies verified class-specific adaptive thresholds.
+Applies validation-selected class-specific decision thresholds.
 """
 
 from pathlib import Path
@@ -165,12 +165,15 @@ class LandCoverClassifier(BaseSpecialist):
             "specialist_name": self.name,
             "feature_count": 84,
             "radar_s1_features_summary": {
-                "band_1_mean_backscatter_db": round(float(s1_sub[0]), 2),
-                "band_2_mean_backscatter_db": round(float(s1_sub[7]), 2)
+                "channels_processed": 2,
+                "band_1_mean_stored_value": round(float(s1_sub[0]), 2),
+                "band_2_mean_stored_value": round(float(s1_sub[7]), 2),
+                "unit_note": "Stored float32 raster values (uncalibrated; dB scaling unverified)"
             },
             "optical_s2_features_summary": {
-                "bands_processed": 10,
-                "overall_reflectance_mean": round(float(np.mean(s2_sub[0::7])), 2)
+                "channels_processed": 10,
+                "overall_mean_stored_dn": round(float(np.mean(s2_sub[0::7])), 2),
+                "unit_note": "Stored digital numbers (uncalibrated; reflectance scaling unverified)"
             },
             "num_trees_evaluated": int(self.model.n_estimators)
         }

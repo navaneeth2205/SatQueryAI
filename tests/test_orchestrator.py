@@ -29,12 +29,13 @@ def test_orchestrator_land_cover_flow(engine, sample_feature_vector):
 
     assert isinstance(response, SatQueryResponse)
     assert response.routed_task == "LAND_COVER_CLASSIFICATION"
-    assert response.status == "SUCCESS"
+    assert "SUCCESS" in response.status
+    assert response.execution_policy in ("PROVISIONAL_EXECUTION", "STANDARD_EXECUTION")
     assert len(response.execution_trace) >= 5
     assert any("[Trace 1/5]" in t for t in response.execution_trace)
     assert any("[Trace 5/5]" in t for t in response.execution_trace)
     assert len(response.evidence.evidence_points) >= 2
-    assert "Detected land-cover" in response.answer or "No registered" in response.answer
+    assert "Predicted land-cover" in response.answer or "No registered" in response.answer
 
     # Verify JSON serializability
     data = response.to_dict()

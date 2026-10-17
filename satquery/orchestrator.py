@@ -23,6 +23,7 @@ class SatQueryResponse:
     """Complete user-facing response from SatQuery AI."""
     query: str
     status: str
+    execution_policy: str
     routed_task: str
     routed_task_display: str
     router_confidence: float
@@ -91,9 +92,14 @@ class SatQueryEngine:
         )
 
         if route.requires_review:
+            execution_policy = "PROVISIONAL_EXECUTION"
             trace.append(
-                f"[Safety Trace] Routing confidence {route.confidence:.2f} is below automated threshold. Flagged for review."
+                f"[Safety Trace] Routing confidence {route.confidence*100:.1f}% is below threshold ({self.router.confidence_threshold*100:.1f}%). "
+                f"Policy: PROVISIONAL_EXECUTION — specialist executes provisionally, but routing intent is flagged for human review. "
+                f"(Note: Task routing confidence measures user intent clarity, distinct from specialist prediction probabilities.)"
             )
+        else:
+            execution_policy = "STANDARD_EXECUTION"
 
         # 2. Dispatch to Specialist via Registry
         try:
@@ -116,7 +122,7 @@ class SatQueryEngine:
             trace.append(
                 f"[Trace 4/5] Specialist '{specialist_result.execution_metadata.get('specialist_name')}' executed successfully."
             )
-            overall_status = "SUCCESS"
+            overall_status = "PROVISIONAL_SUCCESS" if route.requires_review else "SUCCESS"
         elif specialist_result.status == SpecialistStatus.INCOMPATIBLE_INPUT:
             trace.append(
                 f"[Trace 4/5] Input Error: {specialist_result.unavailable_reason}."
@@ -132,14 +138,23 @@ class SatQueryEngine:
         evidence_report = format_evidence(specialist_result)
         trace.append(f"[Trace 5/5] Formatted explainable answer with {len(evidence_report.evidence_points)} evidence points.")
 
+        final_answer = evidence_report.answer
+        if route.requires_review and specialist_result.status == SpecialistStatus.SUCCESS:
+            final_answer = (
+                f"[PROVISIONAL ROUTE: Routing intent confidence is {route.confidence*100:.1f}%, below the review threshold of {self.router.confidence_threshold*100:.1f}%. "
+                f"Specialist executed provisionally. Scores shown are model voting probabilities, not routing confidence.]\n"
+                f"{evidence_report.answer}"
+            )
+
         return SatQueryResponse(
             query=query,
             status=overall_status,
+            execution_policy=execution_policy,
             routed_task=task_str,
             routed_task_display=route.display_name,
             router_confidence=route.confidence,
             requires_human_review=route.requires_review,
-            answer=evidence_report.answer,
+            answer=final_answer,
             evidence=evidence_report,
             execution_trace=trace,
             timestamp=datetime.now(timezone.utc).isoformat()

@@ -58,28 +58,30 @@ def format_evidence(result: SpecialistResult) -> EvidenceReport:
     evidence_points = []
 
     if detected:
-        answer = f"Detected land-cover classes: {', '.join(detected)}."
+        answer = f"Predicted land-cover classes: {', '.join(detected)}."
         for cls in detected:
             score = probabilities.get(cls, 0.0)
             thresh = thresholds.get(cls, 0.40)
             evidence_points.append(
-                f"[Detection] '{cls}' confirmed (model vote score: {score:.2f}, adaptive threshold: {thresh:.2f})"
+                f"[Prediction] Predicted present: '{cls}' (model score: {score:.2f}; decision threshold: {thresh:.2f})"
             )
     else:
-        answer = "No registered land-cover classes exceeded their detection thresholds for this scene."
-        evidence_points.append("[Detection] All class scores remained below their decision thresholds.")
+        answer = "No registered land-cover classes exceeded their decision thresholds for this scene."
+        evidence_points.append("[Prediction] All class scores remained below their decision thresholds.")
 
     # Add verified sensor statistical evidence
     s1_summary = meta.get("radar_s1_features_summary")
     if s1_summary:
+        note = s1_summary.get("unit_note", "uncalibrated")
         evidence_points.append(
-            f"[Radar Evidence] Sentinel-1 SAR mean backscatter: Band 1 = {s1_summary.get('band_1_mean_backscatter_db')} dB, Band 2 = {s1_summary.get('band_2_mean_backscatter_db')} dB"
+            f"[Radar Evidence] Sentinel-1 stored band statistics: Band 1 mean = {s1_summary.get('band_1_mean_stored_value')}, Band 2 mean = {s1_summary.get('band_2_mean_stored_value')} ({note})"
         )
 
     s2_summary = meta.get("optical_s2_features_summary")
     if s2_summary:
+        note = s2_summary.get("unit_note", "uncalibrated")
         evidence_points.append(
-            f"[Optical Evidence] Sentinel-2 multispectral: {s2_summary.get('bands_processed')} channels processed with mean reflectance {s2_summary.get('overall_reflectance_mean')}"
+            f"[Optical Evidence] Sentinel-2 stored band statistics: {s2_summary.get('channels_processed', 10)} channels processed with overall mean digital value = {s2_summary.get('overall_mean_stored_dn')} ({note})"
         )
 
     return EvidenceReport(
