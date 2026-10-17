@@ -46,6 +46,7 @@ htmlcov/
 # Local data & artifacts (do not commit raw imagery or large binary artifacts)
 artifacts/
 data/cache/
+data/oscd/
 *.tif
 *.tiff
 *.parquet

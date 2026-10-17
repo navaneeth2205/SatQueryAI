@@ -93,3 +93,26 @@ def test_specialist_registry_dispatch(land_cover_specialist, dummy_84_features):
     res_vqa = registry.dispatch(TaskType.SINGLE_IMAGE_VQA, None)
     assert res_vqa.status == SpecialistStatus.UNAVAILABLE
     assert "Milestone 3" in res_vqa.unavailable_reason
+
+
+def test_specialist_registry_with_change_detection():
+    from satquery.specialists.change_detection import TemporalDifferenceBaseline
+    registry = SpecialistRegistry()
+    cd_specialist = TemporalDifferenceBaseline(decision_threshold=0.25)
+    registry.register(cd_specialist)
+
+    # 1. Valid temporal pair
+    t1 = np.zeros((20, 20, 3), dtype=np.float32)
+    t2 = np.zeros((20, 20, 3), dtype=np.float32)
+    res = registry.dispatch(TaskType.CHANGE_DETECTION, (t1, t2))
+    assert res.status == SpecialistStatus.SUCCESS
+    assert res.task == TaskType.CHANGE_DETECTION.value
+
+    # 2. Incompatible input (single image)
+    res_bad = registry.dispatch(TaskType.CHANGE_DETECTION, t1)
+    assert res_bad.status == SpecialistStatus.INCOMPATIBLE_INPUT
+
+    # 3. Unsupported task remains unavailable
+    res_unsupported = registry.dispatch(TaskType.CHANGE_VQA, (t1, t2))
+    assert res_unsupported.status == SpecialistStatus.UNAVAILABLE
+

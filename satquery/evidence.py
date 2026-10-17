@@ -7,6 +7,7 @@ and statistical evidence summaries without inventing uncalibrated confidence met
 
 from dataclasses import dataclass, field, asdict
 from typing import Dict, List, Optional, Any
+from satquery.taxonomy import TaskType
 from satquery.specialists.base import SpecialistResult, SpecialistStatus
 
 
@@ -49,11 +50,56 @@ def format_evidence(result: SpecialistResult) -> EvidenceReport:
             sensor_feature_summary=result.execution_metadata
         )
 
-    # 2. Format Successful Predictions (Land Cover)
+    meta = result.execution_metadata
+
+    # 2. Format Change Detection Specialist Output
+    if result.task == TaskType.CHANGE_DETECTION.value:
+        detected = result.predictions
+        probabilities = result.probabilities
+        thresholds = result.thresholds_applied
+        changed_pct = meta.get("changed_area_pct_of_valid", 0.0)
+        valid_pixels = meta.get("valid_pixels", 0)
+        total_pixels = meta.get("total_pixels", 0)
+        valid_pct = meta.get("valid_pixel_pct", 100.0)
+        tau = thresholds.get("decision_threshold", 0.28)
+        deltas = meta.get("mean_channel_deltas", [])
+        bbox = meta.get("largest_change_cluster_bbox_pixel")
+        cluster_area = meta.get("largest_cluster_pixel_area", 0)
+
+        evidence_points = [
+            f"[Change Prediction] Predicted outcome: '{detected[0]}' (valid-pixel change area: {changed_pct:.2f}%; decision threshold: {tau:.2f})",
+            f"[Data Quality] Valid pixel coverage: {valid_pct:.1f}% ({valid_pixels}/{total_pixels} pixels; NoData/finite-value masking applied)",
+            f"[Sensor Differential] Mean channel deltas across valid pixels: {deltas} (normalized absolute difference per channel, uncalibrated digital values)"
+        ]
+
+        if bbox is not None:
+            evidence_points.append(
+                f"[Spatial Focus] Largest connected change cluster: {cluster_area} px, bounding box = {bbox} (unprojected pixel coordinates [ymin, xmin, ymax, xmax])"
+            )
+        else:
+            evidence_points.append(
+                "[Spatial Focus] Largest connected change cluster: null (no connected changed regions >= minimum area threshold)"
+            )
+
+        if "Surface alteration detected" in detected:
+            answer = f"Predicted surface change: Alteration detected across {changed_pct:.2f}% of valid scene pixels (decision threshold {tau:.2f})."
+        else:
+            answer = f"Predicted surface change: No significant change detected ({changed_pct:.2f}% changed pixels, below significance threshold)."
+
+        return EvidenceReport(
+            answer=answer,
+            status=result.status.value,
+            detected_classes=detected,
+            class_probabilities=probabilities,
+            thresholds_applied=thresholds,
+            evidence_points=evidence_points,
+            sensor_feature_summary=meta
+        )
+
+    # 3. Format Land Cover Classification Output
     detected = result.predictions
     probabilities = result.probabilities
     thresholds = result.thresholds_applied
-    meta = result.execution_metadata
 
     evidence_points = []
 
