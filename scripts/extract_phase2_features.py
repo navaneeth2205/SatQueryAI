@@ -94,6 +94,7 @@ def main():
     parser.add_argument("--archive", type=str, default="initial_trails/Dataset/archive.zip")
     parser.add_argument("--train-meta", type=str, default="data/train_full_metadata.parquet")
     parser.add_argument("--val-meta", type=str, default="data/val_full_metadata.parquet")
+    parser.add_argument("--test-meta", type=str, default="data/test_full_metadata.parquet")
     parser.add_argument("--out-dir", type=str, default="data")
     parser.add_argument("--workers", type=int, default=6)
     parser.add_argument("--chunk-size", type=int, default=100)
@@ -132,10 +133,30 @@ def main():
         np.save(train_out_path, X_train)
         print(f"Saved {train_out_path} ({train_out_path.stat().st_size / (1024*1024):.2f} MB)")
 
-    # 3. Validation checks
+    # 3. Test split (Untouched for final independent evaluation)
+    test_meta_path = Path(args.test_meta)
+    if test_meta_path.exists():
+        test_df = pd.read_parquet(test_meta_path)
+        test_out_path = out_dir / "X_test_phase2.npy"
+        if test_out_path.exists():
+            print(f"\n[Cache] Loading existing test features from {test_out_path}...")
+            X_test = np.load(test_out_path)
+        else:
+            X_test = extract_features_dataset(
+                test_df, archive_path, max_workers=args.workers, chunk_size=args.chunk_size, desc="test"
+            )
+            np.save(test_out_path, X_test)
+            print(f"Saved {test_out_path} ({test_out_path.stat().st_size / (1024*1024):.2f} MB)")
+    else:
+        X_test = None
+
+    # 4. Validation checks
     print("\n--- Integrity & Alignment Checks ---")
     print(f"X_train shape: {X_train.shape}, dtype: {X_train.dtype}")
     print(f"X_val shape:   {X_val.shape}, dtype: {X_val.dtype}")
+    if X_test is not None:
+        print(f"X_test shape:  {X_test.shape}, dtype: {X_test.dtype}")
+        assert np.isfinite(X_test).all(), "Non-finite values found in X_test!"
 
     assert np.isfinite(X_train).all(), "Non-finite values found in X_train!"
     assert np.isfinite(X_val).all(), "Non-finite values found in X_val!"
