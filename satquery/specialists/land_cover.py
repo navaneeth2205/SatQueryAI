@@ -1,8 +1,9 @@
 """
 Multimodal Land Cover Classification Specialist for SatQuery AI.
 
-Loads the validated 84-feature Random Forest model trained on paired
-Sentinel-1 (SAR) and Sentinel-2 (optical) observations from BigEarthNet-14k.
+Loads the validated 84-feature Random Forest baseline and the Phase 2
+488-feature LightGBM gradient-boosted ensemble trained on paired Sentinel-1 (SAR)
+and Sentinel-2 (optical) observations from BigEarthNet-14k.
 Applies validation-selected class-specific decision thresholds.
 """
 
@@ -14,6 +15,7 @@ import joblib
 
 from satquery.taxonomy import TaskType, InputType
 from satquery.specialists.base import BaseSpecialist, SpecialistResult, SpecialistStatus
+from satquery.features.multimodal import extract_multimodal_features_phase2
 
 try:
     import tifffile
@@ -24,24 +26,35 @@ except ImportError:
 
 class LandCoverClassifier(BaseSpecialist):
     """
-    Multilabel Land Cover Specialist using 84 optical-SAR statistical features.
+    Multilabel Land Cover Specialist supporting both baseline 84-feature RF
+    and Phase 2 488-feature LightGBM multimodal spatial-pyramid & spectral models.
     """
 
-    def __init__(self, artifacts_dir: Optional[str | Path] = None):
+    def __init__(
+        self,
+        artifacts_dir: Optional[str | Path] = None,
+        phase2_artifacts_dir: Optional[str | Path] = None
+    ):
         super().__init__(
             name="LandCoverClassifier_RF",
             supported_tasks=[TaskType.LAND_COVER_CLASSIFICATION],
             required_input_type=InputType.SINGLE_IMAGE
         )
 
+        repo_root = Path(__file__).resolve().parent.parent.parent
         if artifacts_dir is None:
-            artifacts_dir = Path(__file__).resolve().parent.parent.parent / "artifacts" / "specialists" / "land_cover"
+            artifacts_dir = repo_root / "artifacts" / "specialists" / "land_cover"
         self.artifacts_dir = Path(artifacts_dir)
 
-        self._load_artifacts()
+        if phase2_artifacts_dir is None:
+            phase2_artifacts_dir = repo_root / "artifacts" / "specialists" / "land_cover_phase2"
+        self.phase2_artifacts_dir = Path(phase2_artifacts_dir)
 
-    def _load_artifacts(self) -> None:
-        """Load trained model, label encoder, and threshold configuration."""
+        self._load_baseline_artifacts()
+        self._load_phase2_artifacts()
+
+    def _load_baseline_artifacts(self) -> None:
+        """Load trained baseline RF model, label encoder, and threshold configuration."""
         model_path = self.artifacts_dir / "model.joblib"
         mlb_path = self.artifacts_dir / "label_encoder.joblib"
         thresh_path = self.artifacts_dir / "threshold_config.json"
@@ -66,28 +79,54 @@ class LandCoverClassifier(BaseSpecialist):
         self.global_threshold = float(self.threshold_config.get("global_threshold", 0.40))
         self.class_thresholds = self.threshold_config.get("class_specific_thresholds", {})
 
+    def _load_phase2_artifacts(self) -> None:
+        """Load Phase 2 LightGBM model and optimized per-class thresholds if available."""
+        self.has_phase2 = False
+        p2_model_path = self.phase2_artifacts_dir / "model.joblib"
+        p2_thresh_path = self.phase2_artifacts_dir / "threshold_config.json"
+        p2_classes_path = self.phase2_artifacts_dir / "classes.json"
+
+        if p2_model_path.exists() and p2_thresh_path.exists():
+            try:
+                self.phase2_model = joblib.load(p2_model_path)
+                with open(p2_thresh_path, "r", encoding="utf-8") as f:
+                    p2_cfg = json.load(f)
+                self.phase2_thresholds = p2_cfg.get("class_specific_thresholds", {})
+                self.phase2_global_threshold = float(p2_cfg.get("global_threshold", 0.40))
+
+                if p2_classes_path.exists():
+                    with open(p2_classes_path, "r", encoding="utf-8") as f:
+                        self.phase2_classes = json.load(f)
+                else:
+                    self.phase2_classes = self.classes
+
+                self.has_phase2 = True
+            except Exception:
+                self.has_phase2 = False
+
     def supports_input(self, input_data: Any) -> Tuple[bool, Optional[str]]:
         """
-        Check if input data provides valid 84-feature vector or readable S1/S2 pair.
+        Check if input data provides valid 84-feature vector, 488-feature vector, or readable S1/S2 pair.
         """
         if input_data is None:
             return False, "Input data is None. Must provide an 84-feature vector or S1/S2 image pair."
 
         # Case 1: Direct numpy array
         if isinstance(input_data, np.ndarray):
-            if input_data.ndim == 1 and len(input_data) == 84:
-                if not np.isfinite(input_data).all():
-                    return False, "Feature vector contains NaN or infinite values."
-                return True, None
-            return False, f"Expected 84 features, got array of shape {input_data.shape}."
+            if input_data.ndim == 1:
+                if len(input_data) in (84, 488):
+                    if not np.isfinite(input_data).all():
+                        return False, "Feature vector contains NaN or infinite values."
+                    return True, None
+            return False, f"Expected 84 features (or 488 Phase 2 features), got array of shape {input_data.shape}."
 
         # Case 2: Dictionary input
         if isinstance(input_data, dict):
             if "features" in input_data:
                 feats = np.asarray(input_data["features"], dtype=np.float32)
-                if len(feats) == 84 and np.isfinite(feats).all():
+                if len(feats) in (84, 488) and np.isfinite(feats).all():
                     return True, None
-                return False, f"Dictionary 'features' must be an 84-element finite vector, got {len(feats)} elements."
+                return False, f"Dictionary 'features' must be an 84-element (or 488-element) finite vector, got {len(feats)} elements."
 
             if "s1_path" in input_data and "s2_path" in input_data:
                 s1_p = Path(input_data["s1_path"])
@@ -101,10 +140,14 @@ class LandCoverClassifier(BaseSpecialist):
         return False, "Unsupported input type. Provide an 84-feature numpy array or dict with 'features' or 's1_path'/'s2_path'."
 
     def _extract_from_tiffs(self, s1_path: Path, s2_path: Path) -> np.ndarray:
-        """Extract 84 statistical features from S1 (2 bands) and S2 (10 bands) TIFFs."""
+        """Extract features from S1 (2 bands) and S2 (10 bands) TIFFs."""
         s1_arr = tifffile.imread(str(s1_path)).astype(np.float32)
         s2_arr = tifffile.imread(str(s2_path)).astype(np.float32)
 
+        if self.has_phase2:
+            return extract_multimodal_features_phase2(s1_arr, s2_arr)
+
+        # Fallback to baseline 84 stats
         def _stats(arr):
             feats = []
             for band in arr:
@@ -134,30 +177,73 @@ class LandCoverClassifier(BaseSpecialist):
 
         X = features.reshape(1, -1)
 
-        # 2. Extract model tree voting probabilities
-        # predict_proba returns list of length 16 with arrays of shape (1, 2)
+        # 2. Branch: Phase 2 LightGBM (488 features) vs Baseline RF (84 features)
+        if len(features) == 488 and self.has_phase2:
+            prob_dict: Dict[str, float] = {}
+            thresholds_dict: Dict[str, float] = {}
+            predicted_classes: List[str] = []
+
+            for i, class_name in enumerate(self.phase2_classes):
+                clf = self.phase2_model[i]
+                p = clf.predict_proba(X)
+                score = float(p[0, 1]) if p.shape[1] > 1 else 0.0
+                prob_dict[class_name] = round(score, 4)
+
+                thresh = float(self.phase2_thresholds.get(class_name, self.phase2_global_threshold))
+                thresholds_dict[class_name] = round(thresh, 4)
+
+                if score >= thresh:
+                    predicted_classes.append(class_name)
+
+            predicted_classes.sort(key=lambda c: prob_dict[c], reverse=True)
+
+            meta = {
+                "specialist_name": "LandCoverClassifier_LightGBM_Phase2",
+                "model_family": "gradient_boosted_decision_trees",
+                "feature_count": 488,
+                "feature_composition": {
+                    "level0_global_stats": 84,
+                    "level1_spatial_pyramid_quadrants": 336,
+                    "multispectral_indices": 35,
+                    "polarimetric_sar_indices": 21,
+                    "texture_gradients": 12
+                },
+                "validation_benchmark": {
+                    "micro_f1": 0.7500,
+                    "macro_f1": 0.5492,
+                    "hamming_loss": 0.0930
+                },
+                "num_binary_models_evaluated": len(self.phase2_model)
+            }
+
+            return SpecialistResult(
+                status=SpecialistStatus.SUCCESS,
+                task=TaskType.LAND_COVER_CLASSIFICATION.value,
+                predictions=predicted_classes,
+                probabilities=prob_dict,
+                thresholds_applied=thresholds_dict,
+                execution_metadata=meta
+            )
+
+        # 3. Baseline RF execution (84 features)
         prob_list = self.model.predict_proba(X)
-        prob_dict: Dict[str, float] = {}
-        thresholds_dict: Dict[str, float] = {}
-        predicted_classes: List[str] = []
+        prob_dict = {}
+        thresholds_dict = {}
+        predicted_classes = []
 
         for i, class_name in enumerate(self.classes):
             p = prob_list[i]
-            # Column 1 corresponds to probability of positive class (label 1)
             score = float(p[0, 1]) if p.shape[1] > 1 else 0.0
             prob_dict[class_name] = round(score, 4)
 
-            # Determine threshold
             thresh = float(self.class_thresholds.get(class_name, self.global_threshold))
             thresholds_dict[class_name] = thresh
 
             if score >= thresh:
                 predicted_classes.append(class_name)
 
-        # Sort predicted classes by descending score
         predicted_classes.sort(key=lambda c: prob_dict[c], reverse=True)
 
-        # Feature diagnostics (S1 vs S2 summary)
         s1_sub = features[:14]
         s2_sub = features[14:]
 
