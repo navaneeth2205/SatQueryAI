@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SatQuery AI — Earth Observation Intelligence Hub</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.85; }
+    }
+    .badge-glow {
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="h-9 w-9 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/30">
+          SQ
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            SatQuery AI
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-900/60 text-blue-400 border border-blue-700/50">v0.3 Demo</span>
+          </h1>
+          <p class="text-xs text-slate-400">SIH26167 (ISRO) · Multimodal Routing & Earth Observation Specialists</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800/60">
+          <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          2 Specialists Active
+        </span>
+        <a href="https://github.com" target="_blank" class="text-xs text-slate-400 hover:text-white transition">
+          Docs & Repo
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+    <!-- Left Column: Controls & Input Panel (5 cols) -->
+    <div class="lg:col-span-5 space-y-5">
+      
+      <!-- Query Input Card -->
+      <div class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Natural-Language Query</label>
+          <span class="text-xs text-slate-500">Stage 4 Task Router</span>
+        </div>
+
+        <div class="relative">
+          <textarea id="queryInput" rows="3" 
+            class="w-full bg-slate-950 border border-slate-750 rounded-lg p-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
+            placeholder="Type your Earth observation question or pick a preset chip below...">What changed in this area between 2024 and 2026?</textarea>
+        </div>
+
+        <!-- Preset Chips -->
+        <div>
+          <div class="text-[11px] font-medium text-slate-400 mb-2">Preset Benchmark Queries:</div>
+          <div id="presetChips" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Input Modality & Observation Selection -->
+        <div class="pt-2 border-t border-slate-800/80 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Input Modality</span>
+            <span class="text-[11px] text-blue-400 font-medium" id="modalityHint">OSCD Temporal Pair</span>
+          </div>
+
+          <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-lg border border-slate-800 text-xs">
+            <button type="button" id="tabCD" onclick="setMode('change_detection')"
+              class="py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center">
+              Temporal Pair
+            </button>
+            <button type="button" id="tabLC" onclick="setMode('land_cover')"
+              class="py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center">
+              Single Image
+            </button>
+            <button type="button" id="tabNone" onclick="setMode('query_only')"
+              class="py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center">
+              Query Only
+            </button>
+          </div>
+
+          <!-- Change Detection Observation Selector -->
+          <div id="cdSelectorGroup" class="space-y-2">
+            <label class="text-[11px] text-slate-400">Select Benchmark Scene (OSCD 24-Site Subset):</label>
+            <select id="cdSceneSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
+              <option value="0">Loading scenes...</option>
+            </select>
+            <div class="flex items-center gap-2 pt-1">
+              <input type="checkbox" id="syntheticIdentical" class="rounded bg-slate-950 border-slate-800 text-blue-600 focus:ring-0">
+              <label for="syntheticIdentical" class="text-xs text-amber-400/90 cursor-pointer">
+                Synthetic Regression: Force T1 = T2 (Test 0% Change)
+              </label>
+            </div>
+          </div>
+
+          <!-- Land Cover Sample Selector -->
+          <div id="lcSelectorGroup" class="space-y-2 hidden">
+            <label class="text-[11px] text-slate-400">Select Validation Tile (BigEarthNet-14k):</label>
+            <select id="lcSampleSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
+              <option value="0">Loading tiles...</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Safety Routing Policy Toggle -->
+        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-semibold text-slate-300">Routing Safety Policy</div>
+            <div class="text-[11px] text-slate-500">Dispatched via SatQueryEngine</div>
+          </div>
+          <select id="policySelect" class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
+            <option value="provisional" selected>Provisional Execution (Default)</option>
+            <option value="clarify">Clarification Required (&lt; 65%)</option>
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <button id="runBtn" onclick="runAnalysis()"
+          class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold rounded-lg text-sm shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2">
+          <svg id="spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span id="runBtnText">Execute Query &amp; Dispatch</span>
+        </button>
+      </div>
+
+      <!-- System Architecture Legend -->
+      <div class="bg-slate-900/60 rounded-xl border border-slate-800 p-4 text-xs text-slate-400 space-y-2">
+        <div class="font-semibold text-slate-300 flex items-center gap-2">
+          <span>Active Pipeline Specialists</span>
+        </div>
+        <ul class="space-y-1 text-[11px] text-slate-400 list-disc list-inside">
+          <li><span class="text-slate-200 font-medium">Task Router:</span> TF-IDF + Calibrated Logistic Regression</li>
+          <li><span class="text-slate-200 font-medium">Land Cover:</span> Random Forest 84-feature Optical+SAR</li>
+          <li><span class="text-slate-200 font-medium">Change Detection:</span> Normalized CVA + &tau;* (0.28)</li>
+          <li><span class="text-slate-200 font-medium">VQA / Grounding:</span> Explicit UNAVAILABLE stubs (Milestone 4)</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Results & Visual Inspector Panel (7 cols) -->
+    <div class="lg:col-span-7 space-y-5">
+
+      <!-- Status & Routing Header Card -->
+      <div id="routingCard" class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span id="statusBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400">
+              Ready for Query
+            </span>
+            <span id="policyBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800/60 text-slate-500">
+              Policy: Standby
+            </span>
+          </div>
+          <div class="text-right">
+            <span class="text-[11px] text-slate-500">Task Router Confidence</span>
+            <div id="confScore" class="text-sm font-bold text-slate-300">--%</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="text-xs text-slate-400">Routed Specialist Pipeline:</div>
+          <div id="taskName" class="text-base font-bold text-white mt-0.5">--</div>
+        </div>
+
+        <!-- Natural-Language Answer Box -->
+        <div class="bg-slate-950 rounded-lg p-3.5 border border-slate-800/80">
+          <div class="text-xs font-semibold text-blue-400 mb-1">Synthesized Answer:</div>
+          <div id="answerText" class="text-sm text-slate-200 leading-relaxed">
+            Submit a query to inspect the end-to-end task routing and specialist execution output.
+          </div>
+        </div>
+      </div>
+
+      <!-- Visual Observation Viewer Card -->
+      <div id="visualCard" class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-4 hidden">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Satellite Imagery Inspector</div>
+          <span id="sceneMetaLabel" class="text-xs text-slate-400 font-mono">--</span>
+        </div>
+
+        <!-- Change Detection Side-by-Side / Overlay View -->
+        <div id="cdVisualContainer" class="space-y-3">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-center space-y-1">
+              <span class="text-[11px] font-semibold text-slate-400">T1 Baseline Observation</span>
+              <img id="imgT1" class="w-full h-44 object-cover rounded border border-slate-800/50" src="" alt="T1">
+            </div>
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-center space-y-1">
+              <span class="text-[11px] font-semibold text-slate-400">T2 Subsequent Observation</span>
+              <img id="imgT2" class="w-full h-44 object-cover rounded border border-slate-800/50" src="" alt="T2">
+            </div>
+            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-center space-y-1">
+              <span class="text-[11px] font-semibold text-red-400">Predicted Change Overlay</span>
+              <img id="imgOverlay" class="w-full h-44 object-cover rounded border border-slate-800/50" src="" alt="Overlay">
+            </div>
+          </div>
+          <div class="text-[11px] text-slate-400 text-center">
+            <span class="text-red-400 font-semibold">&#9632; Red Highlight:</span> Detected Changed Pixels (&tau; &ge; 0.28) &nbsp;|&nbsp; 
+            <span class="text-cyan-400 font-semibold">&#9632; Cyan Box:</span> Largest Connected Change Cluster
+          </div>
+        </div>
+      </div>
+
+      <!-- Evidence Points Card -->
+      <div id="evidenceCard" class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Explainable Evidence Points</div>
+          <span class="text-xs text-slate-500">Stage 5 Evidence Engine</span>
+        </div>
+        <ul id="evidenceList" class="space-y-1.5 text-xs text-slate-300">
+          <li class="text-slate-500 italic">No execution evidence yet.</li>
+        </ul>
+      </div>
+
+      <!-- Observable Execution Trace Drawer -->
+      <div class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-3">
+        <div class="flex items-center justify-between cursor-pointer" onclick="toggleTrace()">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <span>Observable Execution Trace</span>
+            <span id="traceCount" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">5 steps</span>
+          </div>
+          <span id="traceToggleIcon" class="text-xs text-slate-400 font-mono">[Collapse]</span>
+        </div>
+        <div id="traceContainer" class="space-y-1.5 font-mono text-[11px] text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800 max-h-52 overflow-y-auto">
+          <div class="text-slate-500 italic">System ready for query dispatch.</div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-800 py-3 text-center text-xs text-slate-500">
+    SatQuery AI · SIH 2026 Research Project · Open-Source Multispectral &amp; Radar Orchestration
+  </footer>
+
+  <!-- Frontend Logic -->
+  <script>
+    let currentMode = 'change_detection';
+    let catalog = { change_detection_scenes: [], land_cover_samples: [], preset_queries: [] };
+
+    async function loadCatalog() {
+      try {
+        const res = await fetch('/api/catalog');
+        const data = await res.json();
+        catalog = data;
+
+        // Render Preset Chips
+        const chipsContainer = document.getElementById('presetChips');
+        chipsContainer.innerHTML = '';
+        data.preset_queries.forEach((p, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'text-[11px] text-left px-2.5 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition truncate max-w-full';
+          btn.textContent = p.query;
+          btn.title = `[${p.category}] ${p.query}`;
+          btn.onclick = () => {
+            document.getElementById('queryInput').value = p.query;
+            setMode(p.recommended_mode);
+          };
+          chipsContainer.appendChild(btn);
+        });
+
+        // Render CD scenes
+        const cdSelect = document.getElementById('cdSceneSelect');
+        cdSelect.innerHTML = '';
+        data.change_detection_scenes.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.textContent = `${s.name.toUpperCase()} (${s.split} split, ${s.width}x${s.height}, ${s.change_pct}% change)`;
+          cdSelect.appendChild(opt);
+        });
+
+        // Render LC samples
+        const lcSelect = document.getElementById('lcSampleSelect');
+        lcSelect.innerHTML = '';
+        data.land_cover_samples.forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s.id;
+          opt.textContent = `Sample #${s.id} — ${s.ground_truth_labels.slice(0, 2).join(', ')}`;
+          lcSelect.appendChild(opt);
+        });
+
+      } catch (err) {
+        console.error('Failed to load catalog:', err);
+      }
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      const tabCD = document.getElementById('tabCD');
+      const tabLC = document.getElementById('tabLC');
+      const tabNone = document.getElementById('tabNone');
+      const cdGroup = document.getElementById('cdSelectorGroup');
+      const lcGroup = document.getElementById('lcSelectorGroup');
+      const hint = document.getElementById('modalityHint');
+
+      [tabCD, tabLC, tabNone].forEach(t => {
+        t.className = 'py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center';
+      });
+
+      if (mode === 'change_detection') {
+        tabCD.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center';
+        cdGroup.classList.remove('hidden');
+        lcGroup.classList.add('hidden');
+        hint.textContent = 'OSCD Temporal Pair';
+      } else if (mode === 'land_cover') {
+        tabLC.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center';
+        cdGroup.classList.add('hidden');
+        lcGroup.classList.remove('hidden');
+        hint.textContent = 'BigEarthNet S1+S2 Feature Vector';
+      } else {
+        tabNone.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center';
+        cdGroup.classList.add('hidden');
+        lcGroup.classList.add('hidden');
+        hint.textContent = 'Query Only (No Imagery Attached)';
+      }
+    }
+
+    async function runAnalysis() {
+      const query = document.getElementById('queryInput').value.trim();
+      if (!query) return;
+
+      const policy = document.getElementById('policySelect').value;
+      const synthetic = document.getElementById('syntheticIdentical').checked;
+      const cdIdx = document.getElementById('cdSceneSelect').value;
+      const lcIdx = document.getElementById('lcSampleSelect').value;
+
+      const runBtn = document.getElementById('runBtn');
+      const spinner = document.getElementById('spinner');
+      const runBtnText = document.getElementById('runBtnText');
+
+      runBtn.disabled = true;
+      spinner.classList.remove('hidden');
+      runBtnText.textContent = 'Processing & Routing...';
+
+      try {
+        const payload = {
+          query: query,
+          policy: policy,
+          mode: currentMode,
+          cd_sample_idx: currentMode === 'change_detection' ? parseInt(cdIdx) : null,
+          sample_idx: currentMode === 'land_cover' ? parseInt(lcIdx) : null,
+          synthetic_identical: synthetic
+        };
+
+        const res = await fetch('/api/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        renderResponse(data);
+
+      } catch (err) {
+        console.error('Execution error:', err);
+        alert('Error communicating with SatQuery engine: ' + err.message);
+      } finally {
+        runBtn.disabled = false;
+        spinner.classList.add('hidden');
+        runBtnText.textContent = 'Execute Query & Dispatch';
+      }
+    }
+
+    function renderResponse(data) {
+      const resp = data.response;
+      const visuals = data.visuals || {};
+
+      // Status Badge
+      const statusBadge = document.getElementById('statusBadge');
+      statusBadge.textContent = resp.status;
+      if (resp.status === 'SUCCESS') {
+        statusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800';
+      } else if (resp.status === 'PROVISIONAL_SUCCESS') {
+        statusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-950 text-amber-400 border border-amber-800';
+      } else if (resp.status === 'NEEDS_CLARIFICATION') {
+        statusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-950 text-blue-400 border border-blue-800';
+      } else if (resp.status === 'INCOMPATIBLE_INPUT') {
+        statusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-950 text-rose-400 border border-rose-800';
+      } else {
+        statusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700';
+      }
+
+      // Policy Badge
+      const policyBadge = document.getElementById('policyBadge');
+      policyBadge.textContent = `Policy: ${resp.execution_policy}`;
+
+      // Routing Confidence & Task
+      document.getElementById('confScore').textContent = `${(resp.router_confidence * 100).toFixed(1)}%`;
+      document.getElementById('taskName').textContent = `${resp.routed_task_display} (${resp.routed_task})`;
+
+      // Answer Text
+      document.getElementById('answerText').textContent = resp.answer;
+
+      // Visuals
+      const visualCard = document.getElementById('visualCard');
+      if (visuals.t1_image && visuals.t2_image) {
+        visualCard.classList.remove('hidden');
+        document.getElementById('imgT1').src = visuals.t1_image;
+        document.getElementById('imgT2').src = visuals.t2_image;
+        if (visuals.change_overlay) {
+          document.getElementById('imgOverlay').src = visuals.change_overlay;
+        } else {
+          document.getElementById('imgOverlay').src = visuals.t2_image;
+        }
+        if (data.scene_metadata) {
+          document.getElementById('sceneMetaLabel').textContent = `${data.scene_metadata.scene_name.toUpperCase()} (${data.scene_metadata.split})`;
+        }
+      } else {
+        visualCard.classList.add('hidden');
+      }
+
+      // Evidence Points
+      const evList = document.getElementById('evidenceList');
+      evList.innerHTML = '';
+      if (resp.evidence && resp.evidence.evidence_points && resp.evidence.evidence_points.length > 0) {
+        resp.evidence.evidence_points.forEach(pt => {
+          const li = document.createElement('li');
+          li.className = 'bg-slate-950/80 p-2 rounded border border-slate-850 flex items-start gap-2';
+          li.innerHTML = `<span class="text-blue-400 font-bold">&bull;</span><span>${pt}</span>`;
+          evList.appendChild(li);
+        });
+      } else {
+        evList.innerHTML = '<li class="text-slate-500 italic">No structured evidence produced.</li>';
+      }
+
+      // Trace
+      const traceContainer = document.getElementById('traceContainer');
+      traceContainer.innerHTML = '';
+      if (resp.execution_trace) {
+        document.getElementById('traceCount').textContent = `${resp.execution_trace.length} steps`;
+        resp.execution_trace.forEach(step => {
+          const line = document.createElement('div');
+          line.className = 'py-0.5 border-b border-slate-900/60 last:border-b-0';
+          if (step.includes('WARNING') || step.includes('Policy:')) {
+            line.className += ' text-amber-300';
+          } else if (step.includes('Error')) {
+            line.className += ' text-rose-300';
+          } else {
+            line.className += ' text-slate-300';
+          }
+          line.textContent = step;
+          traceContainer.appendChild(line);
+        });
+      }
+    }
+
+    function toggleTrace() {
+      const container = document.getElementById('traceContainer');
+      const icon = document.getElementById('traceToggleIcon');
+      if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        icon.textContent = '[Collapse]';
+      } else {
+        container.classList.add('hidden');
+        icon.textContent = '[Expand]';
+      }
+    }
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', loadCatalog);
+  </script>
+</body>
+</html>

@@ -45,25 +45,26 @@ flowchart TD
 
 ### Version Hierarchy Roadmap
 
-| Version | Milestone | Core Component | Dataset | Primary Model |
-| :--- | :--- | :--- | :--- | :--- |
-| **v0.1** | **Milestone 1** | **ML Task Router & Taxonomy** | `data/starter_queries.csv` | Calibrated TF-IDF + Logistic Classifier |
-| **v0.2** | Milestone 2 | Land Cover Classification & Optical-SAR Fusion | BigEarthNet-14k (7,180 Train / 3,255 Val) | Random Forest & XGBoost (84 Features: S1+S2) |
-| **v0.3** | Milestone 3 | Deep Specialist Modules | RSVQA, VRSBench, CDVQA | Domain-adapted VLMs & Siamese Change Detectors |
-| **v0.4** | Milestone 4 | Evidence Engine & Calibrated Confidence | Held-out Benchmark Subsets | Isotonic Calibration & Heatmap/Mask Overlay |
-| **v1.0** | Final System | Full Agentic Web Application | Integrated Satellite Hub | FastAPI Backend + React UI + Execution Trace |
+| Version | Milestone | Core Component | Dataset | Primary Model | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **v0.1** | **Milestone 1** | **ML Task Router & Taxonomy** | `data/starter_queries.csv` | Calibrated TF-IDF + Logistic Classifier | **Complete** |
+| **v0.2** | **Milestone 2** | **Land Cover Classification & Optical-SAR Fusion** | BigEarthNet-14k (7,180 Train / 3,255 Val) | Random Forest (84 Features: S1+S2) | **Complete** |
+| **v0.3** | **Milestone 3** | **Multitemporal Change Detection** | OSCD Benchmark (10 Train / 4 Val / 10 Test) | Normalized Change Vector Analysis (CVA) | **Complete** |
+| **v0.4** | **Starter Demo** | **Interactive Web Analyst Dashboard** | OSCD + BigEarthNet Samples | Flask REST API + Tailwind UI + Trace | **Complete** |
+| **v1.0** | Next Phase | Deep Vision-Language Specialists | RSVQA, VRSBench, CDVQA | Remote-Sensing VLMs & Deep Siamese Networks | Planned |
 
 ---
 
 ## 3. Dataset Hierarchy
 
-The starter dataset (`data/starter_queries.csv`) bundled in this repository is designed to establish and test the routing pipeline. The full platform integrates multiple benchmark collections:
+The platform integrates benchmark collections specifically curated for remote-sensing earth observation:
 
-1. **Starter Queries (`data/starter_queries.csv`)**: Evaluates initial query classification and taxonomy routing.
-2. **BigEarthNet-14k (`BEN-14k`)**: 13,683 paired Sentinel-1 (radar) and Sentinel-2 (optical) tiles used for our classical ML fusion baseline.
-3. **RSVQA & VRSBench**: Large-scale benchmarks for single-image visual question answering, captioning, and object grounding.
-4. **CDVQA**: Multitemporal change detection and change-oriented VQA.
-5. **ISRO / SAC Evaluation Benchmarks**: Pre-georeferenced Cartosat-2S optical and RISAT SAR observations.
+1. **Starter Queries (`data/starter_queries.csv`)**: Evaluates initial query classification and taxonomy routing across 7 task types.
+2. **BigEarthNet-14k (`BEN-14k`)**: 13,683 paired Sentinel-1 (radar) and Sentinel-2 (optical) tiles used for multimodal land-cover classification across 16 CORINE classes.
+3. **Onera Satellite Change Detection (`OSCD`) Benchmark (`data/oscd/`)**: 24 true temporal Sentinel-2 pairs split geographically into 10 training scenes, 4 validation scenes (used to freeze the optimal decision threshold $\tau^* = 0.28$), and 10 held-out test scenes.
+4. **RSVQA & VRSBench**: Large-scale benchmarks for single-image visual question answering, captioning, and object grounding.
+5. **CDVQA**: Multitemporal change detection and change-oriented VQA.
+6. **ISRO / SAC Evaluation Benchmarks**: Georeferenced Cartosat-2S optical and RISAT SAR observations.
 
 ---
 
@@ -75,13 +76,13 @@ The starter dataset (`data/starter_queries.csv`) bundled in this repository is d
 | `SINGLE_IMAGE_VQA` | Single-Image VQA | `single_image` | RSVQA Specialist VLM | RSVQA / VRSBench |
 | `SCENE_CAPTIONING` | Scene Description | `single_image` | Vision-Language Captioner | VRSBench |
 | `VISUAL_GROUNDING` | Text-Guided Grounding | `single_image` | Referring Expression Net | VRSBench / RSVG |
-| `CHANGE_DETECTION` | Multitemporal Change Detection | `temporal_pair` | Siamese Change Detector | CDVQA / LEVIR-CD |
+| `CHANGE_DETECTION` | Multitemporal Change Detection | `temporal_pair` | TemporalDifferenceBaseline / CVA | OSCD Benchmark |
 | `CHANGE_VQA` | Change-Oriented VQA | `temporal_pair` | Multitemporal VQA | CDVQA |
 | `OPTICAL_SAR_FUSION` | Optical-SAR Joint Analysis | `optical_sar_pair` | Multimodal Fusion Network | BigEarthNet / MM-RSVQA |
 
 ---
 
-## 5. Quick Start (Milestone 1 Verification)
+## 5. Quick Start & Starter Demo
 
 ### Step 1 — Local Installation
 Ensure Python 3.10+ is installed:
@@ -104,7 +105,7 @@ This generates:
 * `artifacts/router/evaluation_report.json`: Precision, Recall, Macro/Micro F1, review rate.
 * `artifacts/router/confusion_matrix.png`: High-resolution confusion matrix plot.
 
-### Step 3 — Test Predictions with Observable Trace
+### Step 3 — Test Predictions with CLI
 ```powershell
 # Test land cover classification query
 python scripts\predict_query.py "What land-cover types are visible in this image?"
@@ -116,10 +117,27 @@ python scripts\predict_query.py "What changed between these two dates?"
 python scripts\predict_query.py "Compare radar backscatter and optical moisture." --json
 ```
 
-### Step 4 — Run Test Suite
+### Step 4 — Run Full Automated Test Suite (34 Tests)
 ```powershell
 pytest -v
 ```
+
+### Step 5 — Launch Interactive Starter Demo Web Dashboard 🚀
+To launch the interactive analyst UI locally:
+```powershell
+python scripts\run_demo_app.py
+```
+Or specify host and port:
+```powershell
+python scripts\run_demo_app.py --port 5000
+```
+Then navigate to **`http://127.0.0.1:5000`** in your browser. The starter demo features:
+* **Interactive Query Preset Chips**: One-click testing for change detection, land-cover classification, optical-SAR joint reasoning, and honest unsupported task handling.
+* **Side-by-Side Satellite Viewer**: Inspect real Sentinel-2 temporal pairs ($T_1$ and $T_2$) from the OSCD benchmark.
+* **Dynamic Change Overlay**: Red highlighted change masks with cyan bounding boxes localizing the largest altered pixel cluster.
+* **Multimodal Land-Cover Evidence**: Probability bars and decision thresholds for detected CORINE surface classes.
+* **Routing Policy Arbitration**: Switch between `provisional` execution and `clarify` policy modes.
+* **Observable 5-Step Execution Trace**: Live visualization of intent routing, specialist dispatch, and evidence synthesis.
 
 ---
 
