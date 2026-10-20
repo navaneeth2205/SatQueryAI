@@ -14,6 +14,13 @@ import argparse
 import sys
 from pathlib import Path
 
+# Safe Windows stdout encoding
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 # Ensure repository root is on sys.path
 REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
@@ -49,7 +56,7 @@ def parse_args():
 def main():
     args = parse_args()
     print("=" * 70)
-    print("      🛰️   SatQuery AI - Interactive Satellite Analyst Demo")
+    print("       [SatQuery AI] - Interactive Satellite Analyst Demo")
     print("=" * 70)
     print(f" * Server address: http://{args.host}:{args.port}")
     print(" * Ready for queries: Change Detection & Land Cover Classification")

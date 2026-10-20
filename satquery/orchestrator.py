@@ -1,22 +1,33 @@
 """
-SatQuery AI Central Orchestration Engine.
+End-to-End Pipeline Orchestration Engine for SatQuery AI.
 
-Wires natural-language task routing, specialist model dispatching,
-evidence formatting, configurable routing policy, and observable execution trace logging.
+Coordinates:
+- Natural language query ingestion
+- Input observation metadata extraction (modality, validity, sensor verification)
+- Compatibility-aware task routing (separating linguistic confidence from input compatibility)
+- Safety policy arbitration ('provisional' vs 'clarify')
+- Specialist registry dispatch (Land Cover, Change Detection, and honest unavailable stubs)
+- Explainable evidence synthesis with observable execution trace
 """
 
-from dataclasses import dataclass, field, asdict
-from pathlib import Path
-from typing import Dict, List, Optional, Any
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+import json
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
-from satquery.taxonomy import TaskType, TASK_REGISTRY
+from satquery.taxonomy import TaskType, InputType, TASK_REGISTRY, get_task_definition
 from satquery.router import TaskRouter, ExecutionRoute
 from satquery.specialists.base import SpecialistResult, SpecialistStatus
 from satquery.specialists.registry import SpecialistRegistry
 from satquery.specialists.land_cover import LandCoverClassifier
 from satquery.specialists.change_detection import TemporalDifferenceBaseline
 from satquery.evidence import format_evidence, EvidenceReport
+from satquery.utils.metadata import (
+    InputObservationMetadata,
+    extract_observation_metadata,
+    TASK_COMPATIBILITY_MAP
+)
 
 
 @dataclass
@@ -33,6 +44,13 @@ class SatQueryResponse:
     evidence: EvidenceReport
     execution_trace: List[str]
     timestamp: str
+    # Scientific refinement fields:
+    text_task: str = ""
+    text_confidence: float = 0.0
+    selected_task: str = ""
+    input_compatibility: bool = True
+    routing_reason: str = ""
+    attached_modality: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         data = asdict(self)
@@ -62,31 +80,27 @@ class SatQueryEngine:
     @classmethod
     def create_default(
         cls,
-        router_model_path: Optional[str | Path] = None,
-        land_cover_artifacts_dir: Optional[str | Path] = None,
-        change_detection_artifacts_dir: Optional[str | Path] = None,
+        router_path: Optional[str | Path] = None,
         routing_policy: str = "provisional"
     ) -> "SatQueryEngine":
-        """Factory method building default engine with router and registered specialists."""
+        """
+        Factory method instantiating the default production SatQueryEngine.
+        Loads trained router and registers all implemented specialist models.
+        """
         repo_root = Path(__file__).resolve().parent.parent
 
-        if router_model_path is None:
-            router_model_path = repo_root / "artifacts" / "router" / "router_model.joblib"
+        if router_path is None:
+            router_path = repo_root / "artifacts" / "router" / "router_model.joblib"
 
-        if not Path(router_model_path).exists():
-            raise FileNotFoundError(f"Router model artifact not found at {router_model_path}.")
-
-        router = TaskRouter.load(router_model_path)
+        router = TaskRouter.load(router_path)
 
         registry = SpecialistRegistry()
-        # Register Land Cover specialist
-        land_cover_specialist = LandCoverClassifier(artifacts_dir=land_cover_artifacts_dir)
-        registry.register(land_cover_specialist)
+        # Register Land Cover Classifier (Milestone 2)
+        lc_specialist = LandCoverClassifier()
+        registry.register(lc_specialist)
 
-        # Register Change Detection baseline specialist
-        if change_detection_artifacts_dir is None:
-            change_detection_artifacts_dir = repo_root / "artifacts" / "specialists" / "change_detection"
-        cd_specialist = TemporalDifferenceBaseline(artifacts_dir=change_detection_artifacts_dir)
+        # Register Multitemporal Change Detection Specialist (Milestone 3)
+        cd_specialist = TemporalDifferenceBaseline()
         registry.register(cd_specialist)
 
         return cls(router=router, registry=registry, routing_policy=routing_policy)
@@ -103,14 +117,19 @@ class SatQueryEngine:
             f"[Trace 1/5] Ingested query: \"{query}\"",
         ]
 
-        # 1. Run Task Router
-        route: ExecutionRoute = self.router.predict(query)
+        # 1. Extract observation metadata from input_data
+        obs_meta = extract_observation_metadata(input_data)
+
+        # 2. Run Compatibility-Aware Task Router
+        route: ExecutionRoute = self.router.predict(query, image_metadata=obs_meta)
         task_str = route.task
         trace.append(
             f"[Trace 2/5] Task Router classified intent as '{task_str}' with {route.confidence*100:.1f}% confidence."
         )
+        if not route.input_compatibility:
+            trace.append(f"[Disambiguation Trace] {route.routing_reason}")
 
-        # 2. Evaluate Routing Policy
+        # 3. Evaluate Routing Policy (tied strictly to linguistic confidence)
         if route.requires_review:
             if self.routing_policy == "clarify":
                 execution_policy = "CLARIFICATION_REQUIRED"
@@ -146,7 +165,13 @@ class SatQueryEngine:
                     answer=clarification_answer,
                     evidence=empty_report,
                     execution_trace=trace,
-                    timestamp=datetime.now(timezone.utc).isoformat()
+                    timestamp=datetime.now(timezone.utc).isoformat(),
+                    text_task=route.text_task,
+                    text_confidence=route.text_confidence,
+                    selected_task=route.selected_task,
+                    input_compatibility=route.input_compatibility,
+                    routing_reason=route.routing_reason,
+                    attached_modality=route.attached_modality
                 )
             else:
                 execution_policy = "PROVISIONAL_EXECUTION"
@@ -158,7 +183,7 @@ class SatQueryEngine:
         else:
             execution_policy = "STANDARD_EXECUTION"
 
-        # 3. Dispatch to Specialist via Registry
+        # 4. Dispatch to Specialist via Registry
         try:
             task_enum = TaskType(task_str)
         except ValueError:
@@ -168,51 +193,59 @@ class SatQueryEngine:
             specialist_result = SpecialistResult(
                 status=SpecialistStatus.UNAVAILABLE,
                 task=task_str,
-                unavailable_reason=f"Unknown task enum '{task_str}'."
+                unavailable_reason=f"Task '{task_str}' is not recognized in the active taxonomy."
             )
         else:
-            trace.append(f"[Trace 3/5] Dispatching to Specialist Registry for task '{task_enum.value}'...")
+            trace.append(f"[Trace 3/5] Dispatching to Specialist Registry for task '{task_str}'...")
             specialist_result = self.registry.dispatch(task_enum, input_data)
 
-        # 4. Log Specialist Status
-        if specialist_result.status == SpecialistStatus.SUCCESS:
-            trace.append(
-                f"[Trace 4/5] Specialist '{specialist_result.execution_metadata.get('specialist_name')}' executed successfully."
-            )
-            overall_status = "PROVISIONAL_SUCCESS" if route.requires_review else "SUCCESS"
+        # 5. Format Evidence and Handle Specialist Status
+        if specialist_result.status == SpecialistStatus.UNAVAILABLE:
+            status = "UNAVAILABLE_SPECIALIST"
+            trace.append(f"[Trace 4/5] Task Unavailable: {specialist_result.unavailable_reason}")
+            evidence = format_evidence(specialist_result)
+
         elif specialist_result.status == SpecialistStatus.INCOMPATIBLE_INPUT:
-            trace.append(
-                f"[Trace 4/5] Input Error: {specialist_result.unavailable_reason}."
-            )
-            overall_status = "INCOMPATIBLE_INPUT"
+            status = "INCOMPATIBLE_INPUT"
+            trace.append(f"[Trace 4/5] Input Error: {specialist_result.unavailable_reason}.")
+            evidence = format_evidence(specialist_result)
+
+        elif specialist_result.status == SpecialistStatus.SUCCESS:
+            status = "PROVISIONAL_SUCCESS" if execution_policy == "PROVISIONAL_EXECUTION" else "SUCCESS"
+            specialist_name = specialist_result.execution_metadata.get("specialist_name", "RegisteredSpecialist")
+            trace.append(f"[Trace 4/5] Specialist '{specialist_name}' executed successfully.")
+            evidence = format_evidence(specialist_result)
+
+            # Prefix answer with provisional execution disclaimer if policy was provisional
+            if execution_policy == "PROVISIONAL_EXECUTION":
+                evidence.answer = (
+                    f"[PROVISIONAL ROUTE: Routing intent confidence is {route.confidence*100:.1f}%, below the review threshold of {self.router.confidence_threshold*100:.1f}%. "
+                    f"Specialist executed provisionally. Scores shown are model voting probabilities, not routing confidence.] "
+                    + evidence.answer
+                )
         else:
-            trace.append(
-                f"[Trace 4/5] Task Unavailable: {specialist_result.unavailable_reason}"
-            )
-            overall_status = "UNAVAILABLE_SPECIALIST"
+            status = "FAILED"
+            trace.append(f"[Trace 4/5] Unknown specialist status: {specialist_result.status}.")
+            evidence = format_evidence(specialist_result)
 
-        # 5. Format Evidence
-        evidence_report = format_evidence(specialist_result)
-        trace.append(f"[Trace 5/5] Formatted explainable answer with {len(evidence_report.evidence_points)} evidence points.")
-
-        final_answer = evidence_report.answer
-        if route.requires_review and specialist_result.status == SpecialistStatus.SUCCESS:
-            final_answer = (
-                f"[PROVISIONAL ROUTE: Routing intent confidence is {route.confidence*100:.1f}%, below the review threshold of {self.router.confidence_threshold*100:.1f}%. "
-                f"Specialist executed provisionally. Scores shown are model voting probabilities, not routing confidence.]\n"
-                f"{evidence_report.answer}"
-            )
+        trace.append(f"[Trace 5/5] Formatted explainable answer with {len(evidence.evidence_points)} evidence points.")
 
         return SatQueryResponse(
             query=query,
-            status=overall_status,
+            status=status,
             execution_policy=execution_policy,
             routed_task=task_str,
             routed_task_display=route.display_name,
             router_confidence=route.confidence,
             requires_human_review=route.requires_review,
-            answer=final_answer,
-            evidence=evidence_report,
+            answer=evidence.answer,
+            evidence=evidence,
             execution_trace=trace,
-            timestamp=datetime.now(timezone.utc).isoformat()
+            timestamp=datetime.now(timezone.utc).isoformat(),
+            text_task=route.text_task,
+            text_confidence=route.text_confidence,
+            selected_task=route.selected_task,
+            input_compatibility=route.input_compatibility,
+            routing_reason=route.routing_reason,
+            attached_modality=route.attached_modality
         )
