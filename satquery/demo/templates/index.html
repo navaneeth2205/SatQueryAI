@@ -30,7 +30,7 @@
             SatQuery AI
             <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-900/60 text-blue-400 border border-blue-700/50">v0.3 Demo</span>
           </h1>
-          <p class="text-xs text-slate-400">SIH26167 (ISRO) · Multimodal Routing & Earth Observation Specialists</p>
+          <p class="text-xs text-slate-400">SIH26167 (ISRO) · Multimodal Routing &amp; Earth Observation Specialists</p>
         </div>
       </div>
       <div class="flex items-center gap-3">
@@ -38,9 +38,9 @@
           <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
           2 Specialists Active
         </span>
-        <a href="https://github.com" target="_blank" class="text-xs text-slate-400 hover:text-white transition">
-          Docs & Repo
-        </a>
+        <span class="text-xs text-slate-400 bg-slate-800/80 px-2.5 py-1 rounded-full border border-slate-700">
+          Smart Auto-Routing Enabled
+        </span>
       </div>
     </div>
   </header>
@@ -66,8 +66,8 @@
 
         <!-- Preset Chips -->
         <div>
-          <div class="text-[11px] font-medium text-slate-400 mb-2">Preset Benchmark Queries:</div>
-          <div id="presetChips" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
+          <div class="text-[11px] font-medium text-slate-400 mb-2">Preset Benchmark Queries (Click to test):</div>
+          <div id="presetChips" class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto pr-1">
             <!-- Dynamically populated -->
           </div>
         </div>
@@ -75,28 +75,35 @@
         <!-- Input Modality & Observation Selection -->
         <div class="pt-2 border-t border-slate-800/80 space-y-3">
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Input Modality</span>
-            <span class="text-[11px] text-blue-400 font-medium" id="modalityHint">OSCD Temporal Pair</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Observation Modality</span>
+            <span class="text-[11px] text-blue-400 font-medium" id="modalityHint">Auto-Detect (Smart Dispatch)</span>
           </div>
 
-          <div class="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-lg border border-slate-800 text-xs">
+          <div class="grid grid-cols-4 gap-1 p-1 bg-slate-950 rounded-lg border border-slate-800 text-xs">
+            <button type="button" id="tabAuto" onclick="setMode('auto')"
+              class="py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center text-[11px]">
+              Auto (Smart)
+            </button>
             <button type="button" id="tabCD" onclick="setMode('change_detection')"
-              class="py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center">
+              class="py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center text-[11px]">
               Temporal Pair
             </button>
             <button type="button" id="tabLC" onclick="setMode('land_cover')"
-              class="py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center">
+              class="py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center text-[11px]">
               Single Image
             </button>
             <button type="button" id="tabNone" onclick="setMode('query_only')"
-              class="py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center">
+              class="py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center text-[11px]">
               Query Only
             </button>
           </div>
 
           <!-- Change Detection Observation Selector -->
           <div id="cdSelectorGroup" class="space-y-2">
-            <label class="text-[11px] text-slate-400">Select Benchmark Scene (OSCD 24-Site Subset):</label>
+            <label class="text-[11px] text-slate-400 flex items-center justify-between">
+              <span>OSCD Benchmark Temporal Scene:</span>
+              <span class="text-[10px] text-slate-500">24 georeferenced sites</span>
+            </label>
             <select id="cdSceneSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
               <option value="0">Loading scenes...</option>
             </select>
@@ -110,7 +117,10 @@
 
           <!-- Land Cover Sample Selector -->
           <div id="lcSelectorGroup" class="space-y-2 hidden">
-            <label class="text-[11px] text-slate-400">Select Validation Tile (BigEarthNet-14k):</label>
+            <label class="text-[11px] text-slate-400 flex items-center justify-between">
+              <span>BigEarthNet-14k Validation Tile:</span>
+              <span class="text-[10px] text-slate-500">84 S1/S2 features</span>
+            </label>
             <select id="lcSampleSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
               <option value="0">Loading tiles...</option>
             </select>
@@ -120,11 +130,11 @@
         <!-- Safety Routing Policy Toggle -->
         <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
           <div>
-            <div class="text-xs font-semibold text-slate-300">Routing Safety Policy</div>
-            <div class="text-[11px] text-slate-500">Dispatched via SatQueryEngine</div>
+            <div class="text-xs font-semibold text-slate-300">Routing Policy</div>
+            <div class="text-[11px] text-slate-500">Confidence arbitration mode</div>
           </div>
           <select id="policySelect" class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
-            <option value="provisional" selected>Provisional Execution (Default)</option>
+            <option value="provisional" selected>Provisional Execution (Recommended)</option>
             <option value="clarify">Clarification Required (&lt; 65%)</option>
           </select>
         </div>
@@ -136,20 +146,20 @@
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <span id="runBtnText">Execute Query &amp; Dispatch</span>
+          <span id="runBtnText">Run Query &amp; Dispatch Analysis</span>
         </button>
       </div>
 
-      <!-- System Architecture Legend -->
+      <!-- Active Pipeline Capabilities -->
       <div class="bg-slate-900/60 rounded-xl border border-slate-800 p-4 text-xs text-slate-400 space-y-2">
         <div class="font-semibold text-slate-300 flex items-center gap-2">
           <span>Active Pipeline Specialists</span>
         </div>
         <ul class="space-y-1 text-[11px] text-slate-400 list-disc list-inside">
-          <li><span class="text-slate-200 font-medium">Task Router:</span> TF-IDF + Calibrated Logistic Regression</li>
-          <li><span class="text-slate-200 font-medium">Land Cover:</span> Random Forest 84-feature Optical+SAR</li>
-          <li><span class="text-slate-200 font-medium">Change Detection:</span> Normalized CVA + &tau;* (0.28)</li>
-          <li><span class="text-slate-200 font-medium">VQA / Grounding:</span> Explicit UNAVAILABLE stubs (Milestone 4)</li>
+          <li><span class="text-slate-200 font-medium">Task Router:</span> Calibrated TF-IDF + Multinomial Logistic Regression</li>
+          <li><span class="text-slate-200 font-medium">Land Cover:</span> Random Forest on 84 paired S1/S2 features (16 CORINE classes)</li>
+          <li><span class="text-slate-200 font-medium">Change Detection:</span> Normalized CVA + validation-frozen &tau;* (0.28)</li>
+          <li><span class="text-slate-200 font-medium">VQA / Grounding:</span> Honest UNAVAILABLE stubs (Milestone 4 roadmap)</li>
         </ul>
       </div>
 
@@ -186,17 +196,21 @@
           <div id="answerText" class="text-sm text-slate-200 leading-relaxed">
             Submit a query to inspect the end-to-end task routing and specialist execution output.
           </div>
+          <div id="clarifyActionBox" class="mt-3 pt-2.5 border-t border-slate-800/80 hidden">
+            <button onclick="proceedWithProvisional()" class="text-xs px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-medium rounded-md transition shadow">
+              Proceed with Provisional Specialist Execution &rarr;
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Visual Observation Viewer Card -->
+      <!-- Change Detection Visual Viewer Card -->
       <div id="visualCard" class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-4 hidden">
         <div class="flex items-center justify-between">
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Satellite Imagery Inspector</div>
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Multitemporal Satellite Inspector</div>
           <span id="sceneMetaLabel" class="text-xs text-slate-400 font-mono">--</span>
         </div>
 
-        <!-- Change Detection Side-by-Side / Overlay View -->
         <div id="cdVisualContainer" class="space-y-3">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-center space-y-1">
@@ -213,9 +227,36 @@
             </div>
           </div>
           <div class="text-[11px] text-slate-400 text-center">
-            <span class="text-red-400 font-semibold">&#9632; Red Highlight:</span> Detected Changed Pixels (&tau; &ge; 0.28) &nbsp;|&nbsp; 
+            <span class="text-red-400 font-semibold">&#9632; Red Highlight:</span> Altered Pixels (&tau; &ge; 0.28) &nbsp;|&nbsp; 
             <span class="text-cyan-400 font-semibold">&#9632; Cyan Box:</span> Largest Connected Change Cluster
           </div>
+        </div>
+      </div>
+
+      <!-- Land Cover Visual Card -->
+      <div id="landCoverCard" class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-4 hidden">
+        <div class="flex items-center justify-between">
+          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Land Cover Multi-Label Analysis</div>
+          <span id="lcPatchLabel" class="text-xs text-slate-400 font-mono">--</span>
+        </div>
+
+        <div>
+          <div class="text-xs font-medium text-slate-400 mb-2">Detected Classes (Above Validation Decision Thresholds):</div>
+          <div id="detectedBadges" class="flex flex-wrap gap-1.5">
+            <!-- Detected badge pills -->
+          </div>
+        </div>
+
+        <div class="space-y-2 pt-2 border-t border-slate-800">
+          <div class="text-xs font-medium text-slate-400">Top Class Confidence Scores &amp; Decision Thresholds:</div>
+          <div id="probBarsContainer" class="space-y-1.5">
+            <!-- Bars dynamically injected -->
+          </div>
+        </div>
+
+        <div id="groundTruthRow" class="pt-2 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
+          <span>Ground Truth Labels (Benchmark Metadata):</span>
+          <span id="groundTruthText" class="text-slate-300 font-medium">--</span>
         </div>
       </div>
 
@@ -254,7 +295,7 @@
 
   <!-- Frontend Logic -->
   <script>
-    let currentMode = 'change_detection';
+    let currentMode = 'auto';
     let catalog = { change_detection_scenes: [], land_cover_samples: [], preset_queries: [] };
 
     async function loadCatalog() {
@@ -266,14 +307,14 @@
         // Render Preset Chips
         const chipsContainer = document.getElementById('presetChips');
         chipsContainer.innerHTML = '';
-        data.preset_queries.forEach((p, idx) => {
+        data.preset_queries.forEach((p) => {
           const btn = document.createElement('button');
           btn.className = 'text-[11px] text-left px-2.5 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition truncate max-w-full';
           btn.textContent = p.query;
           btn.title = `[${p.category}] ${p.query}`;
           btn.onclick = () => {
             document.getElementById('queryInput').value = p.query;
-            setMode(p.recommended_mode);
+            setMode(p.recommended_mode || 'auto');
           };
           chipsContainer.appendChild(btn);
         });
@@ -305,6 +346,7 @@
 
     function setMode(mode) {
       currentMode = mode;
+      const tabAuto = document.getElementById('tabAuto');
       const tabCD = document.getElementById('tabCD');
       const tabLC = document.getElementById('tabLC');
       const tabNone = document.getElementById('tabNone');
@@ -312,22 +354,27 @@
       const lcGroup = document.getElementById('lcSelectorGroup');
       const hint = document.getElementById('modalityHint');
 
-      [tabCD, tabLC, tabNone].forEach(t => {
-        t.className = 'py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center';
+      [tabAuto, tabCD, tabLC, tabNone].forEach(t => {
+        t.className = 'py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center text-[11px]';
       });
 
-      if (mode === 'change_detection') {
-        tabCD.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center';
+      if (mode === 'auto') {
+        tabAuto.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center text-[11px]';
+        cdGroup.classList.remove('hidden');
+        lcGroup.classList.remove('hidden');
+        hint.textContent = 'Auto-Detect (Smart Dispatch)';
+      } else if (mode === 'change_detection') {
+        tabCD.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center text-[11px]';
         cdGroup.classList.remove('hidden');
         lcGroup.classList.add('hidden');
-        hint.textContent = 'OSCD Temporal Pair';
+        hint.textContent = 'Force OSCD Temporal Pair';
       } else if (mode === 'land_cover') {
-        tabLC.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center';
+        tabLC.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center text-[11px]';
         cdGroup.classList.add('hidden');
         lcGroup.classList.remove('hidden');
-        hint.textContent = 'BigEarthNet S1+S2 Feature Vector';
+        hint.textContent = 'Force BigEarthNet S1+S2 Feature Vector';
       } else {
-        tabNone.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center';
+        tabNone.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center text-[11px]';
         cdGroup.classList.add('hidden');
         lcGroup.classList.add('hidden');
         hint.textContent = 'Query Only (No Imagery Attached)';
@@ -356,8 +403,8 @@
           query: query,
           policy: policy,
           mode: currentMode,
-          cd_sample_idx: currentMode === 'change_detection' ? parseInt(cdIdx) : null,
-          sample_idx: currentMode === 'land_cover' ? parseInt(lcIdx) : null,
+          cd_sample_idx: (currentMode === 'change_detection' || currentMode === 'auto') ? parseInt(cdIdx || '0') : null,
+          sample_idx: (currentMode === 'land_cover' || currentMode === 'auto') ? parseInt(lcIdx || '0') : null,
           synthetic_identical: synthetic
         };
 
@@ -376,8 +423,13 @@
       } finally {
         runBtn.disabled = false;
         spinner.classList.add('hidden');
-        runBtnText.textContent = 'Execute Query & Dispatch';
+        runBtnText.textContent = 'Run Query & Dispatch Analysis';
       }
+    }
+
+    function proceedWithProvisional() {
+      document.getElementById('policySelect').value = 'provisional';
+      runAnalysis();
     }
 
     function renderResponse(data) {
@@ -410,9 +462,17 @@
       // Answer Text
       document.getElementById('answerText').textContent = resp.answer;
 
-      // Visuals
+      // Clarify Action Box
+      const clarifyBox = document.getElementById('clarifyActionBox');
+      if (resp.status === 'NEEDS_CLARIFICATION') {
+        clarifyBox.classList.remove('hidden');
+      } else {
+        clarifyBox.classList.add('hidden');
+      }
+
+      // Visuals: Change Detection
       const visualCard = document.getElementById('visualCard');
-      if (visuals.t1_image && visuals.t2_image) {
+      if (visuals.t1_image && visuals.t2_image && resp.routed_task === 'CHANGE_DETECTION') {
         visualCard.classList.remove('hidden');
         document.getElementById('imgT1').src = visuals.t1_image;
         document.getElementById('imgT2').src = visuals.t2_image;
@@ -426,6 +486,62 @@
         }
       } else {
         visualCard.classList.add('hidden');
+      }
+
+      // Visuals: Land Cover Card
+      const lcCard = document.getElementById('landCoverCard');
+      if (resp.routed_task === 'LAND_COVER_CLASSIFICATION' || resp.routed_task === 'OPTICAL_SAR_FUSION') {
+        lcCard.classList.remove('hidden');
+        if (visuals.patch_id) {
+          document.getElementById('lcPatchLabel').textContent = `BEN-14k Patch: ${visuals.patch_id}`;
+        }
+
+        // Render detected badges
+        const badgesContainer = document.getElementById('detectedBadges');
+        badgesContainer.innerHTML = '';
+        const detected = (resp.evidence && resp.evidence.detected_classes) || [];
+        if (detected.length > 0) {
+          detected.forEach(c => {
+            const badge = document.createElement('span');
+            badge.className = 'px-2.5 py-1 text-xs rounded-full font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800';
+            badge.textContent = c;
+            badgesContainer.appendChild(badge);
+          });
+        } else {
+          badgesContainer.innerHTML = '<span class="text-xs text-slate-500 italic">No classes crossed decision thresholds.</span>';
+        }
+
+        // Render probability progress bars
+        const probContainer = document.getElementById('probBarsContainer');
+        probContainer.innerHTML = '';
+        const probs = (resp.evidence && resp.evidence.class_probabilities) || {};
+        const thresholds = (resp.evidence && resp.evidence.thresholds_applied) || {};
+        const sortedEntries = Object.entries(probs).sort((a, b) => b[1] - a[1]).slice(0, 7);
+
+        sortedEntries.forEach(([clsName, prob]) => {
+          const thresh = thresholds[clsName] || 0.40;
+          const isPassed = prob >= thresh;
+          const row = document.createElement('div');
+          row.className = 'space-y-0.5';
+          row.innerHTML = `
+            <div class="flex justify-between text-[11px]">
+              <span class="${isPassed ? 'text-emerald-300 font-semibold' : 'text-slate-400'}">${clsName}</span>
+              <span class="font-mono text-slate-300">${(prob * 100).toFixed(1)}% <span class="text-slate-500 text-[10px]">(thresh: ${(thresh * 100).toFixed(0)}%)</span></span>
+            </div>
+            <div class="w-full bg-slate-950 rounded-full h-1.5 border border-slate-800 overflow-hidden">
+              <div class="${isPassed ? 'bg-emerald-500' : 'bg-slate-600'} h-1.5 rounded-full" style="width: ${Math.min(100, Math.max(3, prob * 100))}%"></div>
+            </div>
+          `;
+          probContainer.appendChild(row);
+        });
+
+        // Ground truth comparison
+        const gtText = document.getElementById('groundTruthText');
+        const gts = visuals.ground_truth_labels || [];
+        gtText.textContent = gts.length > 0 ? gts.join(', ') : 'None listed';
+
+      } else {
+        lcCard.classList.add('hidden');
       }
 
       // Evidence Points
@@ -450,9 +566,9 @@
         resp.execution_trace.forEach(step => {
           const line = document.createElement('div');
           line.className = 'py-0.5 border-b border-slate-900/60 last:border-b-0';
-          if (step.includes('WARNING') || step.includes('Policy:')) {
+          if (step.includes('WARNING') || step.includes('Policy:') || step.includes('PROVISIONAL')) {
             line.className += ' text-amber-300';
-          } else if (step.includes('Error')) {
+          } else if (step.includes('Error') || step.includes('INCOMPATIBLE')) {
             line.className += ' text-rose-300';
           } else {
             line.className += ' text-slate-300';

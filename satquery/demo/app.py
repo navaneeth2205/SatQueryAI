@@ -2,7 +2,7 @@
 Flask Web Application for SatQuery AI Interactive Demo.
 
 Provides REST APIs and serves the interactive satellite analyst dashboard:
-- Task routing with confidence gauges and policy arbitration
+- Smart task routing with automatic observation binding
 - Visual multitemporal change detection with side-by-side viewer & overlay
 - Land-cover multi-label predictions with radar/optical evidence
 - Observable 5-step execution trace
@@ -41,7 +41,7 @@ def _create_change_overlay(
     t2_arr = np.array(t2_img.convert("RGB")).astype(np.float32)
     overlay = t2_arr.copy()
 
-    # Red tint for changed pixels: 50% original + 50% red
+    # Red tint for changed pixels: 40% original + 60% red
     change_mask = binary_mask.astype(bool)
     overlay[change_mask, 0] = overlay[change_mask, 0] * 0.4 + 255 * 0.6
     overlay[change_mask, 1] = overlay[change_mask, 1] * 0.4
@@ -93,43 +93,43 @@ def create_app() -> Flask:
             "category": "Change Detection",
             "task": "CHANGE_DETECTION",
             "query": "What changed in this area between 2024 and 2026?",
-            "recommended_mode": "change_detection"
+            "recommended_mode": "auto"
         },
         {
             "category": "Change Detection",
             "task": "CHANGE_DETECTION",
             "query": "Detect land-cover modifications between these two acquisition dates.",
-            "recommended_mode": "change_detection"
+            "recommended_mode": "auto"
         },
         {
             "category": "Land Cover",
             "task": "LAND_COVER_CLASSIFICATION",
             "query": "What land-cover classes are present in this satellite image?",
-            "recommended_mode": "land_cover"
+            "recommended_mode": "auto"
         },
         {
             "category": "Land Cover",
             "task": "LAND_COVER_CLASSIFICATION",
             "query": "Classify all surface types detected in this scene.",
-            "recommended_mode": "land_cover"
+            "recommended_mode": "auto"
         },
         {
             "category": "Optical-SAR Fusion",
             "task": "OPTICAL_SAR_FUSION",
             "query": "Compare radar backscatter and optical reflectance for this scene.",
-            "recommended_mode": "land_cover"
+            "recommended_mode": "auto"
         },
         {
             "category": "Unsupported (VQA)",
             "task": "CHANGE_VQA",
             "query": "Did the lake surface area shrink between the two dates?",
-            "recommended_mode": "query_only"
+            "recommended_mode": "auto"
         },
         {
             "category": "Unsupported (Grounding)",
             "task": "VISUAL_GROUNDING",
             "query": "Locate the reservoir and highlight its boundary with a mask.",
-            "recommended_mode": "query_only"
+            "recommended_mode": "auto"
         }
     ]
 
@@ -174,7 +174,7 @@ def create_app() -> Flask:
 
     @app.route("/api/query", methods=["POST"])
     def process_query_endpoint():
-        """Process an analytical natural-language query end-to-end."""
+        """Process an analytical natural-language query end-to-end with smart observation binding."""
         payload = request.get_json() or {}
         query = payload.get("query", "").strip()
         policy = payload.get("policy", "provisional")
@@ -188,13 +188,31 @@ def create_app() -> Flask:
 
         engine = engines.get(policy, engines["provisional"])
 
-        # Resolve input data according to mode
+        # 1. First predict task to enable smart auto-routing
+        route = engine.router.predict(query)
+        routed_task = route.task
+
+        # 2. Determine effective modality
+        # If mode is 'auto', automatically select modality matching the routed task
+        if mode == "auto":
+            if routed_task == "CHANGE_DETECTION":
+                effective_mode = "change_detection"
+            elif routed_task in ("LAND_COVER_CLASSIFICATION", "OPTICAL_SAR_FUSION"):
+                effective_mode = "land_cover"
+            else:
+                effective_mode = "query_only"
+        else:
+            effective_mode = mode
+
+        # 3. Resolve input data according to effective modality
         input_data = None
         visual_assets = {}
+        scene_meta = None
 
-        if mode == "change_detection" or (mode == "auto" and cd_idx is not None):
-            if cd_idx is not None and 0 <= int(cd_idx) < len(oscd_df):
-                row = oscd_df.iloc[int(cd_idx)]
+        if effective_mode == "change_detection":
+            target_cd_idx = int(cd_idx) if cd_idx is not None else 0
+            if not oscd_df.empty and 0 <= target_cd_idx < len(oscd_df):
+                row = oscd_df.iloc[target_cd_idx]
                 t1_path = REPO_ROOT / row["t1_path"]
                 t2_path = REPO_ROOT / row["t1_path"] if synthetic_identical else REPO_ROOT / row["t2_path"]
 
@@ -203,67 +221,69 @@ def create_app() -> Flask:
                     "t2": str(t2_path),
                     "scene_name": str(row["scene_name"])
                 }
+                scene_meta = {
+                    "scene_name": str(row["scene_name"]),
+                    "split": str(row["split"]),
+                    "synthetic_identical": synthetic_identical
+                }
 
                 # Generate visual base64 thumbnails
                 try:
                     with Image.open(t1_path) as im1, Image.open(t2_path) as im2:
                         visual_assets["t1_image"] = _encode_image_base64(im1)
                         visual_assets["t2_image"] = _encode_image_base64(im2)
-
-                        # Compute change mask for overlay visualization
-                        cd_specialist = engine.registry.get_specialist(engine.router.predict(query).task)
-                        # Predict
-                        res = engine.process_query(query, input_data=input_data)
-                        
-                        # Generate overlay if specialist succeeded
-                        if res.status in ("SUCCESS", "PROVISIONAL_SUCCESS") and res.evidence.sensor_feature_summary:
-                            meta = res.evidence.sensor_feature_summary
-                            bbox = meta.get("largest_change_cluster_bbox_pixel")
-                            
-                            # Load actual mask array computed by specialist
-                            from satquery.specialists.change_detection import TemporalDifferenceBaseline
-                            temp_baseline = TemporalDifferenceBaseline()
-                            val = temp_baseline.supports_input(input_data)
-                            _, pred_mask, _ = temp_baseline.compute_change_map(
-                                np.array(im1).astype(np.float32),
-                                np.array(im2).astype(np.float32),
-                                np.ones((im1.size[1], im1.size[0]), dtype=bool)
-                            )
-                            overlay_img = _create_change_overlay(im2, pred_mask, bbox=bbox)
-                            visual_assets["change_overlay"] = _encode_image_base64(overlay_img)
-                            
-                        return jsonify({
-                            "response": res.to_dict(),
-                            "visuals": visual_assets,
-                            "scene_metadata": {
-                                "scene_name": str(row["scene_name"]),
-                                "split": str(row["split"]),
-                                "synthetic_identical": synthetic_identical
-                            }
-                        })
                 except Exception as e:
-                    pass
+                    print(f"[API Warning] Failed to generate thumbnails: {e}")
 
-        elif mode == "land_cover" or (mode == "auto" and sample_idx is not None):
-            if sample_idx is not None and ben_features is not None and 0 <= int(sample_idx) < len(ben_features):
-                idx = int(sample_idx)
-                feats = ben_features[idx]
-                row = ben_df.iloc[idx] if not ben_df.empty else {}
+        elif effective_mode == "land_cover":
+            target_sample_idx = int(sample_idx) if sample_idx is not None else 0
+            if ben_features is not None and 0 <= target_sample_idx < len(ben_features):
+                feats = ben_features[target_sample_idx]
+                row = ben_df.iloc[target_sample_idx] if not ben_df.empty else {}
                 input_data = {
                     "features": feats,
-                    "patch_id": str(row.get("patch_id", "sample")),
+                    "patch_id": str(row.get("patch_id", f"sample_{target_sample_idx}")),
                     "ground_truth_labels": list(row.get("labels", []))
                 }
                 visual_assets["mode"] = "land_cover"
-                visual_assets["patch_id"] = str(row.get("patch_id", "sample"))
+                visual_assets["patch_id"] = str(row.get("patch_id", f"sample_{target_sample_idx}"))
+                visual_assets["ground_truth_labels"] = list(row.get("labels", []))
 
-        # Standard execution for queries without specific image pair
+        # 4. Execute query through SatQueryEngine
         response = engine.process_query(query, input_data=input_data)
 
-        return jsonify({
+        # 5. Generate change overlay if change detection executed successfully
+        if (
+            effective_mode == "change_detection"
+            and response.status in ("SUCCESS", "PROVISIONAL_SUCCESS")
+            and response.routed_task == "CHANGE_DETECTION"
+            and input_data is not None
+            and "t1_image" in visual_assets
+        ):
+            try:
+                meta = response.evidence.sensor_feature_summary or {}
+                bbox = meta.get("largest_change_cluster_bbox_pixel")
+                from satquery.specialists.change_detection import TemporalDifferenceBaseline
+                temp_baseline = TemporalDifferenceBaseline()
+                with Image.open(input_data["t1"]) as im1, Image.open(input_data["t2"]) as im2:
+                    _, pred_mask, _ = temp_baseline.compute_change_map(
+                        np.array(im1).astype(np.float32),
+                        np.array(im2).astype(np.float32),
+                        np.ones((im1.size[1], im1.size[0]), dtype=bool)
+                    )
+                    overlay_img = _create_change_overlay(im2, pred_mask, bbox=bbox)
+                    visual_assets["change_overlay"] = _encode_image_base64(overlay_img)
+            except Exception as e:
+                print(f"[API Warning] Failed to compute change overlay: {e}")
+
+        resp_payload = {
             "response": response.to_dict(),
             "visuals": visual_assets
-        })
+        }
+        if scene_meta:
+            resp_payload["scene_metadata"] = scene_meta
+
+        return jsonify(resp_payload)
 
     return app
 

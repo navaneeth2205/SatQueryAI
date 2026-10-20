@@ -1,32 +1,33 @@
 """
-SatQuery AI End-to-End Pipeline CLI (Milestone 3).
+End-to-End Pipeline Execution CLI for SatQuery AI.
+
+Dispatches natural language query through:
+  Task Router -> Routing Policy -> Specialist Model -> Evidence Formatter
+
+Supports:
+- Positional or flagged query syntax
+- Smart auto-binding of benchmark satellite imagery/features
+- Change Detection with OSCD benchmark temporal pairs or synthetic regression
+- Land Cover Classification with BigEarthNet-14k paired features or raw TIFFs
+- Unsupported task handling with honest UNAVAILABLE status
+- Observable execution traces and confidence arbitration policies
 
 Usage:
-    # 1. Land cover query with BigEarthNet validation sample
-    python scripts/run_pipeline.py --query "What land-cover types are visible in this image?" --sample-idx 0
-
-    # 2. Change detection query with OSCD benchmark sample
-    python scripts/run_pipeline.py --query "What changed in this area between 2024 and 2026?" --cd-sample-idx 0
-
-    # 3. Change detection synthetic regression test (identical images -> 0% change)
-    python scripts/run_pipeline.py --query "What changed in this scene?" --cd-sample-idx 0 --synthetic-identical
-
-    # 4. Interactive clarification routing policy
-    python scripts/run_pipeline.py --query "What changed between 2024 and 2026?" --policy clarify
-
-    # 5. Incompatible input test (single image to change detection)
-    python scripts/run_pipeline.py --query "What changed between the two dates?" --sample-idx 0
+    python scripts/run_pipeline.py "What land-cover classes are visible in this scene?"
+    python scripts/run_pipeline.py "What changed in this area between 2024 and 2026?"
+    python scripts/run_pipeline.py --query "What changed?" --cd-sample-idx 0
+    python scripts/run_pipeline.py --query "Classify land cover." --sample-idx 0
+    python scripts/run_pipeline.py --query "Detect change." --cd-sample-idx 0 --synthetic-identical
 """
 
 import argparse
 import json
-import sys
 from pathlib import Path
+import sys
+from typing import Any, Dict, Optional
 import numpy as np
 import pandas as pd
-from PIL import Image
 
-# Ensure repository root is on sys.path
 repo_root = Path(__file__).resolve().parent.parent
 if str(repo_root) not in sys.path:
     sys.path.insert(0, str(repo_root))
@@ -36,7 +37,8 @@ from satquery.orchestrator import SatQueryEngine
 
 def main():
     parser = argparse.ArgumentParser(description="Execute SatQuery AI end-to-end pipeline.")
-    parser.add_argument("--query", type=str, required=True, help="Natural-language question")
+    parser.add_argument("query_pos", nargs="?", type=str, default=None, help="Natural-language question (positional)")
+    parser.add_argument("--query", "-q", type=str, default=None, help="Natural-language question")
     parser.add_argument("--policy", type=str, default="provisional", choices=["provisional", "clarify"],
                         help="Routing safety policy: 'provisional' (default) or 'clarify'")
     # Single-image / Land Cover inputs
@@ -49,11 +51,17 @@ def main():
     parser.add_argument("--t2", type=str, default=None, help="Path to temporal T2 observation")
     parser.add_argument("--synthetic-identical", action="store_true",
                         help="[Synthetic Regression Path] Force T2 = T1 to test deterministic zero-change behavior")
+    parser.add_argument("--query-only", action="store_true",
+                        help="Explicitly bypass automated observation binding (force input_data=None)")
     parser.add_argument("--json", action="store_true", help="Print raw JSON response")
     args = parser.parse_args()
 
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
+
+    query = args.query or args.query_pos
+    if not query:
+        parser.error("A query is required. Provide it as a positional string or with --query / -q.")
 
     # 1. Resolve Input Data
     input_data = None
@@ -136,38 +144,82 @@ def main():
         }
         input_note = f"Raw TIFF pair: S1={args.s1}, S2={args.s2}"
 
-    # 2. Initialize Engine with Configurable Policy
+    # 2. Smart Auto-Binding if input was not explicitly given and not forced query-only
     engine = SatQueryEngine.create_default(routing_policy=args.policy)
 
-    # 3. Process Query
-    response = engine.process_query(query=args.query, input_data=input_data)
+    if input_data is None and not args.query_only:
+        predicted_task = engine.router.predict(query).task
+        if predicted_task == "CHANGE_DETECTION":
+            cat_path = repo_root / "data" / "change_detection_catalog.parquet"
+            if cat_path.exists():
+                cat_df = pd.read_parquet(cat_path)
+                if not cat_df.empty:
+                    row = cat_df.iloc[0]
+                    t1_path = repo_root / row["t1_path"]
+                    t2_path = repo_root / row["t2_path"]
+                    input_data = {
+                        "t1": str(t1_path),
+                        "t2": str(t2_path),
+                        "scene_name": str(row["scene_name"]),
+                        "split": str(row["split"])
+                    }
+                    input_note = f"[Auto-bound OSCD Benchmark Scene #0 '{row['scene_name']}']"
 
+        elif predicted_task in ("LAND_COVER_CLASSIFICATION", "OPTICAL_SAR_FUSION"):
+            val_features_path = repo_root / "initial_trails" / "X_val_full.npy"
+            val_meta_path = repo_root / "data" / "val_full_metadata.parquet"
+            if val_features_path.exists():
+                X_val = np.load(val_features_path)
+                if len(X_val) > 0:
+                    features = X_val[0]
+                    patch_info = {}
+                    if val_meta_path.exists():
+                        val_df = pd.read_parquet(val_meta_path)
+                        if not val_df.empty:
+                            row = val_df.iloc[0]
+                            patch_info = {
+                                "patch_id": str(row["patch_id"]),
+                                "ground_truth_labels": list(row["labels"])
+                            }
+                    input_data = {
+                        "features": features,
+                        **patch_info
+                    }
+                    input_note = f"[Auto-bound BigEarthNet-14k sample #0 ({patch_info.get('patch_id', 'sample_0')})]"
+
+    # 3. Process Query End-to-End
+    response = engine.process_query(query, input_data=input_data)
+
+    # 4. Output Results
     if args.json:
         print(json.dumps(response.to_dict(), indent=2))
         return
 
-    print("=" * 70)
-    print("[SatQuery AI] END-TO-END PIPELINE RESPONSE")
-    print("=" * 70)
-    print(f"User Query       : \"{response.query}\"")
-    print(f"Input Supplied   : {input_note}")
-    print(f"Routed Task      : {response.routed_task} ({response.routed_task_display})")
-    print(f"Routing Conf     : {response.router_confidence * 100:.2f}%")
-    print(f"Execution Policy : {response.execution_policy}")
-    print(f"Execution Status : {response.status}")
-    print(f"\nFinal Answer     : {response.answer}")
+    print("=" * 75)
+    print("      🛰️   SatQuery AI - Full Pipeline Execution Trace")
+    print("=" * 75)
+    print(f" Query:                  \"{response.query}\"")
+    print(f" Status:                 {response.status}")
+    print(f" Execution Policy:       {response.execution_policy}")
+    print(f" Routed Task:            {response.routed_task_display} ({response.routed_task})")
+    print(f" Router Confidence:      {response.router_confidence * 100:.1f}%")
+    print(f" Attached Input:         {input_note}")
+    print(f" Human Review Flag:      {response.requires_human_review}")
+    print("-" * 75)
+    print(f" Synthesized Answer:")
+    print(f" {response.answer}")
+    print("-" * 75)
 
-    if response.evidence.detected_classes:
-        print(f"\nPredicted Classes: {', '.join(response.evidence.detected_classes)}")
+    if response.evidence and response.evidence.evidence_points:
+        print(" Structured Scientific Evidence:")
+        for pt in response.evidence.evidence_points:
+            print(f"   * {pt}")
+        print("-" * 75)
 
-    print("\n--- Evidence Summary ---")
-    for pt in response.evidence.evidence_points:
-        print(f"  * {pt}")
-
-    print("\n--- Observable Execution Trace ---")
+    print(" Execution Trace Log:")
     for step in response.execution_trace:
-        print(f"  {step}")
-    print("=" * 70)
+        print(f"   {step}")
+    print("=" * 75)
 
 
 if __name__ == "__main__":
