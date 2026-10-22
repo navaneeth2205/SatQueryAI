@@ -251,6 +251,12 @@ def create_app() -> Flask:
 
         # 4. Execute query through SatQueryEngine
         response = engine.process_query(query, input_data=input_data)
+        print(
+            f"[Demo API] Query: \"{query}\" | Effective Mode: {effective_mode} | "
+            f"Task: {response.selected_task or response.routed_task} | Status: {response.status} | "
+            f"Confidence: {response.text_confidence*100:.1f}%",
+            flush=True
+        )
 
         # 5. Generate change overlay if change detection executed successfully
         if (
