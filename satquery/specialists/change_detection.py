@@ -55,7 +55,7 @@ class TemporalDifferenceBaseline(BaseSpecialist):
     def _normalize_image(self, arr: np.ndarray) -> np.ndarray:
         """
         Apply reproducible, documented scaling across channels.
-        - 8-bit imagery ([0, 255]) is scaled by 255.0 to [0, 1].
+        - 8-bit imagery ([0, 255]) is scaled by 255.0 to [0, 1] (normalized digital values).
         - Multi-band 12-bit / 16-bit reflectance ([0, 10000+]) is scaled by 10000.0.
         - Existing float arrays in [0, 1] are preserved.
         """
@@ -65,6 +65,26 @@ class TemporalDifferenceBaseline(BaseSpecialist):
         elif max_val > 1.0:
             return arr / 255.0
         return arr
+
+    def _normalize_pair(self, t1_arr: np.ndarray, t2_arr: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        Apply documented scaling jointly across both observations in a temporal pair.
+        - If max value across both images > 255.0 (16-bit surface reflectance x 10,000): scale both by 10,000.0.
+        - If max value across both images > 1.0 (8-bit digital values): scale both by 255.0.
+        - If already normalized in [0, 1]: preserve both without scaling.
+        Guarantees both observations (T1, T2) are scaled by an identical factor to avoid artificial differentials.
+        """
+        max_val = max(
+            float(np.nanmax(t1_arr)) if t1_arr.size > 0 else 0.0,
+            float(np.nanmax(t2_arr)) if t2_arr.size > 0 else 0.0
+        )
+        if max_val > 255.0:
+            scale = 10000.0
+        elif max_val > 1.0:
+            scale = 255.0
+        else:
+            scale = 1.0
+        return t1_arr / scale, t2_arr / scale
 
     def supports_input(self, input_data: Any) -> Tuple[bool, Optional[str]]:
         """
@@ -108,8 +128,7 @@ class TemporalDifferenceBaseline(BaseSpecialist):
             binary_mask: 2D boolean array of detected changed valid pixels.
             mean_deltas: List of mean absolute differences per channel over valid pixels.
         """
-        t1_norm = self._normalize_image(t1_arr)
-        t2_norm = self._normalize_image(t2_arr)
+        t1_norm, t2_norm = self._normalize_pair(t1_arr, t2_arr)
 
         # 1. Per-channel absolute differences
         diff = np.abs(t2_norm - t1_norm)

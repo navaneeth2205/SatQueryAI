@@ -603,7 +603,13 @@
       "train_to_val_min_distance_patches": 1.0,
       "val_to_test_min_distance_patches": 1.0
     },
-    "scientific_characterization": "Held-out test-patch evaluation with a 12 km spatial buffer from training patches within same MGRS granules; not disjoint geographic regions."
+    "scientific_characterization": "Held-out test-patch evaluation with a 12 km spatial buffer from training patches within same MGRS granules; not disjoint geographic regions.",
+    "geometry_type": "Concentric Annular Ring (Nested Spatial Windows)",
+    "spatial_audit_file": "artifacts/benchmarks/spatial_buffer_audit.json",
+    "center_to_center_min_distance_km": 12.0,
+    "edge_to_edge_min_buffer_km": 10.8,
+    "train_patches_inside_test_rectangle": 0,
+    "detailed_explanation": "The BigEarthNet-14k Serbia split was formed using concentric spatial windows: the test set occupies the inner core (rows 23-68, cols 23-68), the validation set forms an intervening ring, and the training set occupies the outer periphery (outside rows 13-77, cols 13-77). Consequently, zero training patches lie inside the test rectangle, maintaining a minimum Chebyshev distance of 10.0 patch units (12.0 km center-to-center, 10.8 km edge-to-edge intervening validation buffer) from every test patch."
   },
   "software_environment": {
     "os": "Windows 11",
@@ -639,5 +645,28 @@
       "hamming_loss": 0.1057
     }
   },
-  "reproduction_command": "python scripts/benchmark_controlled_grid.py"
+  "reproduction_command": "python scripts/benchmark_controlled_grid.py",
+  "feature_schema_sha256": "2287685651c1d3ef229e6951634928380ac31f5938929fa771f30f6bc5c26b04",
+  "target_labels_sha256": "498c7c8b89383daa82311427e3cb7ab6977cbe80e0515ddf6360e327605261f3",
+  "source_and_benchmark_script_hashes_sha256": {
+    "scripts/benchmark_controlled_grid.py": "58ccaf2c4f7f8d7278b537a4353ff727f021e46f96b4332d1185b4828245942d",
+    "scripts/evaluate_router_benchmark.py": "0b9e279870d4c9c140e2f218856383d4f1f2ce173de45e67acf8d59c3f56a2e4",
+    "scripts/extract_phase2_features.py": "fa2ec7864688fec787bc4473307597c2f8ba9320147b07efcd9458cae9e0998f",
+    "satquery/features/multimodal.py": "276a7ec90b8b80b0a16eadfea79add8e545c1b3274e38956f587dbbb201efb7e",
+    "satquery/specialists/land_cover.py": "ac67a30fe37162bfeacdb7c160cc08b00a5b31d21cba56f8d2a8d79d0e5e9b34",
+    "satquery/specialists/change_detection.py": "05a4ba34348cafcfa999462887dad82e50aeab5eca308753ba140de58b7097b8",
+    "satquery/router.py": "a614fa86d0e49c2015cb049e55a40f278f01ca790a28c36b5da1597babc2ab3e"
+  },
+  "training_execution": {
+    "training_script": "scripts/benchmark_phase2_models.py",
+    "training_command": "python scripts/benchmark_phase2_models.py",
+    "execution_environment": "Python 3.14.3 on Windows 11 (64-bit AMD64)",
+    "parallelism": "n_jobs=-1 across 16 binary LGBMClassifier fits"
+  },
+  "version_control_and_test_record": {
+    "baseline_commit": "86bc2bf (47 tests passing)",
+    "verification_commit": "5a75976 (49 tests passing, raw-TIFF parity tests added)",
+    "total_tests_passing": 49,
+    "test_pass_rate": "100.0%"
+  }
 }

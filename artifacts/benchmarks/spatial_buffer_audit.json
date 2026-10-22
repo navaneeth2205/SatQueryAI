@@ -1,0 +1,149 @@
+{
+  "audit_title": "BigEarthNet-14k Serbia Spatial Buffer and Coordinate Audit",
+  "patch_resolution_meters": 10.0,
+  "patch_size_pixels": 120,
+  "patch_size_km": 1.2,
+  "distance_metrics_definition": {
+    "grid_unit": "Chebyshev distance in patch units max(|r1 - r2|, |c1 - c2|)",
+    "center_to_center_km": "grid_units * 1.2 km",
+    "edge_to_edge_km": "max(0, (grid_units - 1)) * 1.2 km (intervening spatial buffer)"
+  },
+  "tile_breakdown": {
+    "T34TCR": {
+      "num_train_patches": 2119,
+      "num_val_patches": 1141,
+      "num_test_patches": 1604,
+      "test_coordinate_bounds": {
+        "r_min": 27,
+        "r_max": 68,
+        "c_min": 23,
+        "c_max": 68
+      },
+      "val_coordinate_bounds": {
+        "r_min": 26,
+        "r_max": 77,
+        "c_min": 13,
+        "c_max": 77
+      },
+      "train_coordinate_bounds": {
+        "r_min": 28,
+        "r_max": 90,
+        "c_min": 0,
+        "c_max": 90
+      },
+      "train_patches_inside_test_box": 0,
+      "chebyshev_min_distance_distribution_patches": {
+        "min": 10.0,
+        "p25": 14.0,
+        "median": 18.0,
+        "mean": 18.85,
+        "p75": 23.25,
+        "max": 33.0
+      },
+      "center_to_center_km": {
+        "min": 12.0,
+        "mean": 22.62,
+        "max": 39.6
+      },
+      "edge_to_edge_buffer_km": {
+        "min": 10.8,
+        "mean": 21.42,
+        "max": 38.4
+      }
+    },
+    "T34TEQ": {
+      "num_train_patches": 2782,
+      "num_val_patches": 1286,
+      "num_test_patches": 1278,
+      "test_coordinate_bounds": {
+        "r_min": 23,
+        "r_max": 68,
+        "c_min": 23,
+        "c_max": 68
+      },
+      "val_coordinate_bounds": {
+        "r_min": 13,
+        "r_max": 77,
+        "c_min": 13,
+        "c_max": 77
+      },
+      "train_coordinate_bounds": {
+        "r_min": 0,
+        "r_max": 90,
+        "c_min": 0,
+        "c_max": 90
+      },
+      "train_patches_inside_test_box": 0,
+      "chebyshev_min_distance_distribution_patches": {
+        "min": 10.0,
+        "p25": 13.0,
+        "median": 17.0,
+        "mean": 17.64,
+        "p75": 22.0,
+        "max": 33.0
+      },
+      "center_to_center_km": {
+        "min": 12.0,
+        "mean": 21.17,
+        "max": 39.6
+      },
+      "edge_to_edge_buffer_km": {
+        "min": 10.8,
+        "mean": 19.97,
+        "max": 38.4
+      }
+    },
+    "T34TFN": {
+      "num_train_patches": 1706,
+      "num_val_patches": 774,
+      "num_test_patches": 366,
+      "test_coordinate_bounds": {
+        "r_min": 23,
+        "r_max": 47,
+        "c_min": 23,
+        "c_max": 44
+      },
+      "val_coordinate_bounds": {
+        "r_min": 13,
+        "r_max": 52,
+        "c_min": 13,
+        "c_max": 77
+      },
+      "train_coordinate_bounds": {
+        "r_min": 0,
+        "r_max": 51,
+        "c_min": 0,
+        "c_max": 90
+      },
+      "train_patches_inside_test_box": 0,
+      "chebyshev_min_distance_distribution_patches": {
+        "min": 11.0,
+        "p25": 13.0,
+        "median": 15.0,
+        "mean": 15.7,
+        "p75": 18.0,
+        "max": 25.0
+      },
+      "center_to_center_km": {
+        "min": 13.2,
+        "mean": 18.85,
+        "max": 30.0
+      },
+      "edge_to_edge_buffer_km": {
+        "min": 12.0,
+        "mean": 17.65,
+        "max": 28.8
+      }
+    }
+  },
+  "overall_dataset_summary": {
+    "total_test_patches": 3248,
+    "min_distance_patches": 10.0,
+    "center_to_center_min_km": 12.0,
+    "edge_to_edge_min_buffer_km": 10.8,
+    "mean_distance_patches": 18.02,
+    "mean_center_to_center_km": 21.62,
+    "mean_edge_to_edge_km": 20.42,
+    "patches_with_distance_under_10_units": 0
+  }
+}
