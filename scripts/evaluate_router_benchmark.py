@@ -59,7 +59,7 @@ def main():
     review_rate = float(np.mean(val_review))
     mean_confidence = float(np.mean(val_conf))
 
-    print("\n================ Task Router Benchmark (Validation Set N=25) ================")
+    print(f"\n================ Task Router Benchmark (Validation Set N={len(val_queries)}) ================")
     print(f"Weighted Precision: {overall_prec:.4f}")
     print(f"Weighted Recall:    {overall_rec:.4f}")
     print(f"Weighted F1:        {overall_f1:.4f}")

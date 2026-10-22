@@ -1,0 +1,82 @@
+{
+  "overall_precision": 0.815,
+  "overall_recall": 0.8036,
+  "overall_f1": 0.797,
+  "macro_f1": 0.7979,
+  "mean_confidence": 0.597,
+  "safety_review_rate": 0.625,
+  "confusion_matrix": [
+    [
+      8,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      6,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      1,
+      1,
+      6,
+      0,
+      0,
+      1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      8,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      7,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      2,
+      4,
+      1
+    ],
+    [
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      6
+    ]
+  ],
+  "classes": [
+    "CHANGE_DETECTION",
+    "CHANGE_VQA",
+    "LAND_COVER_CLASSIFICATION",
+    "OPTICAL_SAR_FUSION",
+    "SCENE_CAPTIONING",
+    "SINGLE_IMAGE_VQA",
+    "VISUAL_GROUNDING"
+  ]
+}

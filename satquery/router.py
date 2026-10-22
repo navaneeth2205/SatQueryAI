@@ -210,12 +210,11 @@ class TaskRouter:
                         cls for cls in self.classes_
                         if obs_meta.is_compatible_with(cls)
                     ]
-                    cand_probs = [prob_dict[cls] for cls in temporal_candidates] if temporal_candidates else []
-                    best_cand_score = max(cand_probs) if cand_probs else 0.0
-
-                    if best_cand_score >= 0.15:
+                    if temporal_candidates:
+                        cand_probs = [prob_dict[cls] for cls in temporal_candidates]
                         best_cand_idx = int(np.argmax(cand_probs))
                         selected_task = temporal_candidates[best_cand_idx]
+                        best_cand_score = cand_probs[best_cand_idx]
                         input_compatibility = True
                         routing_reason = (
                             f"Linguistic model tentatively suggested '{text_task}' ({text_confidence*100:.1f}%), "
