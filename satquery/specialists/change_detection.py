@@ -52,39 +52,68 @@ class TemporalDifferenceBaseline(BaseSpecialist):
             except Exception:
                 pass
 
-    def _normalize_image(self, arr: np.ndarray) -> np.ndarray:
+    def _normalize_pair(
+        self,
+        t1_arr: np.ndarray,
+        t2_arr: np.ndarray,
+        product_type: Optional[str] = None,
+        source_dtype: Optional[str] = None
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Apply reproducible, documented scaling across channels.
-        - 8-bit imagery ([0, 255]) is scaled by 255.0 to [0, 1] (normalized digital values).
-        - Multi-band 12-bit / 16-bit reflectance ([0, 10000+]) is scaled by 10000.0.
-        - Existing float arrays in [0, 1] are preserved.
-        """
-        max_val = np.nanmax(arr) if arr.size > 0 else 1.0
-        if max_val > 255.0:
-            return arr / 10000.0
-        elif max_val > 1.0:
-            return arr / 255.0
-        return arr
+        Apply product-grounded, documented scaling jointly across both observations in a temporal pair.
 
-    def _normalize_pair(self, t1_arr: np.ndarray, t2_arr: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-        """
-        Apply documented scaling jointly across both observations in a temporal pair.
-        - If max value across both images > 255.0 (16-bit surface reflectance x 10,000): scale both by 10,000.0.
-        - If max value across both images > 1.0 (8-bit digital values): scale both by 255.0.
-        - If already normalized in [0, 1]: preserve both without scaling.
+        Guarantees:
+        1. 8-bit RGB Imagery (e.g., OSCD RGB, source_dtype='uint8' or product_type='rgb_8bit'):
+           Scaled strictly by 255.0 to yield normalized uncalibrated digital values in [0, 1].
+           Rejects negative values or values exceeding 255.0.
+        2. 16-bit Surface Reflectance (e.g., Sentinel-2 L2A, source_dtype='uint16' or product_type='s2_l2a'):
+           Scaled strictly by 10,000.0 to yield dimensionless surface reflectance in [0, 1].
+        3. Normalized Floats:
+           If arrays are already in [0, 1], preserved without scaling.
+           If max value is in (1, 255], scaled by 255.0 as digital values.
+           If max value is in (255, 15000], scaled by 10,000.0 as 10k-scaled reflectance.
         Guarantees both observations (T1, T2) are scaled by an identical factor to avoid artificial differentials.
         """
         max_val = max(
             float(np.nanmax(t1_arr)) if t1_arr.size > 0 else 0.0,
             float(np.nanmax(t2_arr)) if t2_arr.size > 0 else 0.0
         )
-        if max_val > 255.0:
-            scale = 10000.0
-        elif max_val > 1.0:
+        min_val = min(
+            float(np.nanmin(t1_arr)) if t1_arr.size > 0 else 0.0,
+            float(np.nanmin(t2_arr)) if t2_arr.size > 0 else 0.0
+        )
+        if min_val < 0.0:
+            raise ValueError(f"Unphysical negative pixel values ({min_val}) detected in temporal optical imagery.")
+
+        # Product-type or dtype priority
+        if product_type in ("rgb_8bit", "oscd_rgb") or source_dtype == "uint8":
+            if max_val > 255.0:
+                raise ValueError(f"Pixel value {max_val} exceeds 8-bit maximum (255.0).")
             scale = 255.0
+        elif product_type in ("s2_l2a", "surface_reflectance_10k") or source_dtype in ("uint16", "int16"):
+            scale = 10000.0
         else:
-            scale = 1.0
+            # Type-inferred fallback with verified product boundaries
+            if max_val <= 1.0:
+                scale = 1.0
+            elif max_val <= 255.0:
+                scale = 255.0
+            elif max_val <= 15000.0:
+                scale = 10000.0
+            else:
+                raise ValueError(f"Pixel values exceed documented Sentinel-2 L2A range: max_val={max_val}")
+
         return t1_arr / scale, t2_arr / scale
+
+    def _normalize_image(
+        self,
+        arr: np.ndarray,
+        product_type: Optional[str] = None,
+        source_dtype: Optional[str] = None
+    ) -> np.ndarray:
+        """Single-observation wrapper around product-grounded _normalize_pair."""
+        t1_norm, _ = self._normalize_pair(arr, arr, product_type=product_type, source_dtype=source_dtype)
+        return t1_norm
 
     def supports_input(self, input_data: Any) -> Tuple[bool, Optional[str]]:
         """
@@ -118,7 +147,9 @@ class TemporalDifferenceBaseline(BaseSpecialist):
         self,
         t1_arr: np.ndarray,
         t2_arr: np.ndarray,
-        valid_mask: np.ndarray
+        valid_mask: np.ndarray,
+        product_type: Optional[str] = None,
+        source_dtype: Optional[str] = None
     ) -> Tuple[np.ndarray, np.ndarray, List[float]]:
         """
         Compute Normalized Change Vector Analysis (CVA) magnitude and binary mask.
@@ -128,7 +159,9 @@ class TemporalDifferenceBaseline(BaseSpecialist):
             binary_mask: 2D boolean array of detected changed valid pixels.
             mean_deltas: List of mean absolute differences per channel over valid pixels.
         """
-        t1_norm, t2_norm = self._normalize_pair(t1_arr, t2_arr)
+        t1_norm, t2_norm = self._normalize_pair(
+            t1_arr, t2_arr, product_type=product_type, source_dtype=source_dtype
+        )
 
         # 1. Per-channel absolute differences
         diff = np.abs(t2_norm - t1_norm)
@@ -209,9 +242,12 @@ class TemporalDifferenceBaseline(BaseSpecialist):
             t1, t2 = input_data[0], input_data[1]
             nodata = None
 
+        product_type = input_data.get("product_type") if isinstance(input_data, dict) else None
         val = validate_temporal_pair(t1, t2, nodata_value=nodata)
         cva_norm, binary_mask, mean_deltas = self.compute_change_map(
-            val.t1_array, val.t2_array, val.valid_mask
+            val.t1_array, val.t2_array, val.valid_mask,
+            product_type=product_type,
+            source_dtype=val.source_dtype
         )
 
         changed_pixels = int(np.sum(binary_mask))

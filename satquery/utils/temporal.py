@@ -29,19 +29,25 @@ class TemporalPairValidation:
     total_pixels: int = 0
     valid_pixels: int = 0
     valid_fraction: float = 0.0
+    source_dtype: str = "float32" 
 
 
-def _load_image_array(img_input: Any) -> np.ndarray:
-    """Load an image from filepath, PIL Image, or numpy array."""
+def _load_image_array(img_input: Any) -> Tuple[np.ndarray, str]:
+    """Load an image from filepath, PIL Image, or numpy array and preserve original dtype."""
     if isinstance(img_input, (str, Path)):
         p = Path(img_input)
         if not p.exists():
             raise FileNotFoundError(f"Temporal image file not found: {p}")
         with Image.open(p) as img:
-            arr = np.array(img).astype(np.float32)
+            raw_arr = np.array(img)
+            source_dtype = str(raw_arr.dtype)
+            arr = raw_arr.astype(np.float32)
     elif isinstance(img_input, Image.Image):
-        arr = np.array(img_input).astype(np.float32)
+        raw_arr = np.array(img_input)
+        source_dtype = str(raw_arr.dtype)
+        arr = raw_arr.astype(np.float32)
     elif isinstance(img_input, np.ndarray):
+        source_dtype = str(img_input.dtype)
         arr = img_input.astype(np.float32, copy=False)
     else:
         raise TypeError(f"Unsupported temporal input type: {type(img_input)}. Expected Path, str, PIL.Image, or np.ndarray.")
@@ -56,7 +62,7 @@ def _load_image_array(img_input: Any) -> np.ndarray:
     else:
         raise ValueError(f"Expected 2D or 3D image array, got shape {arr.shape}")
 
-    return arr
+    return arr, source_dtype
 
 
 def validate_temporal_pair(
@@ -84,8 +90,9 @@ def validate_temporal_pair(
         )
 
     try:
-        t1 = _load_image_array(t1_input)
-        t2 = _load_image_array(t2_input)
+        t1, dt1 = _load_image_array(t1_input)
+        t2, dt2 = _load_image_array(t2_input)
+        pair_dtype = dt1 if dt1 == dt2 else f"{dt1}_{dt2}"
     except Exception as e:
         return TemporalPairValidation(
             is_valid=False,
@@ -145,5 +152,6 @@ def validate_temporal_pair(
         channels=channels,
         total_pixels=total_pixels,
         valid_pixels=valid_pixels,
-        valid_fraction=valid_fraction
+        valid_fraction=valid_fraction,
+        source_dtype=pair_dtype
     )
