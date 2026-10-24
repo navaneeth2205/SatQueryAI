@@ -219,7 +219,8 @@ def create_app() -> Flask:
                 input_data = {
                     "t1": str(t1_path),
                     "t2": str(t2_path),
-                    "scene_name": str(row["scene_name"])
+                    "scene_name": str(row["scene_name"]),
+                    "product_type": "oscd_rgb"
                 }
                 scene_meta = {
                     "scene_name": str(row["scene_name"]),
@@ -275,7 +276,9 @@ def create_app() -> Flask:
                     _, pred_mask, _ = temp_baseline.compute_change_map(
                         np.array(im1).astype(np.float32),
                         np.array(im2).astype(np.float32),
-                        np.ones((im1.size[1], im1.size[0]), dtype=bool)
+                        np.ones((im1.size[1], im1.size[0]), dtype=bool),
+                        product_type="oscd_rgb",
+                        source_dtype="uint8"
                     )
                     overlay_img = _create_change_overlay(im2, pred_mask, bbox=bbox)
                     visual_assets["change_overlay"] = _encode_image_base64(overlay_img)

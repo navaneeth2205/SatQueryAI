@@ -62,17 +62,18 @@ class TemporalDifferenceBaseline(BaseSpecialist):
         """
         Apply product-grounded, documented scaling jointly across both observations in a temporal pair.
 
-        Guarantees:
-        1. 8-bit RGB Imagery (e.g., OSCD RGB, source_dtype='uint8' or product_type='rgb_8bit'):
+        Strict Rules:
+        1. 8-bit RGB Digital Values (e.g., OSCD RGB, source_dtype='uint8' or product_type='rgb_8bit'):
            Scaled strictly by 255.0 to yield normalized uncalibrated digital values in [0, 1].
            Rejects negative values or values exceeding 255.0.
-        2. 16-bit Surface Reflectance (e.g., Sentinel-2 L2A, source_dtype='uint16' or product_type='s2_l2a'):
+        2. Sentinel-2 Level-2A BOA Surface Reflectance (source_dtype='uint16' or product_type='s2_l2a'):
            Scaled strictly by 10,000.0 to yield dimensionless surface reflectance in [0, 1].
-        3. Normalized Floats:
-           If arrays are already in [0, 1], preserved without scaling.
-           If max value is in (1, 255], scaled by 255.0 as digital values.
-           If max value is in (255, 15000], scaled by 10,000.0 as 10k-scaled reflectance.
-        Guarantees both observations (T1, T2) are scaled by an identical factor to avoid artificial differentials.
+           Rejects negative values or values exceeding 10,000.0 (reflectance ceiling 1.0).
+        3. Pre-normalized Float Observations (product_type='pre_normalized' or float arrays with all values in [0.0, 1.0]):
+           Preserved without scaling (scale = 1.0).
+        4. Ambiguous Raw Floating-Point Inputs:
+           Floating-point arrays with values > 1.0 without declared product_type are rejected
+           to prevent silent value-guessing.
         """
         max_val = max(
             float(np.nanmax(t1_arr)) if t1_arr.size > 0 else 0.0,
@@ -82,26 +83,36 @@ class TemporalDifferenceBaseline(BaseSpecialist):
             float(np.nanmin(t1_arr)) if t1_arr.size > 0 else 0.0,
             float(np.nanmin(t2_arr)) if t2_arr.size > 0 else 0.0
         )
-        if min_val < 0.0:
-            raise ValueError(f"Unphysical negative pixel values ({min_val}) detected in temporal optical imagery.")
 
-        # Product-type or dtype priority
-        if product_type in ("rgb_8bit", "oscd_rgb") or source_dtype == "uint8":
-            if max_val > 255.0:
-                raise ValueError(f"Pixel value {max_val} exceeds 8-bit maximum (255.0).")
-            scale = 255.0
-        elif product_type in ("s2_l2a", "surface_reflectance_10k") or source_dtype in ("uint16", "int16"):
-            scale = 10000.0
-        else:
-            # Type-inferred fallback with verified product boundaries
-            if max_val <= 1.0:
-                scale = 1.0
-            elif max_val <= 255.0:
-                scale = 255.0
-            elif max_val <= 15000.0:
-                scale = 10000.0
+        resolved_product = product_type
+        if resolved_product is None:
+            if source_dtype == "uint8":
+                resolved_product = "rgb_8bit"
+            elif source_dtype in ("uint16", "int16"):
+                resolved_product = "s2_l2a"
+            elif max_val <= 1.0 and min_val >= 0.0:
+                resolved_product = "pre_normalized"
             else:
-                raise ValueError(f"Pixel values exceed documented Sentinel-2 L2A range: max_val={max_val}")
+                raise ValueError(
+                    f"Ambiguous floating-point temporal observation with unscaled values (min={min_val:.2f}, max={max_val:.2f}). "
+                    f"For unscaled digital numbers or surface reflectance, explicitly specify 'product_type' ('rgb_8bit' or 's2_l2a') "
+                    f"in the input dictionary, or pre-normalize observations to [0.0, 1.0]."
+                )
+
+        if resolved_product in ("rgb_8bit", "oscd_rgb"):
+            if min_val < 0.0 or max_val > 255.0:
+                raise ValueError(f"Values outside valid 8-bit digital range [0, 255]: min={min_val}, max={max_val}")
+            scale = 255.0
+        elif resolved_product in ("s2_l2a", "surface_reflectance_10k"):
+            if min_val < 0.0 or max_val > 10000.0:
+                raise ValueError(f"Values outside valid Sentinel-2 L2A reflectance range [0, 10000]: min={min_val}, max={max_val}")
+            scale = 10000.0
+        elif resolved_product in ("pre_normalized", "normalized_float"):
+            if min_val < 0.0 or max_val > 1.0:
+                raise ValueError(f"Values outside valid pre-normalized range [0.0, 1.0]: min={min_val}, max={max_val}")
+            scale = 1.0
+        else:
+            raise ValueError(f"Unsupported product_type '{resolved_product}'. Expected 'rgb_8bit', 's2_l2a', or 'pre_normalized'.")
 
         return t1_arr / scale, t2_arr / scale
 
@@ -119,18 +130,20 @@ class TemporalDifferenceBaseline(BaseSpecialist):
         """
         Validate whether input is a compatible temporal pair.
         Supports:
-          - Dict: {"t1": ..., "t2": ..., "nodata_value": ...}
+          - Dict: {"t1": ..., "t2": ..., "nodata_value": ..., "product_type": ...}
           - Tuple / List: (t1, t2)
         """
         if input_data is None:
             return False, "Input data is None. Expected temporal pair (t1, t2)."
 
+        product_type = None
         if isinstance(input_data, dict):
             if "t1" not in input_data or "t2" not in input_data:
                 return False, "Input dict must contain both 't1' and 't2' keys."
             t1 = input_data["t1"]
             t2 = input_data["t2"]
             nodata = input_data.get("nodata_value")
+            product_type = input_data.get("product_type")
         elif isinstance(input_data, (tuple, list)) and len(input_data) == 2:
             t1, t2 = input_data[0], input_data[1]
             nodata = None
@@ -140,6 +153,16 @@ class TemporalDifferenceBaseline(BaseSpecialist):
         val_res = validate_temporal_pair(t1, t2, nodata_value=nodata)
         if not val_res.is_valid:
             return False, val_res.error_message
+
+        # Verify product-grounded normalization
+        try:
+            self._normalize_pair(
+                val_res.t1_array, val_res.t2_array,
+                product_type=product_type,
+                source_dtype=val_res.source_dtype
+            )
+        except ValueError as err:
+            return False, str(err)
 
         return True, None
 

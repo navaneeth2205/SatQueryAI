@@ -6,7 +6,8 @@
   "distance_metrics_definition": {
     "grid_unit": "Chebyshev distance in patch units max(|r1 - r2|, |c1 - c2|)",
     "center_to_center_km": "grid_units * 1.2 km",
-    "edge_to_edge_km": "max(0, (grid_units - 1)) * 1.2 km (intervening spatial buffer)"
+    "edge_to_edge_km": "max(0, (grid_units - 1)) * 1.2 km (intervening spatial buffer)",
+    "scientific_characterization": "Held-out test-patch evaluation within shared MGRS tiles, with a reported minimum Chebyshev separation of 10 grid units (12 km center-to-center under the assumed 1.2 km grid spacing)."
   },
   "tile_breakdown": {
     "T34TCR": {

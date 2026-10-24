@@ -93,3 +93,49 @@ def test_nan_infinite_value_masking():
     assert val.is_valid
     assert val.valid_pixels == 390
     assert val.total_pixels == 400
+
+
+def test_oscd_rgb_uint8_scaling():
+    """Verify uint8 observations are strictly scaled by 255.0 on both dates."""
+    baseline = TemporalDifferenceBaseline()
+    t1 = np.full((20, 20, 3), 128, dtype=np.uint8)
+    t2 = np.full((20, 20, 3), 128, dtype=np.uint8)
+
+    t1_norm, t2_norm = baseline._normalize_pair(t1.astype(np.float32), t2.astype(np.float32), source_dtype="uint8")
+    assert np.isclose(t1_norm.max(), 128.0 / 255.0)
+    assert np.isclose(t2_norm.max(), 128.0 / 255.0)
+    assert t1_norm.max() <= 1.0 and t2_norm.max() <= 1.0
+
+
+def test_ambiguous_raw_float_rejection():
+    """Verify raw float observations with values > 1.0 without declared product_type are rejected."""
+    baseline = TemporalDifferenceBaseline()
+    # Floats with values up to 150.0 without product_type
+    t1 = np.full((20, 20, 3), 150.0, dtype=np.float32)
+    t2 = np.full((20, 20, 3), 150.0, dtype=np.float32)
+
+    res = baseline.predict((t1, t2))
+    assert res.status == SpecialistStatus.INCOMPATIBLE_INPUT
+    assert "Ambiguous floating-point temporal observation" in res.unavailable_reason
+
+
+def test_pre_normalized_float_preservation():
+    """Verify float observations in [0, 1] remain unchanged with scale factor 1.0."""
+    baseline = TemporalDifferenceBaseline()
+    t1 = np.full((20, 20, 3), 0.75, dtype=np.float32)
+    t2 = np.full((20, 20, 3), 0.75, dtype=np.float32)
+
+    t1_norm, t2_norm = baseline._normalize_pair(t1, t2, product_type="pre_normalized")
+    assert np.allclose(t1_norm, 0.75)
+    assert np.allclose(t2_norm, 0.75)
+
+
+def test_invalid_reflectance_range_rejection():
+    """Verify Sentinel-2 L2A observations with values exceeding 10,000 or negative are rejected."""
+    baseline = TemporalDifferenceBaseline()
+    t1 = np.full((20, 20, 3), 12000.0, dtype=np.float32)
+    t2 = np.full((20, 20, 3), 5000.0, dtype=np.float32)
+
+    res = baseline.predict({"t1": t1, "t2": t2, "product_type": "s2_l2a"})
+    assert res.status == SpecialistStatus.INCOMPATIBLE_INPUT
+    assert "Values outside valid Sentinel-2 L2A reflectance range" in res.unavailable_reason
