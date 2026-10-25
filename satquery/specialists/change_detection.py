@@ -9,6 +9,7 @@ Implements the deterministic TemporalDifferenceBaseline:
 """
 
 import json
+import logging
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
 import numpy as np
@@ -17,6 +18,8 @@ import scipy.ndimage
 from satquery.taxonomy import TaskType, InputType
 from satquery.specialists.base import BaseSpecialist, SpecialistResult, SpecialistStatus
 from satquery.utils.temporal import validate_temporal_pair, TemporalPairValidation
+
+logger = logging.getLogger(__name__)
 
 
 class TemporalDifferenceBaseline(BaseSpecialist):
@@ -92,6 +95,10 @@ class TemporalDifferenceBaseline(BaseSpecialist):
                 resolved_product = "s2_l2a"
             elif max_val <= 1.0 and min_val >= 0.0:
                 resolved_product = "pre_normalized"
+                logger.info(
+                    "Auto-resolved temporal observation with values in [0.0, 1.0] to product_type='pre_normalized'. "
+                    "For explicit provenance, provide product_type='pre_normalized' in the input dictionary."
+                )
             else:
                 raise ValueError(
                     f"Ambiguous floating-point temporal observation with unscaled values (min={min_val:.2f}, max={max_val:.2f}). "
@@ -106,6 +113,13 @@ class TemporalDifferenceBaseline(BaseSpecialist):
         elif resolved_product in ("s2_l2a", "surface_reflectance_10k"):
             if min_val < 0.0 or max_val > 10000.0:
                 raise ValueError(f"Values outside valid Sentinel-2 L2A reflectance range [0, 10000]: min={min_val}, max={max_val}")
+            if max_val <= 1.0 and source_dtype in ("float32", "float64") and not np.all(t1_arr == 0):
+                raise ValueError(
+                    f"Temporal observation with float values in [0.0, 1.0] (max_val={max_val:.4f}) received under product_type='{resolved_product}'. "
+                    f"Sentinel-2 L2A ('s2_l2a') expects raw scaled BOA digital numbers in [0, 10000] (scale factor 10000.0). "
+                    f"If the observation has already been converted to surface reflectance in [0.0, 1.0], "
+                    f"explicitly specify product_type='pre_normalized' to prevent redundant down-scaling."
+                )
             scale = 10000.0
         elif resolved_product in ("pre_normalized", "normalized_float"):
             if min_val < 0.0 or max_val > 1.0:

@@ -139,3 +139,15 @@ def test_invalid_reflectance_range_rejection():
     res = baseline.predict({"t1": t1, "t2": t2, "product_type": "s2_l2a"})
     assert res.status == SpecialistStatus.INCOMPATIBLE_INPUT
     assert "Values outside valid Sentinel-2 L2A reflectance range" in res.unavailable_reason
+
+
+def test_already_normalized_float_with_s2_l2a_rejection():
+    """Verify float observations in [0, 1] passed under product_type='s2_l2a' are rejected to prevent double-scaling."""
+    baseline = TemporalDifferenceBaseline()
+    t1 = np.full((20, 20, 3), 0.45, dtype=np.float32)
+    t2 = np.full((20, 20, 3), 0.45, dtype=np.float32)
+
+    res = baseline.predict({"t1": t1, "t2": t2, "product_type": "s2_l2a"})
+    assert res.status == SpecialistStatus.INCOMPATIBLE_INPUT
+    assert "received under product_type='s2_l2a'" in res.unavailable_reason
+    assert "pre_normalized" in res.unavailable_reason

@@ -654,7 +654,7 @@
     "scripts/extract_phase2_features.py": "fa2ec7864688fec787bc4473307597c2f8ba9320147b07efcd9458cae9e0998f",
     "satquery/features/multimodal.py": "276a7ec90b8b80b0a16eadfea79add8e545c1b3274e38956f587dbbb201efb7e",
     "satquery/specialists/land_cover.py": "ac67a30fe37162bfeacdb7c160cc08b00a5b31d21cba56f8d2a8d79d0e5e9b34",
-    "satquery/specialists/change_detection.py": "fd0e8c7834a01ba2fc17810936f96484591c791c810e120c0a60f9cf853745a5",
+    "satquery/specialists/change_detection.py": "3979f8c30dff652571c9d63026e38f4406959c86c1964f5f107335aea6b7d6ef",
     "satquery/router.py": "a614fa86d0e49c2015cb049e55a40f278f01ca790a28c36b5da1597babc2ab3e",
     "satquery/utils/temporal.py": "2126aaa91280e18f19d440fe8ea54c10fb5438cc34afc57bcc76c6ee47c4db79"
   },
@@ -666,8 +666,8 @@
   },
   "version_control_and_test_record": {
     "baseline_commit": "86bc2bf (47 tests passing)",
-    "verification_commit": "Current (53 tests passing, strict product-grounded normalization)",
-    "total_tests_passing": 53,
+    "verification_commit": "4ccd604 (54 tests passing, strict normalization, S2 double-downscaling safeguards, 23.3M coordinate audit)",
+    "total_tests_passing": 54,
     "test_pass_rate": "100.0%"
   }
 }
