@@ -151,3 +151,29 @@ def test_already_normalized_float_with_s2_l2a_rejection():
     assert res.status == SpecialistStatus.INCOMPATIBLE_INPUT
     assert "received under product_type='s2_l2a'" in res.unavailable_reason
     assert "pre_normalized" in res.unavailable_reason
+
+
+def test_smoothed_cva_execution():
+    """Verify Gaussian-smoothed CVA executes and records active method in metadata."""
+    baseline = TemporalDifferenceBaseline(method="smoothed", decision_threshold=0.20)
+    t1 = np.full((30, 30, 3), 0.2, dtype=np.float32)
+    t2 = t1.copy()
+    t2[10:20, 10:20, :] = 0.9
+
+    res = baseline.predict({"t1": t1, "t2": t2, "product_type": "pre_normalized"})
+    assert res.status == SpecialistStatus.SUCCESS
+    assert res.execution_metadata["change_detection_method"] == "smoothed"
+    assert res.execution_metadata["changed_pixels"] > 0
+
+
+def test_hysteresis_cva_execution():
+    """Verify dual-threshold hysteresis CVA executes and records active method in metadata."""
+    baseline = TemporalDifferenceBaseline(method="hysteresis", decision_threshold=0.24, hysteresis_low_threshold=0.14)
+    t1 = np.full((30, 30, 3), 0.2, dtype=np.float32)
+    t2 = t1.copy()
+    t2[10:20, 10:20, :] = 0.9
+
+    res = baseline.predict({"t1": t1, "t2": t2, "product_type": "pre_normalized"})
+    assert res.status == SpecialistStatus.SUCCESS
+    assert res.execution_metadata["change_detection_method"] == "hysteresis"
+    assert res.execution_metadata["changed_pixels"] > 0

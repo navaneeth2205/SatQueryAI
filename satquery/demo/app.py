@@ -185,6 +185,7 @@ def create_app() -> Flask:
         cd_idx = payload.get("cd_sample_idx")
         sample_idx = payload.get("sample_idx")
         synthetic_identical = payload.get("synthetic_identical", False)
+        cd_method = payload.get("cd_method", "standard")
 
         if not query:
             return jsonify({"error": "Query string is required."}), 400
@@ -223,12 +224,14 @@ def create_app() -> Flask:
                     "t1": str(t1_path),
                     "t2": str(t2_path),
                     "scene_name": str(row["scene_name"]),
-                    "product_type": "oscd_rgb"
+                    "product_type": "oscd_rgb",
+                    "method": cd_method
                 }
                 scene_meta = {
                     "scene_name": str(row["scene_name"]),
                     "split": str(row["split"]),
-                    "synthetic_identical": synthetic_identical
+                    "synthetic_identical": synthetic_identical,
+                    "method": cd_method
                 }
 
                 # Generate visual base64 thumbnails
@@ -292,10 +295,12 @@ def create_app() -> Flask:
                         np.array(im2).astype(np.float32),
                         np.ones((im1.size[1], im1.size[0]), dtype=bool),
                         product_type="oscd_rgb",
-                        source_dtype="uint8"
+                        source_dtype="uint8",
+                        method=cd_method
                     )
                     overlay_img = _create_change_overlay(im2, pred_mask, bbox=bbox)
                     visual_assets["change_overlay"] = _encode_image_base64(overlay_img)
+                    visual_assets["cd_method"] = cd_method
             except Exception as e:
                 print(f"[API Warning] Failed to compute change overlay: {e}")
 

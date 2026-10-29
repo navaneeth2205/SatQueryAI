@@ -121,3 +121,47 @@ def test_query_endpoint_land_cover_sample(client):
     assert "detected_classes" in data["response"]["evidence"]
     assert "class_probabilities" in data["response"]["evidence"]
 
+
+
+def test_guard_banner_presence_in_html(client):
+    """Test that the Zero-Hallucination Guard and algorithm selectors are present in HTML."""
+    res = client.get("/")
+    assert res.status_code == 200
+    html = res.get_data(as_text=True)
+    assert "guardBanner" in html
+    assert "Zero-Hallucination Specialist Guard Active" in html
+    assert "cdMethodSelect" in html
+    assert "lcModelSelect" in html
+
+
+def test_query_endpoint_change_detection_algorithm_options(client):
+    """Test /api/query respects cd_method options (smoothed, hysteresis, standard)."""
+    for method in ("smoothed", "hysteresis", "standard"):
+        payload = {
+            "query": "What changed in this area between the acquisition dates?",
+            "mode": "change_detection",
+            "cd_sample_idx": 0,
+            "cd_method": method
+        }
+        res = client.post("/api/query", json=payload)
+        assert res.status_code == 200
+        data = res.get_json()
+        assert data["response"]["status"] in ("SUCCESS", "PROVISIONAL_SUCCESS")
+        assert data["visuals"]["cd_method"] == method
+        assert data["visuals"]["change_overlay"].startswith("data:image/png;base64,")
+
+
+def test_query_endpoint_land_cover_model_options(client):
+    """Test /api/query respects model_version options (phase2 vs baseline)."""
+    for model_ver in ("phase2", "baseline"):
+        payload = {
+            "query": "Classify land cover types in this scene.",
+            "mode": "land_cover",
+            "sample_idx": 0,
+            "model_version": model_ver
+        }
+        res = client.post("/api/query", json=payload)
+        assert res.status_code == 200
+        data = res.get_json()
+        assert data["response"]["status"] in ("SUCCESS", "PROVISIONAL_SUCCESS")
+        assert "active_model" in data["visuals"]

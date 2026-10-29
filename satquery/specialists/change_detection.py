@@ -32,9 +32,12 @@ class TemporalDifferenceBaseline(BaseSpecialist):
 
     def __init__(
         self,
-        decision_threshold: float = 0.20,
+        decision_threshold: float = 0.28,
         min_component_area: int = 9,
-        artifacts_dir: Optional[Union[str, Path]] = None
+        artifacts_dir: Optional[Union[str, Path]] = None,
+        method: str = "standard",
+        smoothing_sigma: float = 1.2,
+        hysteresis_low_threshold: float = 0.14
     ):
         super().__init__(
             name="temporal_difference_baseline",
@@ -44,6 +47,9 @@ class TemporalDifferenceBaseline(BaseSpecialist):
         self.decision_threshold = float(decision_threshold)
         self.min_component_area = int(min_component_area)
         self.artifacts_dir = Path(artifacts_dir) if artifacts_dir else None
+        self.method = str(method).lower()
+        self.smoothing_sigma = float(smoothing_sigma)
+        self.hysteresis_low_threshold = float(hysteresis_low_threshold)
 
         # Load validation-tuned threshold from disk if artifact exists
         if self.artifacts_dir and (self.artifacts_dir / "threshold_config.json").exists():
@@ -186,10 +192,12 @@ class TemporalDifferenceBaseline(BaseSpecialist):
         t2_arr: np.ndarray,
         valid_mask: np.ndarray,
         product_type: Optional[str] = None,
-        source_dtype: Optional[str] = None
+        source_dtype: Optional[str] = None,
+        method: Optional[str] = None
     ) -> Tuple[np.ndarray, np.ndarray, List[float]]:
         """
         Compute Normalized Change Vector Analysis (CVA) magnitude and binary mask.
+        Supports standard CVA, Gaussian-smoothed CVA (optimal F1/IoU), and dual-threshold hysteresis CVA (high recall).
         
         Returns:
             cva_norm: 2D float array in [0, 1] representing normalized change magnitude.
@@ -210,8 +218,43 @@ class TemporalDifferenceBaseline(BaseSpecialist):
         cva_norm = rho / np.sqrt(channels)
         cva_norm[~valid_mask] = 0.0
 
-        # 3. Apply validation-selected decision threshold
-        binary_mask = (cva_norm >= self.decision_threshold) & valid_mask
+        # 3. Apply change detection algorithm
+        active_method = (method or getattr(self, "method", "standard")).lower()
+
+        if active_method == "smoothed":
+            # Method 3: Gaussian-smoothed CVA (Optimal F1 and IoU)
+            smoothed = scipy.ndimage.gaussian_filter(cva_norm, sigma=self.smoothing_sigma)
+            binary_mask = (smoothed >= self.decision_threshold) & valid_mask
+        elif active_method == "hysteresis":
+            # Method 4: Dual-threshold hysteresis CVA (High Recall for disaster/emergency monitoring)
+            smoothed = scipy.ndimage.gaussian_filter(cva_norm, sigma=1.0)
+            seeds = (smoothed >= self.decision_threshold) & valid_mask
+            candidates = (smoothed >= self.hysteresis_low_threshold) & valid_mask
+
+            if np.any(seeds):
+                labeled, num_features = scipy.ndimage.label(candidates)
+                if num_features > 0:
+                    seed_labels = np.unique(labeled[seeds])
+                    seed_labels = seed_labels[seed_labels > 0]
+                    keep = np.zeros(num_features + 1, dtype=bool)
+                    keep[seed_labels] = True
+                    binary_mask = keep[labeled] & valid_mask
+                else:
+                    binary_mask = seeds
+            else:
+                binary_mask = np.zeros_like(seeds, dtype=bool)
+        else:
+            # Method 1: Standard CVA baseline
+            binary_mask = (cva_norm >= self.decision_threshold) & valid_mask
+
+        # Apply minimum connected component area filter if specified
+        if self.min_component_area > 1 and np.any(binary_mask):
+            labeled, num_features = scipy.ndimage.label(binary_mask)
+            if num_features > 0:
+                sizes = scipy.ndimage.sum(binary_mask, labeled, range(1, num_features + 1))
+                keep = np.zeros(num_features + 1, dtype=bool)
+                keep[1:] = sizes >= self.min_component_area
+                binary_mask = keep[labeled]
 
         # 4. Compute per-channel mean deltas over valid pixels
         mean_deltas: List[float] = []
@@ -280,11 +323,13 @@ class TemporalDifferenceBaseline(BaseSpecialist):
             nodata = None
 
         product_type = input_data.get("product_type") if isinstance(input_data, dict) else None
+        method = input_data.get("method") if isinstance(input_data, dict) else None
         val = validate_temporal_pair(t1, t2, nodata_value=nodata)
         cva_norm, binary_mask, mean_deltas = self.compute_change_map(
             val.t1_array, val.t2_array, val.valid_mask,
             product_type=product_type,
-            source_dtype=val.source_dtype
+            source_dtype=val.source_dtype,
+            method=method
         )
 
         changed_pixels = int(np.sum(binary_mask))
@@ -317,6 +362,7 @@ class TemporalDifferenceBaseline(BaseSpecialist):
             execution_metadata={
                 "specialist_name": self.name,
                 "specialist_family": "temporal_difference_baseline",
+                "change_detection_method": (method or getattr(self, "method", "standard")).lower(),
                 "total_pixels": val.total_pixels,
                 "valid_pixels": valid_pixels,
                 "valid_pixel_pct": round(val.valid_fraction * 100.0, 2),

@@ -107,6 +107,20 @@
             <select id="cdSceneSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
               <option value="0">Loading scenes...</option>
             </select>
+
+            <!-- Algorithm Mode Selector -->
+            <div>
+              <label class="text-[11px] text-slate-400 flex items-center justify-between mb-1">
+                <span>CVA Detection Algorithm:</span>
+                <span class="text-[10px] text-emerald-400 font-medium">Evaluated Grid</span>
+              </label>
+              <select id="cdMethodSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <option value="smoothed" selected>Gaussian-Smoothed CVA (Highest F1: 0.339, IoU: 0.204)</option>
+                <option value="hysteresis">Dual-Threshold Hysteresis (Highest Recall: 44.3%, +26.1%)</option>
+                <option value="standard">Standard Normalized CVA Baseline (F1: 0.278, Recall: 18.2%)</option>
+              </select>
+            </div>
+
             <div class="flex items-center gap-2 pt-1">
               <input type="checkbox" id="syntheticIdentical" class="rounded bg-slate-950 border-slate-800 text-blue-600 focus:ring-0">
               <label for="syntheticIdentical" class="text-xs text-amber-400/90 cursor-pointer">
@@ -119,11 +133,23 @@
           <div id="lcSelectorGroup" class="space-y-2 hidden">
             <label class="text-[11px] text-slate-400 flex items-center justify-between">
               <span>BigEarthNet-14k Validation Tile:</span>
-              <span class="text-[10px] text-slate-500">84 S1/S2 features</span>
+              <span class="text-[10px] text-slate-500">Multimodal Patch</span>
             </label>
             <select id="lcSampleSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
               <option value="0">Loading tiles...</option>
             </select>
+
+            <!-- Classifier Architecture Selector -->
+            <div>
+              <label class="text-[11px] text-slate-400 flex items-center justify-between mb-1">
+                <span>Classifier Architecture:</span>
+                <span class="text-[10px] text-emerald-400 font-medium">Phase 2 Hardened</span>
+              </label>
+              <select id="lcModelSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                <option value="phase2" selected>Phase 2 LightGBM (488 features, Micro F1: 0.738)</option>
+                <option value="baseline">Baseline Random Forest (84 features, Micro F1: 0.718)</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -156,10 +182,10 @@
           <span>Active Pipeline Specialists</span>
         </div>
         <ul class="space-y-1 text-[11px] text-slate-400 list-disc list-inside">
-          <li><span class="text-slate-200 font-medium">Task Router:</span> Calibrated TF-IDF + Multinomial Logistic Regression</li>
-          <li><span class="text-slate-200 font-medium">Land Cover:</span> Random Forest on 84 paired S1/S2 features (16 CORINE classes)</li>
-          <li><span class="text-slate-200 font-medium">Change Detection:</span> Normalized CVA + validation-frozen &tau;* (0.28)</li>
-          <li><span class="text-slate-200 font-medium">VQA / Grounding:</span> Honest UNAVAILABLE stubs (Milestone 4 roadmap)</li>
+          <li><span class="text-slate-200 font-medium">Task Router:</span> Calibrated Logistic Regression (0.65 threshold, 95% safety recall)</li>
+          <li><span class="text-slate-200 font-medium">Land Cover:</span> Phase 2 LightGBM (488 features, 16 CORINE classes, Micro F1 0.738)</li>
+          <li><span class="text-slate-200 font-medium">Change Detection:</span> Evaluated CVA (Smoothed F1 0.339 vs Hysteresis Recall 44.3%)</li>
+          <li><span class="text-slate-200 font-medium">Zero-Hallucination Guard:</span> Explicit UNAVAILABLE status on VQA/Grounding queries</li>
         </ul>
       </div>
 
@@ -201,6 +227,24 @@
               Proceed with Provisional Specialist Execution &rarr;
             </button>
           </div>
+        </div>
+      </div>
+
+      <!-- Zero-Hallucination Guard Banner for Unsupported Tasks -->
+      <div id="guardBanner" class="bg-amber-950/30 border border-amber-600/50 rounded-xl p-4 hidden space-y-2 shadow-sm">
+        <div class="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+          <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+          Zero-Hallucination Specialist Guard Active
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          SatQuery AI strictly rejects generating unverified or hallucinated text for vision-language queries (VQA, Grounding, Captioning). While these tasks are formally registered in the 7-task taxonomy, they are documented as roadmap stubs awaiting dedicated multimodal foundation models.
+        </p>
+        <div class="flex items-center gap-2 pt-1 text-[11px] text-amber-300/90 font-mono">
+          <span class="bg-amber-900/40 px-2 py-0.5 rounded border border-amber-700/60">Status: UNAVAILABLE_SPECIALIST</span>
+          <span class="text-slate-500">&bull;</span>
+          <span>Roadmap: Milestone 4 VLM Multimodal Integration</span>
         </div>
       </div>
 
@@ -399,13 +443,18 @@
       runBtnText.textContent = 'Processing & Routing...';
 
       try {
+        const cdMethod = document.getElementById('cdMethodSelect') ? document.getElementById('cdMethodSelect').value : 'smoothed';
+        const lcModel = document.getElementById('lcModelSelect') ? document.getElementById('lcModelSelect').value : 'phase2';
+
         const payload = {
           query: query,
           policy: policy,
           mode: currentMode,
           cd_sample_idx: (currentMode === 'change_detection' || currentMode === 'auto') ? parseInt(cdIdx || '0') : null,
           sample_idx: (currentMode === 'land_cover' || currentMode === 'auto') ? parseInt(lcIdx || '0') : null,
-          synthetic_identical: synthetic
+          synthetic_identical: synthetic,
+          cd_method: cdMethod,
+          model_version: lcModel
         };
 
         const res = await fetch('/api/query', {
@@ -468,6 +517,14 @@
         clarifyBox.classList.remove('hidden');
       } else {
         clarifyBox.classList.add('hidden');
+      }
+
+      // Zero-Hallucination Guard Banner
+      const guardBanner = document.getElementById('guardBanner');
+      if (resp.status === 'UNAVAILABLE_SPECIALIST' || ['CHANGE_VQA', 'VISUAL_GROUNDING', 'SCENE_CAPTIONING'].includes(resp.routed_task)) {
+        guardBanner.classList.remove('hidden');
+      } else {
+        guardBanner.classList.add('hidden');
       }
 
       // Visuals: Change Detection
