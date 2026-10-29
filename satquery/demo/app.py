@@ -81,6 +81,9 @@ def create_app() -> Flask:
     ben_features_path = REPO_ROOT / "initial_trails" / "X_val_full.npy"
     ben_features = np.load(ben_features_path) if ben_features_path.exists() else None
 
+    ben_features_p2_path = REPO_ROOT / "data" / "X_val_phase2.npy"
+    ben_features_p2 = np.load(ben_features_p2_path) if ben_features_p2_path.exists() else None
+
     # Cached engines for both policy modes
     engines = {
         "provisional": SatQueryEngine.create_default(routing_policy="provisional"),
@@ -238,8 +241,18 @@ def create_app() -> Flask:
 
         elif effective_mode == "land_cover":
             target_sample_idx = int(sample_idx) if sample_idx is not None else 0
-            if ben_features is not None and 0 <= target_sample_idx < len(ben_features):
+            model_ver = payload.get("model_version", "phase2")
+            feats = None
+            if model_ver == "phase2" and ben_features_p2 is not None and 0 <= target_sample_idx < len(ben_features_p2):
+                feats = ben_features_p2[target_sample_idx]
+                active_model_desc = "Phase 2 LightGBM (488 features, per-class thresholds)"
+            elif ben_features is not None and 0 <= target_sample_idx < len(ben_features):
                 feats = ben_features[target_sample_idx]
+                active_model_desc = "Baseline Random Forest (84 global statistical features)"
+            else:
+                active_model_desc = "None"
+
+            if feats is not None:
                 row = ben_df.iloc[target_sample_idx] if not ben_df.empty else {}
                 input_data = {
                     "features": feats,
@@ -249,6 +262,7 @@ def create_app() -> Flask:
                 visual_assets["mode"] = "land_cover"
                 visual_assets["patch_id"] = str(row.get("patch_id", f"sample_{target_sample_idx}"))
                 visual_assets["ground_truth_labels"] = list(row.get("labels", []))
+                visual_assets["active_model"] = active_model_desc
 
         # 4. Execute query through SatQueryEngine
         response = engine.process_query(query, input_data=input_data)
