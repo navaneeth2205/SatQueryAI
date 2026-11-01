@@ -29,6 +29,21 @@ class TaskType(str, Enum):
 
 
 @dataclass(frozen=True)
+class SpecialistInputContract:
+    """
+    Formal execution contract defining required data modalities,
+    accepted representations, temporal constraints, and numerical formats for a specialist.
+    """
+    task: TaskType
+    required_modalities: List[str]
+    accepted_representations: List[str]
+    temporal_relationship: str
+    accepted_dtypes: List[str]
+    accepted_scalings: List[str]
+    is_registered: bool = False
+
+
+@dataclass(frozen=True)
 class TaskDefinition:
     """Metadata and execution specification for a specialist task."""
     task: TaskType
@@ -39,6 +54,7 @@ class TaskDefinition:
     primary_benchmark_datasets: List[str]
     evaluation_metrics: List[str]
     default_evidence_type: str
+    contract: Optional[SpecialistInputContract] = None
 
 
 TASK_REGISTRY: Dict[TaskType, TaskDefinition] = {
@@ -50,7 +66,16 @@ TASK_REGISTRY: Dict[TaskType, TaskDefinition] = {
         specialist_model_family="random_forest_xgboost_multilabel",
         primary_benchmark_datasets=["BigEarthNet-14k", "reBEN", "EuroSAT"],
         evaluation_metrics=["Micro F1", "Macro F1", "Hamming Loss"],
-        default_evidence_type="class_probabilities_and_radar_optical_indices"
+        default_evidence_type="class_probabilities_and_radar_optical_indices",
+        contract=SpecialistInputContract(
+            task=TaskType.LAND_COVER_CLASSIFICATION,
+            required_modalities=["optical", "sar"],
+            accepted_representations=["feature_vector", "multimodal_geotiff_pair"],
+            temporal_relationship="single_point",
+            accepted_dtypes=["float32", "float64"],
+            accepted_scalings=["pre_extracted_features", "raw_digital_numbers"],
+            is_registered=True
+        )
     ),
     TaskType.SINGLE_IMAGE_VQA: TaskDefinition(
         task=TaskType.SINGLE_IMAGE_VQA,
@@ -60,7 +85,16 @@ TASK_REGISTRY: Dict[TaskType, TaskDefinition] = {
         specialist_model_family="vlm_rsvqa_specialist",
         primary_benchmark_datasets=["RSVQA", "VRSBench"],
         evaluation_metrics=["Accuracy", "Exact Match", "BLEU"],
-        default_evidence_type="attention_heatmap_and_feature_crop"
+        default_evidence_type="attention_heatmap_and_feature_crop",
+        contract=SpecialistInputContract(
+            task=TaskType.SINGLE_IMAGE_VQA,
+            required_modalities=["optical"],
+            accepted_representations=["single_image"],
+            temporal_relationship="single_point",
+            accepted_dtypes=["uint8", "float32"],
+            accepted_scalings=["rgb_image", "s2_l2a"],
+            is_registered=False
+        )
     ),
     TaskType.SCENE_CAPTIONING: TaskDefinition(
         task=TaskType.SCENE_CAPTIONING,
@@ -70,7 +104,16 @@ TASK_REGISTRY: Dict[TaskType, TaskDefinition] = {
         specialist_model_family="vision_language_captioner",
         primary_benchmark_datasets=["VRSBench", "UCM-Captions"],
         evaluation_metrics=["BLEU-4", "ROUGE-L", "CIDEr", "METEOR"],
-        default_evidence_type="generated_caption_tokens"
+        default_evidence_type="generated_caption_tokens",
+        contract=SpecialistInputContract(
+            task=TaskType.SCENE_CAPTIONING,
+            required_modalities=["optical"],
+            accepted_representations=["single_image"],
+            temporal_relationship="single_point",
+            accepted_dtypes=["uint8", "float32"],
+            accepted_scalings=["rgb_image"],
+            is_registered=False
+        )
     ),
     TaskType.VISUAL_GROUNDING: TaskDefinition(
         task=TaskType.VISUAL_GROUNDING,
@@ -80,7 +123,16 @@ TASK_REGISTRY: Dict[TaskType, TaskDefinition] = {
         specialist_model_family="referring_expression_grounding",
         primary_benchmark_datasets=["VRSBench", "RSVG"],
         evaluation_metrics=["IoU", "mIoU", "mAP@0.5"],
-        default_evidence_type="bounding_box_overlay_and_segmentation_mask"
+        default_evidence_type="bounding_box_overlay_and_segmentation_mask",
+        contract=SpecialistInputContract(
+            task=TaskType.VISUAL_GROUNDING,
+            required_modalities=["optical"],
+            accepted_representations=["single_image"],
+            temporal_relationship="single_point",
+            accepted_dtypes=["uint8", "float32"],
+            accepted_scalings=["rgb_image"],
+            is_registered=False
+        )
     ),
     TaskType.CHANGE_DETECTION: TaskDefinition(
         task=TaskType.CHANGE_DETECTION,
@@ -90,7 +142,16 @@ TASK_REGISTRY: Dict[TaskType, TaskDefinition] = {
         specialist_model_family="siamese_differencing_change_detector",
         primary_benchmark_datasets=["CDVQA", "LEVIR-CD", "OSCD"],
         evaluation_metrics=["mIoU", "Precision", "Recall", "F1-Score"],
-        default_evidence_type="binary_change_mask_and_difference_heatmap"
+        default_evidence_type="binary_change_mask_and_difference_heatmap",
+        contract=SpecialistInputContract(
+            task=TaskType.CHANGE_DETECTION,
+            required_modalities=["optical"],
+            accepted_representations=["temporal_image_pair", "temporal_path_pair"],
+            temporal_relationship="bitemporal_pair",
+            accepted_dtypes=["uint8", "uint16", "float32"],
+            accepted_scalings=["oscd_rgb", "s2_l2a", "pre_normalized"],
+            is_registered=True
+        )
     ),
     TaskType.CHANGE_VQA: TaskDefinition(
         task=TaskType.CHANGE_VQA,
@@ -100,7 +161,16 @@ TASK_REGISTRY: Dict[TaskType, TaskDefinition] = {
         specialist_model_family="multitemporal_vqa_network",
         primary_benchmark_datasets=["CDVQA"],
         evaluation_metrics=["VQA Accuracy", "Answer Agreement"],
-        default_evidence_type="temporal_differential_explanation"
+        default_evidence_type="temporal_differential_explanation",
+        contract=SpecialistInputContract(
+            task=TaskType.CHANGE_VQA,
+            required_modalities=["optical"],
+            accepted_representations=["temporal_image_pair"],
+            temporal_relationship="bitemporal_pair",
+            accepted_dtypes=["uint8", "float32"],
+            accepted_scalings=["rgb_image"],
+            is_registered=False
+        )
     ),
     TaskType.OPTICAL_SAR_FUSION: TaskDefinition(
         task=TaskType.OPTICAL_SAR_FUSION,
@@ -110,7 +180,16 @@ TASK_REGISTRY: Dict[TaskType, TaskDefinition] = {
         specialist_model_family="multimodal_fusion_tammi_sar_opt",
         primary_benchmark_datasets=["BigEarthNet-S1-S2", "MM-RSVQA"],
         evaluation_metrics=["Classification F1", "Cross-Modal Consistency"],
-        default_evidence_type="sar_backscatter_polarization_ratio_and_optical_indices"
+        default_evidence_type="sar_backscatter_polarization_ratio_and_optical_indices",
+        contract=SpecialistInputContract(
+            task=TaskType.OPTICAL_SAR_FUSION,
+            required_modalities=["optical", "sar"],
+            accepted_representations=["multimodal_geotiff_pair", "feature_vector"],
+            temporal_relationship="single_point",
+            accepted_dtypes=["uint16", "float32"],
+            accepted_scalings=["s1_sigma0", "s2_l2a"],
+            is_registered=False
+        )
     )
 }
 
@@ -122,3 +201,9 @@ def get_task_definition(task_name: str) -> Optional[TaskDefinition]:
         return TASK_REGISTRY.get(task_enum)
     except ValueError:
         return None
+
+
+def get_task_contract(task_name_or_enum: Any) -> Optional[SpecialistInputContract]:
+    """Retrieve specialist input contract by enum or string task name."""
+    t_def = get_task_definition(str(task_name_or_enum))
+    return t_def.contract if t_def else None

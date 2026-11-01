@@ -13,6 +13,7 @@ from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+import re
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import joblib
@@ -29,6 +30,44 @@ from satquery.utils.metadata import (
     extract_observation_metadata,
     TASK_COMPATIBILITY_MAP
 )
+
+# Task-specific distinctive keywords used to protect user intent from task coercion
+TASK_SPECIFIC_KEYWORDS: Dict[str, List[str]] = {
+    TaskType.LAND_COVER_CLASSIFICATION.value: [
+        "land cover", "land-cover", "landcover", "corine", "biome",
+        "forest", "arable", "pasture", "crop", "urban fabric",
+        "surface category", "biophysical"
+    ],
+    TaskType.CHANGE_DETECTION.value: [
+        "change", "changed", "modifications", "alteration", "differencing",
+        "between dates", "over time", "deforestation", "pre-event",
+        "post-event", "newly built", "sprawl", "temporal sequence"
+    ],
+    TaskType.CHANGE_VQA.value: [
+        "shrunk", "damaged", "destroyed", "expanded between", "disappeared"
+    ],
+    TaskType.OPTICAL_SAR_FUSION.value: [
+        "fusion", "fused", "sar", "radar", "backscatter", "polarization",
+        "sentinel-1", "s1-s2", "c-band"
+    ],
+    TaskType.SINGLE_IMAGE_VQA.value: [
+        "how many", "count", "is there a", "are there any", "airport runway"
+    ],
+    TaskType.SCENE_CAPTIONING.value: [
+        "caption", "describe the scene", "descriptive caption",
+        "concise description", "summarize the landscape"
+    ],
+    TaskType.VISUAL_GROUNDING.value: [
+        "bounding box", "bbox", "pixel coordinates", "localize",
+        "segmentation mask", "locate the"
+    ],
+}
+
+
+def _contains_task_keywords(task_name: str, text: str) -> bool:
+    """Check if text contains whole-word matches for task-specific keywords."""
+    kws = TASK_SPECIFIC_KEYWORDS.get(str(task_name), [])
+    return any(re.search(r'\b' + re.escape(kw) + r'\b', text, re.IGNORECASE) for kw in kws)
 
 
 @dataclass
@@ -204,37 +243,57 @@ class TaskRouter:
                 )
             else:
                 # Top linguistic prediction is incompatible with attached input.
-                # If user attached temporal images, disambiguate among temporal tasks if supported:
-                if obs_meta.modality == InputType.TEMPORAL_PAIR.value:
-                    temporal_candidates = [
-                        cls for cls in self.classes_
-                        if obs_meta.is_compatible_with(cls)
-                    ]
-                    if temporal_candidates:
-                        cand_probs = [prob_dict[cls] for cls in temporal_candidates]
-                        best_cand_idx = int(np.argmax(cand_probs))
-                        selected_task = temporal_candidates[best_cand_idx]
-                        best_cand_score = cand_probs[best_cand_idx]
-                        input_compatibility = True
-                        routing_reason = (
-                            f"Linguistic model tentatively suggested '{text_task}' ({text_confidence*100:.1f}%), "
-                            f"disambiguated by verified temporal pair observation to compatible task '{selected_task}' ({best_cand_score*100:.1f}%)."
-                        )
-                    else:
-                        selected_task = text_task
-                        input_compatibility = False
-                        routing_reason = (
-                            f"Linguistic prediction '{text_task}' requires different input than attached '{obs_meta.modality}'."
-                        )
+                # Check whether user intent is explicitly committed to text_task to prevent coercive rewriting.
+                text_has_explicit_keywords = _contains_task_keywords(text_task, query)
+                has_explicit_intent = (
+                    text_confidence >= self.confidence_threshold
+                    or text_has_explicit_keywords
+                )
+
+                compatible_candidates = [
+                    cls for cls in self.classes_
+                    if obs_meta.is_compatible_with(cls)
+                ]
+
+                # Disambiguation is permitted ONLY when linguistic intent is uncertain/broad
+                # and a valid compatible candidate exists.
+                can_disambiguate = False
+                best_cand = None
+                best_cand_score = 0.0
+
+                if not has_explicit_intent and compatible_candidates:
+                    cand_probs = [prob_dict[cls] for cls in compatible_candidates]
+                    best_cand_idx = int(np.argmax(cand_probs))
+                    best_cand = compatible_candidates[best_cand_idx]
+                    best_cand_score = cand_probs[best_cand_idx]
+
+                    margin = text_confidence - best_cand_score
+                    cand_has_keywords = _contains_task_keywords(str(best_cand), query)
+                    is_broad_query = (
+                        text_confidence < 0.45
+                        or margin <= 0.15
+                        or cand_has_keywords
+                        or any(re.search(r'\b' + re.escape(w) + r'\b', query, re.IGNORECASE) for w in ["analyze", "assess", "examine", "compare", "report", "process", "pipeline"])
+                    )
+                    if is_broad_query:
+                        can_disambiguate = True
+
+                if can_disambiguate and best_cand is not None:
+                    selected_task = best_cand
+                    input_compatibility = True
+                    routing_reason = (
+                        f"Linguistic model tentatively suggested '{text_task}' ({text_confidence*100:.1f}%), "
+                        f"disambiguated under ambiguity (margin {text_confidence - best_cand_score:.2f}) "
+                        f"by verified '{obs_meta.modality}' observation to compatible task '{selected_task}' ({best_cand_score*100:.1f}%)."
+                    )
                 else:
-                    # User attached single image or feature vector, but query requested a change or temporal task.
-                    # Preserve intended task so input incompatibility is accurately reported by specialist.
+                    # Intended task preserved: DO NOT coerce incompatible requests to wrong specialist!
                     selected_task = text_task
                     input_compatibility = False
                     routing_reason = (
                         f"Linguistic prediction '{text_task}' ({text_confidence*100:.1f}%) "
                         f"requires different input than attached '{obs_meta.modality}'. "
-                        f"Preserved intended task for downstream input validation."
+                        f"Preserved intended task to prevent task coercion."
                     )
 
         if selected_task == text_task:

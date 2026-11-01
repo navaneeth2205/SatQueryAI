@@ -16,10 +16,10 @@ from satquery.taxonomy import TaskType, InputType
 from satquery.utils.temporal import validate_temporal_pair
 
 
-# Explicit mapping from task key to set of compatible input modalities
+# Explicit mapping from task key to set of compatible input modalities,
+# aligned with SpecialistInputContract in satquery.taxonomy.
 TASK_COMPATIBILITY_MAP: Dict[str, Set[str]] = {
     TaskType.LAND_COVER_CLASSIFICATION.value: {
-        InputType.SINGLE_IMAGE.value,
         "feature_vector",
         InputType.OPTICAL_SAR_PAIR.value
     },
