@@ -2,8 +2,8 @@
   "manifest_name": "SatQuery AI Phase 1 Reproducibility Manifest",
   "project_title": "Sensor- and Task-Compatibility-Constrained Selective Routing for Multimodal Earth Observation",
   "sih_problem_code": "SIH26167",
-  "phase": "Phase 1 - Router and Compatibility Engine Hardening",
-  "timestamp_utc": "2026-11-01T06:51:43Z",
+  "phase": "Phase 1 - Router and Compatibility Engine Hardening (Final Closure)",
+  "timestamp_utc": "2026-11-01T07:36:14Z",
   "environment": {
     "python_version": "3.14.3",
     "os": "Windows 11 AMD64",
@@ -25,31 +25,40 @@
     }
   },
   "artifact_integrity": {
-    "artifacts/router/router_model.joblib": "16ccc86b3607eb7433f77205f58ba2b5bbc48c57053f01b9e8a52c2b96281101",
+    "artifacts/router/router_model.joblib": "8292476ed8bb10ac54fab75796b00ecce6bda64dd581702ec3639fd132ea517d",
     "artifacts/specialists/land_cover_phase2/model.joblib": "f785ca1f5e9691c17e4a17ebf3f6766f7053059ba871188d24f6dce0ed43d071",
     "data/benchmark_n200_catalog.json": "8aa9a8bbc8c811adf719685306fa800706d162a61ec8d2a530e90796c4be346f",
     "artifacts/benchmarks/n200_routing_baselines_summary.json": "36e18b26fad6fd0eef4e654f96941db23a04ddf2de5ae064d24fc58aff5247ce",
     "artifacts/benchmarks/n200_threshold_sweep_summary.json": "ddbcf87650a8fc7c72c6b0cdf60bee4d4b984528ec3bbbdcf18ee7bab1aaee99",
     "artifacts/benchmarks/risk_coverage_curves.png": "7ccc6b45d97e6bf063f39169ff07c726cd9ad5f431d8d6baeeae690a44f02fa6",
     "artifacts/benchmarks/corrected_n60_routing_baselines_summary.json": "75dbdc378533b1bcf1bfd2463bc8963d1b40c2f5bffb56837f5d5d38c2d19982",
-    "artifacts/benchmarks/group_held_out_benchmark_summary.json": "d5eb89845cf9e2bc5e5b99945feb27d322edc8a6aa6448b2747e9c9bb6110aa0"
-  },
-  "source_code_integrity": {
-    "satquery/router.py": "be91b6a09db1158d77e35ae2b01c9f1cebe2a01546312f1d1cdc53a2860e7cf2",
-    "satquery/taxonomy.py": "c231ef969cf8cb9d7fe0758a63e128e9871378a1df295b71c0944e717fb470dd",
-    "satquery/utils/metadata.py": "f3cbbc36ab3ad7c4f8bcad1144ba8235f013f4b84a49ad51989fa6f1aff159c8",
-    "satquery/specialists/registry.py": "1e7302a461866bd50ceecd8f57a98ffce18806cfdeb6a1406caa7a7e5f8c1251"
+    "artifacts/benchmarks/group_held_out_benchmark_summary.json": "7c098b2ba5dff0758e43635ebd8cf834e19202f72ca6b32c13df3ca1d0508634",
+    "artifacts/benchmarks/n200_scenario_level_audit.csv": "f8720e4577b1bb3ab1179275737171fe3b3830ee8fd7ab68e51a0d984ce0f7bd",
+    "artifacts/benchmarks/group_held_out_scenario_level_audit.csv": "4bca086651a036498ed57241fe119edd1d332b46cd94a97efadb2ce8e0621727",
+    "artifacts/benchmarks/template_family_overlap_audit.json": "aa5fa438d62ab4b144edf66f2d56569fd4b5bd684205fa71d9b488154b3be08f"
   },
   "verification_status": {
     "test_suite_status": "71/71 passing (100%)",
     "task_coercion_resolved": true,
     "provisional_task_coercion_eliminated": true,
     "provisional_incompatible_rate_pct": 0.0,
+    "clarify_incompatible_rate_pct": 0.0,
     "input_contracts_formalized": true,
     "baseline_aggregation_bug_corrected": true,
     "n200_benchmark_evaluated": true,
-    "group_based_held_out_benchmark_complete": true,
-    "group_based_family_overlap_pct": 0.0,
+    "group_disjoint_split_evaluated": true,
+    "validation_vs_test_family_overlap_pct": 0.0,
+    "training_leakage_audited": true,
+    "generalization_claim_standardized": "group_disjoint_evaluation_split",
     "threshold_sweep_complete": true
+  },
+  "source_and_scripts_integrity": {
+    "satquery/router.py": "be91b6a09db1158d77e35ae2b01c9f1cebe2a01546312f1d1cdc53a2860e7cf2",
+    "satquery/taxonomy.py": "c231ef969cf8cb9d7fe0758a63e128e9871378a1df295b71c0944e717fb470dd",
+    "satquery/utils/metadata.py": "f3cbbc36ab3ad7c4f8bcad1144ba8235f013f4b84a49ad51989fa6f1aff159c8",
+    "satquery/specialists/registry.py": "1e7302a461866bd50ceecd8f57a98ffce18806cfdeb6a1406caa7a7e5f8c1251",
+    "scripts/benchmark_routing_policy_baselines.py": "2aef90f72919b135978836c2b2a1da3f5886b8b437cb4c1942f267118eb19042",
+    "scripts/audit_group_splits_and_leakage.py": "032f064eb0d0561fe9df728faad8aa4510fb29898be8899ddee280f5e121d9a7",
+    "scripts/export_n200_scenario_audit.py": "9b435103c17a11ab149f24340e9f87fc25e2cf3d2382f228ceb2b433526375cc"
   }
 }
