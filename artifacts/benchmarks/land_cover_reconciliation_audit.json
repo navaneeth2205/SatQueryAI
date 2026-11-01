@@ -1,0 +1,446 @@
+{
+  "val": {
+    "split": "val",
+    "sample_count": 3255,
+    "rf_metrics_default": {
+      "micro_f1": 53.31,
+      "macro_f1": 37.09,
+      "hamming_loss": 0.1976,
+      "subset_acc": 2.52
+    },
+    "rf_metrics_tuned": {
+      "micro_f1": 48.4,
+      "macro_f1": 36.99,
+      "hamming_loss": 0.2937,
+      "subset_acc": 0.0
+    },
+    "lgb_metrics_default": {
+      "micro_f1": 75.29,
+      "macro_f1": 52.27,
+      "hamming_loss": 0.0867,
+      "subset_acc": 30.63
+    },
+    "lgb_metrics_tuned": {
+      "micro_f1": 75.0,
+      "macro_f1": 54.92,
+      "hamming_loss": 0.093,
+      "subset_acc": 27.31
+    },
+    "per_class_lgb_tuned": [
+      {
+        "class_name": "Arable land",
+        "support": 1862,
+        "tp": 1778,
+        "fp": 167,
+        "fn": 84,
+        "tn": 1226,
+        "precision": 0.9141,
+        "recall": 0.9549,
+        "f1": 0.9341,
+        "tuned_threshold": 0.29
+      },
+      {
+        "class_name": "Beaches, dunes, sands",
+        "support": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 3255,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tuned_threshold": 0.4
+      },
+      {
+        "class_name": "Broad-leaved forest",
+        "support": 1658,
+        "tp": 1502,
+        "fp": 185,
+        "fn": 156,
+        "tn": 1412,
+        "precision": 0.8903,
+        "recall": 0.9059,
+        "f1": 0.8981,
+        "tuned_threshold": 0.51
+      },
+      {
+        "class_name": "Complex cultivation patterns",
+        "support": 844,
+        "tp": 609,
+        "fp": 451,
+        "fn": 235,
+        "tn": 1960,
+        "precision": 0.5745,
+        "recall": 0.7216,
+        "f1": 0.6397,
+        "tuned_threshold": 0.57
+      },
+      {
+        "class_name": "Coniferous forest",
+        "support": 129,
+        "tp": 71,
+        "fp": 49,
+        "fn": 58,
+        "tn": 3077,
+        "precision": 0.5917,
+        "recall": 0.5504,
+        "f1": 0.5703,
+        "tuned_threshold": 0.35
+      },
+      {
+        "class_name": "Industrial or commercial units",
+        "support": 95,
+        "tp": 38,
+        "fp": 44,
+        "fn": 57,
+        "tn": 3116,
+        "precision": 0.4634,
+        "recall": 0.4,
+        "f1": 0.4294,
+        "tuned_threshold": 0.17
+      },
+      {
+        "class_name": "Inland waters",
+        "support": 329,
+        "tp": 258,
+        "fp": 31,
+        "fn": 71,
+        "tn": 2895,
+        "precision": 0.8927,
+        "recall": 0.7842,
+        "f1": 0.835,
+        "tuned_threshold": 0.3
+      },
+      {
+        "class_name": "Inland wetlands",
+        "support": 91,
+        "tp": 43,
+        "fp": 123,
+        "fn": 48,
+        "tn": 3041,
+        "precision": 0.259,
+        "recall": 0.4725,
+        "f1": 0.3346,
+        "tuned_threshold": 0.11
+      },
+      {
+        "class_name": "Land principally occupied by agriculture, with significant areas of natural vegetation",
+        "support": 1180,
+        "tp": 896,
+        "fp": 380,
+        "fn": 284,
+        "tn": 1695,
+        "precision": 0.7022,
+        "recall": 0.7593,
+        "f1": 0.7296,
+        "tuned_threshold": 0.52
+      },
+      {
+        "class_name": "Mixed forest",
+        "support": 195,
+        "tp": 115,
+        "fp": 91,
+        "fn": 80,
+        "tn": 2969,
+        "precision": 0.5583,
+        "recall": 0.5897,
+        "f1": 0.5736,
+        "tuned_threshold": 0.6
+      },
+      {
+        "class_name": "Moors, heathland and sclerophyllous vegetation",
+        "support": 4,
+        "tp": 1,
+        "fp": 7,
+        "fn": 3,
+        "tn": 3244,
+        "precision": 0.125,
+        "recall": 0.25,
+        "f1": 0.1667,
+        "tuned_threshold": 0.1
+      },
+      {
+        "class_name": "Natural grassland and sparsely vegetated areas",
+        "support": 395,
+        "tp": 268,
+        "fp": 202,
+        "fn": 127,
+        "tn": 2658,
+        "precision": 0.5702,
+        "recall": 0.6785,
+        "f1": 0.6197,
+        "tuned_threshold": 0.48
+      },
+      {
+        "class_name": "Pastures",
+        "support": 354,
+        "tp": 232,
+        "fp": 634,
+        "fn": 122,
+        "tn": 2267,
+        "precision": 0.2679,
+        "recall": 0.6554,
+        "f1": 0.3803,
+        "tuned_threshold": 0.23
+      },
+      {
+        "class_name": "Permanent crops",
+        "support": 49,
+        "tp": 7,
+        "fp": 15,
+        "fn": 42,
+        "tn": 3191,
+        "precision": 0.3182,
+        "recall": 0.1429,
+        "f1": 0.1972,
+        "tuned_threshold": 0.25
+      },
+      {
+        "class_name": "Transitional woodland, shrub",
+        "support": 1202,
+        "tp": 999,
+        "fp": 633,
+        "fn": 203,
+        "tn": 1420,
+        "precision": 0.6121,
+        "recall": 0.8311,
+        "f1": 0.705,
+        "tuned_threshold": 0.27
+      },
+      {
+        "class_name": "Urban fabric",
+        "support": 580,
+        "tp": 451,
+        "fp": 134,
+        "fn": 129,
+        "tn": 2541,
+        "precision": 0.7709,
+        "recall": 0.7776,
+        "f1": 0.7742,
+        "tuned_threshold": 0.44
+      }
+    ]
+  },
+  "test": {
+    "split": "test",
+    "sample_count": 3248,
+    "rf_metrics_default": {
+      "micro_f1": 47.95,
+      "macro_f1": 33.21,
+      "hamming_loss": 0.2228,
+      "subset_acc": 2.56
+    },
+    "rf_metrics_tuned": {
+      "micro_f1": 44.81,
+      "macro_f1": 34.0,
+      "hamming_loss": 0.3153,
+      "subset_acc": 0.0
+    },
+    "lgb_metrics_default": {
+      "micro_f1": 73.28,
+      "macro_f1": 46.13,
+      "hamming_loss": 0.0899,
+      "subset_acc": 27.74
+    },
+    "lgb_metrics_tuned": {
+      "micro_f1": 72.99,
+      "macro_f1": 47.39,
+      "hamming_loss": 0.0976,
+      "subset_acc": 22.66
+    },
+    "per_class_lgb_tuned": [
+      {
+        "class_name": "Arable land",
+        "support": 2009,
+        "tp": 1823,
+        "fp": 154,
+        "fn": 186,
+        "tn": 1085,
+        "precision": 0.9221,
+        "recall": 0.9074,
+        "f1": 0.9147,
+        "tuned_threshold": 0.29
+      },
+      {
+        "class_name": "Beaches, dunes, sands",
+        "support": 0,
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "tn": 3248,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tuned_threshold": 0.4
+      },
+      {
+        "class_name": "Broad-leaved forest",
+        "support": 1665,
+        "tp": 1540,
+        "fp": 230,
+        "fn": 125,
+        "tn": 1353,
+        "precision": 0.8701,
+        "recall": 0.9249,
+        "f1": 0.8967,
+        "tuned_threshold": 0.51
+      },
+      {
+        "class_name": "Complex cultivation patterns",
+        "support": 992,
+        "tp": 676,
+        "fp": 386,
+        "fn": 316,
+        "tn": 1870,
+        "precision": 0.6365,
+        "recall": 0.6815,
+        "f1": 0.6582,
+        "tuned_threshold": 0.57
+      },
+      {
+        "class_name": "Coniferous forest",
+        "support": 41,
+        "tp": 18,
+        "fp": 18,
+        "fn": 23,
+        "tn": 3189,
+        "precision": 0.5,
+        "recall": 0.439,
+        "f1": 0.4675,
+        "tuned_threshold": 0.35
+      },
+      {
+        "class_name": "Industrial or commercial units",
+        "support": 85,
+        "tp": 21,
+        "fp": 50,
+        "fn": 64,
+        "tn": 3113,
+        "precision": 0.2958,
+        "recall": 0.2471,
+        "f1": 0.2692,
+        "tuned_threshold": 0.17
+      },
+      {
+        "class_name": "Inland waters",
+        "support": 361,
+        "tp": 295,
+        "fp": 54,
+        "fn": 66,
+        "tn": 2833,
+        "precision": 0.8453,
+        "recall": 0.8172,
+        "f1": 0.831,
+        "tuned_threshold": 0.3
+      },
+      {
+        "class_name": "Inland wetlands",
+        "support": 125,
+        "tp": 68,
+        "fp": 136,
+        "fn": 57,
+        "tn": 2987,
+        "precision": 0.3333,
+        "recall": 0.544,
+        "f1": 0.4134,
+        "tuned_threshold": 0.11
+      },
+      {
+        "class_name": "Land principally occupied by agriculture, with significant areas of natural vegetation",
+        "support": 999,
+        "tp": 831,
+        "fp": 483,
+        "fn": 168,
+        "tn": 1766,
+        "precision": 0.6324,
+        "recall": 0.8318,
+        "f1": 0.7185,
+        "tuned_threshold": 0.52
+      },
+      {
+        "class_name": "Mixed forest",
+        "support": 75,
+        "tp": 25,
+        "fp": 60,
+        "fn": 50,
+        "tn": 3113,
+        "precision": 0.2941,
+        "recall": 0.3333,
+        "f1": 0.3125,
+        "tuned_threshold": 0.6
+      },
+      {
+        "class_name": "Moors, heathland and sclerophyllous vegetation",
+        "support": 0,
+        "tp": 0,
+        "fp": 14,
+        "fn": 0,
+        "tn": 3234,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0,
+        "tuned_threshold": 0.1
+      },
+      {
+        "class_name": "Natural grassland and sparsely vegetated areas",
+        "support": 256,
+        "tp": 67,
+        "fp": 69,
+        "fn": 189,
+        "tn": 2923,
+        "precision": 0.4926,
+        "recall": 0.2617,
+        "f1": 0.3418,
+        "tuned_threshold": 0.48
+      },
+      {
+        "class_name": "Pastures",
+        "support": 454,
+        "tp": 214,
+        "fp": 442,
+        "fn": 240,
+        "tn": 2352,
+        "precision": 0.3262,
+        "recall": 0.4714,
+        "f1": 0.3856,
+        "tuned_threshold": 0.23
+      },
+      {
+        "class_name": "Permanent crops",
+        "support": 46,
+        "tp": 2,
+        "fp": 24,
+        "fn": 44,
+        "tn": 3178,
+        "precision": 0.0769,
+        "recall": 0.0435,
+        "f1": 0.0556,
+        "tuned_threshold": 0.25
+      },
+      {
+        "class_name": "Transitional woodland, shrub",
+        "support": 1197,
+        "tp": 918,
+        "fp": 831,
+        "fn": 279,
+        "tn": 1220,
+        "precision": 0.5249,
+        "recall": 0.7669,
+        "f1": 0.6232,
+        "tuned_threshold": 0.27
+      },
+      {
+        "class_name": "Urban fabric",
+        "support": 517,
+        "tp": 357,
+        "fp": 155,
+        "fn": 160,
+        "tn": 2576,
+        "precision": 0.6973,
+        "recall": 0.6905,
+        "f1": 0.6939,
+        "tuned_threshold": 0.44
+      }
+    ]
+  }
+}

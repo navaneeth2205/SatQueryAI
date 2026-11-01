@@ -50,7 +50,14 @@
     "validation_vs_test_family_overlap_pct": 0.0,
     "training_leakage_audited": true,
     "generalization_claim_standardized": "group_disjoint_evaluation_split",
-    "threshold_sweep_complete": true
+    "threshold_sweep_complete": true,
+    "phase2_spatial_disjointness_verified": true,
+    "phase2_min_chebyshev_distance_patch_units": 10.0,
+    "phase2_min_edge_to_edge_buffer_km": 10.8,
+    "phase2_operating_threshold_lookup_resolved": true,
+    "phase2_land_cover_metrics_reconciled": true,
+    "phase2_oscd_per_scene_breakdown_evaluated": true,
+    "phase2_oscd_radiometric_suppression_analyzed": true
   },
   "source_and_scripts_integrity": {
     "satquery/router.py": "be91b6a09db1158d77e35ae2b01c9f1cebe2a01546312f1d1cdc53a2860e7cf2",
@@ -60,5 +67,21 @@
     "scripts/benchmark_routing_policy_baselines.py": "2aef90f72919b135978836c2b2a1da3f5886b8b437cb4c1942f267118eb19042",
     "scripts/audit_group_splits_and_leakage.py": "032f064eb0d0561fe9df728faad8aa4510fb29898be8899ddee280f5e121d9a7",
     "scripts/export_n200_scenario_audit.py": "9b435103c17a11ab149f24340e9f87fc25e2cf3d2382f228ceb2b433526375cc"
+  },
+  "phase2_baseline_verification_integrity": {
+    "scripts/verify_spatial_distance.py": "fa7ba6692bc4a0a71dd950e6a1a039cef96164492c0d4d6e9c5d9ad8dc9ddf1e",
+    "scripts/reproduce_land_cover_evaluation.py": "4720a5806da7fd1ccc3323804047588d68f77f17f7f9f4939061e6950d720a1d",
+    "scripts/reproduce_oscd_per_scene_evaluation.py": "d29d997908760be7a85a600d853f6b724d19e52451255e359feb2c404e88915c",
+    "artifacts/benchmarks/spatial_buffer_audit.json": "dc761df3eb5fd72b5bd0e71b9b16e1ad62b7024888d521e2b5654f82b9c97c57",
+    "artifacts/benchmarks/land_cover_reconciliation_audit.json": "e827c7fd316588c655a4ee4b3cba8678401bb5773938b5c1a8131a8b6fa209a8",
+    "artifacts/benchmarks/land_cover_per_class_test_metrics.csv": "5db3302ef0591420d735040d9114eb5259bf3d4222e90d9e02bd839cd9012869",
+    "artifacts/benchmarks/oscd_per_scene_evaluation_breakdown.csv": "71c5652038476ca812d2ad43da1eb05ea6205cf3fd71bcd6dfa4ad9b2daee13e",
+    "artifacts/benchmarks/oscd_methods_pooled_comparison.csv": "d152de4f489a9d72d37acec834afff5d1b3b753ac8ffd73efa9e103a9fe161f5",
+    "artifacts/specialists/land_cover_phase2/metadata_summary.json": "ff78869b40226128426a3d0c7ced5c3371e54502fa6e40000791edf0a4d60b5d",
+    "artifacts/specialists/land_cover_phase2/threshold_config.json": "74f1e5f1bccd8e9751a19ad3936aef528e234e69b33c9a7d34a4b20c6f2a3a10",
+    "artifacts/specialists/land_cover_phase2/model.joblib": "f785ca1f5e9691c17e4a17ebf3f6766f7053059ba871188d24f6dce0ed43d071",
+    "data/train_full_metadata.parquet": "268734bf885b085cda740bfff72cb1688599eea5b0710cc131b8f8673e9083c4",
+    "data/val_full_metadata.parquet": "807b23eb45e7438d7f7e930bb88eb2b7724cba68a94f5ac13f8ee7907ce29a83",
+    "data/test_full_metadata.parquet": "069bca852cce37a28081c20f9fc1ed731fcedfcb129d01400f34f0fdcc5aa59c"
   }
 }
