@@ -1,5 +1,9 @@
-method,pooled_precision,pooled_recall,pooled_f1,pooled_iou,total_tp,total_fp,total_fn,total_tn
-Standard CVA,0.582,0.1824,0.2778,0.1613,29016,20838,130061,2898021
-Radiometrically Aligned CVA,0.5996,0.1195,0.1992,0.1106,19002,12687,140075,2906172
-Gaussian-Smoothed CVA,0.6268,0.1818,0.2818,0.164,28915,17215,130162,2901644
-Dual-Threshold Hysteresis CVA,0.2535,0.436,0.3206,0.1909,69364,204219,89713,2714640
+regime,method,pooled_precision,pooled_recall,pooled_f1,pooled_iou,total_tp,total_fp,total_fn,total_tn
+Validation-Tuned (Historical),Standard CVA,0.582,0.1824,0.2778,0.1613,29016,20838,130061,2898021
+Validation-Tuned (Historical),Radiometrically Aligned CVA,0.4878,0.2158,0.2992,0.1759,34330,36054,124747,2882805
+Validation-Tuned (Historical),Gaussian-Smoothed CVA,0.397,0.2963,0.3393,0.2043,47133,71594,111944,2847265
+Validation-Tuned (Historical),Dual-Threshold Hysteresis CVA,0.2612,0.443,0.3287,0.1966,70470,199283,88607,2719576
+Fixed-Threshold Ablation,Standard CVA,0.582,0.1824,0.2778,0.1613,29016,20838,130061,2898021
+Fixed-Threshold Ablation,Radiometrically Aligned CVA,0.5996,0.1195,0.1992,0.1106,19002,12687,140075,2906172
+Fixed-Threshold Ablation,Gaussian-Smoothed CVA,0.6268,0.1818,0.2818,0.164,28915,17215,130162,2901644
+Fixed-Threshold Ablation,Dual-Threshold Hysteresis CVA,0.2535,0.436,0.3206,0.1909,69364,204219,89713,2714640

@@ -5,7 +5,8 @@ on both Validation (N=3,255) and Test (N=3,248) splits of BigEarthNet-14k.
 Computes:
 - Default threshold (0.50) vs. Validation-Tuned Thresholds
 - Baseline RF (84 features) vs. Phase 2 LightGBM (488 features)
-- Per-class confusion statistics: TP, FP, FN, Support, Precision, Recall, F1, Threshold
+- Macro F1 across all 16 predefined classes vs. 14 test-present classes (support > 0)
+- Per-class confusion statistics: TP, FP, FN, TN, Support, Precision, Recall, F1, Threshold
 """
 
 import json
@@ -43,6 +44,7 @@ def evaluate_split(split_name: str = "test"):
     default_thresholds = np.full(len(classes), 0.50)
 
     y_true = p2_mlb.transform(meta_df["labels"].values)
+    present_indices = [i for i in range(len(classes)) if np.sum(y_true[:, i]) > 0]
 
     # Predict LightGBM probabilities
     prob_matrix = np.zeros((len(X), len(classes)), dtype=np.float32)
@@ -75,51 +77,83 @@ def evaluate_split(split_name: str = "test"):
 
         # RF Default
         y_pred_rf_def = (rf_prob_matrix >= default_thresholds).astype(int)
+        _, _, rf_f1_def_per_class, _ = precision_recall_fscore_support(y_true, y_pred_rf_def, average=None, zero_division=0)
         rf_metrics_default = {
             "micro_f1": round(f1_score(y_true, y_pred_rf_def, average="micro", zero_division=0) * 100, 2),
-            "macro_f1": round(f1_score(y_true, y_pred_rf_def, average="macro", zero_division=0) * 100, 2),
+            "macro_f1_all_16": round(f1_score(y_true, y_pred_rf_def, average="macro", zero_division=0) * 100, 2),
+            "macro_f1_present_classes": round(float(np.mean(rf_f1_def_per_class[present_indices])) * 100, 2),
             "hamming_loss": round(hamming_loss(y_true, y_pred_rf_def), 4),
             "subset_acc": round(np.mean(np.all(y_true == y_pred_rf_def, axis=1)) * 100, 2)
         }
 
         # RF Tuned
         y_pred_rf_tuned = (rf_prob_matrix >= rf_tuned_thresholds).astype(int)
+        _, _, rf_f1_tuned_per_class, _ = precision_recall_fscore_support(y_true, y_pred_rf_tuned, average=None, zero_division=0)
         rf_metrics_tuned = {
             "micro_f1": round(f1_score(y_true, y_pred_rf_tuned, average="micro", zero_division=0) * 100, 2),
-            "macro_f1": round(f1_score(y_true, y_pred_rf_tuned, average="macro", zero_division=0) * 100, 2),
+            "macro_f1_all_16": round(f1_score(y_true, y_pred_rf_tuned, average="macro", zero_division=0) * 100, 2),
+            "macro_f1_present_classes": round(float(np.mean(rf_f1_tuned_per_class[present_indices])) * 100, 2),
             "hamming_loss": round(hamming_loss(y_true, y_pred_rf_tuned), 4),
             "subset_acc": round(np.mean(np.all(y_true == y_pred_rf_tuned, axis=1)) * 100, 2)
         }
 
     # Evaluate LightGBM Default
     y_pred_lgb_def = (prob_matrix >= default_thresholds).astype(int)
+    prec_def, rec_def, f1_def, supp_def = precision_recall_fscore_support(y_true, y_pred_lgb_def, average=None, zero_division=0)
     lgb_metrics_default = {
         "micro_f1": round(f1_score(y_true, y_pred_lgb_def, average="micro", zero_division=0) * 100, 2),
-        "macro_f1": round(f1_score(y_true, y_pred_lgb_def, average="macro", zero_division=0) * 100, 2),
+        "macro_f1_all_16": round(f1_score(y_true, y_pred_lgb_def, average="macro", zero_division=0) * 100, 2),
+        "macro_f1_present_classes": round(float(np.mean(f1_def[present_indices])) * 100, 2),
         "hamming_loss": round(hamming_loss(y_true, y_pred_lgb_def), 4),
         "subset_acc": round(np.mean(np.all(y_true == y_pred_lgb_def, axis=1)) * 100, 2)
     }
 
+    per_class_default_records = []
+    for i, cls_name in enumerate(classes):
+        tp = int(np.sum((y_pred_lgb_def[:, i] == 1) & (y_true[:, i] == 1)))
+        fp = int(np.sum((y_pred_lgb_def[:, i] == 1) & (y_true[:, i] == 0)))
+        fn = int(np.sum((y_pred_lgb_def[:, i] == 0) & (y_true[:, i] == 1)))
+        tn = int(np.sum((y_pred_lgb_def[:, i] == 0) & (y_true[:, i] == 0)))
+        per_class_default_records.append({
+            "class_name": cls_name,
+            "support": int(supp_def[i]),
+            "tp": tp,
+            "fp": fp,
+            "fn": fn,
+            "tn": tn,
+            "precision": round(float(prec_def[i]), 4),
+            "recall": round(float(rec_def[i]), 4),
+            "f1": round(float(f1_def[i]), 4),
+            "threshold": 0.50
+        })
+
     # Evaluate LightGBM Tuned
     y_pred_lgb_tuned = (prob_matrix >= tuned_thresholds).astype(int)
+    prec, rec, f1, supp = precision_recall_fscore_support(y_true, y_pred_lgb_tuned, average=None, zero_division=0)
     lgb_metrics_tuned = {
         "micro_f1": round(f1_score(y_true, y_pred_lgb_tuned, average="micro", zero_division=0) * 100, 2),
-        "macro_f1": round(f1_score(y_true, y_pred_lgb_tuned, average="macro", zero_division=0) * 100, 2),
+        "macro_f1_all_16": round(f1_score(y_true, y_pred_lgb_tuned, average="macro", zero_division=0) * 100, 2),
+        "macro_f1_present_classes": round(float(np.mean(f1[present_indices])) * 100, 2),
         "hamming_loss": round(hamming_loss(y_true, y_pred_lgb_tuned), 4),
         "subset_acc": round(np.mean(np.all(y_true == y_pred_lgb_tuned, axis=1)) * 100, 2)
     }
 
-    # Per-class metrics for LightGBM Tuned
-    prec, rec, f1, supp = precision_recall_fscore_support(y_true, y_pred_lgb_tuned, average=None, zero_division=0)
-
-    per_class_records = []
+    per_class_tuned_records = []
     for i, cls_name in enumerate(classes):
         tp = int(np.sum((y_pred_lgb_tuned[:, i] == 1) & (y_true[:, i] == 1)))
         fp = int(np.sum((y_pred_lgb_tuned[:, i] == 1) & (y_true[:, i] == 0)))
         fn = int(np.sum((y_pred_lgb_tuned[:, i] == 0) & (y_true[:, i] == 1)))
         tn = int(np.sum((y_pred_lgb_tuned[:, i] == 0) & (y_true[:, i] == 0)))
 
-        per_class_records.append({
+        # Explicitly document mathematical status for classes with 0 support
+        note = "supported"
+        if supp[i] == 0:
+            if fp > 0:
+                note = f"0 support in {split_name}; FP={fp} -> precision=0.0, recall=0/0 (indeterminate, imputed 0.0)"
+            else:
+                note = f"0 support in {split_name}; no predictions -> precision=0/0, recall=0/0 (imputed 0.0)"
+
+        per_class_tuned_records.append({
             "class_name": cls_name,
             "support": int(supp[i]),
             "tp": tp,
@@ -129,17 +163,21 @@ def evaluate_split(split_name: str = "test"):
             "precision": round(float(prec[i]), 4),
             "recall": round(float(rec[i]), 4),
             "f1": round(float(f1[i]), 4),
-            "tuned_threshold": round(float(tuned_thresholds[i]), 4)
+            "tuned_threshold": round(float(tuned_thresholds[i]), 4),
+            "evaluation_note": note
         })
 
     return {
         "split": split_name,
         "sample_count": len(X),
+        "num_classes_total": len(classes),
+        "num_classes_with_support": len(present_indices),
         "rf_metrics_default": rf_metrics_default,
         "rf_metrics_tuned": rf_metrics_tuned,
         "lgb_metrics_default": lgb_metrics_default,
         "lgb_metrics_tuned": lgb_metrics_tuned,
-        "per_class_lgb_tuned": per_class_records
+        "per_class_lgb_default": per_class_default_records,
+        "per_class_lgb_tuned": per_class_tuned_records
     }
 
 
@@ -152,20 +190,18 @@ def main():
     test_res = evaluate_split("test")
 
     print("\n--- 1. VALIDATION SPLIT (N=3,255) ---")
-    print("RF Baseline (84 feats, default tau=0.50):", val_res["rf_metrics_default"])
-    print("RF Baseline (84 feats, tuned tau)      :", val_res["rf_metrics_tuned"])
     print("LightGBM (488 feats, default tau=0.50)  :", val_res["lgb_metrics_default"])
     print("LightGBM (488 feats, tuned tau)         :", val_res["lgb_metrics_tuned"])
 
     print("\n--- 2. HELD-OUT TEST SPLIT (N=3,248) ---")
-    print("RF Baseline (84 feats, default tau=0.50):", test_res["rf_metrics_default"])
-    print("RF Baseline (84 feats, tuned tau)      :", test_res["rf_metrics_tuned"])
     print("LightGBM (488 feats, default tau=0.50)  :", test_res["lgb_metrics_default"])
     print("LightGBM (488 feats, tuned tau)         :", test_res["lgb_metrics_tuned"])
+    print("RF Baseline (84 feats, default tau=0.50):", test_res["rf_metrics_default"])
 
     print("\n--- 3. PER-CLASS CONFUSION & PERFORMANCE (TEST SPLIT, TUNED THRESHOLDS) ---")
     df_per_class = pd.DataFrame(test_res["per_class_lgb_tuned"])
-    print(df_per_class[["class_name", "support", "tp", "fp", "fn", "precision", "recall", "f1", "tuned_threshold"]].to_string(index=False))
+    cols = ["class_name", "support", "tp", "fp", "fn", "precision", "recall", "f1", "tuned_threshold"]
+    print(df_per_class[cols].to_string(index=False))
 
     # Save summary artifact
     out_json = REPO_ROOT / "artifacts" / "benchmarks" / "land_cover_reconciliation_audit.json"

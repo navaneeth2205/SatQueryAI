@@ -57,7 +57,33 @@
     "phase2_operating_threshold_lookup_resolved": true,
     "phase2_land_cover_metrics_reconciled": true,
     "phase2_oscd_per_scene_breakdown_evaluated": true,
-    "phase2_oscd_radiometric_suppression_analyzed": true
+    "phase2_oscd_radiometric_suppression_analyzed": true,
+    "phase2_total_dataset_patches": 13683,
+    "phase2_split_counts": {
+      "train": 7180,
+      "val": 3255,
+      "test": 3248
+    },
+    "phase2_shared_3tile_patches": 13056,
+    "phase2_shared_3tile_split": {
+      "train": 6607,
+      "val": 3201,
+      "test": 3248
+    },
+    "phase2_disjoint_tile_patches": 627,
+    "phase2_disjoint_tile_split": {
+      "tile": "T34TCS",
+      "train": 573,
+      "val": 54,
+      "test": 0
+    },
+    "phase2_intra_tile_pairs_evaluated": 7578668,
+    "phase2_cartesian_shared_tile_pairs": 21459536,
+    "phase2_cartesian_all_tile_pairs": 23320640,
+    "phase2_test_macro_f1_all_16": 47.39,
+    "phase2_test_macro_f1_present_14": 54.16,
+    "phase2_taxonomy_reconciled": true,
+    "phase2_oscd_multi_regime_reconciled": true
   },
   "source_and_scripts_integrity": {
     "satquery/router.py": "be91b6a09db1158d77e35ae2b01c9f1cebe2a01546312f1d1cdc53a2860e7cf2",
@@ -69,19 +95,29 @@
     "scripts/export_n200_scenario_audit.py": "9b435103c17a11ab149f24340e9f87fc25e2cf3d2382f228ceb2b433526375cc"
   },
   "phase2_baseline_verification_integrity": {
-    "scripts/verify_spatial_distance.py": "fa7ba6692bc4a0a71dd950e6a1a039cef96164492c0d4d6e9c5d9ad8dc9ddf1e",
-    "scripts/reproduce_land_cover_evaluation.py": "4720a5806da7fd1ccc3323804047588d68f77f17f7f9f4939061e6950d720a1d",
-    "scripts/reproduce_oscd_per_scene_evaluation.py": "d29d997908760be7a85a600d853f6b724d19e52451255e359feb2c404e88915c",
-    "artifacts/benchmarks/spatial_buffer_audit.json": "dc761df3eb5fd72b5bd0e71b9b16e1ad62b7024888d521e2b5654f82b9c97c57",
-    "artifacts/benchmarks/land_cover_reconciliation_audit.json": "e827c7fd316588c655a4ee4b3cba8678401bb5773938b5c1a8131a8b6fa209a8",
-    "artifacts/benchmarks/land_cover_per_class_test_metrics.csv": "5db3302ef0591420d735040d9114eb5259bf3d4222e90d9e02bd839cd9012869",
-    "artifacts/benchmarks/oscd_per_scene_evaluation_breakdown.csv": "71c5652038476ca812d2ad43da1eb05ea6205cf3fd71bcd6dfa4ad9b2daee13e",
-    "artifacts/benchmarks/oscd_methods_pooled_comparison.csv": "d152de4f489a9d72d37acec834afff5d1b3b753ac8ffd73efa9e103a9fe161f5",
+    "scripts/verify_spatial_distance.py": "a013aac68821d74a2204b3021332107e8742466669bb4d6aa6451cbdf792f298",
+    "scripts/reproduce_land_cover_evaluation.py": "4c7d885210d4f1a32094f83dacb656e3a8a9d9727e2a5982223304f455a63d92",
+    "scripts/reproduce_oscd_per_scene_evaluation.py": "104794db8f9c89270271a280f354684adfa61ea152fec08b5fb49785c0ba2c79",
+    "scripts/experiment_change_detection.py": "08dff12dd404edee5eba4b141e0a47a1bc0d4cdb638954b6b9660c35f529179f",
+    "artifacts/benchmarks/spatial_buffer_audit.json": "1a873e3d804a0ba5e5d62e87e855ca8d7b90a8d831233f4b1490153d05016acb",
+    "artifacts/benchmarks/land_cover_reconciliation_audit.json": "d529af4dccc53e98e2d3c96b30d8507cb9a52d7ddb02cdfed9d93ca55f714a56",
+    "artifacts/benchmarks/land_cover_per_class_test_metrics.csv": "76a84253dc6fcf90f4c2c314b9aade37932fc81b56791eab2c728d1f767af9d8",
+    "artifacts/benchmarks/oscd_methods_pooled_comparison.csv": "8233fef2808fedbad3418850c2545f88d27dc562c171f9e03243ef9be6f3165c",
+    "artifacts/benchmarks/oscd_per_scene_evaluation_breakdown.csv": "8dbdaaa0a65789f33352a2186a1d8a58ebd640e21470ec8489b394ed5166ec7b",
+    "artifacts/benchmarks/oscd_historical_validation_tuned_pooled.csv": "ce8523dfda34796533f18793e1289339cd5dd86a5bf0c33c4e52dc56cd4a98e5",
+    "artifacts/benchmarks/oscd_historical_validation_tuned_per_scene.csv": "b0cfe01e1c6b0e08484931d26dd87f7a4b2630379e68fcaad309832ddb46dfc0",
+    "artifacts/benchmarks/oscd_fixed_threshold_ablation_pooled.csv": "b201809b1550a0b00f7b492b24dd3f2149c252f462851073ac5925e8a4a0a1bc",
+    "artifacts/benchmarks/oscd_fixed_threshold_ablation_per_scene.csv": "e3758cddb1f8880144e036b34fe534c343d844d772f74d1b403a1713298b81c6",
     "artifacts/specialists/land_cover_phase2/metadata_summary.json": "ff78869b40226128426a3d0c7ced5c3371e54502fa6e40000791edf0a4d60b5d",
     "artifacts/specialists/land_cover_phase2/threshold_config.json": "74f1e5f1bccd8e9751a19ad3936aef528e234e69b33c9a7d34a4b20c6f2a3a10",
     "artifacts/specialists/land_cover_phase2/model.joblib": "f785ca1f5e9691c17e4a17ebf3f6766f7053059ba871188d24f6dce0ed43d071",
+    "artifacts/specialists/land_cover_phase2/label_encoder.joblib": "d7e78865b4f21643cd669246dfafb14bb14ad2142b39dcb931ea28becb9af042",
+    "artifacts/specialists/land_cover_phase2/classes.json": "cdb18c8a0a9dc74f52920720340251f14de323bc5c4fb4f07436f90f3500f3e9",
     "data/train_full_metadata.parquet": "268734bf885b085cda740bfff72cb1688599eea5b0710cc131b8f8673e9083c4",
     "data/val_full_metadata.parquet": "807b23eb45e7438d7f7e930bb88eb2b7724cba68a94f5ac13f8ee7907ce29a83",
-    "data/test_full_metadata.parquet": "069bca852cce37a28081c20f9fc1ed731fcedfcb129d01400f34f0fdcc5aa59c"
+    "data/test_full_metadata.parquet": "069bca852cce37a28081c20f9fc1ed731fcedfcb129d01400f34f0fdcc5aa59c",
+    "data/X_train_phase2.npy": "b3bc80385d1c625e5e707e2bd503fd81d9ce1b80cf80b136611fd965134ee78a",
+    "data/X_val_phase2.npy": "79c453fa50ab1ecadd5042e5bf1d25d16d9a2bfad46bfe0f7debc07520409289",
+    "data/X_test_phase2.npy": "4b4e6aa09f08d43ece6b8fea5512e8ad06111c977c1467a1aec26b09763e0b72"
   }
 }

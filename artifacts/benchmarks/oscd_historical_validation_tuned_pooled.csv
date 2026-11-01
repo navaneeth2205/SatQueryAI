@@ -1,0 +1,5 @@
+regime,method,pooled_precision,pooled_recall,pooled_f1,pooled_iou,total_tp,total_fp,total_fn,total_tn
+Validation-Tuned (Historical),Standard CVA,0.582,0.1824,0.2778,0.1613,29016,20838,130061,2898021
+Validation-Tuned (Historical),Radiometrically Aligned CVA,0.4878,0.2158,0.2992,0.1759,34330,36054,124747,2882805
+Validation-Tuned (Historical),Gaussian-Smoothed CVA,0.397,0.2963,0.3393,0.2043,47133,71594,111944,2847265
+Validation-Tuned (Historical),Dual-Threshold Hysteresis CVA,0.2612,0.443,0.3287,0.1966,70470,199283,88607,2719576

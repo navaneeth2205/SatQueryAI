@@ -1,13 +1,40 @@
 {
-  "audit_title": "BigEarthNet-14k Serbia Spatial Buffer and Coordinate Audit",
-  "patch_resolution_meters": 10.0,
-  "patch_size_pixels": 120,
-  "patch_size_km": 1.2,
-  "distance_metrics_definition": {
-    "grid_unit": "Chebyshev distance in patch units max(|r1 - r2|, |c1 - c2|)",
-    "center_to_center_km": "grid_units * 1.2 km",
-    "edge_to_edge_km": "max(0, (grid_units - 1)) * 1.2 km (intervening spatial buffer)",
-    "scientific_characterization": "Held-out test-patch evaluation within shared MGRS tiles, with a reported minimum Chebyshev separation of 10 grid units (12 km center-to-center under the assumed 1.2 km grid spacing)."
+  "audit_title": "BigEarthNet Serbia Coordinate & Spatial Buffer Audit (Reconciled 4-Tile Ledger)",
+  "dataset_total_patches": 13683,
+  "split_counts": {
+    "train": 7180,
+    "val": 3255,
+    "test": 3248
+  },
+  "shared_tiles_subtotal": {
+    "tiles": [
+      "T34TCR",
+      "T34TEQ",
+      "T34TFN"
+    ],
+    "train": 6607,
+    "val": 3201,
+    "test": 3248,
+    "total": 13056
+  },
+  "disjoint_tile_subtotal": {
+    "tile": "T34TCS",
+    "train": 573,
+    "val": 54,
+    "test": 0,
+    "total": 627
+  },
+  "pair_counts": {
+    "intra_tile_pairs_evaluated": 7578668,
+    "cartesian_shared_tile_pairs": 21459536,
+    "cartesian_all_tile_pairs": 23320640
+  },
+  "spatial_metrics": {
+    "min_chebyshev_distance_patch_units": 10.0,
+    "center_to_center_km": 12.0,
+    "edge_to_edge_buffer_km": 10.799999999999999,
+    "min_euclidean_distance_patch_units": 10.0,
+    "min_euclidean_km": 12.0
   },
   "tile_breakdown": {
     "T34TCR": {
@@ -20,37 +47,28 @@
         "c_min": 23,
         "c_max": 68
       },
-      "val_coordinate_bounds": {
-        "r_min": 26,
-        "r_max": 77,
-        "c_min": 13,
-        "c_max": 77
-      },
+      "train_patches_inside_test_box": 0,
+      "intra_tile_pairs_evaluated": 3398876,
+      "chebyshev_min_distance_patches": 10.0,
+      "center_to_center_km": 12.0,
+      "edge_to_edge_buffer_km": 10.8,
+      "min_euclidean_patches": 10.0,
+      "min_euclidean_km": 12.0,
+      "disjoint_from_test": false
+    },
+    "T34TCS": {
+      "num_train_patches": 573,
+      "num_val_patches": 54,
+      "num_test_patches": 0,
       "train_coordinate_bounds": {
-        "r_min": 28,
+        "r_min": 37,
         "r_max": 90,
-        "c_min": 0,
+        "c_min": 69,
         "c_max": 90
       },
       "train_patches_inside_test_box": 0,
-      "chebyshev_min_distance_distribution_patches": {
-        "min": 10.0,
-        "p25": 14.0,
-        "median": 18.0,
-        "mean": 18.85,
-        "p75": 23.25,
-        "max": 33.0
-      },
-      "center_to_center_km": {
-        "min": 12.0,
-        "mean": 22.62,
-        "max": 39.6
-      },
-      "edge_to_edge_buffer_km": {
-        "min": 10.8,
-        "mean": 21.42,
-        "max": 38.4
-      }
+      "intra_tile_pairs_evaluated": 0,
+      "disjoint_from_test": true
     },
     "T34TEQ": {
       "num_train_patches": 2782,
@@ -62,37 +80,14 @@
         "c_min": 23,
         "c_max": 68
       },
-      "val_coordinate_bounds": {
-        "r_min": 13,
-        "r_max": 77,
-        "c_min": 13,
-        "c_max": 77
-      },
-      "train_coordinate_bounds": {
-        "r_min": 0,
-        "r_max": 90,
-        "c_min": 0,
-        "c_max": 90
-      },
       "train_patches_inside_test_box": 0,
-      "chebyshev_min_distance_distribution_patches": {
-        "min": 10.0,
-        "p25": 13.0,
-        "median": 17.0,
-        "mean": 17.64,
-        "p75": 22.0,
-        "max": 33.0
-      },
-      "center_to_center_km": {
-        "min": 12.0,
-        "mean": 21.17,
-        "max": 39.6
-      },
-      "edge_to_edge_buffer_km": {
-        "min": 10.8,
-        "mean": 19.97,
-        "max": 38.4
-      }
+      "intra_tile_pairs_evaluated": 3555396,
+      "chebyshev_min_distance_patches": 10.0,
+      "center_to_center_km": 12.0,
+      "edge_to_edge_buffer_km": 10.8,
+      "min_euclidean_patches": 10.0,
+      "min_euclidean_km": 12.0,
+      "disjoint_from_test": false
     },
     "T34TFN": {
       "num_train_patches": 1706,
@@ -104,47 +99,151 @@
         "c_min": 23,
         "c_max": 44
       },
-      "val_coordinate_bounds": {
-        "r_min": 13,
-        "r_max": 52,
-        "c_min": 13,
-        "c_max": 77
-      },
-      "train_coordinate_bounds": {
-        "r_min": 0,
-        "r_max": 51,
-        "c_min": 0,
-        "c_max": 90
-      },
       "train_patches_inside_test_box": 0,
-      "chebyshev_min_distance_distribution_patches": {
-        "min": 11.0,
-        "p25": 13.0,
-        "median": 15.0,
-        "mean": 15.7,
-        "p75": 18.0,
-        "max": 25.0
-      },
-      "center_to_center_km": {
-        "min": 13.2,
-        "mean": 18.85,
-        "max": 30.0
-      },
-      "edge_to_edge_buffer_km": {
-        "min": 12.0,
-        "mean": 17.65,
-        "max": 28.8
-      }
+      "intra_tile_pairs_evaluated": 624396,
+      "chebyshev_min_distance_patches": 11.0,
+      "center_to_center_km": 13.2,
+      "edge_to_edge_buffer_km": 12.0,
+      "min_euclidean_patches": 11.0,
+      "min_euclidean_km": 13.2,
+      "disjoint_from_test": false
     }
   },
-  "overall_dataset_summary": {
-    "total_test_patches": 3248,
-    "min_distance_patches": 10.0,
-    "center_to_center_min_km": 12.0,
-    "edge_to_edge_min_buffer_km": 10.8,
-    "mean_distance_patches": 18.02,
-    "mean_center_to_center_km": 21.62,
-    "mean_edge_to_edge_km": 20.42,
-    "patches_with_distance_under_10_units": 0
-  }
+  "nearest_sample_pairs": [
+    {
+      "tile": "T34TCR",
+      "test_coord": [
+        42,
+        68
+      ],
+      "train_coord": [
+        46,
+        78
+      ],
+      "dr": 4,
+      "dc": 10,
+      "chebyshev": 10.0,
+      "euclidean": 10.770329614269007
+    },
+    {
+      "tile": "T34TCR",
+      "test_coord": [
+        42,
+        68
+      ],
+      "train_coord": [
+        47,
+        78
+      ],
+      "dr": 5,
+      "dc": 10,
+      "chebyshev": 10.0,
+      "euclidean": 11.180339887498949
+    },
+    {
+      "tile": "T34TCR",
+      "test_coord": [
+        42,
+        68
+      ],
+      "train_coord": [
+        48,
+        78
+      ],
+      "dr": 6,
+      "dc": 10,
+      "chebyshev": 10.0,
+      "euclidean": 11.661903789690601
+    },
+    {
+      "tile": "T34TEQ",
+      "test_coord": [
+        23,
+        68
+      ],
+      "train_coord": [
+        13,
+        78
+      ],
+      "dr": 10,
+      "dc": 10,
+      "chebyshev": 10.0,
+      "euclidean": 14.142135623730951
+    },
+    {
+      "tile": "T34TEQ",
+      "test_coord": [
+        23,
+        68
+      ],
+      "train_coord": [
+        14,
+        78
+      ],
+      "dr": 9,
+      "dc": 10,
+      "chebyshev": 10.0,
+      "euclidean": 13.45362404707371
+    },
+    {
+      "tile": "T34TEQ",
+      "test_coord": [
+        23,
+        68
+      ],
+      "train_coord": [
+        15,
+        78
+      ],
+      "dr": 8,
+      "dc": 10,
+      "chebyshev": 10.0,
+      "euclidean": 12.806248474865697
+    },
+    {
+      "tile": "T34TFN",
+      "test_coord": [
+        23,
+        23
+      ],
+      "train_coord": [
+        12,
+        12
+      ],
+      "dr": 11,
+      "dc": 11,
+      "chebyshev": 11.0,
+      "euclidean": 15.556349186104045
+    },
+    {
+      "tile": "T34TFN",
+      "test_coord": [
+        23,
+        23
+      ],
+      "train_coord": [
+        12,
+        13
+      ],
+      "dr": 11,
+      "dc": 10,
+      "chebyshev": 11.0,
+      "euclidean": 14.866068747318506
+    },
+    {
+      "tile": "T34TFN",
+      "test_coord": [
+        23,
+        23
+      ],
+      "train_coord": [
+        12,
+        14
+      ],
+      "dr": 11,
+      "dc": 9,
+      "chebyshev": 11.0,
+      "euclidean": 14.212670403551895
+    }
+  ]
 }
