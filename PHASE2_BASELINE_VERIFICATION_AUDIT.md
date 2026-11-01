@@ -23,7 +23,7 @@ This final audit provides the verified scientific baseline, empirical defense, a
    * Qualified strictly as **spatially buffered intra-regional generalization**, acknowledging that while local boundary overlap and pixel leakage are eliminated, regional agro-climatic continuity prevents claiming complete statistical independence.
 3. **CLC Taxonomy Evidence, Code Frequencies & Authoritative Mapping**:
    * Evaluated directly against the raw metadata column `labels` in [`BEN_14k/metadata.parquet`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/initial_trails/Dataset/archive.zip).
-   * In the official BigEarthNet 19-class published nomenclature ([Sumbul et al., 2021](https://doi.org/10.1109/MGRS.2021.3089174), Table 1), **CLC 332 (Bare rocks)** is designated as **"Unlabeled" (Excluded)** due to spectral ambiguity with single-date optical Sentinel-2 imagery; it is not part of the active taxonomy.
+   * **CLC 332 (Bare rock)** is excluded from the recommended BigEarthNet 19-class nomenclature ([Sumbul et al., 2021](https://doi.org/10.1109/MGRS.2021.3089174), Table 1). In the BEN_14k regional subset, the active class vocabulary contains 16 classes. The mapping of CLC 321 and CLC 333 to Natural grassland and sparsely vegetated areas follows the published nomenclature.
    * Class `"Natural grassland and sparsely vegetated areas"` strictly aggregates **CLC 321 (Natural grasslands)** and **CLC 333 (Sparsely vegetated areas)**.
    * In the regional Serbian subset ([Aironi, 2023](https://huggingface.co/datasets/narendraaironi/bigearthnet-14k)), exactly 16 of the 19 classes occur, forming a closed vocabulary shared identically across training labels, `label_encoder.joblib`, `model.joblib` $(N, 16)$, and `y_test_ground_truth.npy`.
 4. **Dual Macro F1 Evaluation Conventions Formalized**:
@@ -122,8 +122,8 @@ Audit executed via [`scripts/verify_spatial_distance.py`](file:///c:/Users/B%20N
   Column: `labels` in `BEN_14k/metadata.parquet` (stores Python arrays of aggregated BigEarthNet class strings for each patch).
 
 ### 2.2 CORINE Land Cover (CLC) to BigEarthNet 19-Class Aggregation Scheme
-In Sumbul et al. (2021, Table 1), the original 43 CORINE Land Cover (CLC) Level-3 classes were consolidated into 19 classes to eliminate spatial-spectral ambiguities in Sentinel-2 imagery. Crucially:
-* **CLC 332 (Bare rocks)** is designated as **"Unlabeled" (Excluded)** from the 19-class taxonomy because bare rock surfaces cannot be reliably distinguished from other spectrally similar bare surfaces without multitemporal thermal or structural sounding. It is not subsumed into grassland or any other active category.
+In Sumbul et al. (2021, Table 1), the original 43 CORINE Land Cover (CLC) Level-3 classes were consolidated into 19 classes. Crucially:
+* **CLC 332 (Bare rock)** is excluded from the recommended BigEarthNet 19-class nomenclature. In the BEN_14k regional subset, the active class vocabulary contains 16 classes. The mapping of CLC 321 and CLC 333 to Natural grassland and sparsely vegetated areas follows the published nomenclature.
 * **Natural grassland and sparsely vegetated areas** strictly combines **CLC 321 (Natural grasslands)** and **CLC 333 (Sparsely vegetated areas)**.
 * **Regional Vocabulary**: Of the 19 standard classes, exactly 16 appear in continental Serbia (`country == 'Serbia'`). Three classes have zero occurrences: `Marine waters` (CLC 521, 522, 523; inland Serbia has no sea), `Coastal wetlands` (CLC 421, 422; no marine coast), and `Agro-forestry areas` (CLC 244; not delineated in Serbian CLC 2018).
 
@@ -182,6 +182,10 @@ Saved in [`artifacts/benchmarks/land_cover_reconciliation_audit.json`](file:///c
 | **Macro F1 (14 Test-Present)** | 48.14% | 52.72% | **54.16%** |
 | **Hamming Loss** | 0.1084 | **0.0899** | 0.0976 |
 | **Exact Subset Match** | 20.35% | **27.74%** | 22.66% |
+
+> [!NOTE]
+> **Threshold Tuning Trade-off Analysis**:
+> Optimizing per-class decision thresholds on the validation set deliberately balances minority class sensitivity against majority-class precision. While Macro F1 across all 16 classes improves from $46.13\%$ to $47.39\%$ ($+1.26\%$) and across 14 test-present classes from $52.72\%$ to $54.16\%$ ($+1.44\%$), aggregate Micro F1 declines slightly from $73.28\%$ to $72.99\%$ ($-0.29\%$), Hamming Loss increases from $0.0899$ to $0.0976$, and exact subset match decreases from $27.74\%$ to $22.66\%$. Both configurations are reported side-by-side to reflect this operational trade-off objectively, rather than presenting threshold tuning as an unconditional improvement.
 
 ### 3.3 Per-Class Performance on Held-Out Test Set ($N=3,248$, Tuned $\tau$)
 Saved in [`artifacts/benchmarks/land_cover_per_class_test_metrics.csv`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/artifacts/benchmarks/land_cover_per_class_test_metrics.csv):
@@ -267,6 +271,10 @@ Saved in [`artifacts/benchmarks/oscd_methods_pooled_comparison.csv`](file:///c:/
 | **Regime B (Parameter Ablation)** | Radiometrically Aligned CVA ($\tau=0.28$) | 0.5996 | 0.1195 | **0.1992** | 0.1106 | 19,002 | 140,075 | 12,687 |
 | **Regime B (Parameter Ablation)** | Gaussian-Smoothed CVA ($\tau=0.26$) | 0.6268 | 0.1818 | **0.2818** | 0.1640 | 28,915 | 130,162 | 17,215 |
 | **Regime B (Parameter Ablation)** | Dual-Threshold Hysteresis CVA ($\tau_{\text{high}}=0.28$) | 0.2535 | 0.4360 | **0.3206** | 0.1909 | 69,364 | 89,713 | 204,219 |
+
+> [!NOTE]
+> **Role of OSCD Metrics in SatQuery AI Research Scope**:
+> In Regime A, Gaussian-smoothed CVA achieves the highest pooled $F_1$ ($0.3393$), while in Regime B, dual-threshold hysteresis CVA achieves the highest pooled $F_1$ ($0.3206$). These figures represent **classical specialist perception baselines**. They establish the baseline perception accuracy for change detection against which future deep specialists will be compared, but do not themselves constitute evidence of selective routing performance.
 
 ### 5.3 Per-Scene Performance: Regime A (Validation-Tuned)
 Saved in [`artifacts/benchmarks/oscd_historical_validation_tuned_per_scene.csv`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/artifacts/benchmarks/oscd_historical_validation_tuned_per_scene.csv):
