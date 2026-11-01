@@ -3,7 +3,7 @@
   "project_title": "Sensor- and Task-Compatibility-Constrained Selective Routing for Multimodal Earth Observation",
   "sih_problem_code": "SIH26167",
   "phase": "Phase 1 - Router and Compatibility Engine Hardening",
-  "timestamp_utc": "2026-11-01T05:15:00Z",
+  "timestamp_utc": "2026-11-01T06:08:00Z",
   "environment": {
     "python_version": "3.14.3",
     "os": "Windows 11 AMD64",
@@ -25,13 +25,13 @@
     }
   },
   "artifact_integrity": {
-    "artifacts/router/router_model.joblib": "46f476a72af42242cccb64f430d0affdd34d3f04f2bc4da511b540301e04b4ec",
+    "artifacts/router/router_model.joblib": "812fc1f60e2acc42441b8b39926363bed43bb25ca6adb47a661ce4a56bc0a45b",
     "artifacts/specialists/land_cover_phase2/model.joblib": "f785ca1f5e9691c17e4a17ebf3f6766f7053059ba871188d24f6dce0ed43d071",
     "data/benchmark_n200_catalog.json": "d287cde9e76c25c42548090606545e97d7db8de76287482498fc3304fa1505f8",
-    "artifacts/benchmarks/n200_routing_baselines_summary.json": "26e8dffd3efb094fc73d5b1869b44119f2c217e0a174dcd566e3f0544666bfec",
+    "artifacts/benchmarks/n200_routing_baselines_summary.json": "64a9ee451ee0cb7fbd22e4982c82a15979babcd86ef2f70a8f3bac5420a761fb",
     "artifacts/benchmarks/n200_threshold_sweep_summary.json": "62329fce77257efb64e88ed59d9307b91f862cb318fcfd11bb2dad44373997f7",
     "artifacts/benchmarks/risk_coverage_curves.png": "f0dc9869131220436d4f44b3984d9d1aa187666c2f79a53115d77b9871a51676",
-    "artifacts/benchmarks/corrected_n60_routing_baselines_summary.json": "909539e0b06e6dc1d90a6fa601ce24713073b81f6ab91e127f6d80ea934659f4"
+    "artifacts/benchmarks/corrected_n60_routing_baselines_summary.json": "31c8252587007cee93161fab82b32b61cf05e4ad2ec6da92498ad15f1551764d"
   },
   "source_code_integrity": {
     "satquery/router.py": "81406e62f27b6d024d9aefe9206be0a8138dc9218b37dc951768d1e8254bf437",
@@ -44,6 +44,8 @@
     "input_contracts_formalized": true,
     "baseline_aggregation_bug_corrected": true,
     "n200_benchmark_evaluated": true,
-    "threshold_sweep_complete": true
+    "threshold_sweep_complete": true,
+    "provisional_incompatible_rate_reconciled": true,
+    "provisional_incompatible_rate_pct": 4.29
   }
 }

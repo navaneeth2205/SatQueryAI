@@ -591,6 +591,7 @@ def evaluate_proposed_policy(
                 if sc.get("expected_task") != resp.routed_task:
                     executed_error = True
             elif not sc.get("is_input_compatible", True):
+                incompatible_dispatch = True
                 executed_error = True
             elif resp.routed_task != sc.get("expected_task") and "supported_compatible" in sc.get("cohort", ""):
                 executed_error = True
