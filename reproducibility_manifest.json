@@ -83,7 +83,9 @@
     "phase2_test_macro_f1_all_16": 47.39,
     "phase2_test_macro_f1_present_14": 54.16,
     "phase2_taxonomy_reconciled": true,
-    "phase2_oscd_multi_regime_reconciled": true
+    "phase2_oscd_multi_regime_reconciled": true,
+    "phase2_prediction_level_evidence_verified": true,
+    "phase2_regime_b_naming": "Controlled Parameter Ablation"
   },
   "source_and_scripts_integrity": {
     "satquery/router.py": "be91b6a09db1158d77e35ae2b01c9f1cebe2a01546312f1d1cdc53a2860e7cf2",
@@ -119,5 +121,23 @@
     "data/X_train_phase2.npy": "b3bc80385d1c625e5e707e2bd503fd81d9ce1b80cf80b136611fd965134ee78a",
     "data/X_val_phase2.npy": "79c453fa50ab1ecadd5042e5bf1d25d16d9a2bfad46bfe0f7debc07520409289",
     "data/X_test_phase2.npy": "4b4e6aa09f08d43ece6b8fea5512e8ad06111c977c1467a1aec26b09763e0b72"
+  },
+  "phase2_prediction_and_ground_truth_integrity": {
+    "data/y_test_ground_truth.npy": "d776b34d80fc8ff9b19022ec0d3ccdf938b1c9bbf7867a231d4b7d1058dbfb23",
+    "data/y_val_ground_truth.npy": "5faa7a958191c21cbc99888d181e530064ac8f6103214cabd7b0c4d8cd0f08f7",
+    "artifacts/specialists/land_cover_phase2/predictions/y_test_prob_matrix.npy": "b11396cced559df09a21a9ed863221fe7537217858f3d4e0f7b9464cabbd06cc",
+    "artifacts/specialists/land_cover_phase2/predictions/y_test_pred_lgb_tuned.npy": "9de9304ac35ce88e71fbb55ef3ae816334f2737fa3c28defc08a01678efe7e68",
+    "artifacts/specialists/land_cover_phase2/predictions/y_test_pred_lgb_default.npy": "83e928609c5d007f9af96ae570c67936478cf49dc294830f75158d26832d14d5",
+    "artifacts/specialists/change_detection/predictions/prediction_manifest.json": "854c277ca26737331477fc262f7b3b4d04ba0bdbd652cb7935504d88cd9c9207",
+    "data/oscd/test/aguasclaras/cm.png": "ce69194158f54fa986aa3a41664572c6888cdbe5ac12d9e09813af466a2a4286",
+    "data/oscd/test/austin/cm.png": "fef6d022c612911d7960303eebbfb411358195dd21bfca72dcfed679bafb2cd2",
+    "data/oscd/test/beihai/cm.png": "cc55d25958b5de29384a0fe7c36a8d17e274534c19d3ec4109e263de9ee323c7",
+    "data/oscd/test/berlin/cm.png": "03009cab3ef9113e6131503e086eb733f30317223358fb9db10302acdc17971d",
+    "data/oscd/test/brasilia/cm.png": "4c2415173c85647f133ef7bfac5bc0a7d6a67b9a8399472fe6ef464b56a2ab33",
+    "data/oscd/test/budapest/cm.png": "d1199ede89faf0dbafbc8ac52ee08fe5cbfb6cfa0006d2a7a96348310f6ac282",
+    "data/oscd/test/campinas/cm.png": "605ae8af713f00842e3add08af0b99b8e4063ade1020fe6df1782cd4749366a1",
+    "data/oscd/test/mumbai/cm.png": "1d4d4b6821ad72843c59a621f48318b8174ba2cdaf262876135ce593279b0e0c",
+    "data/oscd/test/nantes/cm.png": "790dd22bdfd243fb47b7665b1901afe65ae9d8e079909ba2158d17425196f863",
+    "data/oscd/test/pisa/cm.png": "afabd431a75361c49273ddada203958d7e5d9af7656e1cb494c9fb18bca94fe8"
   }
 }
