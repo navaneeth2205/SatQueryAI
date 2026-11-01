@@ -14,7 +14,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-001"
+      "scenario_id": "BENCH-001",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -28,7 +29,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-002"
+      "scenario_id": "BENCH-002",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -42,7 +44,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-003"
+      "scenario_id": "BENCH-003",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -56,7 +59,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-004"
+      "scenario_id": "BENCH-004",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -70,7 +74,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-005"
+      "scenario_id": "BENCH-005",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -84,7 +89,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-006"
+      "scenario_id": "BENCH-006",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -98,7 +104,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-007"
+      "scenario_id": "BENCH-007",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -112,7 +119,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-008"
+      "scenario_id": "BENCH-008",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -126,7 +134,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-009"
+      "scenario_id": "BENCH-009",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -140,7 +149,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-010"
+      "scenario_id": "BENCH-010",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -154,7 +164,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-011"
+      "scenario_id": "BENCH-011",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -168,7 +179,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-012"
+      "scenario_id": "BENCH-012",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -182,7 +194,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-013"
+      "scenario_id": "BENCH-013",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -196,7 +209,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-014"
+      "scenario_id": "BENCH-014",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -210,7 +224,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-015"
+      "scenario_id": "BENCH-015",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -224,7 +239,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-016"
+      "scenario_id": "BENCH-016",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -238,7 +254,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-017"
+      "scenario_id": "BENCH-017",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -252,7 +269,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-018"
+      "scenario_id": "BENCH-018",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -266,7 +284,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-019"
+      "scenario_id": "BENCH-019",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -280,7 +299,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-020"
+      "scenario_id": "BENCH-020",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -294,7 +314,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-021"
+      "scenario_id": "BENCH-021",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -308,7 +329,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-022"
+      "scenario_id": "BENCH-022",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -322,7 +344,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-023"
+      "scenario_id": "BENCH-023",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -336,7 +359,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-024"
+      "scenario_id": "BENCH-024",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -350,7 +374,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-025"
+      "scenario_id": "BENCH-025",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -364,7 +389,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-026"
+      "scenario_id": "BENCH-026",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -378,7 +404,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-027"
+      "scenario_id": "BENCH-027",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -392,7 +419,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-028"
+      "scenario_id": "BENCH-028",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -406,7 +434,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-029"
+      "scenario_id": "BENCH-029",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -420,7 +449,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-030"
+      "scenario_id": "BENCH-030",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -434,7 +464,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-031"
+      "scenario_id": "BENCH-031",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -448,7 +479,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-032"
+      "scenario_id": "BENCH-032",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -462,7 +494,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-033"
+      "scenario_id": "BENCH-033",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -476,7 +509,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-034"
+      "scenario_id": "BENCH-034",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -490,7 +524,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-035"
+      "scenario_id": "BENCH-035",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "1_supported_compatible",
@@ -504,7 +539,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-036"
+      "scenario_id": "BENCH-036",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -518,7 +554,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-037"
+      "scenario_id": "BENCH-037",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -532,7 +569,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-038"
+      "scenario_id": "BENCH-038",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -546,7 +584,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-039"
+      "scenario_id": "BENCH-039",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -560,7 +599,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-040"
+      "scenario_id": "BENCH-040",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -574,7 +614,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-041"
+      "scenario_id": "BENCH-041",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -588,7 +629,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-042"
+      "scenario_id": "BENCH-042",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -602,7 +644,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-043"
+      "scenario_id": "BENCH-043",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -616,7 +659,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-044"
+      "scenario_id": "BENCH-044",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -630,7 +674,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-045"
+      "scenario_id": "BENCH-045",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -644,7 +689,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-046"
+      "scenario_id": "BENCH-046",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -658,7 +704,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-047"
+      "scenario_id": "BENCH-047",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -672,7 +719,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-048"
+      "scenario_id": "BENCH-048",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -686,7 +734,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-049"
+      "scenario_id": "BENCH-049",
+      "group_split": "group_val"
     },
     {
       "cohort": "1_supported_compatible",
@@ -700,7 +749,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-050"
+      "scenario_id": "BENCH-050",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -714,7 +764,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-051"
+      "scenario_id": "BENCH-051",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -728,7 +779,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-052"
+      "scenario_id": "BENCH-052",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -742,7 +794,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-053"
+      "scenario_id": "BENCH-053",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -756,7 +809,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-054"
+      "scenario_id": "BENCH-054",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -770,7 +824,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-055"
+      "scenario_id": "BENCH-055",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -784,7 +839,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-056"
+      "scenario_id": "BENCH-056",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -798,7 +854,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-057"
+      "scenario_id": "BENCH-057",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -812,7 +869,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-058"
+      "scenario_id": "BENCH-058",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -826,7 +884,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-059"
+      "scenario_id": "BENCH-059",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -840,7 +899,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-060"
+      "scenario_id": "BENCH-060",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -854,7 +914,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-061"
+      "scenario_id": "BENCH-061",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -868,7 +929,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-062"
+      "scenario_id": "BENCH-062",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -882,7 +944,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-063"
+      "scenario_id": "BENCH-063",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -896,7 +959,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-064"
+      "scenario_id": "BENCH-064",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -910,7 +974,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-065"
+      "scenario_id": "BENCH-065",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -924,7 +989,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-066"
+      "scenario_id": "BENCH-066",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -938,7 +1004,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-067"
+      "scenario_id": "BENCH-067",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -952,7 +1019,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-068"
+      "scenario_id": "BENCH-068",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -966,7 +1034,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-069"
+      "scenario_id": "BENCH-069",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -980,7 +1049,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-070"
+      "scenario_id": "BENCH-070",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -994,7 +1064,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-071"
+      "scenario_id": "BENCH-071",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1008,7 +1079,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-072"
+      "scenario_id": "BENCH-072",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1022,7 +1094,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-073"
+      "scenario_id": "BENCH-073",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1036,7 +1109,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-074"
+      "scenario_id": "BENCH-074",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1050,7 +1124,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-075"
+      "scenario_id": "BENCH-075",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1064,7 +1139,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-076"
+      "scenario_id": "BENCH-076",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1078,7 +1154,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-077"
+      "scenario_id": "BENCH-077",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1092,7 +1169,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-078"
+      "scenario_id": "BENCH-078",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1106,7 +1184,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-079"
+      "scenario_id": "BENCH-079",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1120,7 +1199,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-080"
+      "scenario_id": "BENCH-080",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1134,7 +1214,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-081"
+      "scenario_id": "BENCH-081",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1148,7 +1229,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-082"
+      "scenario_id": "BENCH-082",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1162,7 +1244,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-083"
+      "scenario_id": "BENCH-083",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1176,7 +1259,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-084"
+      "scenario_id": "BENCH-084",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1190,7 +1274,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-085"
+      "scenario_id": "BENCH-085",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1204,7 +1289,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-086"
+      "scenario_id": "BENCH-086",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1218,7 +1304,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-087"
+      "scenario_id": "BENCH-087",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1232,7 +1319,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-088"
+      "scenario_id": "BENCH-088",
+      "group_split": "group_val"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1246,7 +1334,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-089"
+      "scenario_id": "BENCH-089",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "2_supported_incompatible_input",
@@ -1260,7 +1349,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-090"
+      "scenario_id": "BENCH-090",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1274,7 +1364,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-091"
+      "scenario_id": "BENCH-091",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1288,7 +1379,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-092"
+      "scenario_id": "BENCH-092",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1302,7 +1394,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-093"
+      "scenario_id": "BENCH-093",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1316,7 +1409,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-094"
+      "scenario_id": "BENCH-094",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1330,7 +1424,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-095"
+      "scenario_id": "BENCH-095",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1344,7 +1439,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-096"
+      "scenario_id": "BENCH-096",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1358,7 +1454,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-097"
+      "scenario_id": "BENCH-097",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1372,7 +1469,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-098"
+      "scenario_id": "BENCH-098",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1386,7 +1484,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-099"
+      "scenario_id": "BENCH-099",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1400,7 +1499,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-100"
+      "scenario_id": "BENCH-100",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1414,7 +1514,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-101"
+      "scenario_id": "BENCH-101",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1428,7 +1529,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-102"
+      "scenario_id": "BENCH-102",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1442,7 +1544,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-103"
+      "scenario_id": "BENCH-103",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1456,7 +1559,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-104"
+      "scenario_id": "BENCH-104",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1470,7 +1574,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-105"
+      "scenario_id": "BENCH-105",
+      "group_split": "group_val"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1484,7 +1589,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-106"
+      "scenario_id": "BENCH-106",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1498,7 +1604,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-107"
+      "scenario_id": "BENCH-107",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1512,7 +1619,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-108"
+      "scenario_id": "BENCH-108",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1526,7 +1634,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-109"
+      "scenario_id": "BENCH-109",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1540,7 +1649,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-110"
+      "scenario_id": "BENCH-110",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1554,7 +1664,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-111"
+      "scenario_id": "BENCH-111",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1568,7 +1679,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-112"
+      "scenario_id": "BENCH-112",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1582,7 +1694,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-113"
+      "scenario_id": "BENCH-113",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1596,7 +1709,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-114"
+      "scenario_id": "BENCH-114",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1610,7 +1724,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-115"
+      "scenario_id": "BENCH-115",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1624,7 +1739,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-116"
+      "scenario_id": "BENCH-116",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1638,7 +1754,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-117"
+      "scenario_id": "BENCH-117",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1652,7 +1769,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-118"
+      "scenario_id": "BENCH-118",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1666,7 +1784,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-119"
+      "scenario_id": "BENCH-119",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "3_missing_sensor_modalities",
@@ -1680,7 +1799,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": false,
       "expected_action": "REJECTED_INCOMPATIBLE",
-      "scenario_id": "BENCH-120"
+      "scenario_id": "BENCH-120",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1694,7 +1814,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-121"
+      "scenario_id": "BENCH-121",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1708,7 +1829,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-122"
+      "scenario_id": "BENCH-122",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1722,7 +1844,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-123"
+      "scenario_id": "BENCH-123",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1736,7 +1859,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-124"
+      "scenario_id": "BENCH-124",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1750,7 +1874,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-125"
+      "scenario_id": "BENCH-125",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1764,7 +1889,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-126"
+      "scenario_id": "BENCH-126",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1778,7 +1904,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-127"
+      "scenario_id": "BENCH-127",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1792,7 +1919,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-128"
+      "scenario_id": "BENCH-128",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1806,7 +1934,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-129"
+      "scenario_id": "BENCH-129",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1820,7 +1949,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-130"
+      "scenario_id": "BENCH-130",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1834,7 +1964,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-131"
+      "scenario_id": "BENCH-131",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1848,7 +1979,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-132"
+      "scenario_id": "BENCH-132",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1862,7 +1994,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-133"
+      "scenario_id": "BENCH-133",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1876,7 +2009,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-134"
+      "scenario_id": "BENCH-134",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1890,7 +2024,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-135"
+      "scenario_id": "BENCH-135",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1904,7 +2039,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-136"
+      "scenario_id": "BENCH-136",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1918,7 +2054,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-137"
+      "scenario_id": "BENCH-137",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1932,7 +2069,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-138"
+      "scenario_id": "BENCH-138",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1946,7 +2084,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-139"
+      "scenario_id": "BENCH-139",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1960,7 +2099,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "EXECUTED",
-      "scenario_id": "BENCH-140"
+      "scenario_id": "BENCH-140",
+      "group_split": "group_val"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1974,7 +2114,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-141"
+      "scenario_id": "BENCH-141",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -1988,7 +2129,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-142"
+      "scenario_id": "BENCH-142",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2002,7 +2144,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-143"
+      "scenario_id": "BENCH-143",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2016,7 +2159,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-144"
+      "scenario_id": "BENCH-144",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2030,7 +2174,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-145"
+      "scenario_id": "BENCH-145",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2044,7 +2189,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-146"
+      "scenario_id": "BENCH-146",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2058,7 +2204,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-147"
+      "scenario_id": "BENCH-147",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2072,7 +2219,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-148"
+      "scenario_id": "BENCH-148",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2086,7 +2234,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-149"
+      "scenario_id": "BENCH-149",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2100,7 +2249,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-150"
+      "scenario_id": "BENCH-150",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2114,7 +2264,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-151"
+      "scenario_id": "BENCH-151",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2128,7 +2279,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-152"
+      "scenario_id": "BENCH-152",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2142,7 +2294,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-153"
+      "scenario_id": "BENCH-153",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2156,7 +2309,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-154"
+      "scenario_id": "BENCH-154",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2170,7 +2324,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-155"
+      "scenario_id": "BENCH-155",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2184,7 +2339,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-156"
+      "scenario_id": "BENCH-156",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2198,7 +2354,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-157"
+      "scenario_id": "BENCH-157",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2212,7 +2369,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-158"
+      "scenario_id": "BENCH-158",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2226,7 +2384,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-159"
+      "scenario_id": "BENCH-159",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "4_ambiguous_multi_intent",
@@ -2240,7 +2399,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-160"
+      "scenario_id": "BENCH-160",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2254,7 +2414,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-161"
+      "scenario_id": "BENCH-161",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2268,7 +2429,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-162"
+      "scenario_id": "BENCH-162",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2282,7 +2444,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-163"
+      "scenario_id": "BENCH-163",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2296,7 +2459,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-164"
+      "scenario_id": "BENCH-164",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2310,7 +2474,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-165"
+      "scenario_id": "BENCH-165",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2324,7 +2489,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-166"
+      "scenario_id": "BENCH-166",
+      "group_split": "group_val"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2338,7 +2504,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-167"
+      "scenario_id": "BENCH-167",
+      "group_split": "group_val"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2352,7 +2519,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-168"
+      "scenario_id": "BENCH-168",
+      "group_split": "group_val"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2366,7 +2534,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-169"
+      "scenario_id": "BENCH-169",
+      "group_split": "group_val"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2380,7 +2549,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-170"
+      "scenario_id": "BENCH-170",
+      "group_split": "group_val"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2394,7 +2564,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-171"
+      "scenario_id": "BENCH-171",
+      "group_split": "group_val"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2408,7 +2579,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-172"
+      "scenario_id": "BENCH-172",
+      "group_split": "group_val"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2422,7 +2594,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-173"
+      "scenario_id": "BENCH-173",
+      "group_split": "group_val"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2436,7 +2609,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-174"
+      "scenario_id": "BENCH-174",
+      "group_split": "group_val"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2450,7 +2624,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-175"
+      "scenario_id": "BENCH-175",
+      "group_split": "group_val"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2464,7 +2639,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-176"
+      "scenario_id": "BENCH-176",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2478,7 +2654,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-177"
+      "scenario_id": "BENCH-177",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2492,7 +2669,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-178"
+      "scenario_id": "BENCH-178",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2506,7 +2684,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-179"
+      "scenario_id": "BENCH-179",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "5_unsupported_tasks",
@@ -2520,7 +2699,8 @@
       "is_input_compatible": true,
       "is_ood_or_ambiguous": false,
       "expected_action": "REFUSED_UNAVAILABLE",
-      "scenario_id": "BENCH-180"
+      "scenario_id": "BENCH-180",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2534,7 +2714,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-181"
+      "scenario_id": "BENCH-181",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2548,7 +2729,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-182"
+      "scenario_id": "BENCH-182",
+      "group_split": "group_val"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2562,7 +2744,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-183"
+      "scenario_id": "BENCH-183",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2576,7 +2759,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-184"
+      "scenario_id": "BENCH-184",
+      "group_split": "group_val"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2590,7 +2774,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-185"
+      "scenario_id": "BENCH-185",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2604,7 +2789,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-186"
+      "scenario_id": "BENCH-186",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2618,7 +2804,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-187"
+      "scenario_id": "BENCH-187",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2632,7 +2819,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-188"
+      "scenario_id": "BENCH-188",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2646,7 +2834,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-189"
+      "scenario_id": "BENCH-189",
+      "group_split": "group_val"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2660,7 +2849,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-190"
+      "scenario_id": "BENCH-190",
+      "group_split": "group_val"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2674,7 +2864,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-191"
+      "scenario_id": "BENCH-191",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2688,7 +2879,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-192"
+      "scenario_id": "BENCH-192",
+      "group_split": "group_val"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2702,7 +2894,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-193"
+      "scenario_id": "BENCH-193",
+      "group_split": "group_val"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2716,7 +2909,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-194"
+      "scenario_id": "BENCH-194",
+      "group_split": "group_val"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2730,7 +2924,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-195"
+      "scenario_id": "BENCH-195",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2744,7 +2939,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-196"
+      "scenario_id": "BENCH-196",
+      "group_split": "group_val"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2758,7 +2954,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-197"
+      "scenario_id": "BENCH-197",
+      "group_split": "group_val"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2772,7 +2969,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-198"
+      "scenario_id": "BENCH-198",
+      "group_split": "group_val"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2786,7 +2984,8 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-199"
+      "scenario_id": "BENCH-199",
+      "group_split": "group_test_held_out"
     },
     {
       "cohort": "6_out_of_distribution",
@@ -2800,7 +2999,11 @@
       "is_input_compatible": false,
       "is_ood_or_ambiguous": true,
       "expected_action": "HALTED_UNCERTAINTY",
-      "scenario_id": "BENCH-200"
+      "scenario_id": "BENCH-200",
+      "group_split": "group_test_held_out"
     }
-  ]
+  ],
+  "metadata": {
+    "group_split_description": "Group-based held-out template-family evaluation: 20 families in group_val (N=100) vs 21 families in group_test_held_out (N=100) with 0% family overlap."
+  }
 }

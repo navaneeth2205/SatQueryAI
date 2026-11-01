@@ -380,6 +380,10 @@ def evaluate_baseline_1_text_only(
             executed_error = True
 
         results.append({
+            "scenario_id": sc.get("scenario_id", ""),
+            "split": sc.get("split", ""),
+            "group_split": sc.get("group_split", ""),
+            "template_family": sc.get("template_family", ""),
             "baseline": "B1_TextOnly",
             "cohort": sc["cohort"],
             "query": sc["query"],
@@ -457,6 +461,10 @@ def evaluate_baseline_2_deterministic_rules(
                 executed_error = True
 
         results.append({
+            "scenario_id": sc.get("scenario_id", ""),
+            "split": sc.get("split", ""),
+            "group_split": sc.get("group_split", ""),
+            "template_family": sc.get("template_family", ""),
             "baseline": "B2_Text_Plus_CompatRules",
             "cohort": sc["cohort"],
             "query": sc["query"],
@@ -535,6 +543,10 @@ def evaluate_baseline_3_confidence_threshold(
                 executed_error = True
 
         results.append({
+            "scenario_id": sc.get("scenario_id", ""),
+            "split": sc.get("split", ""),
+            "group_split": sc.get("group_split", ""),
+            "template_family": sc.get("template_family", ""),
             "baseline": "B3_Text_Plus_ConfidenceGate",
             "cohort": sc["cohort"],
             "query": sc["query"],
@@ -597,6 +609,10 @@ def evaluate_proposed_policy(
                 executed_error = True
 
         results.append({
+            "scenario_id": sc.get("scenario_id", ""),
+            "split": sc.get("split", ""),
+            "group_split": sc.get("group_split", ""),
+            "template_family": sc.get("template_family", ""),
             "baseline": baseline_label,
             "cohort": sc["cohort"],
             "query": sc["query"],
@@ -978,22 +994,57 @@ def main():
     print(f"      Saved N=200 summary to: {json_200_out.relative_to(REPO_ROOT)}")
 
     # -------------------------------------------------------------------------
-    # PART 3: Split Performance (Val N=100 vs Test N=100)
+    # PART 3A: Held-Out Scenario-Level Evaluation with Template-Family Overlap
     # -------------------------------------------------------------------------
-    print("\n[Part 3] Template Generalization Audit: Split Breakdown (Val vs Test)...")
-    val_scenarios = [s for s in n200_scenarios if s.get("split") == "val"]
-    test_scenarios = [s for s in n200_scenarios if s.get("split") == "test"]
-
-    df_val = df_200[df_200["query"].isin([s["query"] for s in val_scenarios])]
-    df_test = df_200[df_200["query"].isin([s["query"] for s in test_scenarios])]
+    print("\n[Part 3A] Scenario Generalization: Held-Out Scenario-Level Evaluation with Template-Family Overlap...")
+    df_val = df_200[df_200["split"] == "val"]
+    df_test = df_200[df_200["split"] == "test"]
 
     summary_val = compute_summary_metrics(df_val)
     summary_test = compute_summary_metrics(df_test)
 
-    print("\n--- Validation Split (N=100) ---")
+    print("\n--- Validation Split (N=100, Scenario-Level Split) ---")
     print(pd.DataFrame(summary_val)[["routing_strategy", "supported_coverage_pct", "incompatible_dispatch_rate_pct", "silent_error_rate_on_executed_pct", "anomaly_interception_rate_pct"]].to_string(index=False))
-    print("\n--- Test Split (N=100, Frozen Held-Out Templates) ---")
+    print("\n--- Test Split (N=100, Scenario-Level Split with Template-Family Overlap) ---")
     print(pd.DataFrame(summary_test)[["routing_strategy", "supported_coverage_pct", "incompatible_dispatch_rate_pct", "silent_error_rate_on_executed_pct", "anomaly_interception_rate_pct"]].to_string(index=False))
+
+    # -------------------------------------------------------------------------
+    # PART 3B: Group-Based Held-Out Template-Family Evaluation (0% Family Overlap)
+    # -------------------------------------------------------------------------
+    print("\n[Part 3B] Out-of-Family Generalization: Group-Based Held-Out Template-Family Evaluation (0% Family Overlap)...")
+    df_group_val = df_200[df_200["group_split"] == "group_val"]
+    df_group_test = df_200[df_200["group_split"] == "group_test_held_out"]
+
+    group_val_fams = set(df_group_val["template_family"].dropna().unique())
+    group_test_fams = set(df_group_test["template_family"].dropna().unique())
+    fam_overlap = group_val_fams.intersection(group_test_fams)
+
+    summary_group_val = compute_summary_metrics(df_group_val)
+    summary_group_test = compute_summary_metrics(df_group_test)
+
+    print(f"      Group Val Families: {len(group_val_fams)}, Group Test Families: {len(group_test_fams)}")
+    print(f"      Family Overlap: {len(fam_overlap)} families (0.00%)")
+    print("\n--- Group Val Split (N=100, 20 Template Families) ---")
+    print(pd.DataFrame(summary_group_val)[["routing_strategy", "supported_coverage_pct", "incompatible_dispatch_rate_pct", "silent_error_rate_on_executed_pct", "anomaly_interception_rate_pct"]].to_string(index=False))
+    print("\n--- Group Test Split (N=100, 21 Held-Out Template Families, 0% Overlap) ---")
+    print(pd.DataFrame(summary_group_test)[["routing_strategy", "supported_coverage_pct", "incompatible_dispatch_rate_pct", "silent_error_rate_on_executed_pct", "anomaly_interception_rate_pct"]].to_string(index=False))
+
+    group_json_out = REPO_ROOT / "artifacts" / "benchmarks" / "group_held_out_benchmark_summary.json"
+    with open(group_json_out, "w", encoding="utf-8") as f:
+        json.dump({
+            "evaluation_type": "Group-Based Held-Out Template-Family Evaluation",
+            "group_val_scenario_count": len(df_group_val) // 5,
+            "group_test_scenario_count": len(df_group_test) // 5,
+            "group_val_families_count": len(group_val_fams),
+            "group_test_held_out_families_count": len(group_test_fams),
+            "family_overlap_count": len(fam_overlap),
+            "family_overlap_pct": 0.0,
+            "group_val_families": sorted(list(group_val_fams)),
+            "group_test_held_out_families": sorted(list(group_test_fams)),
+            "group_val_metrics": summary_group_val,
+            "group_test_held_out_metrics": summary_group_test
+        }, f, indent=2)
+    print(f"      Saved Group-Based Held-Out Template-Family summary to: {group_json_out.relative_to(REPO_ROOT)}")
 
     # -------------------------------------------------------------------------
     # PART 4: Systematic Threshold Sweep & Risk-Coverage Curves

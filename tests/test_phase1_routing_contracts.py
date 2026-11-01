@@ -210,3 +210,84 @@ def test_operating_threshold_risk_control_property(router):
 
     # Reset default threshold
     router.confidence_threshold = 0.65
+
+
+# Test 11: Anti-Coercion Invariant on BENCH-056, 059, 062 in Both Clarify and Provisional Modes
+def test_anti_coercion_invariant_bench_056_059_062(router, engine):
+    """
+    Verify the architectural invariant:
+    An explicit linguistic task must never be overwritten merely because another task
+    is compatible with the attached observation.
+    """
+    engine_clarify = SatQueryEngine(router=router, registry=engine.registry, routing_policy="clarify")
+    engine_provisional = SatQueryEngine(router=router, registry=engine.registry, routing_policy="provisional")
+
+    t1 = np.zeros((64, 64, 3), dtype=np.uint8)
+    t2 = np.zeros((64, 64, 3), dtype=np.uint8)
+    pair = (t1, t2)
+
+    cases = [
+        ("BENCH-056", "Detect arable cropland and olive groves in this single scene."),
+        ("BENCH-059", "Identify artificial surfaces and transportation infrastructure across this scene."),
+        ("BENCH-062", "Detect marine inlets, lagoons, and salt marshes in this satellite patch.")
+    ]
+
+    for cid, query in cases:
+        # 1. Router predict check
+        route = router.predict(query, image_metadata=pair)
+        assert route.selected_task == "LAND_COVER_CLASSIFICATION", f"Coercion failed for {cid}: got {route.selected_task}"
+        assert route.input_compatibility is False, f"Compatibility wrongly claimed for {cid}"
+        assert "prevent task coercion" in route.routing_reason
+
+        # 2. Clarify mode check: halts for clarification
+        resp_c = engine_clarify.process_query(query, input_data=pair)
+        assert resp_c.status == "NEEDS_CLARIFICATION"
+        assert resp_c.routed_task == "LAND_COVER_CLASSIFICATION"
+        assert resp_c.input_compatibility is False
+
+        # 3. Provisional mode check: rejects incompatible input without running Change Detection!
+        resp_p = engine_provisional.process_query(query, input_data=pair)
+        assert resp_p.status == "INCOMPATIBLE_INPUT", f"Provisional executed {cid} as {resp_p.status}"
+        assert resp_p.routed_task == "LAND_COVER_CLASSIFICATION"
+        assert resp_p.input_compatibility is False
+
+
+# Test 12: Adversarial Modal Coercion Resistance
+def test_adversarial_modal_coercion_resistance(router, engine):
+    """
+    Test adversarial query-input mismatches:
+    - Land-cover queries with temporal pairs (must NOT coerce to Change Detection)
+    - Change-detection queries with single images (must NOT coerce to single-image tasks)
+    - Optical-SAR fusion queries with single optical images (must NOT coerce to Land Cover)
+    - Broad ambiguous queries (MUST legitimately disambiguate using observation format)
+    """
+    engine_prov = SatQueryEngine(router=router, registry=engine.registry, routing_policy="provisional")
+
+    single_img = np.zeros((64, 64, 3), dtype=np.uint8)
+    temporal_pair = (np.zeros((64, 64, 3), dtype=np.uint8), np.zeros((64, 64, 3), dtype=np.uint8))
+    feat_vec = np.zeros(488, dtype=np.float32)
+
+    # A. Adversarial Land Cover + Temporal Pair
+    r_lc = engine_prov.process_query("Classify all biophysical land-cover categories across this footprint.", input_data=temporal_pair)
+    assert r_lc.routed_task == "LAND_COVER_CLASSIFICATION"
+    assert r_lc.status == "INCOMPATIBLE_INPUT"
+
+    # B. Adversarial Change Detection + Single Image
+    r_cd = engine_prov.process_query("Quantify newly built structures and land modifications between 2024 and 2026.", input_data=single_img)
+    assert r_cd.routed_task == "CHANGE_DETECTION"
+    assert r_cd.status == "INCOMPATIBLE_INPUT"
+
+    # C. Adversarial Fusion + Missing SAR
+    r_fusion = engine_prov.process_query("Perform optical and SAR radar backscatter fusion to classify soil moisture.", input_data=single_img)
+    assert r_fusion.routed_task == "OPTICAL_SAR_FUSION"
+    assert r_fusion.status == "UNAVAILABLE_SPECIALIST"
+
+    # D. Legitimate Multi-Modal Disambiguation on Broad Query
+    broad_q = "Analyze this satellite observation and report key findings."
+    r_disambig_pair = engine_prov.process_query(broad_q, input_data=temporal_pair)
+    assert r_disambig_pair.routed_task == "CHANGE_DETECTION"
+    assert r_disambig_pair.input_compatibility is True
+
+    r_disambig_feat = engine_prov.process_query(broad_q, input_data=feat_vec)
+    assert r_disambig_feat.routed_task == "LAND_COVER_CLASSIFICATION"
+    assert r_disambig_feat.input_compatibility is True

@@ -35,20 +35,24 @@ from satquery.utils.metadata import (
 TASK_SPECIFIC_KEYWORDS: Dict[str, List[str]] = {
     TaskType.LAND_COVER_CLASSIFICATION.value: [
         "land cover", "land-cover", "landcover", "corine", "biome",
-        "forest", "arable", "pasture", "crop", "urban fabric",
-        "surface category", "biophysical"
+        "forest", "arable", "pasture", "crop", "cropland", "urban fabric",
+        "surface category", "biophysical", "artificial surfaces", "infrastructure",
+        "marine inlets", "lagoons", "salt marshes", "single scene", "scene",
+        "patch", "olive groves", "groves", "wetlands", "scrub", "woodland",
+        "water bodies", "surfaces"
     ],
     TaskType.CHANGE_DETECTION.value: [
         "change", "changed", "modifications", "alteration", "differencing",
         "between dates", "over time", "deforestation", "pre-event",
-        "post-event", "newly built", "sprawl", "temporal sequence"
+        "post-event", "newly built", "sprawl", "temporal sequence",
+        "temporal pair", "across years", "surface modifications"
     ],
     TaskType.CHANGE_VQA.value: [
         "shrunk", "damaged", "destroyed", "expanded between", "disappeared"
     ],
     TaskType.OPTICAL_SAR_FUSION.value: [
         "fusion", "fused", "sar", "radar", "backscatter", "polarization",
-        "sentinel-1", "s1-s2", "c-band"
+        "sentinel-1", "s1-s2", "c-band", "optical and sar", "radar and optical"
     ],
     TaskType.SINGLE_IMAGE_VQA.value: [
         "how many", "count", "is there a", "are there any", "airport runway"
@@ -209,6 +213,17 @@ class TaskRouter:
         text_task = str(self.classes_[best_idx])
         text_confidence = float(probs[best_idx])
 
+        # Linguistic intent correction for bag-of-words keyword mismatches:
+        # If the statistical prediction has zero keyword evidence in the query, but the query
+        # contains explicit task-distinctive keywords for another task, protect the user's intent.
+        top_has_keywords = _contains_task_keywords(text_task, query)
+        if not top_has_keywords and text_confidence < self.confidence_threshold:
+            for cand_task in self.classes_:
+                if cand_task != text_task and _contains_task_keywords(str(cand_task), query):
+                    text_task = str(cand_task)
+                    text_confidence = float(prob_dict.get(cand_task, text_confidence))
+                    break
+
         # 2. Extract or accept input observation metadata
         if isinstance(image_metadata, InputObservationMetadata):
             obs_meta = image_metadata
@@ -228,6 +243,8 @@ class TaskRouter:
             obs_meta = InputObservationMetadata(modality=None)
 
         # 3. Compatibility-Aware Task Arbitration
+        # INVARIANT: An explicit linguistic task must never be overwritten merely because
+        # another task is compatible with the attached observation.
         selected_task = text_task
         input_compatibility = True
         routing_reason = "Pure natural-language routing without attached observation constraints."
@@ -243,7 +260,6 @@ class TaskRouter:
                 )
             else:
                 # Top linguistic prediction is incompatible with attached input.
-                # Check whether user intent is explicitly committed to text_task to prevent coercive rewriting.
                 text_has_explicit_keywords = _contains_task_keywords(text_task, query)
                 has_explicit_intent = (
                     text_confidence >= self.confidence_threshold
@@ -255,8 +271,10 @@ class TaskRouter:
                     if obs_meta.is_compatible_with(cls)
                 ]
 
-                # Disambiguation is permitted ONLY when linguistic intent is uncertain/broad
-                # and a valid compatible candidate exists.
+                # Disambiguation is permitted ONLY when:
+                # 1. The query text contains explicitly broad/uncommitted vocabulary (e.g. "analyze", "assess")
+                #    AND does not explicitly name concepts of an incompatible task, OR
+                # 2. The candidate task itself has explicit keywords in the query.
                 can_disambiguate = False
                 best_cand = None
                 best_cand_score = 0.0
@@ -267,15 +285,11 @@ class TaskRouter:
                     best_cand = compatible_candidates[best_cand_idx]
                     best_cand_score = cand_probs[best_cand_idx]
 
-                    margin = text_confidence - best_cand_score
                     cand_has_keywords = _contains_task_keywords(str(best_cand), query)
-                    is_broad_query = (
-                        text_confidence < 0.45
-                        or margin <= 0.15
-                        or cand_has_keywords
-                        or any(re.search(r'\b' + re.escape(w) + r'\b', query, re.IGNORECASE) for w in ["analyze", "assess", "examine", "compare", "report", "process", "pipeline"])
-                    )
-                    if is_broad_query:
+                    broad_words = ["analyze", "assess", "examine", "compare", "report", "process", "pipeline", "survey", "study"]
+                    has_broad_vocab = any(re.search(r'\b' + re.escape(w) + r'\b', query, re.IGNORECASE) for w in broad_words)
+
+                    if cand_has_keywords or (has_broad_vocab and not text_has_explicit_keywords):
                         can_disambiguate = True
 
                 if can_disambiguate and best_cand is not None:

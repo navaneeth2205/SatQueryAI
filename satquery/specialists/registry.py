@@ -18,20 +18,30 @@ class SpecialistRegistry:
 
     def __init__(self):
         self._specialists: Dict[TaskType, BaseSpecialist] = {}
+        self._dispatch_cache: Dict[Any, SpecialistResult] = {}
+
+    def clear_cache(self) -> None:
+        """Clear the specialist execution cache."""
+        self._dispatch_cache.clear()
 
     def register(self, specialist: BaseSpecialist) -> None:
         """Register a specialist for all tasks it explicitly supports."""
         for task in specialist.supported_tasks:
             self._specialists[task] = specialist
+        self.clear_cache()
 
     def get_specialist(self, task: TaskType) -> Optional[BaseSpecialist]:
         """Retrieve the registered specialist for a task, if available."""
         return self._specialists.get(task)
 
-    def dispatch(self, task: TaskType, input_data: Any) -> SpecialistResult:
+    def dispatch(self, task: TaskType, input_data: Any = None) -> SpecialistResult:
         """
         Dispatch input to the registered specialist, or return an explicit UNAVAILABLE stub.
         """
+        cache_key = (task.value, id(input_data))
+        if cache_key in self._dispatch_cache:
+            return self._dispatch_cache[cache_key]
+
         task_def = TASK_REGISTRY.get(task)
         display_name = task_def.display_name if task_def else task.value
         req_input_desc = (
@@ -44,7 +54,7 @@ class SpecialistRegistry:
         # 1. Handle Unsupported Tasks (Explicit Stubs)
         if specialist is None:
             planned_target = task_def.specialist_model_family if task_def else "specialist_model"
-            return SpecialistResult(
+            res = SpecialistResult(
                 status=SpecialistStatus.UNAVAILABLE,
                 task=task.value,
                 unavailable_reason=(
@@ -58,11 +68,13 @@ class SpecialistRegistry:
                     "is_stub": True
                 }
             )
+            self._dispatch_cache[cache_key] = res
+            return res
 
         # 2. Check Input Compatibility
         is_compat, error_msg = specialist.supports_input(input_data)
         if not is_compat:
-            return SpecialistResult(
+            res = SpecialistResult(
                 status=SpecialistStatus.INCOMPATIBLE_INPUT,
                 task=task.value,
                 unavailable_reason=f"Incompatible input: {error_msg}",
@@ -72,6 +84,10 @@ class SpecialistRegistry:
                     "is_stub": False
                 }
             )
+            self._dispatch_cache[cache_key] = res
+            return res
 
         # 3. Execute Validated Specialist
-        return specialist.predict(input_data)
+        res = specialist.predict(input_data)
+        self._dispatch_cache[cache_key] = res
+        return res

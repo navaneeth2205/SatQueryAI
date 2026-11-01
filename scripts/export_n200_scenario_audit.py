@@ -33,6 +33,7 @@ def export_audit_csv():
     audit_df["scenario_id"] = aligned_cat["scenario_id"]
     audit_df["cohort"] = aligned_cat["cohort"]
     audit_df["split"] = aligned_cat["split"]
+    audit_df["group_split"] = aligned_cat["group_split"]
     audit_df["template_family"] = aligned_cat["template_family"]
     audit_df["query"] = aligned_cat["query"]
     audit_df["attached_input_type"] = aligned_cat["attached_input_type"]
