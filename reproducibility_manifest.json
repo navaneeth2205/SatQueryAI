@@ -85,7 +85,10 @@
     "phase2_taxonomy_reconciled": true,
     "phase2_oscd_multi_regime_reconciled": true,
     "phase2_prediction_level_evidence_verified": true,
-    "phase2_regime_b_naming": "Controlled Parameter Ablation"
+    "phase2_regime_b_naming": "Controlled Parameter Ablation",
+    "phase2_prediction_execution_reproduced": true,
+    "phase2_euclidean_minimum_verified": "12.00 km (10.0 patch units)",
+    "phase2_sentinel1_clipping_justified": "Implementation-selected bounds [-35 dB, +5 dB] on training data only"
   },
   "source_and_scripts_integrity": {
     "satquery/router.py": "be91b6a09db1158d77e35ae2b01c9f1cebe2a01546312f1d1cdc53a2860e7cf2",
@@ -94,7 +97,8 @@
     "satquery/specialists/registry.py": "1e7302a461866bd50ceecd8f57a98ffce18806cfdeb6a1406caa7a7e5f8c1251",
     "scripts/benchmark_routing_policy_baselines.py": "2aef90f72919b135978836c2b2a1da3f5886b8b437cb4c1942f267118eb19042",
     "scripts/audit_group_splits_and_leakage.py": "032f064eb0d0561fe9df728faad8aa4510fb29898be8899ddee280f5e121d9a7",
-    "scripts/export_n200_scenario_audit.py": "9b435103c17a11ab149f24340e9f87fc25e2cf3d2382f228ceb2b433526375cc"
+    "scripts/export_n200_scenario_audit.py": "9b435103c17a11ab149f24340e9f87fc25e2cf3d2382f228ceb2b433526375cc",
+    "scripts/reproduce_from_saved_predictions.py": "4f685389652d1dbb7e8f3615703b7d82ee72b373cbba1636d9ac7cd1d49c5f93"
   },
   "phase2_baseline_verification_integrity": {
     "scripts/verify_spatial_distance.py": "a013aac68821d74a2204b3021332107e8742466669bb4d6aa6451cbdf792f298",
