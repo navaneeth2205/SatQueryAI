@@ -525,10 +525,10 @@ PS C:\Users\B NAVANEETH\SatQueryAI> git rev-parse "v0.2.0-phase2-freeze^{commit}
 ce7134245f9be6b3876a3a2df1699b2641156f9f
 
 PS C:\Users\B NAVANEETH\SatQueryAI> git rev-parse HEAD
-c24e091d300eb0bead7b0b8c66a8775f56475631
+010e71f836495c76556882ed64588555bf773c81
 
 PS C:\Users\B NAVANEETH\SatQueryAI> git describe --tags
-v0.2.0-phase2-freeze-9-gc24e091
+v0.2.0-phase2-freeze-11-g010e71f
 
 PS C:\Users\B NAVANEETH\SatQueryAI> git status --short
 (empty - working tree completely clean)
@@ -547,7 +547,7 @@ tests/test_m30_clarification_and_routing_invariants.py::test_clear_intent_compat
 
 PS C:\Users\B NAVANEETH\SatQueryAI> python -m pytest tests/ -q
 ............................................................................  [100%]
-76 passed in 47.23s
+76 passed in 30.20s
 ```
 
 ### G.3 Specific Regression Invariants Verified
