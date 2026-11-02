@@ -339,8 +339,11 @@ $$\sigma_\Delta^2 = 2 \sigma^2 (1 - \rho) = 2 \times 0.08^2 \times (1 - 0.72) \a
 PS C:\Users\B NAVANEETH\SatQueryAI> git rev-parse "v0.2.0-phase2-freeze^{commit}"
 ce7134245f9be6b3876a3a2df1699b2641156f9f
 
+PS C:\Users\B NAVANEETH\SatQueryAI> git rev-parse HEAD
+d2eebff689accb535a84a4d38a6faef8ad483a78
+
 PS C:\Users\B NAVANEETH\SatQueryAI> git describe --tags
-v0.2.0-phase2-freeze-4-g88eb221
+v0.2.0-phase2-freeze-5-gd2eebff
 
 PS C:\Users\B NAVANEETH\SatQueryAI> git status --short
 (empty - working tree completely clean)
