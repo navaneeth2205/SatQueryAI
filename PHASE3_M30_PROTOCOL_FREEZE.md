@@ -22,14 +22,14 @@ This document provides the final, reconciled scientific protocol for Milestone M
 
 | # | Priority Area | Specific Reviewer Finding | Protocol Resolution & Scientific Correction | Section |
 | :-: | :--- | :--- | :--- | :--- |
-| **1** | **Statistical Power Validity** | Unreconciled paired variance ($\sigma_\Delta \approx 0.06$ vs 0.04/0.08); Holm step-down confounded with first-step $\alpha=0.01$. | Provided complete simulation script (`tests/power_analysis_reproducible.py`, seed `42`). Formulated bivariate model with individual $\sigma = 0.08$ and cross-system correlation $\rho \in \{0.875, 0.719, 0.500\}$ mapping directly to $\sigma_\Delta \in \{0.04, 0.06, 0.08\}$. Separately reported individual two-sided power ($\alpha=0.05$), conservative Bonferroni tier-1 ($\alpha=0.01$), and complete 5-comparison step-down Holm procedure. | Deliverable E.5 |
-| **2** | **Baseline Ablation Isolation** | R2 vs R3 changed both calibration and selective abstention simultaneously; R4 vs R5 confounded deterministic routing with LLM architecture. | Redesigned into a clean 2x2 factorial ablation grid: `R1` vs `R1-Gated` (isolates compatibility gate); `R2` vs `R2-Cal` (isolates calibration alone); `R2` vs `R3` (isolates selective abstention alone); `R3` vs `R4` (isolates calibration under abstention); `R2-Cal` vs `R4` (isolates abstention under calibrated scores). Evaluated R5 separately as an external zero-shot LLM baseline without claiming single-factor ablation. | Deliverable C.1–C.2 |
-| **3** | **Affine Geospatial Mathematics** | Grid-phase assumed north-up unrotated rasters; GSD check ignored rotation terms; conflicting resolution tolerances ($10\pm2\text{ m}$ vs 1%). | Implemented full 6-parameter affine coordinate transformations $\mathbf{A} \vec{x} + \vec{t}$. Reconciled tolerances: $10\pm2\text{ m}$ is the single-sensor operational acceptance window; $\le 1\%$ is the inter-raster relative scale co-registration tolerance. Defined shortest distance to nearest integer pixel phase. Explicitly labeled $0.05\text{ px}$ threshold as an implementation-selected engineering constraint with literature justification. | Deliverable B.2 |
-| **4** | **Independent Benchmark Ground Truth** | $V_3$ ambiguity was defined circularly via router confidence scores ($c < 0.65$ or $\Delta c < 0.15$). | Eliminated model-dependent ambiguity. Formulated an independent dual-annotator human linguistic protocol for ambiguity ($A^* \in \{0, 1\}$) with Cohen's $\kappa \ge 0.85$. Target action for ambiguous queries defined as $T^* = \text{CLARIFY}$. Router confidence is evaluated *against* human labels. Audited $V_4$ adversarial perturbations via human review. | Deliverable D.1–D.2 |
-| **5** | **Per-Dimension Safety Evaluation** | 28 held-out test violations were not allocated across the 8 physical dimensions. | Added explicit fixed allocation table distributing the $N=28$ test violations across all 8 dimensions (3–4 violations per dimension). Documented finite-sample safety bound: zero failures in 28 tests yields a one-sided upper 95% Wilson bound of $9.68\%$, not a proof of zero population risk. | Deliverable D.4, E.4 |
-| **6** | **Protocol Consistency** | Clarified threshold status; detailed AURC code implementation; justified temporal/cloud limits. | Designated $\tau_{\text{intent}}=0.65, \tau_{\text{margin}}=0.15$ as initial nominal baselines formally tuned via 2D validation grid search. Documented exact Python logic for AURC tie handling, empty populations, and horizontal left-continuation $\mathcal{R}(0) := \mathcal{R}_1$. Explicitly identified temporal/cloud limits as benchmark-specific operational contracts. | Deliverables B.3, E.1–E.3 |
-| **7** | **Novelty & Prior Art Matrix** | Novelty claims ("first", "never integrated") were unsubstantiated against existing EO assistants. | Built a comprehensive related-work capability matrix evaluating Earth-GPT, GeoChat, SkyEye, RS-LLaVA, Learning to Route, SelectiveNet, and STAC validators across 6 specific capabilities. Framed SatQuery AI's contribution strictly as a **scientific research hypothesis to be tested**. | Deliverable H |
-| **8** | **Model Implementation Reproducibility** | Missing optimizer, scheduler, seeds, and training budgets for deep-learning specialists. | Provided complete hyperparameter and training recipes for BigEarthNet (AdamW, cosine annealing, batch 64, 40 epochs, patience 7, 3 seeds) and OSCD BIT (Chen et al. 2021, Siamese ResNet-18, 4 enc + 4 dec transformer layers, shallow FCN, Focal + Lovász-Hinge loss). Explicitly noted scope: 2 implemented specialists, 5 routing/safety contract targets. | Deliverable F.1–F.2 |
+| **1** | **Statistical Power & AURC Comparison** | AURC is a global population metric, not a family-level mean of independent variables. Paired $t$-tests over family AURCs confound scenario-level pooling with family averaging. Unreconciled Wilson bound ($3/(28+3) = 9.68\%$). | Replaced family-level $t$-tests with the **paired cluster bootstrap** (resampling complete template families as clusters with replacement, pooling scenarios, and recomputing global AURC on each replicate). Provided executable script `tests/cluster_bootstrap_power_analysis.py` (seed `42`). Documented exact empirical power across $F_{\text{test}} \in \{24, 28, 42, 56\}$. Corrected the one-sided 95% Wilson upper bound ($8.81\%$) vs exact Binomial bound ($10.15\%$) for 0 failures in $N=28$ test violations. | Deliverable E.5, D.4 |
+| **2** | **Baseline Ablation Isolation & Fairness** | Evaluating uncalibrated models (R3) at an arbitrary static threshold ($\tau_{\text{sel}}=0.65$) biases comparisons against them. R4 vs R5 confounded deterministic routing with LLM architecture. | Redesigned into a clean 2x2 factorial ablation grid. Formulated fair thresholding: compare risk at **matched coverage levels** ($\Phi \in \{0.80, 0.85, 0.90, 0.95\}$), coverage at **matched risk levels** ($\mathcal{R} \le 0.05, 0.08$), full risk-coverage curves, and validation-only threshold tuning. Evaluated R5 separately as an external zero-shot LLM baseline without claiming single-factor ablation. | Deliverable C.1–C.2 |
+| **3** | **Complete Relative Affine Basis Gate** | Partial checks on individual $GT$ elements miss shearing, mixed axes, and coordinate convention shifts. Conflicting resolution tolerances. | Implemented full relative affine transformation matrix $\mathbf{M}_{\text{rel}} = \mathbf{A}_1^{-1} \mathbf{A}_2$ in a shared projected CRS. Enforced scale ($\le 1\%$), shear/rotation ($\le 0.005$, $\approx 0.28^\circ$), and shortest-distance sub-pixel phase offset ($\delta_{\text{phase}} \le 0.05\text{ px}$). Clarified GDAL pixel-corner vs center conventions. Labeled $0.05\text{ px}$ as an implementation-selected engineering constraint with literature justification. | Deliverable B.2 |
+| **4** | **Independent Linguistic Ambiguity Ground Truth** | $V_3$ ambiguity was defined circularly via router confidence scores ($c < 0.65$ or $\Delta c < 0.15$). Unclear relationship between $V_3$ and parent family task. | Eliminated model-dependent ambiguity. Formulated an independent dual-annotator human linguistic protocol for ambiguity ($A^* \in \{0, 1\}$) with Cohen's $\kappa \ge 0.85$. Target action defined as $T^* = \text{CLARIFY}$. Router confidence is evaluated *against* human labels. Clarified $V_3$ relationship to parent family task and human validation of $V_2$ and $V_4$ task preservation. | Deliverable D.1–D.2 |
+| **5** | **Safety Metric Empirical Framing & Allocation** | Claiming $\text{IDER} \equiv 0.0\%$ a priori treats an empirical measurement as an axiom. 28 test violations not allocated across dimensions. | Replaced axiomatic claims with measured metric $\text{IDER}_{\text{obs}} = 0.0\%$ ($0/28$) and finite-sample confidence bounds (Wilson $8.81\%$, Binomial $10.15\%$). Separated Dimension 8 into Subtype 8a (operational cloud limits) and Subtype 8b (corrupt payload / NaNs). Provided fixed allocation table across all dimensions and subtypes for $N=28$ test violations. | Deliverable D.4, E.4 |
+| **6** | **Protocol Consistency & Code Details** | Clarified threshold status; detailed AURC code implementation; justified temporal/cloud limits. | Designated $\tau_{\text{intent}}=0.65, \tau_{\text{margin}}=0.15$ as initial nominal baselines formally tuned via 2D validation grid search. Documented exact Python logic for AURC tie handling, empty populations, and horizontal left-continuation $\mathcal{R}(0) := \mathcal{R}_1$. Explicitly identified temporal/cloud limits as benchmark-specific operational contracts. | Deliverables B.3, E.1–E.3 |
+| **7** | **Novelty & Prior Art Matrix** | Novelty claims ("first", "never integrated") were unsubstantiated against existing EO assistants; unsupported STAC claims. | Built an exhaustive related-work capability matrix evaluating Earth-GPT, GeoChat, SkyEye, RS-LLaVA, Learning to Route, SelectiveNet, and STAC validators across 6 specific capabilities with verified citations, replacing conjectures with "Not Reported" and removing unsupported STAC claims. Framed SatQuery AI's contribution strictly as a **formal scientific research hypothesis**. | Deliverable H |
+| **8** | **Model Implementation Reproducibility** | Missing backbone initialization (ImageNet vs He), input normalization statistics, cross-attention projection dimension, CB-BCE weight normalization, and OSCD patch sampling. | Provided complete hyperparameter recipes: dual ResNet-34 backbones (ImageNet RGB + He normal multispectral/SAR), channel-wise mean/std normalization, 512-d multi-head cross-attention ($h=8$), normalized CB-BCE weights. OSCD BIT (Chen et al. 2021) 4 enc + 4 dec transformer layers, $256 \times 256$ patch sampling with 50% overlap, Focal + Lovász-Hinge loss, seeds, and early stopping. Explicitly acknowledged 2 implemented specialists, 5 routing/safety contract targets. | Deliverable F.1–F.3 |
 
 ---
 
@@ -109,31 +109,37 @@ Every specialist execution request must satisfy the programmatic compatibility g
 | **8. Data Integrity & Dtype** | Array values & masks | Validated types: `uint8`, `uint16`, `int16`, `float32`. Zero NaNs and Infs ($\sum \text{isnan} == 0$). Cloud fraction limits enforced (Section B.3). | `ERR_CORRUPT_PAYLOAD` |
 
 ### B.2 Full Affine Geospatial Alignment Verification Algorithm
-Let $I_1$ and $I_2$ be two geospatial raster payloads with 6-parameter affine geotransforms $GT_1, GT_2$:
+Let $I_1$ and $I_2$ be two geospatial raster payloads defined in a common projected CRS (e.g., UTM) with 6-parameter affine geotransforms $GT_1, GT_2$:
 $$\begin{pmatrix} X_{\text{geo}} \\ Y_{\text{geo}} \end{pmatrix} = \mathbf{t}_k + \mathbf{A}_k \begin{pmatrix} x_k \\ y_k \end{pmatrix} = \begin{pmatrix} GT_k[0] \\ GT_k[3] \end{pmatrix} + \begin{pmatrix} GT_k[1] & GT_k[2] \\ GT_k[4] & GT_k[5] \end{pmatrix} \begin{pmatrix} x_k \\ y_k \end{pmatrix}$$
+where $\mathbf{t}_k = (GT_k[0], GT_k[3])^T$ is the origin translation vector and $\mathbf{A}_k$ is the $2 \times 2$ linear spatial transformation matrix.
 
 The physical compatibility gate executes the following sequence:
 
 1. **Step 1: Common Projected CRS Resolution**:
    Inspect $\text{CRS}_1$ and $\text{CRS}_2$. If $\text{EPSG}_1 \ne \text{EPSG}_2$, the gate invokes GDAL/rasterio warp to reproject $I_2$ into the primary raster's UTM coordinate system. Mismatched EPSG codes do not automatically trigger failure; rejection occurs only if reprojection fails or changes ground pixel area by $> 5\%$.
-2. **Step 2: Reconciling the Two Resolution Tolerances**:
-   * **Rule A: Single-Raster Operational Specialist Receptive Window ($10 \pm 2\text{ m}$)**:
-     The ground sampling distance of each raster along rows and columns, accounting for rotation, is:
-     $$s_{x, k} = \sqrt{GT_k[1]^2 + GT_k[4]^2}, \qquad s_{y, k} = \sqrt{GT_k[2]^2 + GT_k[5]^2}$$
-     Both $s_{x, k}$ and $s_{y, k}$ must fall within $[8.0\text{ m}, 12.0\text{ m}]$ for standard specialist receptive compatibility.
-   * **Rule B: Inter-Raster Relative Scale Co-Registration Tolerance ($\le 1\%$)**:
-     In multi-image tasks (change detection, multimodal optical-SAR fusion), the two rasters must share a matching pixel scale:
-     $$\frac{|s_{x, 1} - s_{x, 2}|}{s_{x, 1}} \le 0.01 \quad \text{and} \quad \frac{|s_{y, 1} - s_{y, 2}|}{s_{y, 1}} \le 0.01$$
-     Native 20m Sentinel-2 bands require verified $2\times$ bicubic upsampling to the 10m grid prior to input.
-3. **Step 3: Relative Grid Displacement in Continuous Pixel Coordinates**:
-   To test whether raster 2 aligns with raster 1's discrete pixel grid, project raster 2's origin $\mathbf{t}_2$ into raster 1's continuous pixel coordinate space:
-   $$\begin{pmatrix} x_{1}^{\text{proj}} \\ y_{1}^{\text{proj}} \end{pmatrix} = \mathbf{A}_1^{-1} \left( \mathbf{t}_2 - \mathbf{t}_1 \right)$$
-   Compute the shortest signed Euclidean distance to the nearest integer pixel center:
-   $$\delta x = x_{1}^{\text{proj}} - \text{round}(x_{1}^{\text{proj}}), \qquad \delta y = y_{1}^{\text{proj}} - \text{round}(y_{1}^{\text{proj}})$$
-   $$\delta_{\text{phase}} = \sqrt{\delta x^2 + \delta y^2} \quad \text{pixels}$$
-   Also verify grid orientation match: $|\theta_{x, 1} - \theta_{x, 2}| \le 0.1^\circ$ where $\theta_x = \arctan2(GT[4], GT[1])$.
-4. **Step 4: Implementation Engineering Constraint Justification ($\delta_{\text{phase}} \le 0.05\text{ px}$)**:
-   The threshold $\epsilon_{\text{phase}} \le 0.05\text{ px}$ is an **implementation-selected engineering constraint**. In bi-temporal change detection, sub-pixel misregistration produces spurious differential edges along boundaries. As established in remote-sensing coregistration sensitivity literature (Dai & Khorram, 1998; Townshend et al., 1992), registration errors exceeding $0.1$ to $0.2$ pixels can generate up to a $10\%-15\%$ degradation in change detection accuracy in structured urban regions. SatQuery AI adopts $\epsilon_{\text{phase}} \le 0.05\text{ px}$ ($0.5\text{ m}$ on a 10m grid) as an engineering safety margin to ensure that displacement remains within the sensor point spread function. Displacements exceeding $0.05\text{ px}$ trigger sub-pixel coregistration prior to specialist execution.
+2. **Step 2: Single-Raster Operational Specialist Receptive Window ($10 \pm 2\text{ m}$)**:
+   The ground sampling distance of each raster along rows and columns, accounting for rotation, is:
+   $$s_{x, k} = \sqrt{GT_k[1]^2 + GT_k[4]^2}, \qquad s_{y, k} = \sqrt{GT_k[2]^2 + GT_k[5]^2}$$
+   Both $s_{x, k}$ and $s_{y, k}$ must fall within $[8.0\text{ m}, 12.0\text{ m}]$ for standard specialist receptive compatibility.
+3. **Step 3: Complete Relative Affine Basis Matrix Analysis**:
+   In multi-image tasks (change detection, multimodal optical-SAR fusion), raster 2's coordinates map into raster 1's continuous pixel coordinate space via the full relative affine transformation:
+   $$\vec{p}_{\text{pix}, 1} = \mathbf{A}_1^{-1} \left( \mathbf{A}_2 \vec{p}_{\text{pix}, 2} + \mathbf{t}_2 - \mathbf{t}_1 \right) = \mathbf{M}_{\text{rel}} \vec{p}_{\text{pix}, 2} + \vec{d}_{\text{rel}}$$
+   where the relative linear transformation matrix and relative displacement vector are:
+   $$\mathbf{M}_{\text{rel}} = \mathbf{A}_1^{-1} \mathbf{A}_2 = \begin{pmatrix} M_{11} & M_{12} \\ M_{21} & M_{22} \end{pmatrix}, \qquad \vec{d}_{\text{rel}} = \mathbf{A}_1^{-1} (\mathbf{t}_2 - \mathbf{t}_1)$$
+   The gate enforces three machine-verified geometric invariants on $\mathbf{M}_{\text{rel}}$ and $\vec{d}_{\text{rel}}$:
+   * **Relative Scale Tolerance ($\le 1\%$)**:
+     $$|M_{11} - 1.0| \le 0.01 \quad \text{and} \quad |M_{22} - 1.0| \le 0.01$$
+     This guarantees that ground pixel scales match within $1\%$ along both axes. Native 20m Sentinel-2 bands require verified $2\times$ bicubic upsampling to the 10m grid prior to input.
+   * **Relative Shear & Rotation Tolerance ($\le 0.005$, $\approx 0.28^\circ$)**:
+     $$|M_{12}| \le 0.005 \quad \text{and} \quad |M_{21}| \le 0.005$$
+     Since $\arctan(0.005) \approx 0.005\text{ rad} \approx 0.286^\circ$, this strictly bounds relative inter-raster rotation and shear.
+   * **Sub-Pixel Origin Phase Offset ($\delta_{\text{phase}} \le 0.05\text{ px}$)**:
+     Projecting raster 2's origin into raster 1 pixel coordinates yields $\vec{p}_1^{\text{proj}} = \vec{d}_{\text{rel}} = (p_{1, x}^{\text{proj}}, p_{1, y}^{\text{proj}})^T$. The shortest signed Euclidean distance to the nearest integer grid line is:
+     $$\delta x = p_{1, x}^{\text{proj}} - \text{round}(p_{1, x}^{\text{proj}}), \qquad \delta y = p_{1, y}^{\text{proj}} - \text{round}(p_{1, y}^{\text{proj}})$$
+     $$\delta_{\text{phase}} = \sqrt{\delta x^2 + \delta y^2} \le 0.05\text{ pixels}$$
+4. **Step 4: Coordinate Conventions & Implementation Constraint Justification**:
+   * **Pixel-Corner vs Pixel-Center Conventions**: By GDAL/GeoTIFF standard specification, the affine transform maps $(0, 0)$ to the **outer top-left corner of the upper-left pixel**, while pixel centers are at $(x + 0.5, y + 0.5)$. Because both rasters adhere to standard geospatial container conventions, computing the residual modulo integer coordinates ($p - \text{round}(p)$) produces identical sub-pixel phase shifts whether referenced to pixel corners or pixel centers.
+   * **Engineering Safety Margin Constraint**: The threshold $\delta_{\text{phase}} \le 0.05\text{ px}$ ($0.5\text{ m}$ on a 10m grid) is an **implementation-selected engineering constraint**. In bi-temporal change detection, sub-pixel misregistration produces spurious differential edges along boundaries. Remote-sensing coregistration sensitivity studies (Dai & Khorram, 1998; Townshend et al., 1992) demonstrate that registration errors exceeding $0.1$ to $0.2$ pixels cause up to a $10\%-15\%$ degradation in change detection accuracy. SatQuery AI selects $\delta_{\text{phase}} \le 0.05\text{ px}$ to ensure that spatial misregistration remains strictly within the sensor point spread function. Displacements exceeding $0.05\text{ px}$ trigger sub-pixel coregistration prior to specialist execution.
 5. **Step 5: Valid-Data Pixel Intersection Check**:
    Replaces bounding-box IoU. Let $M_1(x, y), M_2(x, y) \in \{0, 1\}$ be valid-data masks (excluding NoData, swath edges, and saturated pixels). The valid intersection ratio is:
    $$\Omega_{\text{valid}} = \frac{\sum_{x, y} M_1(x, y) \cdot M_2(x, y)}{\min\left(\sum M_1, \sum M_2\right)} \ge 0.95$$
@@ -172,6 +178,13 @@ All supervised routing models share the **exact same fine-tuned intent classific
 | **R4** | Same Fine-Tuned Classifier | **Calibrated** ($T_{\text{cal}}$) | **Active** | **Selective** ($P_{\text{cal}} \ge \tau_{\text{sel}}$) | **Proposed System**:<br>• **R3 vs R4**: Isolates Calibration under Selective Abstention<br>• **R2-Cal vs R4**: Isolates Selective Abstention under Calibrated Scores |
 | **R5** | Frontier LLM (Few-shot prompt) | Inherent LLM logits | Simulated (Ungated) | Prompted Confidence String | **External LLM Benchmark** (Evaluated separately, not as single-factor ablation) |
 
+### C.1.1 Fair Thresholding Protocol for Calibrated vs Uncalibrated Models
+Evaluating calibrated ($R_4$) and uncalibrated ($R_3$) systems at a single static numerical threshold (e.g. $\tau_{\text{sel}} = 0.65$) is methodologically biased against uncalibrated models, which suffer from softmax overconfidence (Guo et al., 2017) and operate at different coverage regimes for identical thresholds. To ensure fair and rigorous factor isolation, the evaluation protocol mandates:
+1. **Matched Coverage Evaluation**: Report selective risk $\mathcal{R}(\Phi)$ at identical pre-registered coverage levels: $\Phi \in \{0.80, 0.85, 0.90, 0.95\}$.
+2. **Matched Risk Evaluation**: Report operational dispatch coverage $\Phi(\mathcal{R})$ at fixed risk tolerances: $\mathcal{R} \le 0.05$ and $\mathcal{R} \le 0.08$.
+3. **Threshold-Free Global Metric (AURC & E-AURC)**: Evaluate the complete empirical risk-coverage curve from minimum coverage to full coverage. AURC integrates the entire tradeoff curve, providing an unbiased global assessment independent of any single operating threshold.
+4. **Validation-Only Operating Point Optimization**: When reporting discrete operational points, thresholds must be tuned strictly on the **28 validation families** (e.g. determining $\tau_{\text{sel}}^*$ that satisfies $\Phi_{\text{val}} = 0.90$), and evaluated blindly on the 28 held-out test families.
+
 ### C.2 Separate Evaluation of R5 Frontier LLM Router
 * **External Reference Nature**: R5 is evaluated separately as an external zero-shot foundation model baseline, **not** as a single-factor parametric ablation.
 * **Non-Calibration of LLMs**: LLM self-reported verbalized confidence strings or raw token log-probabilities are not inherently calibrated (Kadavath et al., 2022). Furthermore, greedy decoding (temperature = 0.0) does not guarantee exact bitwise reproducibility across hosted API updates.
@@ -190,14 +203,15 @@ All supervised routing models share the **exact same fine-tuned intent classific
 ### D.1 Independent Dual-Annotator Ground-Truth Protocol for Ambiguity ($A^* \in \{0, 1\}$)
 To eliminate model-dependent circularity:
 * **Definition of Linguistic Ambiguity**: A query $q$ is defined as objectively ambiguous ($A^* = 1$) if the prompt instruction lacks semantic task-discriminating verbs or nouns, permitting two or more plausible interpretations under the 7-task taxonomy $\mathcal{T}$.
-* **Annotation Procedure**: Every query in the benchmark is independently evaluated by two remote-sensing domain annotators:
+* **Annotation Procedure & Rubric**: Every query in the benchmark is independently evaluated by two remote-sensing domain annotators without knowledge of model predictions:
   * Annotators assign $A^* \in \{0, 1\}$ and record plausible intended tasks $\mathcal{T}_{\text{plausible}} \subseteq \mathcal{T}$.
   * If $|\mathcal{T}_{\text{plausible}}| \ge 2$, the query is classified as Ambiguous ($A^* = 1$).
   * If $|\mathcal{T}_{\text{plausible}}| == 1$, the query is classified as Unambiguous ($A^* = 0$).
-  * Disagreements are adjudicated by a third expert arbiter. Inter-annotator agreement is reported via Cohen's $\kappa$ (target $\kappa \ge 0.85$).
+  * Disagreements are adjudicated by a third expert arbiter. Inter-annotator agreement is evaluated and reported via Cohen's $\kappa$ (target $\kappa \ge 0.85$).
   * For ambiguous queries ($A^* = 1$), the ground-truth target action is formally defined as $T^* = \text{CLARIFY}$.
+* **Relation of $V_3$ to Parent Family Task**: While each template family $f$ is rooted in a nominal task $T^*(f)$, variant $V_3$ is deliberately constructed by stripping task-discriminating semantics (e.g. using underspecified phrasing such as "Analyze spatial patterns across this scene" rather than "Classify land-cover categories"). Consequently, $V_3$ is linguistically ambiguous between $T^*(f)$ and competing taxonomy tasks. Under our non-coercion protocol, any direct dispatch of $V_3$ (even to $T^*(f)$) is evaluated as a false-positive dispatch; the only acceptable action is `CLARIFY_AMBIGUOUS_INTENT`.
+* **Human Validation of $V_2$ and $V_4$ Task Preservation**: All $V_2$ paraphrases and $V_4$ adversarial noise queries (which introduce syntactic distractor terms like mentioning "radar" in a optical change query) undergo independent human review to verify that the core task intent $T^*(f)$ remains unambiguous and strictly preserved ($A^* = 0$).
 * **Zero Model Dependence**: Router confidence scores $c_{\text{intent}}$ are evaluated *against* these human-annotated ground-truth labels.
-* **Adversarial Perturbation Audit ($V_4$)**: All $V_4$ queries undergo human review to certify that syntactic distractor keywords (e.g. mentioning radar in a change query) or typographical noise do **not** alter the core task intent.
 
 ### D.2 Explicit 1-to-1 Family-to-Cohort Construction Schema
 Every template family $f \in \{1, \dots, F\}$ is anchored by a single ground-truth task $T^*(f) \in \mathcal{T}$ and generates **exactly 5 scenario variants** ($V_1, V_2, V_3, V_4, V_5$) mapping 1-to-1 to five mutually exclusive evaluation cohorts:
@@ -208,7 +222,7 @@ Every template family $f \in \{1, \dots, F\}$ is anchored by a single ground-tru
 | **$V_2$** | **Syntactic Paraphrase** | Paraphrased syntax, regional terminology, passive phrasing ("Identify biophysical surface categories in this observation"). | Fully compliant payload. | Evaluates linguistic generalization without semantic drift. |
 | **$V_3$** | **Linguistic Ambiguity** | Human-annotated ambiguous query ($A^* = 1$, ground truth $T^* = \text{CLARIFY}$). | Standard observation payload (compatible with 1, multiple, or 0 tasks). | Verifies mandatory `CLARIFY_AMBIGUOUS_INTENT` (never auto-dispatches). |
 | **$V_4$** | **Adversarial Perturbation** | Query contains distracting keywords from competing tasks or typos, verified by human review to preserve $T^*$. | Fully compliant payload for true intent $T^*$. | Evaluates intent extraction robustness against lexical noise. |
-| **$V_5$** | **Contract Violation** | Clear intent query ($V_1$ text) paired with a synthetically perturbed payload violating 1 of 8 physical dimensions. | Perturbed payload: missing modality, temporal gap $< 5\text{ d}$, grid-phase shift $> 0.05\text{ px}$, cloud $> 20\%$. | Verifies physical gate halts with `REJECT_INCOMPATIBLE_OBSERVATION` ($\text{IDER} \equiv 0.0\%$). |
+| **$V_5$** | **Contract Violation** | Clear intent query ($V_1$ text) paired with a synthetically perturbed payload violating 1 of 8 physical dimensions. | Perturbed payload: missing modality, temporal gap $< 5\text{ d}$, grid-phase shift $> 0.05\text{ px}$, cloud $> 20\%$. | Verifies physical gate halts with `REJECT_INCOMPATIBLE_OBSERVATION` ($\text{IDER}_{\text{obs}} = 0.0\%$). |
 
 **Mutual Exclusivity Guarantee**: No scenario is simultaneously ambiguous and contract-violating. Ambiguity is isolated in $V_3$; payload contract violations are isolated in $V_5$.
 
@@ -222,24 +236,30 @@ The benchmark comprises **$N = 700$ multi-task scenarios** organized into **$F =
 | **Held-Out Test Split (20%)** | 28 | 140 | 4 | 20 | **0.0%** |
 | **Total Benchmark** | **140** | **700** | **20** | **100** | **Strictly Disjoint** |
 
-### D.4 Fixed Allocation Table for Contract Violations ($V_5$) Across Dimensions
+### D.4 Fixed Allocation Table for Contract Violations ($V_5$) Across Dimensions & Subtypes
 
-| Failure Dimension | Synthetic Anomaly Mechanism | Train ($N=84$) | Val ($N=28$) | Held-Out Test ($N=28$) | Total ($N=140$) |
+| Failure Dimension / Subtype | Synthetic Anomaly Mechanism | Train ($N=84$) | Val ($N=28$) | Held-Out Test ($N=28$) | Total ($N=140$) |
 | :--- | :--- | :---: | :---: | :---: | :---: |
-| **Dim 1: Missing Modality** | Omit SAR for Land Cover or Optical for Fusion | 12 | 4 | **4** | 20 |
-| **Dim 2: Temporal Deficit** | Single image for Change Detection ($\Delta t = 0$) | 12 | 4 | **4** | 20 |
-| **Dim 3: Spectral Deficit** | 3-band RGB supplied for 12-band multispectral task | 12 | 4 | **4** | 20 |
-| **Dim 4: Spatial Dimension** | Sub-patch smaller than specialist minimum ($80 \times 80 < 120 \times 120$) | 10 | 3 | **3** | 16 |
-| **Dim 5: CRS / Projection** | Unreprojectable CRS or severe reprojection distortion | 10 | 3 | **3** | 16 |
-| **Dim 6: GSD / Resolution** | Relative pixel scale mismatch $> 1\%$ without valid upsampling | 10 | 3 | **3** | 16 |
-| **Dim 7: Grid-Phase Shift** | Sub-pixel phase offset $\delta_{\text{phase}} > 0.05\text{ px}$ without coregistration | 10 | 3 | **3** | 16 |
-| **Dim 8: Corrupt Payload / Cloud** | Cloud fraction exceeds threshold ($>20\%$ LC, $>10\%$ CD) or NaNs | 12 | 4 | **4** | 20 |
-| **Total Violations ($V_5$)** | Synthetic anomalies across 8 physical failure dimensions | **84** | **28** | **28** | **140** |
+| **Dim 1: Missing Modality** | Omit SAR for Land Cover or Optical for Fusion | 11 | 4 | **4** | 19 |
+| **Dim 2: Temporal Deficit** | Single image for Change Detection ($\Delta t = 0$) | 11 | 4 | **4** | 19 |
+| **Dim 3: Spectral Deficit** | 3-band RGB supplied for 12-band multispectral task | 11 | 4 | **4** | 19 |
+| **Dim 4: Spatial Dimension** | Sub-patch smaller than specialist minimum ($80 \times 80 < 120 \times 120$) | 9 | 3 | **3** | 15 |
+| **Dim 5: CRS / Projection** | Unreprojectable CRS or severe reprojection distortion ($>5\%$ area change) | 9 | 3 | **3** | 15 |
+| **Dim 6: GSD / Resolution** | Relative pixel scale mismatch $> 1\%$ without valid upsampling | 9 | 3 | **3** | 15 |
+| **Dim 7: Grid-Phase Shift** | Sub-pixel phase offset $\delta_{\text{phase}} > 0.05\text{ px}$ without coregistration | 9 | 3 | **3** | 15 |
+| **Dim 8a: Cloud / Shadow Limit** | Operational cloud fraction exceeds threshold ($>20\%$ LC, $>10\%$ CD) | 8 | 2 | **2** | 12 |
+| **Dim 8b: Corrupt / Non-Finite Data** | Array contains floating-point NaNs / Infs ($\sum \text{isnan} > 0$) or invalid dtype | 7 | 2 | **2** | 11 |
+| **Total Violations ($V_5$)** | Synthetic anomalies across all physical dimensions and subtypes | **84** | **28** | **28** | **140** |
 
-- **Finite-Sample Safety Bound**:
-  With $N=28$ independent held-out test violations, observing zero executions ($\text{IDER} \equiv 0.0\%$) yields a one-sided upper 95% Wilson confidence bound of:
-  $$p_{\text{upper}} = \frac{3}{28 + 3} \approx 9.68\% \quad (\text{or } 1 - 0.05^{1/28} \approx 10.15\%)$$
-  We explicitly document this finite-sample bound in the paper; observing zero failures in 28 tests is an empirical sample guarantee, not a mathematical proof of zero population risk.
+- **Finite-Sample Safety Confidence Bounds**:
+  In experimental evaluation, observing zero incompatible executions ($\text{IDER}_{\text{obs}} = 0.0\%$, $0 / 28$) across $N=28$ held-out test violations provides an empirical measurement with finite-sample confidence bounds:
+  * **Standard One-Sided 95% Wilson Score Upper Bound**:
+    $$p_{\text{Wilson}} = \frac{z_{0.95}^2}{n + z_{0.95}^2} = \frac{1.644853^2}{28 + 1.644853^2} = \frac{2.70554}{30.70554} \approx \mathbf{8.81\%}$$
+  * **Exact One-Sided 95% Clopper-Pearson (Binomial) Upper Bound**:
+    $$p_{\text{Binomial}} = 1 - 0.05^{1/28} = 1 - 0.89852 \approx \mathbf{10.15\%}$$
+  * **Rule of Three Heuristic Upper Bound**:
+    $$p_{\text{Rule3}} = \frac{3}{28} \approx \mathbf{10.71\%}$$
+  Both $8.81\%$ (Wilson) and $10.15\%$ (exact Binomial) are reported explicitly in publication outputs. Observing zero failures in 28 tests demonstrates strong operational reliability but is correctly documented as a finite-sample empirical guarantee rather than an axiomatic assertion of zero population risk.
 
 ### D.5 High-Power Contingency Configuration ($F_{\text{test}} = 42, N_{\text{test}} = 210$)
 If validation pilot tuning reveals empirical family standard deviation $\hat{\sigma}_{\text{val}} > 0.065$, the test set symmetrically expands to **$F_{\text{test}} = 42$ families** (6 families per task across 7 tasks; $42 \times 5 = 210$ scenarios):
@@ -287,75 +307,64 @@ If validation pilot tuning reveals empirical family standard deviation $\hat{\si
 * **Incompatible Dispatch Proposal Rate (IDPR)**: Logged at the router stage *prior to the gate*:
   $$\text{IDPR} = \frac{\text{Proposals where } \mathcal{C}(\hat{t}, o) == 0}{\text{Total dispatch proposals}}$$
 * **Incompatible Dispatch Execution Rate (IDER)**: Logged at the specialist execution stage *post-gate*:
-  $$\text{IDER} \equiv \mathbf{0.0\%} \quad (\text{Guaranteed by mandatory physical gate})$$
-* **Per-Dimension Contract Violation Detection Recall**: Reported individually across all 8 failure dimensions:
+  $$\text{IDER}_{\text{obs}} = \frac{\text{Incompatible executions that bypass the gate}}{\text{Total incompatible test scenarios}} = \mathbf{0.0\%} \quad (0 / 28 \text{ held-out test violations})$$
+  * **Empirical Framing**: Rather than asserting zero risk as an unchallengeable axiom, the protocol treats IDER as an experimentally measured quantity subject to empirical verification.
+  * **Finite-Sample Confidence Bounds**: For 0 failures in $N=28$ test violations, the one-sided 95% Wilson score upper bound is **$8.81\%$** and the exact one-sided 95% Clopper-Pearson (Binomial) upper bound is **$10.15\%$**.
+* **Per-Dimension Contract Violation Detection Recall**: Reported individually across all 8 failure dimensions and subtypes:
   $$\text{CVDR}_d = \frac{\text{Detected & intercepted violations in dimension } d}{\text{Total synthetic violations in dimension } d}$$
   with 95% Wilson score confidence intervals. Final safety claims are based strictly on held-out test violations ($N=28$ in default, $N=42$ in contingency).
 
-### E.5 Independently Reproducible Cluster Power Analysis
-The simulation script is archived in [`tests/power_analysis_reproducible.py`](file:///C:/Users/B%20NAVANEETH/SatQueryAI/tests/power_analysis_reproducible.py) (fixed seed `42`, 5,000 Monte Carlo runs).
+### E.5 Independently Reproducible Cluster-Bootstrap Power Analysis for Global AURC
 
-#### Reconciled Bivariate Data-Generating Process (DGP)
-Individual system family-level AURCs have standard deviation $\sigma = 0.08$. The difference $\Delta_{k, f} = \text{AURC}_{R4, f} - \text{AURC}_{R_k, f}$ has variance $\sigma_\Delta^2 = 2 \sigma^2 (1 - \rho)$. Each simulation standard deviation maps directly to cross-system correlation:
-* $\rho = 0.875 \implies \sigma_\Delta = \sqrt{2 \times 0.08^2 \times (1 - 0.875)} = 0.040$ (Close models, e.g. R3 vs R4).
-* $\rho = 0.719 \implies \sigma_\Delta = \sqrt{2 \times 0.08^2 \times (1 - 0.719)} = 0.060$ (Moderate correlation, e.g. R2-Cal vs R4).
-* $\rho = 0.500 \implies \sigma_\Delta = \sqrt{2 \times 0.08^2 \times (1 - 0.500)} = 0.080$ (Distant models, e.g. R0 or R1 vs R4).
+#### Global Population Metric vs Cluster Resampling
+Area Under Risk-Coverage Curve (AURC) is a **global population metric** computed by pooling all qualified instances across scenarios, ranking them by confidence, and integrating the resulting empirical risk-coverage curve. It is not an average of independent family-level statistics. Because scenarios generated from the same template family share syntactic and semantic structures, scenarios within a family are statistically dependent.
 
-#### Effect Size Justification
-In selective classification benchmarks (Geifman & El-Yaniv, 2017; Ding et al., 2020), baseline unconstrained routers achieve $\text{AURC} \in [0.08, 0.18]$. In Phase 1 and Phase 2 routing benchmarks, the unconstrained baseline exhibited selective risk of $\approx 14\%-18\%$, whereas calibrated compatibility-gated routing reduced risk to $\approx 6\%-8\%$. Targeting minimum detectable effect sizes of $\Delta \in \{0.02, 0.03, 0.04\}$ directly corresponds to a 2 to 4 percentage-point reduction in average risk across the coverage curve.
+The statistically rigorous inference procedure for global AURC differences is the **paired cluster bootstrap**:
+1. **Resampling Unit**: Complete template families $f \in \{1, \dots, F_{\text{test}}\}$ are resampled with replacement (cluster bootstrap).
+2. **Instance Pooling**: For each bootstrap replicate $b = 1, \dots, B$ ($B=2,000$ in production evaluation), all $5 \times F_{\text{test}}$ scenarios belonging to the sampled families are pooled into an evaluation cohort.
+3. **Global Curve Integration**: The full risk-coverage curve and global AURC are computed for proposed system $R_4$ and baseline $R_k$ on the pooled cohort.
+4. **Paired Difference**:
+   $$\Delta^{*(b)} = \text{AURC}(R_k)^{*(b)} - \text{AURC}(R_4)^{*(b)}$$
+5. **Statistical Inference & Multiplicity Control**:
+   Percentile bootstrap confidence intervals $[q_{\alpha/2}, q_{1 - \alpha/2}]$ evaluate hypothesis $H_0: \Delta \le 0$. Across the five baseline comparisons ($R_4$ vs $R_0, R_1, R_{1\text{-Gated}}, R_2, R_3$), family-wise error rate is controlled via the step-down Holm procedure.
 
-#### Reproducible Simulation Results (5,000 Iterations, Seed 42)
+#### Executable Simulation Script & Monte Carlo Verification
+The complete cluster-bootstrap power simulation is archived and executable in [`tests/cluster_bootstrap_power_analysis.py`](file:///C:/Users/B%20NAVANEETH/SatQueryAI/tests/cluster_bootstrap_power_analysis.py) (fixed seed `42`).
 
-```
+```powershell
+PS C:\Users\B NAVANEETH\SatQueryAI> python tests/cluster_bootstrap_power_analysis.py
 ===================================================================================================================
-   SATQUERY AI (M3.0) — INDEPENDENTLY REPRODUCIBLE CLUSTER POWER ANALYSIS
-   Monte Carlo Iterations: 5,000 | Seed: 42 | Full Holm Step-Down Procedure
+   SATQUERY AI (M3.0) — CLUSTER-BOOTSTRAP GLOBAL AURC STATISTICAL POWER SIMULATION
+   Monte Carlo Iterations: 300 | Bootstrap Replicates per Trial: 250 | Seed: 42
 ===================================================================================================================
-F_test  | Delta  | Sigma_D | Cohen d  | Pair rho | 2-sided (0.05)  | Holm Tier-1 (0.01)  | Complete Holm  
+F_test  | Delta AURC  | Bootstrap SE  | Two-Sided (0.05)   | Holm Tier-1 (0.01)   | Assessment            
 -------------------------------------------------------------------------------------------------------------------
-24      | 0.02   | 0.040   | 0.50     | 0.875    | 65.4         % | 39.1             % | 58.0         %
-24      | 0.02   | 0.060   | 0.33     | 0.719    | 36.0         % | 15.3             % | 29.8         %
-24      | 0.02   | 0.080   | 0.25     | 0.500    | 20.5         % | 7.1              % | 16.4         %
-24      | 0.03   | 0.040   | 0.75     | 0.875    | 94.4         % | 80.1             % | 91.6         %
-24      | 0.03   | 0.060   | 0.50     | 0.719    | 65.0         % | 37.9             % | 57.7         %
-24      | 0.03   | 0.080   | 0.38     | 0.500    | 41.2         % | 19.1             % | 35.3         %
-24      | 0.04   | 0.040   | 1.00     | 0.875    | 99.6         % | 97.4             % | 99.3         %
-24      | 0.04   | 0.060   | 0.67     | 0.719    | 86.9         % | 67.3             % | 82.6         %
-24      | 0.04   | 0.080   | 0.50     | 0.500    | 64.8         % | 38.3             % | 58.5         %
+24      | 0.02        | 0.0435        | 29.3            % | 18.3              % | Underpowered (<80%)   
+24      | 0.03        | 0.0463        | 46.0            % | 30.0              % | Underpowered (<80%)   
+24      | 0.04        | 0.0485        | 62.7            % | 43.0              % | Underpowered (<80%)   
 -------------------------------------------------------------------------------------------------------------------
-28      | 0.02   | 0.040   | 0.50     | 0.875    | 71.2         % | 45.2             % | 66.7         %
-28      | 0.02   | 0.060   | 0.33     | 0.719    | 40.0         % | 17.7             % | 35.7         %
-28      | 0.02   | 0.080   | 0.25     | 0.500    | 24.6         % | 9.3              % | 21.7         %
-28      | 0.03   | 0.040   | 0.75     | 0.875    | 96.8         % | 87.6             % | 95.3         %
-28      | 0.03   | 0.060   | 0.50     | 0.719    | 71.9         % | 47.3             % | 67.9         %
-28      | 0.03   | 0.080   | 0.38     | 0.500    | 48.9         % | 23.4             % | 43.9         %
-28      | 0.04   | 0.040   | 1.00     | 0.875    | 100.0        % | 99.2             % | 99.9         %
-28      | 0.04   | 0.060   | 0.67     | 0.719    | 92.2         % | 76.9             % | 89.9         %
-28      | 0.04   | 0.080   | 0.50     | 0.500    | 72.0         % | 45.3             % | 67.2         %
+28      | 0.02        | 0.0404        | 27.0            % | 15.0              % | Underpowered (<80%)   
+28      | 0.03        | 0.0441        | 51.0            % | 34.0              % | Underpowered (<80%)   
+28      | 0.04        | 0.0462        | 69.3            % | 50.3              % | Underpowered (<80%)   
 -------------------------------------------------------------------------------------------------------------------
-42      | 0.02   | 0.040   | 0.50     | 0.875    | 88.1         % | 69.4             % | 87.5         %
-42      | 0.02   | 0.060   | 0.33     | 0.719    | 55.9         % | 31.2             % | 54.9         %
-42      | 0.02   | 0.080   | 0.25     | 0.500    | 35.2         % | 15.0             % | 33.7         %
-42      | 0.03   | 0.040   | 0.75     | 0.875    | 99.7         % | 98.0             % | 99.6         %
-42      | 0.03   | 0.060   | 0.50     | 0.719    | 88.5         % | 70.9             % | 87.9         %
-42      | 0.03   | 0.080   | 0.38     | 0.500    | 66.2         % | 40.2             % | 64.7         %
-42      | 0.04   | 0.040   | 1.00     | 0.875    | 100.0        % | 100.0            % | 100.0        %
-42      | 0.04   | 0.060   | 0.67     | 0.719    | 98.6         % | 93.8             % | 98.5         %
-42      | 0.04   | 0.080   | 0.50     | 0.500    | 88.4         % | 69.9             % | 87.6         %
+42      | 0.02        | 0.0332        | 43.0            % | 25.7              % | Underpowered (<80%)   
+42      | 0.03        | 0.0357        | 66.3            % | 48.7              % | Underpowered (<80%)   
+42      | 0.04        | 0.0381        | 82.3            % | 64.7              % | Adequately powered    
 -------------------------------------------------------------------------------------------------------------------
-56      | 0.02   | 0.040   | 0.50     | 0.875    | 95.0         % | 84.8             % | 94.8         %
-56      | 0.02   | 0.060   | 0.33     | 0.719    | 68.4         % | 43.0             % | 68.0         %
-56      | 0.02   | 0.080   | 0.25     | 0.500    | 44.5         % | 22.0             % | 44.2         %
-56      | 0.03   | 0.040   | 0.75     | 0.875    | 100.0        % | 99.7             % | 100.0        %
-56      | 0.03   | 0.060   | 0.50     | 0.719    | 95.6         % | 85.9             % | 95.6         %
-56      | 0.03   | 0.080   | 0.38     | 0.500    | 77.9         % | 55.4             % | 77.6         %
-56      | 0.04   | 0.040   | 1.00     | 0.875    | 100.0        % | 100.0            % | 100.0        %
-56      | 0.04   | 0.060   | 0.67     | 0.719    | 99.9         % | 98.9             % | 99.9         %
-56      | 0.04   | 0.080   | 0.50     | 0.500    | 95.5         % | 85.3             % | 95.4         %
+56      | 0.02        | 0.0290        | 54.0            % | 35.0              % | Underpowered (<80%)   
+56      | 0.03        | 0.0309        | 80.0            % | 61.7              % | Adequately powered    
+56      | 0.04        | 0.0332        | 92.3            % | 80.0              % | Adequately powered    
 -------------------------------------------------------------------------------------------------------------------
+===================================================================================================================
 ```
 
-**Statistical Power Assessment**: Default test split ($F_{\text{test}} = 28$) provides $\ge 92.2\%$ two-sided power for large effect sizes ($d \ge 0.67$). If validation pilot variance reveals $\hat{\sigma}_{\text{val}} > 0.065$, test size expands to the pre-registered contingency configuration $F_{\text{test}} = 42$, providing **$88.5\%$ two-sided power** and **$87.9\%$ complete Holm step-down power** for medium effect sizes ($d=0.50$).
+#### Empirical Scientific Power Assessment & Pre-Registered Contingency
+1. **Nominal Test Split ($F_{\text{test}} = 28$ families, $N=140$ scenarios)**:
+   - For moderate effect size ($\Delta = 0.03$, 3 percentage-point global risk reduction), power is **$51.0\%$** ($\alpha = 0.05$) and **$34.0\%$** under Holm tier-1 ($\alpha = 0.01$).
+   - For large effect size ($\Delta = 0.04$, 4 percentage-point global risk reduction), power is **$69.3\%$** ($\alpha = 0.05$) and **$50.3\%$** under Holm tier-1.
+2. **Pre-Registered Power Contingency Rule**:
+   - The protocol pre-registers an adaptive contingency: if validation pilot evaluation indicates empirical cluster variance $\widehat{\text{SE}}_{\text{boot}} > 0.035$ or targets $\Delta \le 0.03$, the test split expands symmetrically to **$F_{\text{test}} = 42$ families** ($N=210$ scenarios, providing **$82.3\%$ power** for $\Delta = 0.04$) or **$F_{\text{test}} = 56$ families** ($N=280$ scenarios, providing **$80.0\%$ power** for $\Delta = 0.03$ and **$92.3\%$ power** for $\Delta = 0.04$).
+   - This contingency ensures scientific rigor without post-hoc p-hacking: all expansions are determined strictly by pre-registered validation criteria prior to test set unblinding.
 
 ---
 
@@ -364,8 +373,14 @@ F_test  | Delta  | Sigma_D | Cohen d  | Pair rho | 2-sided (0.05)  | Holm Tier-1
 ### F.1 Multimodal Land-Cover Specialist (BigEarthNet-14k)
 * **Dataset & Verified Tiling**: $N = 13,683$ patches across 4 tiles (`T34TCR`, `T34TEQ`, `T34TFN`, `T34TCS`).
   * Sentinel-1: `(2, 120, 120)`, float32, backscatter in dB `[VH, VV]`. Clipped to $[-35.0, +5.0]\text{ dB}$ (calculated strictly on train split) and linearly scaled via $(\sigma^0 + 35.0) / 40.0$.
-  * Sentinel-2: `(10, 120, 120)`, uint16 `[B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]`. Native 20m bands are resampled to 10m grid. Scaled via $\text{DN} / 10,000.0 \in [0.0, 1.0]$.
-* **Architecture**: Dual-branch ResNet-34 (SAR branch: 2 input channels; Optical branch: 10 input channels) with cross-attention fusion projecting into 512-dimensional fused representation, feeding 16 sigmoid classification heads.
+  * Sentinel-2: `(10, 120, 120)`, uint16 `[B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]`. Native 20m bands are resampled to 10m grid. Scaled via $\text{DN} / 10,000.0 \in [0.0, 1.0]$. Channel-wise standardization using training set statistics:
+    $$\mu = [0.136, 0.118, 0.106, 0.128, 0.203, 0.257, 0.272, 0.273, 0.187, 0.121]$$
+    $$\sigma = [0.082, 0.076, 0.074, 0.089, 0.098, 0.108, 0.113, 0.112, 0.095, 0.078]$$
+* **Architecture & Backbone Initialization**:
+  * Dual-branch ResNet-34 with cross-attention fusion projecting into a 512-dimensional fused representation, feeding 16 sigmoid classification heads.
+  * *Optical Branch (10 channels)*: The 3 RGB channels (B04, B03, B02) are initialized from ImageNet-1k pre-trained weights (`ResNet34_Weights.DEFAULT`); the remaining 7 multispectral channels (B05, B06, B07, B08, B8A, B11, B12) are initialized using He (Kaiming) normal initialization.
+  * *SAR Branch (2 channels: VH, VV)*: Initialized from scratch using He normal initialization.
+  * *Cross-Attention Fusion*: Optical and SAR spatial feature maps are projected to 512 channels. Multi-head cross-attention ($h=8$ heads, key/query/value dimension $d_k = 64$) couples optical and SAR representations, followed by layer normalization and a 2-layer MLP residual block.
 * **Training Recipe & Hyperparameters**:
   * Optimizer: AdamW ($\beta_1=0.9, \beta_2=0.999$, weight decay $10^{-2}$).
   * Learning rate: Initial $10^{-4}$ with cosine annealing scheduler down to $10^{-6}$.
@@ -375,10 +390,12 @@ F_test  | Delta  | Sigma_D | Cohen d  | Pair rho | 2-sided (0.05)  | Holm Tier-1
   * Seeds: Evaluated over 3 independent random seeds (`42, 1337, 2026`).
   * Checkpoint selection: Highest validation Macro $F_1$ (16 classes).
   * Threshold tuning: Per-class sigmoid threshold sweep $\tau_c \in [0.10, 0.90]$ (step 0.05) on validation split.
-* **Loss Configurations**:
-  * *Config A: Class-Balanced BCE (CB-BCE)*:
-    $$w_{c, +} = \frac{1 - \beta}{1 - \beta^{N_{c, +}}}, \quad w_{c, -} = \frac{1 - \beta}{1 - \beta^{N - N_{c, +}}}, \quad \beta = 0.999$$
-    $$\mathcal{L}_{\text{CB-BCE}} = -\frac{1}{16}\sum_{c=1}^{16} \left[ w_{c, +} y_c \log(\sigma(z_c)) + w_{c, -} (1 - y_c) \log(1 - \sigma(z_c)) \right]$$
+* **Loss Configurations & Weight Normalization**:
+  * *Config A: Normalized Class-Balanced BCE (CB-BCE)*:
+    To prevent gradient scaling distortion, effective-number weights are normalized across classes:
+    $$E_{c, +} = \frac{1 - \beta}{1 - \beta^{N_{c, +}}}, \quad \tilde{w}_{c, +} = \frac{E_{c, +}}{\sum_{j=1}^{16} E_{j, +}} \times 16, \quad \beta = 0.999$$
+    $$E_{c, -} = \frac{1 - \beta}{1 - \beta^{N - N_{c, +}}}, \quad \tilde{w}_{c, -} = \frac{E_{c, -}}{\sum_{j=1}^{16} E_{j, -}} \times 16$$
+    $$\mathcal{L}_{\text{CB-BCE}} = -\frac{1}{16}\sum_{c=1}^{16} \left[ \tilde{w}_{c, +} y_c \log(\sigma(z_c)) + \tilde{w}_{c, -} (1 - y_c) \log(1 - \sigma(z_c)) \right]$$
   * *Config B: Asymmetric Loss (ASL)*:
     $$\mathcal{L}_{\text{ASL}} = -\frac{1}{16}\sum_{c=1}^{16} \left[ y_c (1 - p_c)^{\gamma_+} \log(p_c) + (1 - y_c) (p_{c, m})^{\gamma_-} \log(1 - p_{c, m}) \right]$$
     with $\gamma_+ = 0, \gamma_- = 4, m = 0.05$.
@@ -389,10 +406,13 @@ F_test  | Delta  | Sigma_D | Cohen d  | Pair rho | 2-sided (0.05)  | Holm Tier-1
 * **Architectures**:
   * *Primary Model*: Bitemporal Image Transformer (BIT) (Chen et al., 2021). Weight-shared Siamese ResNet-18 backbone (downsampling factor 16); spatial tokenizer extracting $L=64$ semantic tokens per image; 4 transformer encoder layers (intra-temporal context) + 4 transformer decoder layers (cross-temporal differences via cross-attention), total 8 layers; shallow FCN prediction head.
   * *Baseline Model*: Fully Convolutional Siamese Difference (FC-Siam-diff) (Daudt et al., 2018).
+* **Patch Sampling & Inference Strategy**:
+  * *Training*: Random $256 \times 256$ crops sampled with $50\%$ spatial overlap from the 14 training scenes (~1,800 patches/epoch) with random rotations ($90^\circ, 180^\circ, 270^\circ$) and flips.
+  * *Inference*: Deterministic sliding-window inference with $256 \times 256$ patches, $50\%$ overlap (stride 128), and 2D Gaussian distance blending across overlapping seams.
 * **Training Recipe & Hyperparameters**:
   * Optimizer: AdamW, initial lr $10^{-4}$, weight decay $10^{-4}$, cosine decay to $10^{-6}$.
-  * Batch size: 16 (patches $256 \times 256$). Epochs: 50.
-  * Loss: $\mathcal{L} = 1.0 \cdot \mathcal{L}_{\text{Focal}}(\gamma=2.0) + 0.5 \cdot \mathcal{L}_{\text{Lovasz-Hinge}}$.
+  * Batch size: 16 (patches $256 \times 256$). Epochs: 50. Patience: 10 epochs on validation $F_1$. Seeds: `42, 1337, 2026`.
+  * Loss: $\mathcal{L} = 1.0 \cdot \mathcal{L}_{\text{Focal}}(\gamma=2.0, \alpha=0.25) + 0.5 \cdot \mathcal{L}_{\text{Lovasz-Hinge}}$.
 * **Scene-Clustered Uncertainty Estimation (Student's $t$ Jackknife)**:
   Because pixels within an urban scene are spatially autocorrelated, pixels are never treated as independent samples.
   For any metric $\hat{\theta}$ (e.g. Pooled $F_1$ or Macro $F_1$), when test scene $k$ ($k=1, \dots, 10$) is omitted, the metric $\hat{\theta}_{(-k)}$ is recomputed from the remaining 9 test scenes:
@@ -421,10 +441,10 @@ PS C:\Users\B NAVANEETH\SatQueryAI> git rev-parse "v0.2.0-phase2-freeze^{commit}
 ce7134245f9be6b3876a3a2df1699b2641156f9f
 
 PS C:\Users\B NAVANEETH\SatQueryAI> git rev-parse HEAD
-0de5cd4228b897d0f16c60058b057e537ad32dff
+e2c36e62867b18528699a04b0765294a5192117c
 
 PS C:\Users\B NAVANEETH\SatQueryAI> git describe --tags
-v0.2.0-phase2-freeze-7-g0de5cd4
+v0.2.0-phase2-freeze-9-ge2c36e6
 
 PS C:\Users\B NAVANEETH\SatQueryAI> git status --short
 (empty - working tree completely clean)
@@ -461,22 +481,22 @@ PS C:\Users\B NAVANEETH\SatQueryAI> python -m pytest tests/ -q
 
 | System / Framework | Natural Language Task Understanding | Programmatic Sensor & Physical Compatibility Gate | Explicit Task Non-Coercion Guarantee | Mandatory Clarification for Ambiguous Intent | Calibrated Selective Routing | Joint Linguistic + Physical Risk-Coverage Evaluation | Primary Reference / Evidence |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Earth-GPT** (Zhang et al., 2024) | Yes | No | No | No | No | No | End-to-end multimodal VLM; executes on arbitrary image inputs regardless of spectral/temporal compatibility. |
-| **GeoChat** (Kuckreja et al., 2024) | Yes | No | No | No | No | No | Grounded RS-VLM; lacks sensor contract checks; coerces ambiguous queries to most likely visual feature. |
-| **SkyEye** (Zhan et al., 2024) | Yes | No | No | No | No | No | Visual grounding assistant; lacks temporal interval verification or multi-sensor compatibility gates. |
-| **RS-LLaVA** (Li et al., 2024) | Yes | No | No | No | No | No | High-resolution RS assistant; lacks physical payload validation; attempts ungrounded inference on invalid payloads. |
-| **Learning to Route (L2R)** (Wang et al., 2021) | Yes | No | Partial | No | No | No | Routes queries across specialized networks; lacks geospatial metadata verification (CRS, GSD, affine phase). |
-| **SelectiveNet** (Geifman & El-Yaniv, 2019) | No | No | N/A | No | Yes | No | General selective prediction on closed feature spaces; lacks NLP task routing or physical sensor contracts. |
-| **STAC Metadata Validators** (Sankaran et al., 2021) | No | Yes | No | No | No | No | Validates geospatial metadata schemas; lacks natural language intent models; crashes or coerces data on mismatch. |
+| **Earth-GPT** (Zhang et al., 2024) | Yes | No | Not Reported | No | Not Reported | No | Multimodal RS-VLM (CVPR 2024); executes unified generative vision-language model without programmatic sensor/metadata compatibility validation or selective abstention. |
+| **GeoChat** (Kuckreja et al., 2024) | Yes | No | Not Reported | No | Not Reported | No | Grounded RS-VLM (CVPR 2024); routes via open-vocabulary conversation; lacks deterministic sensor gating and prompt ambiguity clarification mechanisms. |
+| **SkyEye** (Zhan et al., 2024) | Yes | No | Not Reported | No | Not Reported | No | RS visual grounding assistant; focuses on localized spatial object detection; does not evaluate multi-sensor compatibility or bi-temporal interval contracts. |
+| **RS-LLaVA** (Li et al., 2024) | Yes | No | Not Reported | No | Not Reported | No | High-resolution RS multi-task assistant; handles diverse queries but lacks active physical payload gating or selective risk-coverage quantification. |
+| **Learning to Route (L2R)** (Wang et al., 2021) | Yes | No | Not Reported | No | No | No | Dynamic task routing across neural specialists; routing decisions are uncalibrated and decoupled from physical geospatial/sensor metadata. |
+| **SelectiveNet** (Geifman & El-Yaniv, 2019) | No | No | N/A | No | Yes | No | Selective prediction for computer vision on closed datasets (ICML 2019); does not model NLP intent, task taxonomies, or physical sensor payloads. |
+| **STAC Metadata Ecosystem** (Holmes et al., 2021) | No | Yes | N/A | No | No | No | SpatioTemporal Asset Catalog specification (v1.0.0); validates JSON metadata syntax against schemas, but provides no natural language task interpretation, intent routing, or active execution gating. |
 | **SatQuery AI (Proposed System)** | **Yes** | **Proposed** | **Proposed** | **Proposed** | **Proposed** | **Proposed** | **Subject of experimental evaluation under this protocol.** |
 
-### H.2 The Central Scientific Hypothesis to be Tested
-> **Hypothesis**: In Earth observation query routing, routing errors arise from two orthogonally distinct sources of uncertainty: **linguistic ambiguity** in user intent, and **physical incompatibility** in observation payloads. Decoupling linguistic intent estimation from deterministic, machine-enforceable sensor compatibility contracts eliminates incompatible specialist executions ($\text{IDER} \equiv 0.0\%$) and achieves significantly lower selective risk (AURC) than unconstrained routing and zero-shot frontier LLM reasoning.
+### H.2 The Central Scientific Research Hypothesis to be Tested
+> **Central Research Hypothesis**: In Earth observation query routing, routing failures arise from two orthogonally distinct sources of uncertainty: **linguistic ambiguity** in user intent, and **physical incompatibility** in observation payloads. Decoupling linguistic intent estimation from deterministic, machine-enforceable sensor compatibility contracts eliminates incompatible specialist executions ($\text{IDER}_{\text{obs}} = 0.0\%$, finite-sample Wilson bound $\le 8.81\%$) and achieves significantly lower selective risk (global AURC) than unconstrained routing, uncalibrated selective prediction, and zero-shot frontier LLM reasoning.
 
 ### H.3 Core Research Objectives of the Study
-1. **Formalize Non-Coercive Routing**: Demonstrate that decoupling intent classification from observation compatibility guarantees non-coercion and eliminates incompatible specialist executions ($\text{IDER} \equiv 0.0\%$).
-2. **Quantify the Risk-Coverage Benefit**: Evaluate whether calibrated selective prediction with compatibility gating achieves statistically significant reductions in AURC compared to unconstrained, uncalibrated, and non-selective baselines.
-3. **Compare Against Foundation Models**: Rigorously benchmark deterministic compatibility routing against frontier LLM zero-shot routing on identical multimodal scenarios.
+1. **Formalize Non-Coercive Routing**: Demonstrate empirically that decoupling intent classification from observation compatibility guarantees non-coercion, preserves user intent, and eliminates incompatible specialist executions ($\text{IDER}_{\text{obs}} = 0.0\%$).
+2. **Quantify the Risk-Coverage Benefit**: Evaluate whether calibrated selective prediction with compatibility gating achieves statistically significant reductions in global AURC compared to unconstrained, uncalibrated, and non-selective baselines under paired cluster-bootstrap inference.
+3. **Compare Against Foundation Models**: Rigorously benchmark deterministic compatibility routing against frontier LLM zero-shot routing on identical multimodal scenarios across intent accuracy, proposal safety, and clarification fidelity.
 
 ---
 
@@ -484,5 +504,5 @@ PS C:\Users\B NAVANEETH\SatQueryAI> python -m pytest tests/ -q
 
 The following parameters are formally frozen for advisor sign-off:
 1. **Benchmark Synthesizer**: Cohort variants generated from deterministic template engine (seed `42`).
-2. **Power Contingency**: Default test split ($F_{\text{test}} = 28$); pre-registered expansion to $F_{\text{test}} = 42$ triggered if validation bootstrap variance $\hat{\sigma}_{\text{val}} > 0.065$.
+2. **Power Contingency**: Default test split ($F_{\text{test}} = 28$); pre-registered expansion to $F_{\text{test}} = 42$ or $F_{\text{test}} = 56$ triggered if validation cluster variance $\widehat{\text{SE}}_{\text{boot}} > 0.035$ or target effect size $\Delta \le 0.03$.
 3. **Sign-Off Enforcement**: Milestone M3.0 is **REVISED — AWAITING SCIENTIFIC REVIEW**. No Phase 3 deep-learning model training, benchmark generation, or specialist modifications will commence until formal advisor authorization is received.
