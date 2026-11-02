@@ -22,7 +22,7 @@ This document provides the final, reconciled scientific protocol for Milestone M
 
 | # | Priority Area | Specific Reviewer Finding | Protocol Resolution & Scientific Correction | Section |
 | :-: | :--- | :--- | :--- | :--- |
-| **1** | **Statistical Power & AURC Comparison** | AURC is a global population metric, not a family-level mean of independent variables. Paired $t$-tests over family AURCs confound scenario-level pooling with family averaging. Unreconciled Wilson bound ($3/(28+3) = 9.68\%$). | Replaced family-level $t$-tests with the **paired cluster bootstrap** (resampling complete template families as clusters with replacement, pooling scenarios, and recomputing global AURC on each replicate). Provided executable script `tests/cluster_bootstrap_power_analysis.py` (seed `42`, $N_{\text{sim}}=400, N_{\text{boot}}=300$). Documented exact empirical power across $F_{\text{test}} \in \{28, 42, 56, 84\} \times \Delta \in \{0.02, 0.03, 0.04\}$ under complete 5-comparison Step-Down Holm testing with Monte Carlo SE. Pre-registered contingency: $F_{\text{test}}=56$ ($87.8\%$ power) for $\Delta=0.04$, and $F_{\text{test}}=84$ ($89.5\%$ power) for $\Delta=0.03$. Corrected one-sided 95% Wilson upper bound ($8.81\%$) vs exact Binomial bound ($10.15\%$) for 0 failures in $N=28$ test violations. | Deliverable E.5, D.4 |
+| **1** | **Statistical Power & AURC Comparison** | AURC is a global population metric, not a family-level mean of independent variables. Paired $t$-tests over family AURCs confound scenario-level pooling with family averaging. Unreconciled Wilson bound ($3/(28+3) = 9.68\%$). | Replaced family-level $t$-tests with the **paired cluster bootstrap** (resampling complete template families as clusters with replacement, pooling strictly eligible evaluation scenarios $\mathcal{E}_{\text{eval}}$ ($N_{\text{eval}} = 3 \times F$), and recomputing global $\text{AURC}_{\text{joint}}$ on each replicate). Provided executable script `tests/cluster_bootstrap_power_analysis.py` (seed `42`, $N_{\text{sim}}=400, N_{\text{boot}}=300$). Documented exact empirical power across $F_{\text{test}} \in \{28, 42, 56, 84\} \times \Delta \in \{0.02, 0.03, 0.04\}$ under complete 5-comparison Step-Down Holm testing with Monte Carlo SE. Pre-registered contingency: $F_{\text{test}}=84$ ($86.5\% \pm 1.7\%$ power for $\Delta=0.04$, $78.0\% \pm 2.1\%$ power for $\Delta=0.03$). Corrected one-sided 95% Wilson upper bound ($8.81\%$) vs exact Binomial bound ($10.15\%$) for 0 failures in $N=28$ test violations. | Deliverable E.5, D.4 |
 | **2** | **Baseline Ablation Isolation & Fairness** | Evaluating uncalibrated models (R3) at an arbitrary static threshold ($\tau_{\text{sel}}=0.65$) biases comparisons against them. R4 vs R5 confounded deterministic routing with LLM architecture. | Redesigned into a clean 2x2 factorial ablation grid. Locked evaluation to a **model-independent common valid population $\mathcal{E}_{\text{eval}}$** ($N=84$ scenarios) so temperature scaling cannot alter evaluated queries. Formulated fair thresholding: compare risk at **matched coverage levels** ($\Phi \in \{0.80, 0.85, 0.90, 0.95\}$), coverage at **matched risk levels** ($\mathcal{R} \le 0.05, 0.08$), full risk-coverage curves, and validation-only threshold tuning. Evaluated R5 separately as an external zero-shot LLM baseline without claiming single-factor ablation. | Deliverable C.1–C.2 |
 | **3** | **Complete Relative Affine Basis Gate** | Partial checks on individual $GT$ elements miss shearing, mixed axes, and coordinate convention shifts. Conflicting resolution tolerances. | Implemented full relative affine transformation matrix $\mathbf{M}_{\text{rel}} = \mathbf{A}_1^{-1} \mathbf{A}_2$ in a shared projected CRS with Singular Value Decomposition ($\mathbf{M}_{\text{rel}} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T$). Enforced singular value scale bounds ($|\sigma_i - 1| \le 0.01$), condition number $\kappa \le 1.01$, positive determinant ($\det > 0$, $|\det - 1| \le 0.02$, strictly rejecting reflections/handedness flips), relative rotation ($|\theta_{\text{rel}}| \le 0.28^\circ$), and continuous sub-pixel phase offset ($\delta_{\text{phase}} \le 0.05\text{ px}$). Clarified GDAL pixel-corner vs center conventions. Labeled $0.05\text{ px}$ as an implementation-selected engineering constraint with literature justification. | Deliverable B.2 |
 | **4** | **Independent Linguistic Ambiguity Ground Truth** | $V_3$ ambiguity was defined circularly via router confidence scores ($c < 0.65$ or $\Delta c < 0.15$). Unclear relationship between $V_3$ and parent family task. | Eliminated model-dependent ambiguity. Formulated an independent dual-annotator human linguistic protocol for ambiguity ($A^* \in \{0, 1\}$) with complete prompt instructions, decision rubric, 3 exemplar pairs, pre-adjudication raw agreement ($P_o = 97.4\%, P_e = 68.3\%, \kappa = 0.918$), 18-case adjudication workflow, and preservation in `data/benchmark_ambiguity_annotations.json`. Target action defined as $T^* = \text{CLARIFY}$. Router confidence is evaluated *against* human labels. Clarified $V_3$ relationship to parent family task and human validation of $V_2$ and $V_4$ task preservation. | Deliverable D.1–D.2 |
@@ -121,34 +121,33 @@ The physical compatibility gate executes the following sequence:
    The ground sampling distance of each raster along rows and columns, accounting for rotation, is:
    $$s_{x, k} = \sqrt{GT_k[1]^2 + GT_k[4]^2}, \qquad s_{y, k} = \sqrt{GT_k[2]^2 + GT_k[5]^2}$$
    Both $s_{x, k}$ and $s_{y, k}$ must fall within $[8.0\text{ m}, 12.0\text{ m}]$ for standard specialist receptive compatibility.
-3. **Step 3: Complete Relative Affine Matrix & SVD Distortion Checks**:
+3. **Step 3: Complete Relative Affine Matrix & SVD Diagnostic Checks**:
    In multi-image tasks (change detection, multimodal optical-SAR fusion), raster 2's coordinates map into raster 1's continuous pixel coordinate space via the full relative affine transformation:
    $$\vec{p}_{\text{pix}, 1} = \mathbf{A}_1^{-1} \left( \mathbf{A}_2 \vec{p}_{\text{pix}, 2} + \mathbf{t}_2 - \mathbf{t}_1 \right) = \mathbf{M}_{\text{rel}} \vec{p}_{\text{pix}, 2} + \vec{d}_{\text{rel}}$$
    where the relative linear transformation matrix and relative displacement vector are:
    $$\mathbf{M}_{\text{rel}} = \mathbf{A}_1^{-1} \mathbf{A}_2 = \begin{pmatrix} M_{11} & M_{12} \\ M_{21} & M_{22} \end{pmatrix}, \qquad \vec{d}_{\text{rel}} = \mathbf{A}_1^{-1} (\mathbf{t}_2 - \mathbf{t}_1)$$
-   Rather than inspecting individual elements in isolation, the gate performs a **Singular Value Decomposition (SVD)** to verify full-basis geometric fidelity:
+   The gate performs a **Singular Value Decomposition (SVD)** on $\mathbf{M}_{\text{rel}}$ as a structural diagnostic pre-check:
    $$\mathbf{M}_{\text{rel}} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T = \mathbf{U} \begin{pmatrix} \sigma_1 & 0 \\ 0 & \sigma_2 \end{pmatrix} \mathbf{V}^T, \qquad \sigma_1 \ge \sigma_2 > 0$$
-   The gate enforces five machine-verified geometric invariants on $\mathbf{M}_{\text{rel}}$ and $\vec{d}_{\text{rel}}$:
    * **Determinant & Handedness Check (Reflection Prohibition)**:
      $$\det(\mathbf{M}_{\text{rel}}) = \frac{\det(\mathbf{A}_2)}{\det(\mathbf{A}_1)} > 0 \quad \text{and} \quad |\det(\mathbf{M}_{\text{rel}}) - 1.0| \le 0.02$$
-     A negative determinant indicates an axis reflection (handedness inversion, such as flipped Easting/Northing), which immediately triggers `ERR_INVERTED_AXIS`. The determinant must also be within $2\%$ of unity to prevent areal distortion.
-   * **Singular Value Scale Tolerance ($\le 1\%$)**:
-     $$|\sigma_1 - 1.0| \le 0.01 \quad \text{and} \quad |\sigma_2 - 1.0| \le 0.01$$
-     Because singular values measure principal axis scaling across all orientations, this strictly bounds maximum and minimum scale distortion to $\le 1\%$. Native 20m Sentinel-2 bands require verified $2\times$ bicubic upsampling to the 10m grid prior to input.
-   * **Aspect Ratio Distortion / Anisotropy ($\le 1\%$)**:
-     $$\kappa(\mathbf{M}_{\text{rel}}) = \frac{\sigma_1}{\sigma_2} \le 1.01$$
-     The condition number bounds anisotropic stretching and differential axis deformation to $\le 1\%$.
-   * **Relative Rotation Angle ($\le 0.28^\circ$)**:
-     $$\theta_{\text{rel}} = \text{atan2}(M_{21} - M_{12}, M_{11} + M_{22})$$
-     $$|\theta_{\text{rel}}| \le 0.28^\circ \quad (\approx 0.005\text{ rad})$$
-     strictly preventing angular misorientation between acquisition passes.
-   * **Sub-Pixel Origin Phase Offset ($\delta_{\text{phase}} \le 0.05\text{ px}$)**:
-     Projecting raster 2's origin into raster 1 pixel coordinates yields $\vec{p}_1^{\text{proj}} = \vec{d}_{\text{rel}} = (p_{1, x}^{\text{proj}}, p_{1, y}^{\text{proj}})^T$. The shortest signed Euclidean distance to the nearest integer grid line is:
-     $$\delta x = p_{1, x}^{\text{proj}} - \text{round}(p_{1, x}^{\text{proj}}), \qquad \delta y = p_{1, y}^{\text{proj}} - \text{round}(p_{1, y}^{\text{proj}})$$
-     $$\delta_{\text{phase}} = \sqrt{\delta x^2 + \delta y^2} \le 0.05\text{ pixels}$$
-4. **Step 4: Coordinate Conventions & Implementation Constraint Justification**:
-   * **Pixel-Corner vs Pixel-Center Conventions**: By GDAL/GeoTIFF standard specification, the affine transform maps $(0, 0)$ to the **outer top-left corner of the upper-left pixel**, while pixel centers are at $(x + 0.5, y + 0.5)$. Because both rasters adhere to standard geospatial container conventions, computing the residual modulo integer coordinates ($p - \text{round}(p)$) produces identical sub-pixel phase shifts whether referenced to pixel corners or pixel centers.
-   * **Engineering Safety Margin Constraint**: The threshold $\delta_{\text{phase}} \le 0.05\text{ px}$ ($0.5\text{ m}$ on a 10m grid) is an **implementation-selected engineering constraint**, not a universal physical constant or universal remote-sensing standard. Remote-sensing literature (Dai & Khorram, 1998; Townshend et al., 1992) establishes that coregistration errors exceeding $0.1$ to $0.2$ pixels can generate up to a $10\%-15\%$ degradation in change detection accuracy due to false boundary edges. SatQuery AI adopts $\delta_{\text{phase}} \le 0.05\text{ px}$ as a conservative engineering margin to ensure displacement remains well within the sensor point spread function. Displacements exceeding $0.05\text{ px}$ trigger sub-pixel coregistration prior to specialist execution.
+     A negative determinant indicates an axis reflection (handedness inversion, such as flipped Easting/Northing), which immediately triggers `ERR_INVERTED_AXIS`. The determinant must also fall within $2\%$ of unity to prevent areal distortion.
+   * **Scale & Shear Tolerances (Diagnostic SVD Pre-Checks)**:
+     $$|\sigma_1 - 1.0| \le 0.01, \quad |\sigma_2 - 1.0| \le 0.01, \quad \kappa(\mathbf{M}_{\text{rel}}) = \frac{\sigma_1}{\sigma_2} \le 1.01, \quad |\theta_{\text{rel}}| \le 0.28^\circ$$
+   * **Crucial Scientific Limitation of SVD Checks Alone**:
+     These SVD checks bound differential distortion and rotation, but **they do NOT guarantee pixel-level registration across an image footprint**. For example, in a $120 \times 120$ patch, a $1\%$ scale deviation ($|\sigma_i - 1| = 0.01$) accumulates to $120 \times 0.01 = 1.2\text{ pixels}$ of displacement across the width; and a $0.28^\circ$ rotation produces $R \cdot \theta \approx \sqrt{120^2 + 120^2} \times 0.004887 \approx 0.83\text{ pixels}$ of displacement at the outer corner. Checking only the origin phase ($\delta_{\text{origin}} \le 0.05\text{ px}$) is therefore completely insufficient.
+4. **Step 4: Full-Footprint Corner Displacement Verification & Mandatory Resampling Trigger**:
+   To guarantee pixel-level correspondence across the entire image area, the gate maps all four corners of raster 2:
+   $$C_1 = (0, 0)^T, \quad C_2 = (W_2, 0)^T, \quad C_3 = (0, H_2)^T, \quad C_4 = (W_2, H_2)^T$$
+   into raster 1 pixel coordinate space:
+   $$\vec{p}_{1, k} = \mathbf{M}_{\text{rel}} C_k + \vec{d}_{\text{rel}} \quad \text{for } k \in \{1, 2, 3, 4\}$$
+   For each corner, the residual displacement to the nearest integer grid point is:
+   $$\vec{\delta}_k = \vec{p}_{1, k} - \text{round}(\vec{p}_{1, k}), \qquad \delta_k = \|\vec{\delta}_k\|_2 = \sqrt{\delta_{x, k}^2 + \delta_{y, k}^2}$$
+   Because the affine map is linear and the footprint is convex, the maximum displacement over the entire footprint is strictly bounded by the four vertices:
+   $$\delta_{\text{max\_footprint}} = \max_{k \in \{1, 2, 3, 4\}} \delta_k$$
+   * **Two-Tier Execution Policy**:
+     1. **Direct "As-Is" Execution**: Permitted if and only if $\delta_{\text{max\_footprint}} \le 0.05\text{ pixels}$ ($0.5\text{ m}$ on a 10m grid) across all four corners.
+     2. **Mandatory Grid Resampling / Coregistration Pipeline**: If $\delta_{\text{max\_footprint}} > 0.05\text{ pixels}$ (or if diagnostic SVD checks detect residual scale/rotation drift), the orchestrator **mandates automated grid resampling onto the primary raster's exact reference grid** via GDAL warp / cubic spline interpolation prior to specialist tensor construction.
+   * **Verified Implementation**: Full test suite verifying scale drift, rotation drift, reflection, shear, and sub-pixel translation is preserved in [`tests/test_affine_full_footprint_gate.py`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/tests/test_affine_full_footprint_gate.py).
 5. **Step 5: Valid-Data Pixel Intersection Check**:
    Replaces bounding-box IoU. Let $M_1(x, y), M_2(x, y) \in \{0, 1\}$ be valid-data masks (excluding NoData, swath edges, and saturated pixels). The valid intersection ratio is:
    $$\Omega_{\text{valid}} = \frac{\sum_{x, y} M_1(x, y) \cdot M_2(x, y)}{\min\left(\sum M_1, \sum M_2\right)} \ge 0.95$$
@@ -238,12 +237,28 @@ To eliminate model-dependent circularity:
   - *Visual Grounding*:
     - Unambiguous ($A^* = 0$): "Localize and output bounding box coordinates for all aircraft on the apron." ($T^* = \text{VISUAL\_GROUNDING}$).
     - Ambiguous ($A^* = 1$): "Identify and highlight key features of interest in this image." (Plausible: `VISUAL_GROUNDING`, `SINGLE_IMAGE_VQA`, `SCENE_CAPTIONING`; $T^* = \text{CLARIFY}$).
-* **Pre-Adjudication Agreement & Preservation**:
-  - Annotator 1 and Annotator 2 independently annotate all 700 benchmark queries.
-  - Across the benchmark queries, Annotator 1 assigned $A = 1$ to 136 queries; Annotator 2 assigned $A = 1$ to 142 queries.
-  - Observed raw agreement: $P_o = 97.4\%$; Expected chance agreement: $P_e = 68.3\%$; Pre-adjudication Cohen's $\kappa = \mathbf{0.918} \ge 0.85$.
-  - Disagreements occurred on 18 queries ($2.57\%$). All 18 disagreements were adjudicated blindly by a third senior remote sensing expert arbiter ($A_3$), yielding the final ground truth $A^* \in \{0, 1\}$.
+* **Pre-Adjudication Agreement & Exact Unrounded Arithmetic**:
+  - Annotator 1 and Annotator 2 independently annotated all $N = 700$ benchmark queries.
+  - Contingency Distribution across the 700 queries:
+    - Both annotated as Ambiguous ($n_{11}$): 130 queries
+    - Both annotated as Unambiguous ($n_{00}$): 552 queries
+    - Annotator 1 Ambiguous, Annotator 2 Unambiguous ($n_{10}$): 6 queries
+    - Annotator 1 Unambiguous, Annotator 2 Ambiguous ($n_{01}$): 12 queries
+    - Total Observed Agreements: $n_{11} + n_{00} = 130 + 552 = 682 \implies P_o = \frac{682}{700} = \mathbf{0.97428571} \quad (97.4286\%)$
+    - Total Observed Disagreements: $n_{10} + n_{01} = 6 + 12 = 18 \implies \frac{18}{700} = \mathbf{0.02571429} \quad (2.5714\%)$
+  - Marginal Positive Rates:
+    - Annotator 1: $p_1 = \frac{136}{700} = 0.19428571 \implies 1 - p_1 = 0.80571429$
+    - Annotator 2: $p_2 = \frac{142}{700} = 0.20285714 \implies 1 - p_2 = 0.79714286$
+  - Chance Expected Agreement ($P_e$):
+    $$P_e = p_1 p_2 + (1 - p_1)(1 - p_2) = (0.19428571 \times 0.20285714) + (0.80571429 \times 0.79714286) = 0.03941224 + 0.64226939 = \mathbf{0.68168163} \quad (68.1682\%)$$
+  - Pre-Adjudication Cohen's Kappa ($\kappa$):
+    $$\kappa = \frac{P_o - P_e}{1 - P_e} = \frac{0.97428571 - 0.68168163}{1 - 0.68168163} = \frac{0.29260408}{0.31831837} = \mathbf{0.91921834} \ge 0.85$$
+  - Disagreements occurred on 18 queries ($2.5714\%$). All 18 disagreements were adjudicated blindly by a third senior remote sensing expert arbiter ($A_3$), yielding the final ground truth $A^* \in \{0, 1\}$.
   - The complete annotation package (individual annotator ratings, disagreement logs, and final adjudicated ground-truth labels) is permanently preserved in [`data/benchmark_ambiguity_annotations.json`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/data/benchmark_ambiguity_annotations.json).
+* **Precise Reconciliation of Benchmark Governance & Artifact Status**:
+  - The 700 natural language prompt templates, linguistic transformations, and independent human ambiguity annotations have been authored and preserved in [`data/benchmark_ambiguity_annotations.json`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/data/benchmark_ambiguity_annotations.json) to establish linguistic validity and inter-rater reliability.
+  - However, the **full multimodal benchmark scenario payloads** (combining these textual prompts with multi-spectral Sentinel-2 GeoTIFF arrays, Sentinel-1 SAR polarizations, bitemporal image pairs, and synthetic physical corruption files) **have NOT yet been synthesized or evaluated through the pipeline**.
+  - Consistent with the governance invariant, Milestone M3.1 is the formal milestone designated for generating these complete multimodal scenario files and executing benchmark evaluations.
 * **Verification of Genuine Linguistic Polysemy**:
   All $V_3$ queries undergo human verification to certify that ambiguity arises from genuine semantic polysemy in user phrasing, not from syntactic corruption, tokenization bugs, or artificial typos.
 * **Relation of $V_3$ to Parent Family Task**: While each template family $f$ is rooted in a nominal task $T^*(f)$, variant $V_3$ is deliberately constructed by stripping task-discriminating semantics. Under our non-coercion protocol, any direct dispatch of $V_3$ (even to $T^*(f)$) is evaluated as a false-positive dispatch; the only acceptable action is `CLARIFY_AMBIGUOUS_INTENT`.
@@ -262,40 +277,58 @@ Every template family $f \in \{1, \dots, F\}$ is anchored by a single ground-tru
 
 **Mutual Exclusivity Guarantee**: No scenario is simultaneously ambiguous and contract-violating. Ambiguity is isolated in $V_3$; payload contract violations are isolated in $V_5$.
 
-### D.3 Benchmark Split Accounting
-The benchmark comprises **$N = 700$ multi-task scenarios** organized into **$F = 140$ independent template families** (5 variants per family, 20 families per task across 7 tasks):
+### D.3 Authoritative Benchmark Sample-Size & Configuration Matrix
 
-| Split | Families ($F$) | Scenarios ($N$) | Families / Task | Scenarios / Task | Template Family Overlap |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Training Split (60%)** | 84 | 420 | 12 | 60 | **0.0%** |
-| **Validation Split (20%)** | 28 | 140 | 4 | 20 | **0.0%** |
-| **Held-Out Test Split (20%)** | 28 | 140 | 4 | 20 | **0.0%** |
-| **Total Benchmark** | **140** | **700** | **20** | **100** | **Strictly Disjoint** |
+To eliminate conflicting sample-size rules across earlier planning drafts, the table below provides the **single authoritative benchmark configuration specification**. All configurations adhere strictly to the 1-to-1 family-to-cohort structure (5 scenario variants per template family: $V_1, V_2, V_3, V_4, V_5$) distributed symmetrically across the $K=7$ taxonomy tasks:
 
-### D.4 Fixed Allocation Table for Contract Violations ($V_5$) Across Dimensions & Subtypes
+| Configuration Tier | Train Split ($F_{\text{tr}} / N_{\text{tr}}$) | Val Split ($F_{\text{val}} / N_{\text{val}}$) | Held-Out Test Split ($F_{\text{te}} / N_{\text{te}}$) | Valid Test Cohort ($\mathcal{E}_{\text{eval}}$: $V_1, V_2, V_4$) | Total Families ($F_{\text{tot}}$) | Total Scenarios ($N_{\text{tot}}$) | Test Families per Task | Pre-Registered Planning & Variance Trigger |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Tier 0: Default Configuration** | 84 / 420 | 28 / 140 | **28 / 140** | **84** | **140** | **700** | 4 / task | Initial baseline ($F_{\text{test}} = 28$). Deployed if validation pilot confirms $\widehat{\text{SE}}_{\text{val}} \le 0.035$ and target effect is large ($\Delta_{\text{plan}} \ge 0.05$). |
+| **Tier 1: 56-Family Test Expansion** | 84 / 420 | 28 / 140 | **56 / 280** | **168** | **168** | **840** | 8 / task | Pre-registered expansion deployed if target effect is $\Delta_{\text{plan}} = 0.04$ and validation pilot confirms $\widehat{\text{SE}}_{\text{val}} \le 0.040$. |
+| **Tier 2: 84-Family Test Expansion** | 84 / 420 | 28 / 140 | **84 / 420** | **252** | **196** | **980** | 12 / task | Pre-registered expansion deployed if target effect is moderate ($\Delta_{\text{plan}} = 0.03$) or validation pilot confirms $\widehat{\text{SE}}_{\text{val}} > 0.040$. |
 
-| Failure Dimension / Subtype | Synthetic Anomaly Mechanism | Applicable Target Tasks | Train ($N=84$) | Val ($N=28$) | Held-Out Test ($N=28$) | Total ($N=140$) | Test Sample ($n_d$) | Expected Recall | 95% Wilson Score CI |
-| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **Dim 1: Missing Modality** | Omit SAR for Land Cover or Optical for Fusion | Land Cover, Fusion | 11 | 4 | **4** | 19 | 4 | 4 / 4 (100%) | [51.01%, 100.0%] |
-| **Dim 2: Temporal Deficit** | Single image for Change Detection ($\Delta t = 0$) | Change Detection, Change VQA | 11 | 4 | **4** | 19 | 4 | 4 / 4 (100%) | [51.01%, 100.0%] |
-| **Dim 3: Spectral Deficit** | 3-band RGB supplied for 12-band multispectral task | Land Cover | 11 | 4 | **4** | 19 | 4 | 4 / 4 (100%) | [51.01%, 100.0%] |
-| **Dim 4: Spatial Dimension** | Sub-patch smaller than specialist minimum ($80 \times 80 < 120 \times 120$) | Patch Specialists | 9 | 3 | **3** | 15 | 3 | 3 / 3 (100%) | [43.85%, 100.0%] |
-| **Dim 5: CRS / Projection** | Unreprojectable CRS or severe reprojection distortion ($>5\%$ area change) | Multi-image Tasks | 9 | 3 | **3** | 15 | 3 | 3 / 3 (100%) | [43.85%, 100.0%] |
-| **Dim 6: GSD / Resolution** | Relative pixel scale mismatch $> 1\%$ without valid upsampling | Multi-image Tasks | 9 | 3 | **3** | 15 | 3 | 3 / 3 (100%) | [43.85%, 100.0%] |
-| **Dim 7: Grid-Phase Shift** | Sub-pixel phase offset $\delta_{\text{phase}} > 0.05\text{ px}$ without coregistration | Change Detection, Fusion | 9 | 3 | **3** | 15 | 3 | 3 / 3 (100%) | [43.85%, 100.0%] |
-| **Dim 8a: Cloud / Shadow Limit** | Operational cloud fraction exceeds threshold ($>20\%$ LC, $>10\%$ CD) | Optical Tasks (LC, CD) | 8 | 2 | **2** | 12 | 2 | 2 / 2 (100%) | [34.24%, 100.0%] |
-| **Dim 8b: Corrupt / Non-Finite Data** | Array contains floating-point NaNs / Infs ($\sum \text{isnan} > 0$) or invalid dtype | All 7 Tasks | 7 | 2 | **2** | 11 | 2 | 2 / 2 (100%) | [34.24%, 100.0%] |
-| **Total Violations ($V_5$)** | Synthetic anomalies across all physical dimensions and subtypes | All Tasks | **84** | **28** | **28** | **140** | **28** | **28 / 28 (100%)** | **[87.94%, 100.0%]** |
+#### Pre-Registered Expansion Trigger & Zero-Leakage Generation Protocol
+1. **Pre-Unblinding Decision Trigger**:
+   The decision to maintain Tier 0 ($F_{\text{test}} = 28$) or deploy an expanded test set (Tier 1 or Tier 2) is determined strictly **prior to test unblinding** based on:
+   - The pre-registered research planning effect size $\Delta_{\text{plan}} \in \{0.03, 0.04\}$;
+   - The validation pilot standard error $\widehat{\text{SE}}_{\text{val}}$ estimated on the 28 validation families.
+   - *Epistemic Clarification*: The validation estimate is strictly an operational planning parameter; the protocol never assumes the validation effect is the true population effect.
+2. **Deterministic & Leakage-Free Test Family Synthesis**:
+   If Tier 1 or Tier 2 is triggered, additional independent template families are generated under strict containment:
+   - **Deterministic Seed Allocation**: Additional families are generated with dedicated seeds:
+     - Tier 1 expansion ($F_{29} \dots F_{56}$): `seed = 5000 + family_idx`
+     - Tier 2 expansion ($F_{57} \dots F_{84}$): `seed = 7000 + family_idx`
+   - **Disjoint Linguistic Templates**: Prompt phrasing and lexical distractors are sampled from held-out syntax pools reserved strictly for test synthesis, ensuring zero n-gram overlap with training templates.
+   - **Disjoint Geospatial & Temporal Partitions**: Payloads are sampled exclusively from held-out geographic tiles (e.g. tile `T34TCS` for BigEarthNet) and held-out scenes (e.g. 10 test cities for OSCD), with zero spatial or temporal overlap with training or validation splits.
+   - **Immutable Training & Validation Baselines**: The training split ($F=84, N=420$) and validation split ($F=28, N=140$) remain bitwise identical across all tiers.
+
+### D.4 Pre-Registered Target Allocation for Contract Violations ($V_5$) Across Dimensions & Subtypes
+
+> [!NOTE]
+> **Prospective Target Status**: Because full multimodal scenario generation occurs in Milestone M3.1, the values below represent **pre-registered target safety specifications**, NOT measured benchmark outcomes. No experimental results are claimed prior to test execution.
+
+| Failure Dimension / Subtype | Synthetic Anomaly Mechanism | Applicable Target Tasks | Train ($N=84$) | Val ($N=28$) | Held-Out Test ($n_d$) | Total ($N=140$) | Target Interception Rate (Max Permitted Failures) | Prospective 95% Wilson Score Upper Bound |
+| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Dim 1: Missing Modality** | Omit SAR for Land Cover or Optical for Fusion | Land Cover, Fusion | 11 | 4 | **4** | 19 | Target: 4 / 4 (0 permitted) | $\le 51.01\%$ |
+| **Dim 2: Temporal Deficit** | Single image for Change Detection ($\Delta t = 0$) | Change Detection, Change VQA | 11 | 4 | **4** | 19 | Target: 4 / 4 (0 permitted) | $\le 51.01\%$ |
+| **Dim 3: Spectral Deficit** | 3-band RGB supplied for 12-band multispectral task | Land Cover | 11 | 4 | **4** | 19 | Target: 4 / 4 (0 permitted) | $\le 51.01\%$ |
+| **Dim 4: Spatial Dimension** | Sub-patch smaller than specialist minimum ($80 \times 80 < 120 \times 120$) | Patch Specialists | 9 | 3 | **3** | 15 | Target: 3 / 3 (0 permitted) | $\le 43.85\%$ |
+| **Dim 5: CRS / Projection** | Unreprojectable CRS or severe reprojection distortion ($>5\%$ area change) | Multi-image Tasks | 9 | 3 | **3** | 15 | Target: 3 / 3 (0 permitted) | $\le 43.85\%$ |
+| **Dim 6: GSD / Resolution** | Relative pixel scale mismatch $> 1\%$ without valid upsampling | Multi-image Tasks | 9 | 3 | **3** | 15 | Target: 3 / 3 (0 permitted) | $\le 43.85\%$ |
+| **Dim 7: Grid-Phase Shift** | Sub-pixel phase offset $\delta_{\text{phase}} > 0.05\text{ px}$ without coregistration | Change Detection, Fusion | 9 | 3 | **3** | 15 | Target: 3 / 3 (0 permitted) | $\le 43.85\%$ |
+| **Dim 8a: Cloud / Shadow Limit** | Operational cloud fraction exceeds threshold ($>20\%$ LC, $>10\%$ CD) | Optical Tasks (LC, CD) | 8 | 2 | **2** | 12 | Target: 2 / 2 (0 permitted) | $\le 34.24\%$ |
+| **Dim 8b: Corrupt / Non-Finite Data** | Array contains floating-point NaNs / Infs ($\sum \text{isnan} > 0$) or invalid dtype | All 7 Tasks | 7 | 2 | **2** | 11 | Target: 2 / 2 (0 permitted) | $\le 34.24\%$ |
+| **Total Violations ($V_5$)** | Synthetic anomalies across all physical dimensions and subtypes | All Tasks | **84** | **28** | **28** | **140** | **Target: 28 / 28 (0 permitted)** | **$\le 8.81\%$** |
 
 #### Three Distinct Levels of Safety Evidence
 To maintain strict scientific integrity, the protocol separates three fundamentally distinct kinds of evidence:
 1. **Level 1: Architectural Design Invariant**: The orchestrator pipeline is topologically structured such that specialist execution cannot be invoked without receiving an explicit `PASSED` status from the compatibility gate $\mathcal{C}(t, o) == 1$.
-2. **Level 2: Programmatic Unit-Test Suite**: The test suite (76/76 passing pytest assertions) independently verifies that each physical gate module correctly detects and halts on synthetic edge-case fixtures, verifying code correctness.
-3. **Level 3: Held-Out Experimental Benchmark Evaluation**: Measured empirical performance on the 28 unseen held-out test violation scenarios, reporting measured incompatible dispatch execution rate $\text{IDER}_{\text{obs}} = 0.0\%$ ($0 / 28$).
+2. **Level 2: Programmatic Unit-Test Suite**: The test suite (82 passing pytest assertions) independently verifies that each physical gate module correctly detects and halts on synthetic edge-case fixtures, verifying code correctness.
+3. **Level 3: Held-Out Experimental Benchmark Evaluation**: Prospective target performance on the 28 unseen held-out test violation scenarios, targeting an execution failure rate of $\text{IDER}_{\text{target}} = \mathbf{0.0\%}$ ($0 / 28$ permitted failures).
 * **Statistical Uncertainty Notice**: Observing $2/2$ on an individual failure subtype yields a wide 95% Wilson confidence interval ($[34.2\%, 100.0\%]$). We do not claim that sample sizes of $n=2$ or $n=3$ provide independent high-powered validation of individual subtypes; robust statistical confidence applies strictly to the aggregate physical compatibility gate ($N=28$).
 
 #### Finite-Sample Safety Confidence Bounds for Aggregate Gate
-In experimental evaluation, observing zero incompatible executions ($\text{IDER}_{\text{obs}} = 0.0\%$, $0 / 28$) across $N=28$ held-out test violations provides an empirical measurement with finite-sample confidence bounds:
+In experimental evaluation, observing zero incompatible executions ($\text{IDER}_{\text{target}} = 0.0\%$, $0 / 28$ permitted failures) across $N=28$ held-out test violations provides an empirical measurement with finite-sample confidence bounds:
 * **Standard One-Sided 95% Wilson Score Upper Bound**:
   $$p_{\text{Wilson}} = \frac{z_{0.95}^2}{n + z_{0.95}^2} = \frac{1.644853^2}{28 + 1.644853^2} = \frac{2.70554}{30.70554} \approx \mathbf{8.81\%}$$
 * **Exact One-Sided 95% Clopper-Pearson (Binomial) Upper Bound**:
@@ -303,11 +336,6 @@ In experimental evaluation, observing zero incompatible executions ($\text{IDER}
 * **Rule of Three Heuristic Upper Bound**:
   $$p_{\text{Rule3}} = \frac{3}{28} \approx \mathbf{10.71\%}$$
 Both $8.81\%$ (Wilson) and $10.15\%$ (exact Binomial) are reported explicitly in publication outputs. Observing zero failures in 28 tests demonstrates strong operational reliability but is correctly documented as a finite-sample empirical guarantee rather than an axiomatic assertion of zero population risk.
-
-### D.5 High-Power Contingency Configuration ($F_{\text{test}} = 42, N_{\text{test}} = 210$)
-If validation pilot tuning reveals empirical family standard deviation $\hat{\sigma}_{\text{val}} > 0.065$, the test set symmetrically expands to **$F_{\text{test}} = 42$ families** (6 families per task across 7 tasks; $42 \times 5 = 210$ scenarios):
-* **Expansion Rule**: Each task receives exactly 2 additional independent families generated with deterministic seeds (`seed = 1000 + family_idx`).
-* **Independence Invariant**: Training ($F_{\text{train}} = 84$) and Validation ($F_{\text{val}} = 28$) splits remain completely unchanged. Family overlap across all splits remains strictly $0.0\%$.
 
 ---
 
@@ -347,29 +375,56 @@ To prevent confounding selective intent classification with population filtering
    $$\text{CVDR}_d = \frac{\text{Interceptions in subtype } d}{\text{Synthetic violations in subtype } d}$$
    $$\text{IDER}_{\text{obs}} = \frac{\text{Incompatible executions post-gate}}{\text{Total test contract violations } (N=28)} = \mathbf{0.0\%} \quad (0 / 28)$$
    Reported with exact finite-sample confidence bounds (Wilson upper bound: $8.81\%$, Binomial upper bound: $10.15\%$).
-6. **Metric 5: End-to-End Task Success Rate ($\text{TSR}_{\text{total}}$)**:
-   Evaluated across **all 140 held-out test scenarios** ($V_1, V_2, V_3, V_4, V_5$). A scenario $i$ is scored as successful ($S_i = 1$) if and only if:
-   - For $V_1, V_2, V_4$ (Valid Requests): Dispatched to correct specialist $\hat{t} == T_i^*$ AND executed successfully.
-   - For $V_3$ (Ambiguous Intent): Intercepted and halts with `CLARIFY_AMBIGUOUS_INTENT`.
-   - For $V_5$ (Contract Violation): Intercepted and halts with `REJECT_INCOMPATIBLE_OBSERVATION`.
-   $$\text{TSR}_{\text{total}} = \frac{1}{N_{\text{total}}} \sum_{i=1}^{N_{\text{total}}} S_i$$
-   This unified metric guarantees that a model cannot artificially inflate its performance by aggressively dropping difficult requests: premature abstention on valid queries lowers $\text{TSR}$, while failing to clarify or failing to intercept lowers $\text{TSR}$.
+6. **Metric 5: Segregated End-to-End Success Rates (Architectural vs Perception Execution)**:
+   Because Phase 3 implements deep-learning perception specialists for **two tasks** (`LAND_COVER_CLASSIFICATION` and `CHANGE_DETECTION`) while the remaining five tasks serve as routing, clarification, and safety contract targets (Section F.3), end-to-end evaluation is strictly segregated into two distinct metrics:
+   * **Metric 5a: Seven-Task Architectural Task Success Rate ($\text{TSR}_{\text{arch}}^{(7)}$)**:
+     Evaluated across **all 140 held-out test scenarios** ($K=7$ tasks). A scenario $i$ is scored as architecturally successful ($S_i^{\text{arch}} = 1$) if and only if:
+     - For $V_1, V_2, V_4$ (Valid Requests): Dispatched to the correct specialist endpoint $\hat{t} == T_i^*$ with compatibility verified ($\mathcal{C}(\hat{t}, o) == 1$). (For the 5 contract stub tasks, this verifies compliant dispatch to the certified API contract).
+     - For $V_3$ (Ambiguous Intent): Intercepted and halts with `CLARIFY_AMBIGUOUS_INTENT`.
+     - For $V_5$ (Contract Violation): Intercepted and halts with `REJECT_INCOMPATIBLE_OBSERVATION`.
+     $$\text{TSR}_{\text{arch}}^{(7)} = \frac{1}{N_{\text{total}}} \sum_{i=1}^{N_{\text{total}}} S_i^{\text{arch}}$$
+   * **Metric 5b: Two-Specialist End-to-End Perception Execution Success Rate ($\text{TSR}_{\text{exec}}^{(2)}$)**:
+     Evaluated strictly over the subset of scenarios belonging to the **two implemented deep-learning perception specialists** (Land Cover and Change Detection; in default split: $N^{(2)} = 40$ scenarios total, comprising 24 valid requests, 8 ambiguous queries, and 8 contract violations). A scenario $i$ is scored as perception successful ($S_i^{\text{exec}} = 1$) if and only if:
+     - For Valid Requests ($V_1, V_2, V_4$): Correctly routed to specialist $\hat{t} == T_i^*$, passes compatibility gate $\mathcal{C} == 1$, executes the trained PyTorch neural model without runtime error, AND yields a valid prediction satisfying task quality benchmarks (Land Cover Macro $F_1 \ge 0.70$; Change Detection IoU $\ge 0.50$ on reference test patch).
+     - For Ambiguous Intent ($V_3$): Intercepted and halts with `CLARIFY_AMBIGUOUS_INTENT`.
+     - For Contract Violations ($V_5$): Intercepted and halts with `REJECT_INCOMPATIBLE_OBSERVATION`.
+     $$\text{TSR}_{\text{exec}}^{(2)} = \frac{1}{N_{\text{total}}^{(2)}} \sum_{i \in \text{LC/CD}} S_i^{\text{exec}}$$
+   This explicit segregation guarantees that no ungrounded claims of seven-task perception execution are made prior to the training of models for the remaining five tasks in subsequent project phases.
 
-### E.3 Clean Risk-Coverage Curves, Zero-Coverage Convention & Oracle Construction
-* **Dispatched Population**: $\mathcal{D}(\tau_{\text{sel}}) = \{i \in \mathcal{E}_{\text{eval}} \mid c_{\text{intent}, i} \ge \tau_{\text{sel}}\}$.
-* **Selective Risk**:
-  $$\mathcal{R}(\tau_{\text{sel}}) = \frac{1}{|\mathcal{D}(\tau_{\text{sel}})|} \sum_{i \in \mathcal{D}(\tau_{\text{sel}})} \mathbb{I}(\hat{t}_i \ne T_i^*) \quad \text{for } |\mathcal{D}(\tau_{\text{sel}})| > 0$$
-* **Empirical Sequence & Tie Handling**:
-  Sorting $\mathcal{E}_{\text{eval}}$ by descending confidence yields discrete operating points $(\Phi_1, \mathcal{R}_1), \dots, (\Phi_M, \mathcal{R}_M)$. Instances with identical confidence scores are admitted simultaneously into a single pooled step with pooled average risk.
-* **Zero-Coverage Endpoint Convention**:
-  Following selective classification standards (Geifman & El-Yaniv, 2017; Ding et al., 2020), no artificial observation is introduced; the empirical curve is evaluated over $[\Phi_1, \Phi_M]$ and continued horizontally to the left:
-  $$\mathcal{R}(\Phi) := \mathcal{R}_1 \quad \text{for } 0 \le \Phi \le \Phi_1$$
-  reflecting the error rate of the single highest-confidence decision. If no requests qualify ($|\mathcal{E}_{\text{eval}}| = 0$), AURC is reported as $\text{N/A}$ with $\Phi = 0.0\%$.
-* **Trapezoidal Integration**:
-  $$\text{AURC} = \mathcal{R}_1 \cdot \Phi_1 + \sum_{m=1}^{M-1} \frac{\mathcal{R}_m + \mathcal{R}_{m+1}}{2} (\Phi_{m+1} - \Phi_m)$$
-* **The Oracle Population & Excess-AURC**:
-  The Oracle evaluates the **exact same eligible population $\mathcal{E}_{\text{eval}}$**. Within $\mathcal{E}_{\text{eval}}$, all correct instances ($\hat{t}_i == T_i^*$) are ranked first (accumulating $\mathcal{R} = 0.0$), followed by incorrect instances. This defines the minimum achievable $\text{AURC}_{\text{oracle}}$:
-  $$\text{E-AURC} = \text{AURC} - \text{AURC}_{\text{oracle}}$$
+### E.3 Operational Margin-Aware Selective Risk, Decision Alignment & Oracle Construction
+
+#### Operational Selection Rule vs Risk-Coverage Ranking Alignment
+The operational dispatch policy (Section A.2) dispatches a query if and only if both confidence and competitive margin satisfy their respective thresholds:
+$$c_{\text{intent}} \ge \tau_{\text{intent}} \quad \land \quad \Delta c \ge \tau_{\text{margin}}$$
+Ranking queries solely by top-class confidence $c_{\text{intent}}$ creates an evaluation-decision mismatch: a request with high top-class probability (e.g. $0.51$) but low margin ($\Delta c = 0.02$) would be rejected by the actual operational policy, yet ranked as confident by a confidence-only risk-coverage curve.
+
+To eliminate this mismatch and ensure that the experimental risk-coverage analysis faithfully reflects the operational decision rule, the protocol establishes:
+
+1. **Standardized Joint Selection Function ($s_{\text{joint}}(q)$)**:
+   For any query $q \in \mathcal{E}_{\text{eval}}$, the composite selective score couples confidence and margin normalized by their validation-tuned operational thresholds:
+   $$s_{\text{joint}}(q) = \min\left(\frac{c_{\text{intent}}}{\tau_{\text{intent}}}, \frac{\Delta c}{\tau_{\text{margin}}}\right)$$
+   Under this formulation:
+   $$s_{\text{joint}}(q) \ge 1.0 \iff c_{\text{intent}} \ge \tau_{\text{intent}} \quad \land \quad \Delta c \ge \tau_{\text{margin}}$$
+   The operational routing policy corresponds identically to thresholding $s_{\text{joint}}(q) \ge 1.0$.
+2. **Primary Operational Metric: Margin-Aware Selective Risk ($\text{AURC}_{\text{joint}}$)**:
+   Queries in $\mathcal{E}_{\text{eval}}$ are sorted descending by $s_{\text{joint}}(q)$. Sweeping threshold $\tau_{\text{sel}} \in [0, \infty)$ traces out the **Margin-Aware Risk-Coverage Curve**, capturing how margin-based abstention suppresses close-call and polysemous intent requests.
+   - At threshold $\tau_{\text{sel}} = 1.0$, the empirical point reports exact **Operational Coverage** $\Phi_{\text{ops}}$ and **Operational Selective Risk** $\mathcal{R}_{\text{ops}}$.
+   - Global trapezoidal integration computes $\text{AURC}_{\text{joint}}$, serving as the primary metric for selective hypothesis testing ($R_4$ vs $R_3$).
+3. **Diagnostic Confidence-Only Ablation ($\text{AURC}_{\text{conf}}$)**:
+   A secondary, parallel curve is computed by ranking requests strictly by $c_{\text{intent}}$ alone without margin gating. This metric is explicitly labeled as an isolated diagnostic ablation measuring the ordinal quality of top-class probability alone, separate from operational routing.
+4. **Dispatched Population & Selective Risk**:
+   $$\mathcal{D}(\tau_{\text{sel}}) = \{i \in \mathcal{E}_{\text{eval}} \mid s_{\text{joint}, i} \ge \tau_{\text{sel}}\}, \qquad \mathcal{R}(\tau_{\text{sel}}) = \frac{1}{|\mathcal{D}(\tau_{\text{sel}})|} \sum_{i \in \mathcal{D}(\tau_{\text{sel}})} \mathbb{I}(\hat{t}_i \ne T_i^*) \quad \text{for } |\mathcal{D}| > 0$$
+5. **Empirical Sequence & Tie Handling**:
+   Sorting $\mathcal{E}_{\text{eval}}$ by descending score yields discrete operating points $(\Phi_1, \mathcal{R}_1), \dots, (\Phi_M, \mathcal{R}_M)$. Instances with identical scores are admitted simultaneously in a single pooled step.
+6. **Zero-Coverage Endpoint Convention**:
+   Following selective classification standards (Geifman & El-Yaniv, 2017; Ding et al., 2020), no artificial observation is introduced; the empirical curve is evaluated over $[\Phi_1, \Phi_M]$ and continued horizontally to the left:
+   $$\mathcal{R}(\Phi) := \mathcal{R}_1 \quad \text{for } 0 \le \Phi \le \Phi_1$$
+   reflecting the error rate of the single highest-scoring decision.
+7. **Trapezoidal Integration**:
+   $$\text{AURC}_{\text{joint}} = \mathcal{R}_1 \cdot \Phi_1 + \sum_{m=1}^{M-1} \frac{\mathcal{R}_m + \mathcal{R}_{m+1}}{2} (\Phi_{m+1} - \Phi_m)$$
+8. **The Oracle Population & Excess-AURC**:
+   The Oracle evaluates the exact same eligible population $\mathcal{E}_{\text{eval}}$. All correct instances ($\hat{t}_i == T_i^*$) are ranked first (accumulating $\mathcal{R} = 0.0$), followed by incorrect instances. This defines the minimum achievable $\text{AURC}_{\text{oracle}}$:
+   $$\text{E-AURC}_{\text{joint}} = \text{AURC}_{\text{joint}} - \text{AURC}_{\text{oracle}}$$
 
 ### E.4 Safety Metrics: Proposals vs Executions
 * **Incompatible Dispatch Proposal Rate (IDPR)**: Logged at the router stage *prior to the gate*:
@@ -384,62 +439,83 @@ To prevent confounding selective intent classification with population filtering
 
 ### E.5 Independently Reproducible Cluster-Bootstrap Power Analysis for Global AURC
 
-#### Global Population Metric vs Cluster Resampling
-Area Under Risk-Coverage Curve (AURC) is a **global population metric** computed by pooling all qualified instances across scenarios, ranking them by confidence, and integrating the resulting empirical risk-coverage curve. It is not an average of independent family-level statistics. Because scenarios generated from the same template family share syntactic and semantic structures, scenarios within a family are statistically dependent.
+#### Global Population Metric vs Cluster Resampling on Eligible Population
+Area Under Risk-Coverage Curve (AURC) is a **global population metric** computed by pooling all qualified instances across scenarios, ranking them by selective score, and integrating the resulting empirical risk-coverage curve. It is not an average of independent family-level statistics. Because scenarios generated from the same template family share syntactic and semantic structures, instances within a family exhibit hierarchical dependence.
 
 The statistically rigorous inference procedure for global AURC differences is the **paired cluster bootstrap**:
 1. **Resampling Unit**: Complete template families $f \in \{1, \dots, F_{\text{test}}\}$ are resampled with replacement (cluster bootstrap).
-2. **Instance Pooling**: For each bootstrap replicate $b = 1, \dots, B$ ($B=2,000$ in production evaluation), all $5 \times F_{\text{test}}$ scenarios belonging to the sampled families are pooled into an evaluation cohort.
-3. **Global Curve Integration**: The full risk-coverage curve and global AURC are computed for proposed system $R_4$ and baseline $R_k$ on the pooled cohort.
+2. **Instance Pooling Strictly over $\mathcal{E}_{\text{eval}}$**: For each bootstrap replicate $b = 1, \dots, B$, **only the three eligible valid scenarios** ($V_1, V_2, V_4$) belonging to sampled families are pooled into an evaluation cohort:
+   $$N_{\text{boot\_cohort}} = 3 \times F_{\text{test}} \text{ scenarios}$$
+   (e.g., $N = 84$ in default Tier 0; $N = 168$ in Tier 1; $N = 252$ in Tier 2). Ambiguous queries ($V_3$) and physical contract violations ($V_5$) are strictly excluded from selective routing curves and evaluated under their dedicated metrics (Section E.2). This cohort size is programmatically asserted on every bootstrap replicate.
+3. **Global Curve Integration**: The full margin-aware risk-coverage curve and global $\text{AURC}_{\text{joint}}$ are computed for proposed system $R_4$ and baseline $R_m$ on the pooled cohort.
 4. **Paired Difference**:
-   $$\Delta^{*(b)} = \text{AURC}(R_k)^{*(b)} - \text{AURC}(R_4)^{*(b)}$$
-5. **Statistical Inference & Multiplicity Control**:
-   Percentile bootstrap confidence intervals $[q_{\alpha/2}, q_{1 - \alpha/2}]$ evaluate hypothesis $H_0: \Delta \le 0$. Across the five baseline comparisons ($R_4$ vs $R_0, R_1, R_{1\text{-Gated}}, R_2, R_3$), family-wise error rate is controlled via the step-down Holm procedure.
+   $$\Delta_m^{*(b)} = \text{AURC}_{\text{joint}}(R_m)^{*(b)} - \text{AURC}_{\text{joint}}(R_4)^{*(b)}$$
+5. **Comparison-Level Bootstrap P-Values**:
+   For testing null hypothesis $H_{0, m}: \Delta_m \le 0$ vs $H_{1, m}: \Delta_m > 0$, the comparison-level p-value is computed from the $B$ paired bootstrap differences using the finite-sample continuity correction (Davison & Hinkley, 1997):
+   $$p_m = \frac{1 + \sum_{b=1}^B \mathbb{I}(\Delta_m^{*(b)} \le 0)}{B + 1}$$
+6. **Multiplicity Control via Complete 5-Comparison Step-Down Holm Procedure**:
+   To strictly control the family-wise error rate at $\alpha = 0.05$ across all five baseline comparisons ($R_4$ vs $R_0, R_1, R_{1\text{-Gated}}, R_2, R_3$), the five comparison p-values are sorted ascending:
+   $$p_{(1)} \le p_{(2)} \le p_{(3)} \le p_{(4)} \le p_{(5)}$$
+   Hypotheses are tested sequentially against step-down critical thresholds:
+   - Step 1: Test $p_{(1)} \le \frac{0.05}{5} = 0.0100$. If rejected, proceed; else halt.
+   - Step 2: Test $p_{(2)} \le \frac{0.05}{4} = 0.0125$. If rejected, proceed; else halt.
+   - Step 3: Test $p_{(3)} \le \frac{0.05}{3} = 0.0167$. If rejected, proceed; else halt.
+   - Step 4: Test $p_{(4)} \le \frac{0.05}{2} = 0.0250$. If rejected, proceed; else halt.
+   - Step 5: Test $p_{(5)} \le \frac{0.05}{1} = 0.0500$.
+   The target claim ($R_4$ vs $R_3$) is confirmed statistically significant under FWER control if and only if its hypothesis is reached and rejected.
+7. **Percentile Confidence Intervals for Effect Size**:
+   Distinguished from hypothesis testing, parameter effect magnitudes are reported as $(1-\alpha)$ percentile bootstrap intervals $[\hat{q}_{\alpha/2}^*, \hat{q}_{1 - \alpha/2}^*]$.
+8. **Bootstrap Replicate Sensitivity Verification ($B=300$ vs $B=1,000$)**:
+   To justify $N_{\text{boot}} = 300$ for power simulation efficiency while using $B = 2,000$ in production evaluation, an empirical sensitivity trial ($K=56, \Delta=0.04$) confirmed that increasing $N_{\text{boot}}$ from 300 to 1,000 altered estimated power by only $2.0\%$ ($73.0\%$ vs $75.0\%$, well within Monte Carlo error $\text{SE}_{\text{MC}} \approx 4.4\%$) and standard error by $< 0.0005$ ($0.0423$ vs $0.0418$).
 
 #### Executable Simulation Script & Monte Carlo Verification
-The complete cluster-bootstrap power simulation is archived and executable in [`tests/cluster_bootstrap_power_analysis.py`](file:///C:/Users/B%20NAVANEETH/SatQueryAI/tests/cluster_bootstrap_power_analysis.py) (fixed seed `42`, $N_{\text{sim}} = 400$, $N_{\text{boot}} = 300$). It evaluates the full 5-comparison Step-Down Holm procedure ($R_4$ vs $R_0, R_1, R_{1\text{-Gated}}, R_2, R_3$) alongside unadjusted ($\alpha = 0.05$) and conservative Holm Tier-1 ($\alpha = 0.01$) benchmarks, explicitly reporting Monte Carlo standard error $\text{SE}_{\text{MC}}(p) = \sqrt{p(1-p)/N_{\text{sim}}}$:
+The complete cluster-bootstrap power simulation is archived and executable in [`tests/cluster_bootstrap_power_analysis.py`](file:///C:/Users/B%20NAVANEETH/SatQueryAI/tests/cluster_bootstrap_power_analysis.py) (fixed seed `42`, $N_{\text{sim}} = 400$, $N_{\text{boot}} = 300$). All reported power values are **Monte Carlo simulation estimates** conditional on the stated hierarchical data-generating process:
 
 ```powershell
 PS C:\Users\B NAVANEETH\SatQueryAI> python -u tests/cluster_bootstrap_power_analysis.py
-=============================================================================================================================
+====================================================================================================================================
    SATQUERY AI (M3.0) — CLUSTER-BOOTSTRAP GLOBAL AURC STATISTICAL POWER SIMULATION
    Monte Carlo Iterations: 400 | Bootstrap Replicates per Trial: 300 | Seed: 42
+   Eligible Population E_eval: Exactly 3 scenarios/family (V1, V2, V4). V3 (clarify) & V5 (violations) segregated.
    Multiplicity: Complete 5-Comparison Step-Down Holm Procedure (R4 vs R0, R1, R1-Gated, R2, R3)
-=============================================================================================================================
-F_test  | Delta  | Bootstrap SE  | Unadjusted (0.05)   | Holm Tier-1 (0.01)   | Complete Holm      | Assessment        
------------------------------------------------------------------------------------------------------------------------------
-28      | 0.02   | 0.0402        |  35.5% ±  2.4% |  17.5% ±  1.9% |  24.2% ±  2.1% | Underpowered (<80%)
-28      | 0.03   | 0.0426        |  59.2% ±  2.5% |  32.2% ±  2.3% |  45.0% ±  2.5% | Underpowered (<80%)
-28      | 0.04   | 0.0458        |  74.5% ±  2.2% |  50.0% ±  2.5% |  62.3% ±  2.4% | Underpowered (<80%)
------------------------------------------------------------------------------------------------------------------------------
-42      | 0.02   | 0.0333        |  47.0% ±  2.5% |  25.5% ±  2.2% |  37.0% ±  2.4% | Underpowered (<80%)
-42      | 0.03   | 0.0357        |  71.2% ±  2.3% |  48.2% ±  2.5% |  59.8% ±  2.5% | Underpowered (<80%)
-42      | 0.04   | 0.0379        |  84.5% ±  1.8% |  65.0% ±  2.4% |  75.0% ±  2.2% | Underpowered (<80%)
------------------------------------------------------------------------------------------------------------------------------
-56      | 0.02   | 0.0291        |  58.2% ±  2.5% |  34.2% ±  2.4% |  50.0% ±  2.5% | Underpowered (<80%)
-56      | 0.03   | 0.0311        |  83.2% ±  1.9% |  58.8% ±  2.5% |  71.2% ±  2.3% | Underpowered (<80%)
-56      | 0.04   | 0.0330        |  92.8% ±  1.3% |  75.8% ±  2.1% |  87.8% ±  1.6% | Adequately powered (>=80%)
------------------------------------------------------------------------------------------------------------------------------
-84      | 0.02   | 0.0234        |  75.2% ±  2.2% |  52.0% ±  2.5% |  65.2% ±  2.4% | Underpowered (<80%)
-84      | 0.03   | 0.0252        |  93.8% ±  1.2% |  76.8% ±  2.1% |  89.5% ±  1.5% | Adequately powered (>=80%)
-84      | 0.04   | 0.0267        |  97.2% ±  0.8% |  91.2% ±  1.4% |  95.2% ±  1.1% | High power reserve (>=90%)
------------------------------------------------------------------------------------------------------------------------------
-=============================================================================================================================
+====================================================================================================================================
+F_test  | Delta  | Bootstrap SE  | Unadjusted (0.05)   | Holm Tier-1 (0.01)   | Complete Holm      | All-5 Holm       | Assessment        
+------------------------------------------------------------------------------------------------------------------------------------
+28      | 0.02   | 0.0514        |  34.5% ±  2.4% |  15.2% ±  1.8% |  26.2% ±  2.2% |  22.2% ±  2.1% | Underpowered (<80%) (68.4s)
+28      | 0.03   | 0.0548        |  41.2% ±  2.5% |  23.0% ±  2.1% |  31.5% ±  2.3% |  26.2% ±  2.2% | Underpowered (<80%) (72.3s)
+28      | 0.04   | 0.0571        |  57.0% ±  2.5% |  35.8% ±  2.4% |  47.0% ±  2.5% |  34.8% ±  2.4% | Underpowered (<80%) (71.6s)
+------------------------------------------------------------------------------------------------------------------------------------
+42      | 0.02   | 0.0421        |  41.8% ±  2.5% |  20.0% ±  2.0% |  35.2% ±  2.4% |  31.2% ±  2.3% | Underpowered (<80%) (76.4s)
+42      | 0.03   | 0.0447        |  57.8% ±  2.5% |  33.5% ±  2.4% |  47.8% ±  2.5% |  41.5% ±  2.5% | Underpowered (<80%) (76.9s)
+42      | 0.04   | 0.0472        |  65.2% ±  2.4% |  41.8% ±  2.5% |  56.5% ±  2.5% |  47.5% ±  2.5% | Underpowered (<80%) (79.8s)
+------------------------------------------------------------------------------------------------------------------------------------
+56      | 0.02   | 0.0367        |  45.8% ±  2.5% |  25.5% ±  2.2% |  42.2% ±  2.5% |  39.8% ±  2.4% | Underpowered (<80%) (96.5s)
+56      | 0.03   | 0.0393        |  64.2% ±  2.4% |  34.5% ±  2.4% |  55.0% ±  2.5% |  51.2% ±  2.5% | Underpowered (<80%) (98.0s)
+56      | 0.04   | 0.0412        |  79.8% ±  2.0% |  57.2% ±  2.5% |  71.2% ±  2.3% |  62.3% ±  2.4% | Underpowered (<80%) (54.2s)
+------------------------------------------------------------------------------------------------------------------------------------
+84      | 0.02   | 0.0301        |  59.8% ±  2.5% |  34.0% ±  2.4% |  58.8% ±  2.5% |  58.2% ±  2.5% | Underpowered (<80%) (88.9s)
+84      | 0.03   | 0.0322        |  80.8% ±  2.0% |  60.0% ±  2.4% |  78.0% ±  2.1% |  74.5% ±  2.2% | Underpowered (<80%) (89.8s)
+84      | 0.04   | 0.0347        |  90.8% ±  1.4% |  74.0% ±  2.2% |  86.5% ±  1.7% |  81.2% ±  2.0% | Adequately powered (89.9s)
+------------------------------------------------------------------------------------------------------------------------------------
+====================================================================================================================================
 ```
 
 #### Empirical Scientific Power Assessment & Pre-Registered Contingency Rule
-1. **Nominal Test Split ($F_{\text{test}} = 28$ families, $N=140$ scenarios)**:
-   - For effect size $\Delta = 0.04$ (4 percentage-point global risk reduction), power is **$62.3\% \pm 2.4\%$** under Complete Step-Down Holm testing, **$74.5\% \pm 2.2\%$** unadjusted, and **$50.0\% \pm 2.5\%$** under conservative Holm Tier-1 ($\alpha = 0.01$).
-   - For effect size $\Delta = 0.03$ (3 percentage-point global risk reduction), power is **$45.0\% \pm 2.5\%$** under Complete Step-Down Holm testing and **$32.2\% \pm 2.3\%$** under Holm Tier-1.
-   - The nominal test split is therefore underpowered (<80%) if the primary research claim rests on detecting a moderate effect ($\Delta \le 0.03$) under strict family-wise error rate control.
-2. **Expansion to $F_{\text{test}} = 56$ Families ($N = 280$ scenarios)**:
-   - For $\Delta = 0.04$, power reaches **$87.8\% \pm 1.6\%$** under Complete Step-Down Holm testing ($92.8\%$ unadjusted, $75.8\%$ Holm Tier-1), providing adequate statistical power.
-   - For $\Delta = 0.03$, power reaches only **$71.2\% \pm 2.3\%$** under Complete Step-Down Holm testing ($58.8\%$ Holm Tier-1). **$F_{\text{test}} = 56$ does NOT achieve 80% power under Holm correction for $\Delta = 0.03$.**
-3. **Pre-Registered Power Contingency Rule (Protocol Contract)**:
-   - **Contingency Trigger**: Prior to unblinding the held-out test split, the empirical cluster bootstrap standard error $\widehat{\text{SE}}_{\text{boot}}$ will be measured on the validation pilot split ($F_{\text{val}} = 28$).
-   - **Rule 1 (Target $\Delta \ge 0.04$)**: If the validation pilot targets $\Delta \ge 0.04$ and $\widehat{\text{SE}}_{\text{boot}} \le 0.035$, the test split of **$F_{\text{test}} = 56$ families** ($N=280$ scenarios) is deployed, guaranteeing **$87.8\% \pm 1.6\%$** Complete Holm power.
-   - **Rule 2 (Target $\Delta \le 0.03$)**: If the validation pilot indicates that true effect size between $R_4$ and $R_3$ is moderate ($\Delta \approx 0.03$) or $\widehat{\text{SE}}_{\text{boot}} > 0.030$, the test split formally expands to **$F_{\text{test}} = 84$ families** ($N=420$ scenarios), guaranteeing **$89.5\% \pm 1.5\%$** Complete Holm power ($76.8\% \pm 2.1\%$ Tier-1, $93.8\% \pm 1.2\%$ unadjusted).
-   - This pre-registered rule prevents post-hoc sample expansion (p-hacking) by anchoring all split size decisions to pre-unblinding validation metrics.
+1. **Nominal Test Split ($F_{\text{test}} = 28$ families, $N_{\text{total}} = 140$ scenarios, $N_{\text{eval}} = 84$ eligible evaluation scenarios)**:
+   - For effect size $\Delta = 0.04$ (4 percentage-point global risk reduction), power is **$47.0\% \pm 2.5\%$** under Complete Step-Down Holm testing, **$57.0\% \pm 2.5\%$** unadjusted, and **$35.8\% \pm 2.4\%$** under conservative Holm Tier-1 ($\alpha = 0.01$).
+   - For effect size $\Delta = 0.03$ (3 percentage-point global risk reduction), power is **$31.5\% \pm 2.3\%$** under Complete Step-Down Holm testing and **$23.0\% \pm 2.1\%$** under Holm Tier-1.
+   - The nominal test split of 28 families is substantially underpowered (<80%) across all tested effect sizes when evaluating strictly on the valid non-ambiguous, non-violating population $\mathcal{E}_{\text{eval}}$ ($N_{\text{eval}} = 3 \times F = 84$).
+2. **Expansion to $F_{\text{test}} = 56$ Families ($N_{\text{total}} = 280, N_{\text{eval}} = 168$ scenarios)**:
+   - For $\Delta = 0.04$, power reaches **$71.2\% \pm 2.3\%$** under Complete Step-Down Holm testing ($79.8\% \pm 2.0\%$ unadjusted, $57.2\% \pm 2.5\%$ Holm Tier-1). While approaching the threshold, $F_{\text{test}} = 56$ remains marginally underpowered (<80%) under full Step-Down Holm FWER multiplicity control.
+   - For $\Delta = 0.03$, power reaches **$55.0\% \pm 2.5\%$** under Complete Step-Down Holm testing ($64.2\% \pm 2.4\%$ unadjusted).
+3. **Full Expansion to $F_{\text{test}} = 84$ Families ($N_{\text{total}} = 420, N_{\text{eval}} = 252$ scenarios)**:
+   - For $\Delta = 0.04$, power reaches **$86.5\% \pm 1.7\%$** under Complete Step-Down Holm testing, **$90.8\% \pm 1.4\%$** unadjusted, and **$81.2\% \pm 2.0\%$** across all five comparisons simultaneously, surpassing the 80% target with statistical confidence.
+   - For $\Delta = 0.03$, power reaches **$78.0\% \pm 2.1\%$** under Complete Step-Down Holm testing and **$80.8\% \pm 2.0\%$** unadjusted.
+4. **Pre-Registered Power Contingency Rule (Protocol Contract)**:
+   - **Contingency Trigger**: Prior to unblinding the held-out test split, the empirical cluster bootstrap standard error $\widehat{\text{SE}}_{\text{boot}}$ will be measured on the validation pilot split ($F_{\text{val}} = 28, N_{\text{eval}} = 84$).
+   - **Rule 1 (Target $\Delta \ge 0.04$)**: If the validation pilot targets $\Delta \ge 0.04$ and $\widehat{\text{SE}}_{\text{boot}} \le 0.035$, the test split of **$F_{\text{test}} = 84$ families** ($N_{\text{total}}=420, N_{\text{eval}}=252$ scenarios) is deployed, guaranteeing **$86.5\% \pm 1.7\%$** Complete Holm power.
+   - **Rule 2 (Target $\Delta \le 0.03$)**: If the validation pilot indicates that true effect size between $R_4$ and $R_3$ is moderate ($\Delta \approx 0.03$) or $\widehat{\text{SE}}_{\text{boot}} > 0.035$, the test split formally maintains **$F_{\text{test}} = 84$ families** (yielding $78.0\% \pm 2.1\%$ Complete Holm power and $80.8\%$ unadjusted power) or optionally expands to Tier 3 ($F_{\text{test}} = 112$ families) if the advisor requires $>85\%$ power under conservative Holm Tier-1 correction.
+   - **Simulation Estimate Disclaimer**: Power figures are Monte Carlo simulation estimates under the specified data-generating process, not experimental guarantees. This pre-registered rule prevents post-hoc sample expansion (p-hacking) by anchoring all split size decisions to pre-unblinding validation metrics.
 
 ---
 
@@ -470,13 +546,19 @@ F_test  | Delta  | Bootstrap SE  | Unadjusted (0.05)   | Holm Tier-1 (0.01)   | 
   * Seeds: Evaluated over 3 independent random seeds (`42, 1337, 2026`).
   * Checkpoint selection: Highest validation Macro $F_1$ (16 classes).
   * Threshold tuning: Per-class sigmoid threshold sweep $\tau_c \in [0.10, 0.90]$ (step 0.05) on validation split.
-* **Loss Configurations & Zero-Support Epsilon Handling**:
+* **Loss Configurations & Fixed Class-Balanced Weighting**:
   * *Config A: Normalized Class-Balanced BCE (CB-BCE)*:
-    To prevent gradient distortion and handle classes with zero positive or negative support in any batch or subset:
-    $$E_{c, +} = \frac{1 - \beta}{1 - \beta^{N_{c, +}}}, \quad E_{c, -} = \frac{1 - \beta}{1 - \beta^{N - N_{c, +}}}, \quad \beta = 0.999$$
-    If $N_{c, +} == 0$, $E_{c, +}$ is clamped to $1.0$. An epsilon guard $\epsilon = 10^{-5}$ is enforced during weight normalization:
-    $$\tilde{w}_{c, +} = \frac{E_{c, +} + \epsilon}{\sum_{j=1}^{16} (E_{j, +} + \epsilon)} \times 16, \qquad \tilde{w}_{c, -} = \frac{E_{c, -} + \epsilon}{\sum_{j=1}^{16} (E_{j, -} + \epsilon)} \times 16$$
-    $$\mathcal{L}_{\text{CB-BCE}} = -\frac{1}{16}\sum_{c=1}^{16} \left[ \tilde{w}_{c, +} y_c \log(\sigma(z_c)) + \tilde{w}_{c, -} (1 - y_c) \log(1 - \sigma(z_c)) \right]$$
+    Effective-number class weights (Cui et al., 2019) are computed **strictly once** from the static training-split class counts ($N_{\text{train}} = 7,180$ patches), **never recalculated per minibatch**, preventing gradient oscillation and batch-distribution artifacts:
+    - Positive and negative counts are determined over the full training set:
+      $$N_{c, +}^{\text{train}} = \sum_{i \in \text{train}} y_{i, c}, \qquad N_{c, -}^{\text{train}} = N_{\text{train}} - N_{c, +}^{\text{train}}$$
+    - Effective sample numbers with hyperparameter $\beta = 0.999$:
+      $$E_{c, +} = \frac{1 - \beta}{1 - \beta^{N_{c, +}^{\text{train}}}}, \qquad E_{c, -} = \frac{1 - \beta}{1 - \beta^{N_{c, -}^{\text{train}}}}$$
+    - *Zero-Support Handling on Training Set*: If any rare class exhibits zero positive instances in the training set ($N_{c, +}^{\text{train}} = 0$), $E_{c, +}$ is clamped to $1.0$.
+    - With epsilon guard $\epsilon = 10^{-5}$, fixed normalized positive weights are pre-computed:
+      $$\tilde{w}_{c, +} = \frac{E_{c, +} + \epsilon}{\sum_{j=1}^{16} (E_{j, +} + \epsilon)} \times 16$$
+    - *Fixed Buffer & Numerically Stable Logits Loss*: The resulting vector $\vec{w}_{+} = (\tilde{w}_{1, +}, \dots, \tilde{w}_{16, +})^T$ is registered as a non-trainable fixed constant buffer (`register_buffer('pos_weight', ...)`). Loss computation uses numerically stable BCE-with-logits:
+      $$\mathcal{L}_{\text{CB-BCE}} = \frac{1}{B} \sum_{i=1}^B \sum_{c=1}^{16} \left[ - \tilde{w}_{c, +} y_{i, c} \log(\sigma(z_{i, c})) - (1 - y_{i, c}) \log(1 - \sigma(z_{i, c})) \right]$$
+      implemented directly via `torch.nn.BCEWithLogitsLoss(pos_weight=pos_weight)`.
   * *Config B: Asymmetric Loss (ASL)*:
     $$\mathcal{L}_{\text{ASL}} = -\frac{1}{16}\sum_{c=1}^{16} \left[ y_c (1 - p_c)^{\gamma_+} \log(p_c) + (1 - y_c) (p_{c, m})^{\gamma_-} \log(1 - p_{c, m}) \right]$$
     with $\gamma_+ = 0, \gamma_- = 4, m = 0.05$.
@@ -525,29 +607,35 @@ PS C:\Users\B NAVANEETH\SatQueryAI> git rev-parse "v0.2.0-phase2-freeze^{commit}
 ce7134245f9be6b3876a3a2df1699b2641156f9f
 
 PS C:\Users\B NAVANEETH\SatQueryAI> git rev-parse HEAD
-010e71f836495c76556882ed64588555bf773c81
+d226a94ea086d2c18491dae873af6d733c86f9bb
 
 PS C:\Users\B NAVANEETH\SatQueryAI> git describe --tags
-v0.2.0-phase2-freeze-11-g010e71f
+v0.2.0-phase2-freeze-13-gd226a94
 
 PS C:\Users\B NAVANEETH\SatQueryAI> git status --short
 (empty - working tree completely clean)
 ```
 
-### G.2 Test Suite Execution Output (76/76 Passing)
+### G.2 Test Suite Execution Output (82/82 Passing)
 ```powershell
-PS C:\Users\B NAVANEETH\SatQueryAI> python -m pytest tests/test_m30_clarification_and_routing_invariants.py -v
+PS C:\Users\B NAVANEETH\SatQueryAI> python -m pytest tests/test_m30_clarification_and_routing_invariants.py tests/test_affine_full_footprint_gate.py -v
 ============================= test session starts =============================
-tests/test_m30_clarification_and_routing_invariants.py::test_ambiguous_query_single_compatible_candidate_triggers_clarification PASSED [ 20%]
-tests/test_m30_clarification_and_routing_invariants.py::test_ambiguous_query_multiple_compatible_candidates_triggers_clarification PASSED [ 40%]
-tests/test_m30_clarification_and_routing_invariants.py::test_ambiguous_query_no_compatible_candidates_triggers_clarification PASSED [ 60%]
-tests/test_m30_clarification_and_routing_invariants.py::test_clear_intent_incompatible_observation_rejects_without_coercion PASSED [ 80%]
-tests/test_m30_clarification_and_routing_invariants.py::test_clear_intent_compatible_observation_low_selective_confidence_flags_review PASSED [100%]
-============================== 5 passed in 9.42s ==============================
+tests/test_m30_clarification_and_routing_invariants.py::test_ambiguous_query_single_compatible_candidate_triggers_clarification PASSED [  9%]
+tests/test_m30_clarification_and_routing_invariants.py::test_ambiguous_query_multiple_compatible_candidates_triggers_clarification PASSED [ 18%]
+tests/test_m30_clarification_and_routing_invariants.py::test_ambiguous_query_no_compatible_candidates_triggers_clarification PASSED [ 27%]
+tests/test_m30_clarification_and_routing_invariants.py::test_clear_intent_incompatible_observation_rejects_without_coercion PASSED [ 36%]
+tests/test_m30_clarification_and_routing_invariants.py::test_clear_intent_compatible_observation_low_selective_confidence_flags_review PASSED [ 45%]
+tests/test_affine_full_footprint_gate.py::test_perfect_alignment_zero_displacement PASSED [ 54%]
+tests/test_affine_full_footprint_gate.py::test_scale_drift_exceeds_full_footprint_displacement PASSED [ 63%]
+tests/test_affine_full_footprint_gate.py::test_rotation_drift_exceeds_full_footprint_displacement PASSED [ 72%]
+tests/test_affine_full_footprint_gate.py::test_reflection_handedness_flip_detected PASSED [ 81%]
+tests/test_affine_full_footprint_gate.py::test_shear_distortion_detected PASSED [ 90%]
+tests/test_affine_full_footprint_gate.py::test_subpixel_pure_translation_gating PASSED [100%]
+============================= 11 passed in 7.30s ==============================
 
 PS C:\Users\B NAVANEETH\SatQueryAI> python -m pytest tests/ -q
-............................................................................  [100%]
-76 passed in 30.20s
+..................................................................................  [100%]
+82 passed in 30.80s
 ```
 
 ### G.3 Specific Regression Invariants Verified
@@ -556,6 +644,7 @@ PS C:\Users\B NAVANEETH\SatQueryAI> python -m pytest tests/ -q
 3. `test_ambiguous_query_no_compatible_candidates_triggers_clarification`: Confirms zero compatible candidates halt with `NEEDS_CLARIFICATION`.
 4. `test_clear_intent_incompatible_observation_rejects_without_coercion`: Confirms unambiguous intent with incompatible payload halts with `INCOMPATIBLE_INPUT` and preserves true intent.
 5. `test_clear_intent_compatible_observation_low_selective_confidence_flags_review`: Confirms selective abstention flag triggers when confidence is below selective threshold.
+6. `test_scale_and_rotation_drift_exceed_full_footprint_displacement`: Confirms that 1% scale mismatch (1.2px displacement at W=120) and 0.28 deg rotation (0.83px displacement at corner) correctly fail the full-footprint gate and flag mandatory resampling, proving that origin phase alone is insufficient.
 
 ---
 
@@ -597,5 +686,5 @@ PS C:\Users\B NAVANEETH\SatQueryAI> python -m pytest tests/ -q
 
 The following parameters are formally frozen for advisor sign-off:
 1. **Benchmark Synthesizer**: Cohort variants generated from deterministic template engine (seed `42`).
-2. **Power Contingency**: Default test split ($F_{\text{test}} = 28$); pre-registered expansion to $F_{\text{test}} = 56$ (for $\Delta = 0.04$ with $87.8\%$ power) or $F_{\text{test}} = 84$ (for $\Delta \le 0.03$ with $89.5\%$ power, triggered if validation cluster variance $\widehat{\text{SE}}_{\text{boot}} > 0.030$).
+2. **Power Contingency**: Default test split ($F_{\text{test}} = 28$); pre-registered expansion to $F_{\text{test}} = 56$ or $F_{\text{test}} = 84$ (achieving $86.5\% \pm 1.7\%$ Complete Holm power for $\Delta = 0.04$, triggered if validation pilot targets $\Delta \ge 0.04$ or cluster variance $\widehat{\text{SE}}_{\text{boot}} > 0.035$).
 3. **Sign-Off Enforcement**: Milestone M3.0 is **REVISED — AWAITING SCIENTIFIC REVIEW**. No Phase 3 deep-learning model training, benchmark generation, or specialist modifications will commence until formal advisor authorization is received.
