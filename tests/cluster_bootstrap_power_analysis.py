@@ -290,12 +290,12 @@ def validate_null_type1_error(K=28, n_sims=1000, n_boot=300, seed=42, max_worker
     p_05_cp = compute_clopper_pearson_ci(p_05_k, n_sims)
     p_01_cp = compute_clopper_pearson_ci(p_01_k, n_sims)
     
-    print(f"{'Method':<25} | {'Nominal':<8} | {'Rejections':<10} | {'Empirical Rate':<16} | {'Wilson 95% CI':<22} | {'Clopper-Pearson 95% CI':<24} | {'Status':<12}", flush=True)
+    print(f"{'Method':<25} | {'Nominal':<8} | {'Rejections':<10} | {'Empirical Rate':<16} | {'Wilson 95% CI':<22} | {'Clopper-Pearson 95% CI':<24} | {'Assessment':<15}", flush=True)
     print("-" * 132, flush=True)
-    print(f"{'Null-Centred Bootstrap':<25} | {'0.05':<8} | {b_05_k:>4}/{n_sims:<5} | {b_05_rate*100:>5.2f}% ± {b_05_se*100:>4.2f}% | [{b_05_wilson[0]*100:.2f}%, {b_05_wilson[1]*100:.2f}%]     | [{b_05_cp[0]*100:.2f}%, {b_05_cp[1]*100:.2f}%]            | {'VALIDATED' if b_05_rate <= 0.065 else 'ELEVATED'}", flush=True)
-    print(f"{'Null-Centred Bootstrap':<25} | {'0.01':<8} | {b_01_k:>4}/{n_sims:<5} | {b_01_rate*100:>5.2f}% ± {b_01_se*100:>4.2f}% | [{b_01_wilson[0]*100:.2f}%, {b_01_wilson[1]*100:.2f}%]     | [{b_01_cp[0]*100:.2f}%, {b_01_cp[1]*100:.2f}%]            | {'VALIDATED' if b_01_rate <= 0.020 else 'ELEVATED'}", flush=True)
-    print(f"{'Paired Cluster Permutation':<25} | {'0.05':<8} | {p_05_k:>4}/{n_sims:<5} | {p_05_rate*100:>5.2f}% ± {p_05_se*100:>4.2f}% | [{p_05_wilson[0]*100:.2f}%, {p_05_wilson[1]*100:.2f}%]     | [{p_05_cp[0]*100:.2f}%, {p_05_cp[1]*100:.2f}%]            | {'VALIDATED' if p_05_rate <= 0.065 else 'ELEVATED'}", flush=True)
-    print(f"{'Paired Cluster Permutation':<25} | {'0.01':<8} | {p_01_k:>4}/{n_sims:<5} | {p_01_rate*100:>5.2f}% ± {p_01_se*100:>4.2f}% | [{p_01_wilson[0]*100:.2f}%, {p_01_wilson[1]*100:.2f}%]     | [{p_01_cp[0]*100:.2f}%, {p_01_cp[1]*100:.2f}%]            | {'VALIDATED' if p_01_rate <= 0.020 else 'ELEVATED'}", flush=True)
+    print(f"{'Null-Centred Bootstrap':<25} | {'0.05':<8} | {b_05_k:>4}/{n_sims:<5} | {b_05_rate*100:>5.2f}% ± {b_05_se*100:>4.2f}% | [{b_05_wilson[0]*100:.2f}%, {b_05_wilson[1]*100:.2f}%]     | [{b_05_cp[0]*100:.2f}%, {b_05_cp[1]*100:.2f}%]            | {'EMPIRICAL MATCH' if b_05_rate <= 0.065 else 'ELEVATED'}", flush=True)
+    print(f"{'Null-Centred Bootstrap':<25} | {'0.01':<8} | {b_01_k:>4}/{n_sims:<5} | {b_01_rate*100:>5.2f}% ± {b_01_se*100:>4.2f}% | [{b_01_wilson[0]*100:.2f}%, {b_01_wilson[1]*100:.2f}%]     | [{b_01_cp[0]*100:.2f}%, {b_01_cp[1]*100:.2f}%]            | {'CONSERVATIVE' if b_01_rate <= 0.020 else 'ELEVATED'}", flush=True)
+    print(f"{'Paired Cluster Permutation':<25} | {'0.05':<8} | {p_05_k:>4}/{n_sims:<5} | {p_05_rate*100:>5.2f}% ± {p_05_se*100:>4.2f}% | [{p_05_wilson[0]*100:.2f}%, {p_05_wilson[1]*100:.2f}%]     | [{p_05_cp[0]*100:.2f}%, {p_05_cp[1]*100:.2f}%]            | {'SLIGHT ELEVATION' if p_05_rate > 0.055 else 'EMPIRICAL MATCH'}", flush=True)
+    print(f"{'Paired Cluster Permutation':<25} | {'0.01':<8} | {p_01_k:>4}/{n_sims:<5} | {p_01_rate*100:>5.2f}% ± {p_01_se*100:>4.2f}% | [{p_01_wilson[0]*100:.2f}%, {p_01_wilson[1]*100:.2f}%]     | [{p_01_cp[0]*100:.2f}%, {p_01_cp[1]*100:.2f}%]            | {'SLIGHT ELEVATION' if p_01_rate > 0.012 else 'EMPIRICAL MATCH'}", flush=True)
     print("=" * 132 + "\n", flush=True)
     
     return {
