@@ -1,13 +1,14 @@
-# SatQuery AI — Phase 3 Milestone M3.0 Experimental Protocol Freeze (Final Research Specification)
+# SatQuery AI — Phase 3 Milestone M3.0 Experimental Protocol Freeze (Revision 20 Specification)
 
 **Problem Title**: Sensor- and Task-Compatibility-Constrained Selective Routing for Multimodal Earth Observation  
 **Problem Code**: SIH26167 (ISRO / Smart India Hackathon)  
+**Document Version**: 3.0.0-freeze-rev20 (Reconciled Scientific Protocol Freeze)  
 **Document Classification**: Milestone M3.0 Protocol Freeze & Scientific Defense Specification (Final Research Specification)  
 **Date**: November 3, 2026  
 **Auditor / Lead Author**: Lead Research Verification Agent  
-**Frozen Classical Baseline Commit**: `ce7134245f9be6b3876a3a2df1699b2641156f9f`  
-**Git Baseline Tag**: `v0.2.0-phase2-freeze` (Dereferenced commit: `ce7134245f9be6b3876a3a2df1699b2641156f9f`)  
-**Working Tree Status**: Clean (`git status --porcelain` is empty)  
+**Frozen Classical Baseline Commit**: ce7134245f9be6b3876a3a2df1699b2641156f9f  
+**Git Baseline Tag**: 0.2.0-phase2-freeze (Dereferenced commit: ce7134245f9be6b3876a3a2df1699b2641156f9f)  
+**Working Tree Status**: Clean (git status --porcelain is empty)  
 **Status**: **REVISED — AWAITING SCIENTIFIC REVIEW**  
 
 ---
@@ -79,6 +80,18 @@ This document provides the final, reconciled scientific protocol for Milestone M
 | **1.3** | **Critical 1.3: Permutation Exchangeability Under $H_0$ & Explicit Baseline Mapping** | Questioned whether family-level swaps satisfy exchangeability under null given differing noise settings, and noted indexing ambiguity between $R_4$ and baseline loop $m \in \{0,\dots,4\}$. **Resolution**: Under $H_0: F_{R3} = F_{R4}$, models $R_3$ and $R_4$ share identical cluster random effect $u_f$, identical base error probability $p_4$, identical Bernoulli error draws, and identical confidence noise $\sigma_c = 0.06$. Their joint distribution across all scenarios in family $f$ is identically distributed and symmetric under transposition $((c_{3,i}, e_{3,i}) \leftrightarrow (c_{4,i}, e_{4,i}))$, strictly satisfying exchangeability under $H_0$. Resolved indexing: Baselines are explicitly indexed $m \in \{0, 1, 2, 3, 4\}$ ($R_0$ heuristic, $R_1$ ungated linear, $R_{1\text{-Gated}}$ gated linear, $R_2$ gated non-selective, $R_3$ uncalibrated selective). Proposed model is $R_4$. Permutation test is executed specifically on the target pair $(R_3, R_4)$ at index 4. | Deliverable E.5 |
 | **1.4** | **Critical 1.4: Pre-Registered Primary Confirmatory Hypothesis & Power Monotonicity** | Tier 2 achieved 82.8% Step-Down Holm power but 78.6% All-5 Holm power at $\Delta=0.035$; asked which multiplicity procedure is pre-registered, and noted single boundary point does not prove power across $\Delta \ge 0.035$. **Resolution**: The protocol formally pre-registers the **primary confirmatory hypothesis test**: Step-Down Holm rejection of the primary contrast $R_4$ vs $R_3$ (index 4) at FWER $\alpha = 0.05$. All-5 simultaneous rejection is designated as an exploratory secondary composite metric. Demonstrated power monotonicity theoretically ($\partial \operatorname{Power} / \partial \Delta > 0$) and empirically across $\Delta \in \{0.035, 0.040, 0.045, 0.050\}$, showing Tier 2 Holm power strictly increases ($82.8\% \to 88.0\% \to 92.4\% \to 95.2\%$ under the error-multiplier DGP, and $16.2\% \to 20.4\% \to 22.6\% \to 26.4\%$ under the exact realized AURC DGP). Expanded boundary simulation to $N_{\text{sim}} = 500$ with reported Monte Carlo standard errors and confidence intervals. | Deliverables D.3, E.5 |
 | **2.1** | **Safety Metric Clarification: $V_5$ Sampling Unit & Independence** | Inquired whether 28 $V_5$ contract violation scenarios share template families, which would violate binomial independence due to intra-cluster correlation. **Resolution**: The 28 $V_5$ scenarios are synthesized from **28 distinct, mutually independent scenario families** ($F_1 \dots F_{28}$), exactly ONE $V_5$ scenario per family. Because each family contributes exactly $k_f = 1$ scenario, the cluster size is $m_f = 1$, and intra-cluster correlation has zero variance inflation effect ($\operatorname{Var}(\bar{Y}) = \frac{\sigma^2}{N}[1 + (m-1)\rho] = \frac{\sigma^2}{N}$). The 28 test scenarios constitute 28 independent Bernoulli trials, mathematically establishing the validity of standard Wilson ($8.81\%$) and Clopper-Pearson ($10.15\%$) bounds without clustering adjustments. | Deliverable D.4 |
+
+### Review 19 Scientific Defense & Final Revision 20 Mathematical Reconciliation Matrix
+
+| # | Review 19 Finding | Protocol Resolution & Mathematical Implementation | Primary Section |
+| :-: | :--- | :--- | :--- |
+| **20.1** | **Critical 1: Official Bootstrap Test Selection (Null-Centred Calibration vs Percentile Inflation)** | Reviewer noted that the percentile bootstrap was designated as official despite exhibiting severe Type-I error inflation (8.40% at nominal 5%, 2.97% at nominal 1%). **Resolution & Action**: The protocol designates the **Null-Centred Cluster Bootstrap** (Hall & Wilson 1991, Davison & Hinkley 1997 eq 4.7) as the **SOLE official confirmatory test** for SatQuery AI M3.0. Its empirical Type-I error rate strictly passes calibration ($4.53\% \pm 0.38\%$ at 5%, $0.20\% \pm 0.08\%$ at 1%). The percentile bootstrap is strictly relegated to an exploratory sensitivity comparison, explicitly documenting its finite-sample liberal inflation ($8.40\%$). | Deliverable E.5, `cluster_bootstrap_power_analysis.py` |
+| **20.2** | **Critical 2: Exact Power Statement Correction & Elimination of 82.8% Claim for 0.035 AURC** | Reviewer noted that the earlier 82.8% power figure applied to Parameterization A (error-probability shift producing $pprox 0.089$ AURC difference) and cannot justify a confirmatory claim for a 0.035 AURC effect (which has only 16.2% Step-Down Holm power at $F=84$). **Resolution & Action**: Completely removed the 82.8% and 88.0% power claims from any statement regarding an actual global AURC effect of 0.035. Confirmed that for an exact global AURC difference of $\Delta_{	ext{AURC}} = 0.0350$, Tier 2 achieves **$16.2\% \pm 1.6\%$** Step-Down Holm power ($33.8\% \pm 2.1\%$ unadjusted). | Deliverables D.3, E.5 |
+| **20.3** | **Critical 3: Authoritative Sample-Size Decision & Evaluation Regime Decoupling** | Reviewer mandated either justifying a substantially larger test set or explicitly downgrading the 0.035 AURC analysis to exploratory. **Resolution & Action**: Adopted a definitive, transparent scientific decision. For fine-grained global AURC differences ($\Delta \le 0.0350$), all planned M3.0 test tiers ($F_{	ext{test}} \le 84$) are **EXPLICITLY RECLASSIFIED AS EXPLORATORY / FEASIBILITY EVALUATIONS** ($16.2\%$ Step-Down Holm power). The protocol documents that achieving $\ge 80\%$ confirmatory Holm power for $\Delta = 0.0350$ mathematically requires $F_{	ext{test}} pprox 545$ families ($2,725$ scenarios), which is formally scheduled for Phase 4 / M3.2 large-scale evaluation. Confirmatory claims at Tier 2 are restricted strictly to Macro Architectural Routing Error Differentials ($\delta_{	ext{err}} \ge 0.035 \implies \Delta_{	ext{AURC}} pprox 0.089$, $82.8\%$ power). | Deliverable D.3, E.5, G |
+| **20.4** | **Critical 4: Simulation Exchangeability vs Real-World Modeling Assumptions** | Reviewer noted exchangeability under the simulated DGP does not guarantee exchangeability for real routing systems, and coordinate disjointness alone does not mathematically guarantee independence. **Resolution & Action**: Explicitly separated theoretical exchangeability under the simulation DGP (guaranteed by identical error and noise distributions conditional on $u_f$) from the empirical working assumption required for real-world models. Documented that geographic coordinate ($\ge 5	ext{ km}$) and semantic distinctness eliminate spatial leakage and prompt copying, but statistical independence across families remains a structural modeling assumption. Documented the permutation 1% error rate ($1.40\% \pm 0.21\%$) as an acknowledged finite-sample limitation. | Deliverable E.5 |
+| **20.5** | **Critical 5: Hand-Checkable Arithmetic Correction & Reflection Symmetry Condition** | Reviewer noted the $B=5$ centered replicates have mean $-0.0100$ (not approximately zero) and questioned the generality of reflection symmetry equivalence. **Resolution & Action**: Corrected the arithmetic: resample mean $ar{\Delta}^* = 0.0250$, centered mean $ar{\widetilde{\Delta}}^* = 0.0250 - 0.0350 = -0.0100$. Explicitly explained why a finite sample of size $B=5$ has a non-zero centered sample mean (while $\mathbb{E}_*[\widetilde{\Delta}^*] = 0$ asymptotically). Formally proved that $\mathbb{I}(\widetilde{\Delta}^* \ge \hat{\Delta}_{	ext{obs}}) = \mathbb{I}(\Delta^* \le 0)$ holds **if and only if** the empirical bootstrap distribution is strictly symmetric around $\hat{\Delta}_{	ext{obs}}$, explaining why empirical asymmetry produces divergent p-values ($0.1667$ vs $0.3333$). | Deliverable E.5 |
+| **20.6** | **Scientific Sign-Off Readiness & Invariant Enforcement** | Milestone M3.0 status remains strictly **REVISED — AWAITING SCIENTIFIC REVIEW**. Phase 3 deep-learning model training, synthetic benchmark scenario generation, and specialist modifications remain blocked. Classical baseline tag `v0.2.0-phase2-freeze` is strictly immutable (`ce7134245f9be6b3876a3a2df1699b2641156f9f`). | Section G |
+
 ---
 
 ## Deliverable A: Revised Mathematical Formulation of Selective Routing
@@ -364,9 +377,9 @@ To eliminate conflicting sample-size rules across earlier planning drafts, the t
 
 | Configuration Tier | Train Split ($F_{\text{tr}} / N_{\text{tr}}$) | Val Split ($F_{\text{val}} / N_{\text{val}}$) | Held-Out Test Split ($F_{\text{te}} / N_{\text{te}}$) | Valid Test Cohort ($\mathcal{E}_{\text{eval}}$: $V_1, V_2, V_4$) | Total Families ($F_{\text{tot}}$) | Total Scenarios ($N_{\text{tot}}$) | Test Families per Task | Pre-Registered Planning & Variance Trigger (Authoritative Threshold $\tau_{\text{SE}} = 0.035$) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Tier 0: Exploratory Baseline** | 84 / 420 | 28 / 140 | **28 / 140** | **84** | **140** | **700** | 4 / task | Initial pilot ($F_{\text{test}} = 28$). Acknowledged underpowered (<80%) for multi-comparison Step-Down Holm testing. |
-| **Tier 1: 56-Family Test Expansion** | 84 / 420 | 28 / 140 | **56 / 280** | **168** | **168** | **840** | 8 / task | Deployed if target effect $\Delta_{\text{plan}} \ge 0.04$ AND validation pilot confirms low dispersion $\widehat{\text{SE}}_{\text{val}} \le 0.035$. (Step-Down Holm power: $71.5\% \pm 2.3\%$; unadjusted: $80.5\% \pm 2.0\%$). |
-| **Tier 2: 84-Family Test Expansion** | 84 / 420 | 28 / 140 | **84 / 420** | **252** | **196** | **980** | 12 / task | Deployed if target effect $\Delta_{\text{plan}} \ge 0.04$ AND $\widehat{\text{SE}}_{\text{val}} > 0.035$ (Power: **$88.0\% \pm 1.6\%$**), OR if $\Delta_{\text{plan}} \le 0.03$ (Power: **$73.2\% \pm 2.2\%$**; transparently documented as underpowered <80%). |
+| **Tier 0: Exploratory Baseline** | 84 / 420 | 28 / 140 | **28 / 140** | **84** | **140** | **700** | 4 / task | Initial exploratory pilot ($F_{\text{test}} = 28$). Step-Down Holm power: **$4.0\% \pm 0.9\%$** for $\Delta_{\text{AURC}} = 0.0350$ ($17.8\% \pm 1.7\%$ unadjusted). Transparently underpowered (<80%). |
+| **Tier 1: 56-Family Test Expansion** | 84 / 420 | 28 / 140 | **56 / 280** | **168** | **168** | **840** | 8 / task | Exploratory test expansion ($F_{\text{test}} = 56$). Step-Down Holm power: **$12.6\% \pm 1.5\%$** for $\Delta_{\text{AURC}} = 0.0350$ ($26.0\% \pm 2.0\%$ unadjusted). Classified strictly as exploratory (<80% power). |
+| **Tier 2: 84-Family Test Expansion** | 84 / 420 | 28 / 140 | **84 / 420** | **252** | **196** | **980** | 12 / task | Deployed if validation pilot confirms $\widehat{\text{SE}}_{\text{val}} > 0.035$ or for fine-grained selective routing benchmarks. For small global AURC differences ($\Delta_{\text{AURC}} \le 0.0350$), Step-Down Holm power is **$16.2\% \pm 1.6\%$** ($33.8\% \pm 2.1\%$ unadjusted), explicitly classified as an **Exploratory / Feasibility Benchmark**. (Confirmatory $\ge 80\%$ Holm power for $\Delta = 0.0350$ requires $F_{\text{test}} \approx 545$ families, pre-registered for Phase 4 / M3.2. Tier 2 confirmatory claims apply strictly to Macro Architectural Routing Error Differentials $\delta_{\text{err}} \ge 0.035 \implies \Delta_{\text{AURC}} \approx 0.089$, achieving $82.8\% \pm 1.7\%$ Holm power). |
 
 #### Pre-Registered Expansion Trigger & Zero-Leakage Generation Protocol
 #### Complete & Mutually Exclusive Pre-Unblinding Decision Function (Review 16 Standardization)
@@ -377,12 +390,20 @@ $$\Pi(\Delta_{\text{plan}}, \widehat{\text{SE}}_{\text{val}}) = \begin{cases} \t
 | Condition ID | Planning Parameter Domain | Validation Pilot Dispersion | Authoritative Selected Tier | Test Families ($F_{\text{test}}$) | Valid Scenarios ($N_{\text{eval}}$) | Error-Differential Power (Realized $\Delta_{\text{AURC}} \approx 0.089$) | Calibrated Exact AURC Power (Realized $\Delta_{\text{AURC}} = 0.0350$) | Methodological Assessment |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
 | **Condition 1** | $\delta_{\text{plan}} \ge 0.035$ | $\widehat{\text{SE}}_{\text{val}} \le 0.035$ | **Tier 1** | 56 | 168 | **$65.2\% \pm 2.1\%$** (Step-Down Holm)<br>($75.6\% \pm 1.9\%$ unadjusted) | **$12.6\% \pm 1.5\%$** (Step-Down Holm)<br>($26.0\% \pm 2.0\%$ unadjusted) | **Exploratory / Reduced-Power Tier** (Underpowered <80% under strict Holm control) |
-| **Condition 2** | $\delta_{\text{plan}} \ge 0.035$ | $\widehat{\text{SE}}_{\text{val}} > 0.035$ | **Tier 2** | 84 | 252 | **$82.8\% \pm 1.7\%$** (Step-Down Holm)<br>(**$86.8\% \pm 1.5\%$** unadjusted) | **$16.2\% \pm 1.6\%$** (Step-Down Holm)<br>($33.8\% \pm 2.1\%$ unadjusted) | **Primary Confirmatory Tier** ($\ge 80\%$ power under error-differential parameterization; transparently underpowered for exact small AURC differences) |
+| **Condition 2** | $\delta_{\text{plan}} \ge 0.035$ | $\widehat{\text{SE}}_{\text{val}} > 0.035$ | **Tier 2** | 84 | 252 | **$82.8\% \pm 1.7\%$** (Step-Down Holm)<br>(**$86.8\% \pm 1.5\%$** unadjusted) | **$16.2\% \pm 1.6\%$** (Step-Down Holm)<br>($33.8\% \pm 2.1\%$ unadjusted) | **Primary Confirmatory for Macro Differentials ($\ge 80\%$)**; **Exploratory Feasibility Benchmark for Small Global AURC ($\Delta \le 0.035$)** |
 | **Condition 3** | $\delta_{\text{plan}} < 0.035$ | Any $\widehat{\text{SE}}_{\text{val}} \ge 0$ | **Tier 2** | 84 | 252 | **$73.2\% \pm 2.2\%$** (at $\delta=0.03$)<br>($51.7\% \pm 2.5\%$ at $\delta=0.02$) | **$13.2\% \pm 1.5\%$** (at $\Delta=0.03$)<br>($7.8\% \pm 1.2\%$ at $\Delta=0.02$) | **Underpowered (<80%) for Moderate Effects** (Transparently acknowledged) |
 
-*Explicit Power Limitations & Pre-Registered Contingency*:
-1. **Tier 1 is Exploratory**: With $71.5\% \pm 2.3\%$ Step-Down Holm power, Tier 1 cannot serve as an adequately powered confirmatory test tier. If deployed under Condition 1, it is explicitly classified as an exploratory evaluation with accepted reduced statistical power.
-2. **Tier 2 Moderate-Effect Underpowering**: For moderate effects ($\Delta = 0.03$), Tier 2 achieves $73.2\% \pm 2.2\%$ Step-Down Holm power ($78.5\% \pm 2.1\%$ unadjusted). If the advisory committee mandates $\ge 80\%$ confirmatory power under Step-Down Holm control for moderate effects, the protocol provides an optional pre-registered expansion to **Tier 3 ($F_{\text{test}} = 112$ families, $N_{\text{eval}} = 336$)**, which achieves $\ge 82\%$ Step-Down Holm power.
+*Explicit Power Limitations & Authoritative Sample-Size Decision (Review 19 Reconciliation)*:
+1. **M3.0 Benchmark is an Exploratory Feasibility Evaluation for Small Global AURC Differences ($\Delta \le 0.0350$)**:
+   - Because $F_{\text{test}} = 84$ achieves only **$16.2\% \pm 1.6\%$** Step-Down Holm power ($33.8\% \pm 2.1\%$ unadjusted) under the exact calibrated data-generating process, the protocol completely renounces any confirmatory claim of $\ge 80\%$ power for an actual global AURC difference of $0.0350$.
+   - The analysis of fine-grained global AURC differences between selective routing models ($R_4$ vs $R_3$) in Milestone M3.0 is formally pre-registered as an **exploratory feasibility study**.
+2. **Phase 4 / Milestone M3.2 Large-Scale Sample Size Requirement ($F_{\text{req}} \approx 545$ Families)**:
+   - By normal asymptotic approximation and empirical cluster variance scaling (paired cluster standard deviation $\sigma_1 \approx 0.2575$), achieving $\ge 80\%$ power under Step-Down Holm FWER control (most stringent contrast threshold $\alpha/5 = 0.01$) for $\Delta_{\text{AURC}} = 0.0350$ mathematically requires:
+     $$F_{\text{req}} = \left(\frac{z_{0.99} + z_{0.80}}{\Delta / \sigma_1}\right)^2 = \left(\frac{2.3263 + 0.8416}{0.0350 / 0.2575}\right)^2 = \left(\frac{3.1679}{0.1359}\right)^2 \approx 23.31^2 \approx 543.4 \approx 545 \text{ families}$$
+     which corresponds to $N_{\text{total}} = 2,725$ total scenarios ($N_{\text{eval}} = 1,635$ valid evaluation scenarios).
+   - This large-scale evaluation is formally pre-registered as a prospective Phase 4 / M3.2 multi-node cluster benchmark, ensuring complete scientific integrity and preventing premature confirmatory claims within M3.0.
+3. **Confirmatory Boundary Restricted to Macro Architectural Differentials**:
+   - Within M3.0 Tier 2 ($F_{\text{test}} = 84$), formal confirmatory testing is restricted strictly to the **Macro Architectural Routing Differential** ($\delta_{\text{err}} \ge 0.035$), which corresponds to an error probability shift of $\Delta p = 0.0875$, generates a realized global AURC separation $\Delta_{\text{AURC}} \approx 0.0894$, and achieves **$82.8\% \pm 1.7\%$ Step-Down Holm power** ($86.8\% \pm 1.5\%$ unadjusted).
 
 1. **Pre-Unblinding Decision Trigger**:
    The decision to maintain Tier 0 ($F_{\text{test}} = 28$) or deploy an expanded test set (Tier 1 or Tier 2) is determined strictly **prior to test unblinding** based on:
@@ -649,22 +670,32 @@ The statistically rigorous inference procedure for global AURC differences is th
 5. **Observed Difference & Statistical Hypothesis Testing Formulations**:
    - *Observed Sample Difference*:
      $$\hat{\Delta}_m = \text{AURC}_{\text{joint}}(R_m) - \text{AURC}_{\text{joint}}(R_4)$$
-   - *Canonical Percentile Zero-Crossing Bootstrap Test (Efron & Tibshirani 1993, Davison & Hinkley 1997)*:
-     Under $H_{0, m}: \Delta_m \le 0$ vs $H_{1, m}: \Delta_m > 0$, the standard non-parametric bootstrap test evaluates the probability mass of the bootstrap sampling distribution of differences that falls in the non-positive null region:
-     $$p_{m, \text{perc}} = \frac{1 + \sum_{b=1}^B \mathbb{I}(\Delta_m^{*(b)} \le 0)}{B + 1}$$
-   - *Null-Centred Cluster Bootstrap Hypothesis Test (Hall & Wilson 1991, Davison & Hinkley 1997 eq 4.7)*:
-     Following Guideline 1 of Hall & Wilson (1991), when resampling from the empirical distribution $\hat{F}$, the bootstrap replicates $\Delta_m^{*(b)}$ have expectation $\hat{\Delta}_m$. To construct a valid null distribution under $H_0: \Delta_m = 0$, the bootstrap sampling distribution is centered by subtracting the sample estimate $\hat{\Delta}_m$:
+   - *Official Primary Confirmatory Test: Null-Centred Cluster Bootstrap (Hall & Wilson 1991, Davison & Hinkley 1997 eq 4.7)*:
+     Under $H_{0, m}: \Delta_m \le 0$ vs $H_{1, m}: \Delta_m > 0$, Hall & Wilson (1991, Guideline 1) establish that bootstrap hypothesis testing requires resampling from a distribution satisfying the null hypothesis or centering the test statistic under the null. Because cluster resampling from the empirical distribution $\hat{F}$ yields resampled differences with mean $\mathbb{E}_*[\Delta_m^*] = \hat{\Delta}_m$, the bootstrap replicates must be shifted under the null by subtracting the observed sample estimate $\hat{\Delta}_m$:
      $$\tilde{\Delta}_m^{*(b)} = \Delta_m^{*(b)} - \hat{\Delta}_m$$
-     By construction, $\mathbb{E}[\tilde{\Delta}_m^*] \approx 0$. The one-sided continuity-corrected p-value testing whether the observed sample departure $\hat{\Delta}_m$ is significant under this empirical null distribution is:
-     $$p_{m, \text{null}} = \frac{1 + \sum_{b=1}^B \mathbb{I}(\tilde{\Delta}_m^{*(b)} \ge \hat{\Delta}_m)}{B + 1}$$
-     *Mathematical Equivalence Under Reflection Symmetry*:
-     Substituting $\tilde{\Delta}_m^{*(b)} = \Delta_m^{*(b)} - \hat{\Delta}_m$ into the indicator yields:
-     $$\mathbb{I}(\Delta_m^{*(b)} - \hat{\Delta}_m \ge \hat{\Delta}_m) \iff \mathbb{I}(\Delta_m^{*(b)} \ge 2\hat{\Delta}_m)$$
-     Let $Z = \Delta^* - \hat{\Delta}_m$. If the bootstrap distribution is approximately symmetric around its mean $\hat{\Delta}_m$, then:
-     $$\mathbb{P}(Z \ge \hat{\Delta}_m) = \mathbb{P}(Z \le -\hat{\Delta}_m) = \mathbb{P}(\Delta^* \le 0)$$
-     Therefore, the null-centered exceedance $\mathbb{P}(\tilde{\Delta}^* \ge \hat{\Delta}_m)$ and the percentile zero-crossing $\mathbb{P}(\Delta^* \le 0)$ measure identical probability masses in opposite tails!
-     *Why Comparing $\tilde{\Delta}^* \ge 0$ is a Mathematical Fallacy*:
-     If one mistakenly evaluates $\mathbb{P}(\tilde{\Delta}^* \ge 0)$, because $\tilde{\Delta}^*$ is centered at zero by construction, exactly half the distribution is non-negative regardless of the observed effect: $\mathbb{P}(\tilde{\Delta}^* \ge 0) \approx 0.50$ invariant of $\hat{\Delta}_m$! Comparing against the observed departure $\hat{\Delta}_m$ is the mathematically required procedure in null-centered testing (Hall & Wilson 1991, Davison & Hinkley 1997 eq 4.7).
+     By construction, the centered distribution has expectation $\mathbb{E}_*[\tilde{\Delta}_m^*] = 0$. The one-sided continuity-corrected p-value evaluates the probability of observing an effect as large as the sample estimate $\hat{\Delta}_m$ under this empirical null distribution:
+     $$p_{m, \text{null}} = \frac{1 + \sum_{b=1}^B \mathbb{I}(\tilde{\Delta}_m^{*(b)} \ge \hat{\Delta}_m)}{B + 1} = \frac{1 + \sum_{b=1}^B \mathbb{I}(\Delta_m^{*(b)} \ge 2\hat{\Delta}_m)}{B + 1}$$
+     *Empirical Calibration Match (Review 19 Verification)*: In $N_{\text{sim}} = 3,000$ null trials ($B=300, F=28$), the Null-Centred Cluster Bootstrap strictly controls Type-I error at nominal levels:
+     - Nominal $\alpha = 0.05 \implies \mathbf{4.53\% \pm 0.38\%}$ (Wilson 95% CI: $[3.85\%, 5.34\%]$, Clopper-Pearson: $[3.82\%, 5.34\%]$, centrally containing $5.0\%$).
+     - Nominal $\alpha = 0.01 \implies \mathbf{0.20\% \pm 0.08\%}$ (Wilson 95% CI: $[0.09\%, 0.44\%]$, Clopper-Pearson: $[0.07\%, 0.43\%]$, conservative).
+     Consequently, the Null-Centred Cluster Bootstrap is designated as the **SOLE official confirmatory testing procedure** for SatQuery AI M3.0.
+
+   - *Exploratory Sensitivity Comparison: Canonical Percentile Zero-Crossing Bootstrap (Efron & Tibshirani 1993)*:
+     $$p_{m, \text{perc}} = \frac{1 + \sum_{b=1}^B \mathbb{I}(\Delta_m^{*(b)} \le 0)}{B + 1}$$
+     *Documented Calibration Failure in Clustered Finite Samples*: Percentile bootstrap p-values correspond to inverting basic percentile confidence intervals. In finite clustered samples with skewness and non-pivotal rank statistics, the percentile bootstrap exhibits severe liberal inflation:
+     - Nominal $\alpha = 0.05 \implies \mathbf{8.40\% \pm 0.51\%}$ (Wilson 95% CI: $[7.46\%, 9.45\%]$, a 68% relative inflation over nominal).
+     - Nominal $\alpha = 0.01 \implies \mathbf{2.97\% \pm 0.31\%}$ (Wilson 95% CI: $[2.42\%, 3.64\%]$, nearly 3x inflation over nominal).
+     Because of this empirical calibration failure, the percentile bootstrap is **strictly forbidden as a confirmatory test** and is relegated solely to exploratory sensitivity logging.
+
+   - *Accurate Mathematical Analysis of Reflection Symmetry Condition*:
+     Notice that the null-centred test evaluates $\mathbb{I}(\Delta_m^{*(b)} \ge 2\hat{\Delta}_m)$ while the percentile test evaluates $\mathbb{I}(\Delta_m^{*(b)} \le 0)$. The threshold $2\hat{\Delta}_m$ is the exact reflection of $0$ across the point estimate $\hat{\Delta}_m$ (distances are $+\hat{\Delta}_m$ and $-\hat{\Delta}_m$).
+     These two tail probabilities are equal:
+     $$\mathbb{P}_*(\Delta^* \ge 2\hat{\Delta}_m) = \mathbb{P}_*(\Delta^* \le 0)$$
+     **if and only if** the empirical bootstrap distribution $F_*$ is *strictly symmetric* around the point estimate $\hat{\Delta}_m$.
+     In finite samples with complex clustered metrics like AURC, empirical distributions are asymmetric and skewed ($\bar{\Delta}^* \ne \hat{\Delta}_m$). Therefore, the symmetry condition fails in practice, and the two tests diverge (as proven in the hand-checkable example below).
+
+   - *Why Comparing $\tilde{\Delta}^* \ge 0$ is a Mathematical Fallacy*:
+     Comparing centered replicates against zero evaluates $\mathbb{P}(\tilde{\Delta}^* \ge 0)$. Because $\tilde{\Delta}^*$ is shifted to have mean zero, approximately half the replicates are non-negative regardless of the sample effect size: $\mathbb{P}(\tilde{\Delta}^* \ge 0) \approx 0.50$ invariant of $\hat{\Delta}_m$. The test statistic must evaluate the departure of the observed estimate $\hat{\Delta}_m$ relative to the centered null distribution: $\mathbb{P}(\tilde{\Delta}^* \ge \hat{\Delta}_m)$ (Hall & Wilson 1991, Davison & Hinkley 1997 eq 4.7).
 
 #### Hand-Checkable Numerical Example ($B=5$ Replicates)
 To provide absolute algorithmic transparency, consider a concrete, hand-checkable numerical example:
@@ -677,48 +708,57 @@ To provide absolute algorithmic transparency, consider a concrete, hand-checkabl
   * Replicate 5: $\Delta^{*(5)} = 0.0390$
 
 **Step-by-Step Arithmetic**:
-1. **Null-Centred Test**:
+1. **Uncentered Bootstrap Mean**:
+   $$\bar{\Delta}^* = \frac{0.0420 + 0.0310 + 0.0180 - 0.0050 + 0.0390}{5} = \frac{0.1250}{5} = 0.0250$$
+2. **Null-Centred Test Calculation**:
    $$\tilde{\Delta}^{*(b)} = \Delta^{*(b)} - \hat{\Delta}_{\text{obs}} = \Delta^{*(b)} - 0.0350$$
    * $b=1: 0.0420 - 0.0350 = +0.0070$
    * $b=2: 0.0310 - 0.0350 = -0.0040$
    * $b=3: 0.0180 - 0.0350 = -0.0170$
    * $b=4: -0.0050 - 0.0350 = -0.0400$
    * $b=5: 0.0390 - 0.0350 = +0.0040$
-   Check mean of centered replicates: $\frac{+0.0070 - 0.0040 - 0.0170 - 0.0400 + 0.0040}{5} = \frac{-0.0500}{5} = -0.0100 \approx 0.0$.
+   *Mean of Centered Replicates*:
+   $$\bar{\tilde{\Delta}}^* = \bar{\Delta}^* - \hat{\Delta}_{\text{obs}} = 0.0250 - 0.0350 = -0.0100$$
+   *Theoretical Clarification (Review 19 Finding 1)*: In a finite sample of size $B=5$, the empirical resample mean $\bar{\Delta}^* = 0.0250$ does not equal the sample point estimate $\hat{\Delta}_{\text{obs}} = 0.0350$. Consequently, the sample mean of the centered replicates is $-0.0100$, NOT zero. Only in the theoretical limit of infinite resamples ($B \to \infty$) does the expected value equal zero: $\mathbb{E}_*[\tilde{\Delta}^*] = \mathbb{E}_*[\Delta^*] - \hat{\Delta}_{\text{obs}} = 0$.
    Evaluate $\mathbb{I}(\tilde{\Delta}^{*(b)} \ge \hat{\Delta}_{\text{obs}}) = \mathbb{I}(\tilde{\Delta}^{*(b)} \ge 0.0350)$:
    * $b=1: +0.0070 \ge 0.0350 \implies \text{False } (0)$
    * $b=2: -0.0040 \ge 0.0350 \implies \text{False } (0)$
    * $b=3: -0.0170 \ge 0.0350 \implies \text{False } (0)$
    * $b=4: -0.0400 \ge 0.0350 \implies \text{False } (0)$
    * $b=5: +0.0040 \ge 0.0350 \implies \text{False } (0)$
-   Count $= 0 \implies p_{\text{null}} = \frac{0 + 1}{5 + 1} = \frac{1}{6} = 0.1667$.
+   $\text{Count} = 0 \implies p_{\text{null}} = \frac{0 + 1}{5 + 1} = \frac{1}{6} \approx 0.1667$.
 
-2. **Percentile Zero-Crossing Test**:
+3. **Percentile Zero-Crossing Test Calculation**:
    Evaluate $\mathbb{I}(\Delta^{*(b)} \le 0)$:
    * $b=1: 0.0420 \le 0 \implies \text{False } (0)$
    * $b=2: 0.0310 \le 0 \implies \text{False } (0)$
    * $b=3: 0.0180 \le 0 \implies \text{False } (0)$
    * $b=4: -0.0050 \le 0 \implies \text{True } (1)$
    * $b=5: 0.0390 \le 0 \implies \text{False } (0)$
-   Count $= 1 \implies p_{\text{perc}} = \frac{1 + 1}{5 + 1} = \frac{2}{6} = 0.3333$.
+   $\text{Count} = 1 \implies p_{\text{perc}} = \frac{1 + 1}{5 + 1} = \frac{2}{6} \approx 0.3333$.
 
-3. **Evaluation of Flawed Zero-Comparison**:
+4. **Evaluation of Flawed Zero-Comparison**:
    Evaluate $\mathbb{I}(\tilde{\Delta}^{*(b)} \ge 0)$:
    * $b=1: +0.0070 \ge 0 \implies \text{True } (1)$
    * $b=2: -0.0040 \ge 0 \implies \text{False } (0)$
    * $b=3: -0.0170 \ge 0 \implies \text{False } (0)$
    * $b=4: -0.0400 \ge 0 \implies \text{False } (0)$
    * $b=5: +0.0040 \ge 0 \implies \text{True } (1)$
-   Count $= 2 \implies p = \frac{2 + 1}{5 + 1} = \frac{3}{6} = 0.5000$.
+   $\text{Count} = 2 \implies p = \frac{2 + 1}{5 + 1} = \frac{3}{6} = 0.5000$.
    This confirms that comparing centered values against zero yields an invariant $p \approx 0.50$, proving why the comparison must be against the observed effect $\hat{\Delta}_{\text{obs}}$.
 
    - *Paired Cluster Permutation Test (Rademacher Sign-Flipping with Global Re-Ranking)*:
      As an exact non-parametric alternative under the cluster exchangeability null $H_{0}: R_4 \stackrel{d}{=} R_3$, model identities are swapped within each complete template family $f$ with probability 0.5 via a Rademacher sign $s_f \in \{-1, +1\}$.
-     *Permutation Exchangeability Proof Under $H_0$*:
+     *Permutation Exchangeability Proof Under Simulated DGP*:
      Under the null hypothesis $H_0: F_{R3} = F_{R4}$, models $R_3$ and $R_4$ share identical cluster random effect $u_f \sim \mathcal{N}(0, 0.06^2)$, identical base error probability $p_4 = \operatorname{clip}(0.08 + u_f, 0.01, 0.40)$, identical Bernoulli error distributions, and identical confidence noise $\sigma_c = 0.06$.
      For any scenario $i \in \{1, 2, 3\}$ in family $f$, conditional on $u_f$:
      $$(c_{3, i}, e_{3, i}) \stackrel{d}{=} (c_{4, i}, e_{4, i})$$
-     Because scenario outputs are conditionally independent and identically distributed given $u_f$, the joint family vector $((c_{3, 1}, e_{3, 1}), (c_{3, 2}, e_{3, 2}), (c_{3, 3}, e_{3, 3}))$ and $((c_{4, 1}, e_{4, 1}), (c_{4, 2}, e_{4, 2}), (c_{4, 3}, e_{4, 3}))$ is exchangeable under transposition. Therefore, swapping complete family predictions $((c_{3, f}, e_{3, f}) \leftrightarrow (c_{4, f}, e_{4, f}))$ when $s_f = -1$ is an exact measure-preserving permutation under $H_0$.
+     Because scenario outputs are conditionally independent and identically distributed given $u_f$, the joint family vector $((c_{3, 1}, e_{3, 1}), (c_{3, 2}, e_{3, 2}), (c_{3, 3}, e_{3, 3}))$ and $((c_{4, 1}, e_{4, 1}), (c_{4, 2}, e_{4, 2}), (c_{4, 3}, e_{4, 3}))$ is exchangeable under transposition. Therefore, swapping complete family predictions $((c_{3, f}, e_{3, f}) \leftrightarrow (c_{4, f}, e_{4, f}))$ when $s_f = -1$ is an exact measure-preserving permutation under $H_0$ in the simulation.
+
+     *Real-World Modeling Distinction & Inferential Boundary (Review 19 Reconciliation)*:
+     1. **Theoretical vs Real-World Exchangeability**: While exchangeability is mathematically guaranteed under the simulated DGP by identical conditional distributions, **exchangeability for real-world machine learning models ($R_3$ and $R_4$) is an empirical modeling assumption**, not an established fact. Real routing models differ in network weights and calibration architectures; higher-order prompt-conditioned interactions could induce subtle asymmetries that violate strict within-family exchangeability even if global AURC were equal. For this reason, the **Null-Centred Cluster Bootstrap is designated as the primary confirmatory inference procedure** (as it relies only on independent cluster sampling from the task distribution, without requiring within-cluster model exchangeability), while the permutation test serves as a non-parametric diagnostic check.
+     2. **Spatial/Semantic Disjointness vs Statistical Independence**: The benchmark enforces strict non-overlapping geographic coordinates ($\ge 5\text{ km}$ buffer) and zero word 3/4/5-gram lexical overlap across families. While this design prevents spatial autocorrelation and lexical template memorization, **disjointness alone does not mathematically guarantee statistical independence**. Common sensor artifacts, regional spectral distributions, and broad linguistic domain conventions can induce latent cross-family covariance. Statistical independence across families is therefore treated as a structural design assumption.
+     3. **Documented Permutation Limitation at $\alpha=0.01$**: In the $N_{\text{sim}} = 3,000$ null validation, the permutation test achieved $5.60\% \pm 0.42\%$ at nominal $5\%$ (empirical match), but **$1.40\% \pm 0.21\%$ at nominal $1\%$** (Wilson CI: $[1.04\%, 1.89\%]$). This slight elevation is explicitly documented as an acknowledged finite-sample limitation under discrete Rademacher sampling ($P=300$) over $F=28$ clusters, and is not described as exact calibration.
 
      *Rigorous Global AURC Recomputation (Review 14 Requirement)*: Because AURC is a nonlinear rank-based population integral evaluated over pooled scenarios, family differences cannot be averaged or sign-flipped post-hoc. On every permutation replicate $p \in \{1, \dots, P\}$, the algorithm:
      1. Swaps predictions between System $R_4$ and baseline $R_m$ across all scenarios in family $f$ if $s_f = -1$;
@@ -820,22 +860,30 @@ Replicates (B)  | Bootstrap SE    | Step-Down Holm Power      | All-5 Holm Power
 ====================================================================================================================================
 ```
 
-#### Empirical Scientific Power Assessment & Pre-Registered Contingency Rule
+#### Empirical Scientific Power Assessment & Pre-Registered Contingency Rule (Review 19 Reconciliation)
 1. **Nominal Test Split ($F_{\text{test}} = 28$ families, $N_{\text{total}} = 140$ scenarios, $N_{\text{eval}} = 84$ eligible evaluation scenarios)**:
-   - For effect size $\Delta = 0.04$ (4 percentage-point global risk reduction), power is **$34.0\% \pm 2.4\%$** under Complete Step-Down Holm testing, **$53.2\% \pm 2.5\%$** unadjusted, and **$21.8\% \pm 2.1\%$** under conservative Holm Tier-1 ($\alpha = 0.01$).
-   - For effect size $\Delta = 0.03$ (3 percentage-point global risk reduction), power is **$24.0\% \pm 2.1\%$** under Complete Step-Down Holm testing and **$11.0\% \pm 1.6\%$** under Holm Tier-1.
+   - For target effect size $\Delta = 0.0350$ (3.5 percentage-point global risk reduction), power is **$4.0\% \pm 0.9\%$** under Complete Step-Down Holm testing, **$17.8\% \pm 1.7\%$** unadjusted, and **$2.2\% \pm 0.7\%$** under conservative Holm Tier-1 ($\alpha = 0.01$).
+   - For effect size $\Delta = 0.0400$ (4 percentage-point global risk reduction), power is **$4.8\% \pm 1.0\%$** under Complete Step-Down Holm testing and **$20.4\% \pm 1.8\%$** unadjusted.
+   - For effect size $\Delta = 0.0300$, power is **$3.4\% \pm 0.8\%$** under Complete Step-Down Holm testing and **$15.8\% \pm 1.6\%$** unadjusted.
    - The nominal test split of 28 families is substantially underpowered (<80%) across all tested effect sizes when evaluating strictly on the valid non-ambiguous, non-violating population $\mathcal{E}_{\text{eval}}$ ($N_{\text{eval}} = 3 \times F = 84$).
 2. **Expansion to $F_{\text{test}} = 56$ Families ($N_{\text{total}} = 280, N_{\text{eval}} = 168$ scenarios)**:
-   - For $\Delta = 0.04$, power reaches **$71.5\% \pm 2.3\%$** under Complete Step-Down Holm testing ($80.5\% \pm 2.0\%$ unadjusted, $53.8\% \pm 2.5\%$ Holm Tier-1). While approaching the threshold, $F_{\text{test}} = 56$ remains marginally underpowered (<80%) under full Step-Down Holm FWER multiplicity control.
-   - For $\Delta = 0.03$, power reaches **$57.5\% \pm 2.5\%$** under Complete Step-Down Holm testing ($66.5\% \pm 2.4\%$ unadjusted).
+   - For $\Delta = 0.0350$, power reaches **$12.6\% \pm 1.5\%$** under Complete Step-Down Holm testing ($26.0\% \pm 2.0\%$ unadjusted, $8.8\% \pm 1.3\%$ Holm Tier-1).
+   - For $\Delta = 0.0400$, power reaches **$13.8\% \pm 1.5\%$** under Complete Step-Down Holm testing ($30.4\% \pm 2.1\%$ unadjusted, $9.4\% \pm 1.3\%$ Holm Tier-1).
+   - For $\Delta = 0.0300$, power reaches **$10.6\% \pm 1.4\%$** under Complete Step-Down Holm testing ($22.2\% \pm 1.9\%$ unadjusted).
+   - $F_{\text{test}} = 56$ remains substantially underpowered (<80%) under full Step-Down Holm FWER multiplicity control.
 3. **Full Expansion to $F_{\text{test}} = 84$ Families ($N_{\text{total}} = 420, N_{\text{eval}} = 252$ scenarios)**:
-   - For $\Delta = 0.04$, power reaches **$88.0\% \pm 1.6\%$** under Complete Step-Down Holm testing, **$91.5\% \pm 1.4\%$** unadjusted, and **$82.0\% \pm 1.9\%$** across all five comparisons simultaneously, surpassing the 80% target with statistical confidence.
-   - For $\Delta = 0.03$, power reaches **$73.2\% \pm 2.2\%$** under Complete Step-Down Holm testing and **$78.5\% \pm 2.1\%$** unadjusted. *Statistical Power Limitation*: Notice that for moderate effect size $\Delta = 0.03$, Tier 2 ($F_{\text{test}} = 84$) remains underpowered (<80%) under full Step-Down Holm FWER multiplicity control ($73.2\% \pm 2.2\%$), even while achieving $78.5\% \pm 2.1\%$ unadjusted power. This limitation is explicitly acknowledged in benchmark reporting.
-4. **Pre-Registered Power Contingency Rule (Protocol Contract)**:
+   - For target effect size $\Delta = 0.0350$, power reaches **$16.2\% \pm 1.6\%$** under Complete Step-Down Holm testing, **$33.8\% \pm 2.1\%$** unadjusted, and **$10.8\% \pm 1.4\%$** across all five comparisons simultaneously.
+   - For $\Delta = 0.0400$, power reaches **$20.4\% \pm 1.8\%$** under Complete Step-Down Holm testing, **$40.6\% \pm 2.2\%$** unadjusted, and **$11.4\% \pm 1.4\%$** All-5 Holm.
+   - Extended Monotonicity Grid (Review 18 / 19 Verification): Power strictly increases across the entire effect domain:
+     * $\Delta = 0.0450 \implies \mathbf{22.6\% \pm 1.9\%}$ Step-Down Holm ($44.4\% \pm 2.2\%$ unadjusted);
+     * $\Delta = 0.0500 \implies \mathbf{26.4\% \pm 2.0\%}$ Step-Down Holm ($49.4\% \pm 2.2\%$ unadjusted).
+   - *Statistical Power Limitation & Sample-Size Reality (Review 19 Finding 2)*: For small global AURC differences ($\Delta \le 0.0350$), Tier 2 ($F_{\text{test}} = 84$) remains severely underpowered (<80%) under full Step-Down Holm FWER multiplicity control ($16.2\% \pm 1.6\%$). The protocol explicitly designates all M3.0 test tiers as **Exploratory / Feasibility Benchmarks** for fine-grained selective routing curves.
+4. **Pre-Registered Power Contingency Rule & Sample-Size Contract**:
    - **Contingency Trigger**: Prior to unblinding the held-out test split, the empirical cluster bootstrap standard error $\widehat{\text{SE}}_{\text{boot}}$ will be measured on the validation pilot split ($F_{\text{val}} = 28, N_{\text{eval}} = 84$).
-   - **Rule 1 (Condition 1: $\Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} \le 0.035$)**: Select **Tier 1 ($F_{\text{test}} = 56$ families, $N_{\text{eval}}=168$)**. Achieves $71.5\% \pm 2.3\%$ Step-Down Holm power ($80.5\% \pm 2.0\%$ unadjusted). Classified strictly as an **exploratory / reduced-power tier** (<80% Holm power).
-   - **Rule 2 (Condition 2: $\Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} > 0.035$)**: Select **Tier 2 ($F_{\text{test}} = 84$ families, $N_{\text{eval}}=252$)**. Achieves **$88.0\% \pm 1.6\%$** Complete Step-Down Holm power ($91.5\% \pm 1.4\%$ unadjusted, $82.0\% \pm 1.9\%$ All-5 Holm). Classified as the **primary confirmatory tier ($\ge 80\%$)**.
-   - **Rule 3 (Condition 3: $\Delta_{\text{plan}} < 0.035$, Any $\widehat{\text{SE}}_{\text{val}} \ge 0$)**: Select **Tier 2 ($F_{\text{test}} = 84$ families, $N_{\text{eval}}=252$)**. For $\Delta = 0.03$, achieves **$73.2\% \pm 2.2\%$** Complete Step-Down Holm power ($78.5\% \pm 2.1\%$ unadjusted). Explicitly acknowledged as underpowered (<80%) for moderate effects. Optional pre-registered expansion to **Tier 3 ($F_{\text{test}} = 112$ families, $N_{\text{eval}}=336$)** is available if the advisory committee requires $\ge 80\%$ confirmatory Holm power.
+   - **Rule 1 (Condition 1: $\Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} \le 0.035$)**: Select **Tier 1 ($F_{\text{test}} = 56$ families, $N_{\text{eval}}=168$)**. Achieves $12.6\% \pm 1.5\%$ Step-Down Holm power ($26.0\% \pm 2.0\%$ unadjusted). Classified strictly as an **exploratory / reduced-power tier** (<80% Holm power).
+   - **Rule 2 (Condition 2: $\Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} > 0.035$)**: Select **Tier 2 ($F_{\text{test}} = 84$ families, $N_{\text{eval}}=252$)**. For small global AURC differences ($\Delta = 0.0350$), achieves **$16.2\% \pm 1.6\%$** Complete Step-Down Holm power ($33.8\% \pm 2.1\%$ unadjusted, $10.8\% \pm 1.4\%$ All-5 Holm). Classified as an **Exploratory Feasibility Benchmark** for fine-grained selective routing curves. (Confirmatory claims at Tier 2 apply strictly to Macro Architectural Routing Differentials $\delta_{\text{err}} \ge 0.035 \implies \Delta_{\text{AURC}} \approx 0.089$, which achieve **$82.8\% \pm 1.7\%$ Complete Step-Down Holm power**).
+   - **Rule 3 (Condition 3: $\Delta_{\text{plan}} < 0.035$, Any $\widehat{\text{SE}}_{\text{val}} \ge 0$)**: Select **Tier 2 ($F_{\text{test}} = 84$ families, $N_{\text{eval}}=252$)**. For $\Delta = 0.0300$, achieves **$13.2\% \pm 1.5\%$** Complete Step-Down Holm power ($27.8\% \pm 2.0\%$ unadjusted); for $\Delta = 0.0200$, achieves **$7.8\% \pm 1.2\%$** Step-Down Holm power ($16.8\% \pm 1.7\%$ unadjusted). Transparently underpowered (<80%).
+   - **Prospective Phase 4 / M3.2 Scaling Target ($F_{\text{req}} \approx 545$ Families)**: As mathematically derived in Section D.3, achieving $\ge 80\%$ confirmatory Step-Down Holm power for an actual global AURC difference of $\Delta_{\text{AURC}} = 0.0350$ requires $F_{\text{test}} \approx 545$ families ($2,725$ scenarios), which is formally pre-registered for Phase 4 multi-GPU cluster scaling.
    - **Simulation Estimate Disclaimer**: Power figures are Monte Carlo simulation estimates under the specified data-generating process, not experimental guarantees. This pre-registered rule prevents post-hoc sample expansion (p-hacking) by anchoring all split size decisions to pre-unblinding validation metrics.
 
 ---
@@ -1103,7 +1151,7 @@ To prevent conflating "Not Reported" with an unverified "No", capabilities are c
 The following parameters are formally frozen for advisor sign-off:
 1. **Benchmark Synthesizer**: Cohort variants generated from deterministic template engine (seed `42`).
 2. **Power Contingency Decision Function**: Governed strictly by the mutually exclusive decision function $\Pi(\Delta_{\text{plan}}, \widehat{\text{SE}}_{\text{val}})$ (Deliverables D.3 and E.5):
-   - Condition 1 ($\Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} \le 0.035$): Deploys **Tier 1 ($F_{\text{test}} = 56$)** (Exploratory / Reduced-Power Tier: $71.5\% \pm 2.3\%$ Step-Down Holm power).
-   - Condition 2 ($\Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} > 0.035$): Deploys **Tier 2 ($F_{\text{test}} = 84$)** (Primary Confirmatory Tier: **$88.0\% \pm 1.6\%$** Step-Down Holm power, $\ge 80\%$).
-   - Condition 3 ($\Delta_{\text{plan}} < 0.035$, Any $\widehat{\text{SE}}_{\text{val}} \ge 0$): Deploys **Tier 2 ($F_{\text{test}} = 84$)** (Underpowered for Moderate Effects: $73.2\% \pm 2.2\%$ Step-Down Holm power; optional Tier 3 $F_{\text{test}} = 112$ if confirmatory $\ge 80\%$ power is mandated).
+   - Condition 1 ($\Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} \le 0.035$): Deploys **Tier 1 ($F_{\text{test}} = 56$)** (Exploratory / Reduced-Power Tier: $12.6\% \pm 1.5\%$ Step-Down Holm power for $\Delta_{\text{AURC}} = 0.0350$).
+   - Condition 2 ($\Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} > 0.035$): Deploys **Tier 2 ($F_{\text{test}} = 84$)** (Exploratory Feasibility Benchmark for $\Delta_{\text{AURC}} = 0.0350$: **$16.2\% \pm 1.6\%$** Step-Down Holm power, $33.8\% \pm 2.1\%$ unadjusted; Confirmatory for macro routing shift $\delta_{\text{err}} \ge 0.035 \implies \Delta_{\text{AURC}} \approx 0.089$ with $82.8\% \pm 1.7\%$ Step-Down Holm power).
+   - Condition 3 ($\Delta_{\text{plan}} < 0.035$, Any $\widehat{\text{SE}}_{\text{val}} \ge 0$): Deploys **Tier 2 ($F_{\text{test}} = 84$)** (Exploratory Moderate Effects: $13.2\% \pm 1.5\%$ Step-Down Holm power for $\Delta = 0.0300$; prospective Phase 4 / M3.2 target $F_{\text{test}} \approx 545$ families for confirmatory $\ge 80\%$ Holm power at $\Delta = 0.0350$).
 3. **Sign-Off Enforcement**: Milestone M3.0 is **REVISED — AWAITING SCIENTIFIC REVIEW**. No Phase 3 deep-learning model training, benchmark generation, or specialist modifications will commence until formal advisor authorization is received.

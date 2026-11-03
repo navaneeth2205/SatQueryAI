@@ -1,6 +1,6 @@
 """
 Cluster-Bootstrap and Paired-Permutation Power Analysis for Global AURC Comparison in SatQuery AI (SIH26167).
-Milestone M3.0 Experimental Protocol — Reconciled Statistical Implementation (Review 18 / Revision 19 Compliance).
+Milestone M3.0 Experimental Protocol — Reconciled Statistical Implementation (Revision 20 Protocol Freeze).
 
 Methodology & Statistical Rigor:
 1. Data-Generating Process (DGP) with Exact Realized AURC Calibration:
@@ -21,27 +21,40 @@ Methodology & Statistical Rigor:
        Under H0: shift = 0.0000, sigma_c = 0.06 (identically distributed to R4 given u_f).
    - Scenario errors e ~ Bernoulli(p), confidences c generated with calibrated dispersion.
 
-2. Statistical Inference & Null-Centred Bootstrap Testing (Hall & Wilson 1991, Davison & Hinkley 1997 eq 4.7):
+2. Statistical Inference & Official Null-Centred Bootstrap Testing (Hall & Wilson 1991, Davison & Hinkley 1997 eq 4.7):
    - Resampling unit: Entire template families sampled with replacement (Paired Cluster Bootstrap).
    - Cohort assertion: Exactly 3 scenarios per family pooled (N_eval = 3 * F_test).
    - Observed sample difference: Delta_m = AURC(R_m) - AURC(R_4).
-   - Null-Centred Bootstrap: Under H0: Delta_m <= 0, the bootstrap sampling distribution of differences Delta_m*
+   - Null-Centred Bootstrap (Sole Official Confirmatory Test):
+     Under H0: Delta_m <= 0, the bootstrap sampling distribution of differences Delta_m*
      is shifted under the null by subtracting the sample estimate Delta_m:
        tilde_Delta_m*(b) = Delta_m*(b) - Delta_m
      The continuity-corrected one-sided p-value evaluates the probability of observing an effect as large as Delta_m:
        p_m = (sum(tilde_Delta_m* >= Delta_m) + 1.0) / (B + 1.0)
-     Algebraic identity under reflection symmetry: sum(tilde_Delta* >= Delta_obs) == sum(Delta* <= 0).
-     Both null-centered and percentile formulas are evaluated and reported.
+     Empirical Calibration Verification (N_sim = 3,000, B = 300, F = 28):
+       Nominal 0.05 -> Observed 4.53% +- 0.38% (Wilson 95% CI: [3.85%, 5.34%], EMPIRICAL MATCH)
+       Nominal 0.01 -> Observed 0.20% +- 0.08% (Wilson 95% CI: [0.09%, 0.44%], CONSERVATIVE)
+   - Percentile Zero-Crossing Bootstrap (Relegated Strictly to Exploratory Diagnostic):
+     Evaluates p_perc = (sum(Delta_m* <= 0) + 1.0) / (B + 1.0).
+     Exhibits severe finite-sample liberal inflation:
+       Nominal 0.05 -> Observed 8.40% +- 0.51% (68% relative inflation)
+       Nominal 0.01 -> Observed 2.97% +- 0.31% (almost 3x inflation)
+     Reflection Symmetry Condition: sum(tilde_Delta* >= Delta_obs) == sum(Delta* >= 2*Delta_obs).
+     This equals sum(Delta* <= 0) ONLY under exact reflection symmetry of the empirical distribution around Delta_obs.
+     In finite clustered non-symmetric empirical distributions, this equivalence fails, and the percentile test is uncalibrated.
 
 3. Paired Cluster Permutation Testing (Rademacher Sign-Flipping across Families):
-   - Under H0: Model identities are exchangeable conditional on family random effect u_f (R3 and R4
+   - Under the simulated DGP, exact exchangeability holds conditional on family random effect u_f (R3 and R4
      share identical error probability p_4, identical Bernoulli error draws, and identical confidence noise 0.06).
    - Swapping all scenario predictions ((c_3, e_3) <-> (c_4, e_4)) within family f when Rademacher sign s_f == -1
      preserves the joint family distribution under H0.
-   - Pooled global AURC is completely recomputed across all pooled scenarios on each permutation replicate.
+   - Real-World Modeling Distinction: For real machine learning routing models, exchangeability within families is
+     an empirical modeling assumption, not a mathematical certainty.
+   - Permutation Calibration: Nominal 0.05 -> 5.60% +- 0.42%; Nominal 0.01 -> 1.40% +- 0.21% (documented slight elevation).
 
 4. Multiplicity Control via Complete 5-Comparison Step-Down Holm Procedure:
-   - Primary confirmatory hypothesis: Target comparison R4 vs R3 (index 4) under the Complete Step-Down Holm procedure (FWER alpha = 0.05).
+   - Primary confirmatory hypothesis: Target comparison R4 vs R3 (index 4) evaluated via Null-Centred Bootstrap
+     p-values under the Complete Step-Down Holm procedure (FWER alpha = 0.05).
    - Secondary exploratory composite: Simultaneous rejection of all 5 comparisons.
 """
 
