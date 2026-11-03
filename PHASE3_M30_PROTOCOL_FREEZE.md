@@ -9,7 +9,7 @@
 **Frozen Classical Baseline Commit**: `ce7134245f9be6b3876a3a2df1699b2641156f9f`
 **Git Baseline Tag**: `v0.2.0-phase2-freeze` (Dereferenced commit: `ce7134245f9be6b3876a3a2df1699b2641156f9f`)
 **Working Tree Status**: Clean (git status --porcelain is empty)  
-**Status**: **REVISED — AWAITING SCIENTIFIC REVIEW**  
+**Status**: **APPROVED & FROZEN (M3.0 CLOSED — M3.1 AUTHORIZED)**  
 
 ---
 
@@ -17,7 +17,7 @@
 
 This document provides the final, reconciled scientific protocol for Milestone M3.0 of SatQuery AI. It resolves all methodological, mathematical, and publication-level issues raised in the research review.
 
-**Research Governance Invariant**: **No deep-learning models have been trained, no benchmark scenario files generated, and the frozen Phase 2 baseline tag remains strictly unchanged.** Authorization for Milestone M3.1 remains blocked pending scientific review and sign-off on this protocol.
+**Research Governance Invariant**: **Milestone M3.0 is formally APPROVED and FROZEN as of November 3, 2026. Phase 2 classical baseline tag `v0.2.0-phase2-freeze` is strictly preserved. Milestone M3.1 (Deep Learning Specialist Training & Selective Routing Evaluation) is AUTHORIZED and ACTIVE under the pre-registered controls, evaluation gates, and contingency rules frozen in this protocol.**
 
 ### Comprehensive Reviewer Issue Resolution Table
 
@@ -1321,4 +1321,4 @@ The following parameters are formally frozen for advisor sign-off:
    - Condition 1 ($\Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} \le 0.035$): Deploys **Tier 1 ($F_{\text{test}} = 56$)** (Exploratory / Reduced-Power Tier: $12.6\% \pm 1.5\%$ Step-Down Holm power for $\Delta_{\text{AURC}} = 0.0350$).
    - Condition 2 ($\Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} > 0.035$): Deploys **Tier 2 ($F_{\text{test}} = 84$)** (Exploratory Feasibility Benchmark for $\Delta_{\text{AURC}} = 0.0350$: **$16.2\% \pm 1.6\%$** Step-Down Holm power, $33.8\% \pm 2.1\%$ unadjusted; Confirmatory for macro routing shift $\delta_{\text{err}} \ge 0.035 \implies \Delta_{\text{AURC}} \approx 0.089$ with $85.2\% \pm 1.6\%$ Step-Down Holm power ($88.2\% \pm 1.4\%$ unadjusted, fresh audit across 500 trials)).
    - Condition 3 ($\Delta_{\text{plan}} < 0.035$, Any $\widehat{\text{SE}}_{\text{val}} \ge 0$): Deploys **Tier 2 ($F_{\text{test}} = 84$)** (Exploratory Moderate Effects: $13.2\% \pm 1.5\%$ Step-Down Holm power for $\Delta = 0.0300$; prospective Phase 4 / M3.2 target $F_{\text{test}} \approx 545$ families for confirmatory $\ge 80\%$ Holm power at $\Delta = 0.0350$).
-3. **Sign-Off Enforcement**: Milestone M3.0 is **REVISED — AWAITING SCIENTIFIC REVIEW**. No Phase 3 deep-learning model training, benchmark generation, or specialist modifications will commence until formal advisor authorization is received.
+3. **Sign-Off Record & Scientific Approval**: Milestone M3.0 is **APPROVED AND FROZEN** (Advisor Scientific Review Sign-Off, November 3, 2026). Revision 21 (`v3.0.0-freeze-rev21`) is officially ratified. Milestone M3.1 is **AUTHORIZED TO PROCEED** under the frozen experimental protocol, retaining all pre-registered controls, validation triggers, and evaluation gates intact.
