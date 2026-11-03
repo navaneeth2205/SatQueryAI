@@ -147,6 +147,20 @@ def evaluate_affine_alignment_gate(gt1, gt2, width=120, height=120, shape1=None,
             f"ERR_UNREGISTERED_GRID: Maximum footprint displacement {disp['max_footprint_displacement']:.4f} px "
             f"exceeds engineering limit {max_disp_threshold} px"
         )
+
+    # 8. Structural Non-Resamplability Check (Review 15 Resolution):
+    # Reflection / handedness inversion, severe anisotropic shear, CRS mismatch,
+    # or shape mismatch CANNOT be resolved by standard grid resampling.
+    # The pipeline must immediately REJECT rather than attempting meaningless interpolation.
+    has_fatal_structural_error = any(
+        r.startswith("ERR_INVERTED_AXIS") or
+        r.startswith("ERR_ANISOTROPIC_SHEAR") or
+        r.startswith("ERR_CRS_MISMATCH") or
+        r.startswith("ERR_DIMENSION_MISMATCH")
+        for r in failure_reasons
+    )
+    if has_fatal_structural_error:
+        needs_resampling = False
         
     return {
         "passed": passed,
@@ -223,24 +237,26 @@ def test_rotation_drift_exceeds_full_footprint_displacement():
 
 
 def test_reflection_handedness_flip_detected():
-    """Flipped coordinate axis (negative determinant) triggers ERR_INVERTED_AXIS."""
+    """Flipped coordinate axis (negative determinant) triggers ERR_INVERTED_AXIS and CANNOT be resampled."""
     gt1 = (500000.0, 10.0, 0.0, 4500000.0, 0.0, -10.0)
     # gt2 has flipped Y direction (positive instead of negative)
     gt2 = (500000.0, 10.0, 0.0, 4500000.0, 0.0, 10.0)
     
     gate = evaluate_affine_alignment_gate(gt1, gt2, width=120, height=120)
     assert gate["passed"] is False
+    assert gate["needs_resampling"] is False  # Structural fatal error: cannot resample inverted axes
     assert any("ERR_INVERTED_AXIS" in r for r in gate["failure_reasons"])
 
 
 def test_shear_distortion_detected():
-    """Shear distortion causing condition number > 1.01 triggers ERR_ANISOTROPIC_SHEAR."""
+    """Shear distortion causing condition number > 1.01 triggers ERR_ANISOTROPIC_SHEAR and cannot be resampled."""
     gt1 = (500000.0, 10.0, 0.0, 4500000.0, 0.0, -10.0)
     # Non-zero off-diagonal shear
     gt2 = (500000.0, 10.0, 0.25, 4500000.0, 0.0, -10.0)
     
     gate = evaluate_affine_alignment_gate(gt1, gt2, width=120, height=120)
     assert gate["passed"] is False
+    assert gate["needs_resampling"] is False  # Anisotropic shear is fatal structural distortion
     assert any("ERR_ANISOTROPIC_SHEAR" in r or "ERR_SCALE_DISTORTION" in r for r in gate["failure_reasons"])
 
 
