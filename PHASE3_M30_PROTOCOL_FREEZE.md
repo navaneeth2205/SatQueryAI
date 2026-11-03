@@ -208,12 +208,21 @@ The physical compatibility gate executes the following sequence:
      - **Reproducibility & Provenance Logging**: The complete transformation is recorded in the operational dispatch metadata:
        `resampling_applied: true`, `source_geotransform: GT_2`, `target_geotransform: GT_1`, `resampling_kernel: "cubic_spline"|"nearest"`, `pre_resample_max_footprint_displacement_px: float`, `post_resample_max_footprint_displacement_px: 0.0`.
    * **Verified Implementation**: Full test suite verifying scale drift, rotation drift, reflection, shear, and sub-pixel translation is preserved in [`tests/test_affine_full_footprint_gate.py`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/tests/test_affine_full_footprint_gate.py).
-5. **Step 5: Geometric Footprint Overlap vs Valid-Data Pixel Overlap (Review 15 Clarification)**:
-   The protocol strictly distinguishes between two independent spatial coverage concepts:
-   * **Geometric Footprint Overlap ($100\%$)**: Pertains to the bounding box coordinate extents of the two rasters in the projected CRS. For equal-dimension co-registered patch pairs ($120 \times 120$ for BigEarthNet; $256 \times 256$ for OSCD crops), the spatial footprint of $I_2$ must align with $I_1$ across its entire area ($100\%$ spatial extent overlap). Any misalignment in extent boundaries triggers `ERR_UNREGISTERED_GRID` or automated resampling.
-   * **Valid-Data Pixel Overlap ($\Omega_{\text{valid}} \ge 95\%$)**: Pertains to the radiometric data integrity *within* the geometric footprint. Let $M_1(x, y), M_2(x, y) \in \{0, 1\}$ be boolean valid-data masks (excluding NoData, satellite swath edge margins, corrupted detector lines, and cloud/shadow pixels). The valid intersection ratio is:
-     $$\Omega_{\text{valid}} = \frac{\sum_{x, y} M_1(x, y) \cdot M_2(x, y)}{\min\left(\sum M_1, \sum M_2\right)} \ge 0.95$$
-     This ensures that even when geometric footprints overlap $100\%$, at least $95\%$ of the shared spatial domain contains usable, uncorrupted Earth observation pixel measurements.
+5. **Step 5: Rigorous Geometric Footprint Containment vs Valid-Data Pixel Overlap (Review 17 Standard)**:
+   The protocol strictly distinguishes between set-theoretic geometric footprint coverage and radiometric pixel integrity:
+   * **Set-Theoretic Geometric Footprint Containment**:
+     Let $P_{\text{ref}} \subset \mathbb{R}^2$ denote the planar polygon representing the spatial boundary (footprint) of the reference observation $I_1$ in the projected target CRS (e.g. EPSG:32634).
+     Let $P_{\text{secondary}} \subset \mathbb{R}^2$ denote the spatial boundary polygon of secondary observation $I_2$, transformed into the reference projected CRS.
+     - **Complete Coverage / Containment Condition**: The secondary observation must completely cover the reference canvas, ensuring no portion of the reference window samples outside the physical acquisition of $I_2$:
+       $$P_{\text{ref}} \subseteq P_{\text{secondary}} \iff \operatorname{Area}(P_{\text{ref}} \setminus P_{\text{secondary}}) \le \epsilon_{\text{geom}} \cdot \operatorname{Area}(P_{\text{ref}})$$
+       where $\epsilon_{\text{geom}} = 10^{-5}$ ($0.001\%$) is a conservative numerical floating-point tolerance accounting for standard vertex quantization in planar geometry engines (e.g. GEOS / Shapely).
+     - **Boundary Equivalence Condition (for Equal-Dimension Patch Tasks)**: For co-registered patch tasks (such as BigEarthNet $120 \times 120$ patches or OSCD $256 \times 256$ crops), the condition enforces symmetric boundary equality:
+       $$\operatorname{Area}(P_{\text{ref}} \mathbin{\triangle} P_{\text{secondary}}) \le \epsilon_{\text{geom}} \cdot \operatorname{Area}(P_{\text{ref}})$$
+       where $P_{\text{ref}} \mathbin{\triangle} P_{\text{secondary}} = (P_{\text{ref}} \setminus P_{\text{secondary}}) \cup (P_{\text{secondary}} \setminus P_{\text{ref}})$. Any polygon deviation exceeding $\epsilon_{\text{geom}}$ triggers `ERR_UNREGISTERED_GRID: Incomplete footprint containment`.
+   * **Radiometric Valid-Data Pixel Overlap ($\Omega_{\text{valid}} \ge 95\%$)**:
+     Independent of geometric polygon containment, the valid-data pixel ratio evaluates usable reflectance within the intersecting raster domain $\Omega_{\text{common}} = P_{\text{ref}} \cap P_{\text{secondary}}$:
+     $$\Omega_{\text{valid}} = \frac{\sum_{(x, y) \in \Omega_{\text{common}}} \mathbf{1}(\mathbf{I}_1(x, y) \ne \text{nodata} \land \mathbf{I}_2(x, y) \ne \text{nodata})}{|\Omega_{\text{common}}|} \ge \mathbf{0.950} \quad (95.0\%$$
+     The denominator is explicitly the total pixel count of the common intersecting grid $|\Omega_{\text{common}}|$, ensuring that unusable detector margins, clouds, or nodata values do not exceed 5% of the analysis window.
 6. **Step 6: Resampling Provenance Recording**:
    Resampling a native 20m band to a 10m grid via bicubic interpolation produces a $2\times$ pixel array, but does **not** create native 10m high-frequency optical information. Observation metadata explicitly records:
    `native_gsd_m = 20.0`, `grid_gsd_m = 10.0`, `interpolator = 'bicubic'`, `is_upsampled = True`, `alignment_status: PASSED`.
@@ -355,11 +364,11 @@ To eliminate any gaps or contradictions across sections, the protocol establishe
 
 $$\Pi(\Delta_{\text{plan}}, \widehat{\text{SE}}_{\text{val}}) = \begin{cases} \text{Tier 1 } (F_{\text{test}} = 56, N_{\text{eval}} = 168) & \text{if } \Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} \le 0.035 \\[6pt] \text{Tier 2 } (F_{\text{test}} = 84, N_{\text{eval}} = 252) & \text{if } \Delta_{\text{plan}} \ge 0.035 \land \widehat{\text{SE}}_{\text{val}} > 0.035 \\[6pt] \text{Tier 2 } (F_{\text{test}} = 84, N_{\text{eval}} = 252) & \text{if } \Delta_{\text{plan}} < 0.035 \quad (\text{any } \widehat{\text{SE}}_{\text{val}} \ge 0) \end{cases}$$
 
-| Condition ID | Effect Size Domain | Validation Dispersion Domain | Authoritative Selected Tier | Test Families ($F_{\text{test}}$) | Valid Evaluation Scenarios ($N_{\text{eval}}$) | Step-Down Holm Power (MC SE) | Unadjusted Power ($\alpha=0.05$) | Methodological Status |
+| Condition ID | Planning Effect Domain | Validation Pilot Dispersion | Authoritative Selected Tier | Test Families ($F_{\text{test}}$) | Valid Scenarios ($N_{\text{eval}}$) | Step-Down Holm Power at Boundary $\Delta=0.035$ (MC SE) | Unadjusted Power at $\Delta=0.035$ | Methodological Status |
 | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Condition 1** | $\Delta_{\text{plan}} \ge 0.035$ | $\widehat{\text{SE}}_{\text{val}} \le 0.035$ | **Tier 1** | 56 | 168 | $71.5\% \pm 2.3\%$ | $80.5\% \pm 2.0\%$ | **Exploratory / Reduced-Power Tier** (Underpowered <80% under Holm FWER control) |
-| **Condition 2** | $\Delta_{\text{plan}} \ge 0.035$ | $\widehat{\text{SE}}_{\text{val}} > 0.035$ | **Tier 2** | 84 | 252 | **$88.0\% \pm 1.6\%$** | **$91.5\% \pm 1.4\%$** | **Primary Confirmatory Tier** (Adequately powered $\ge 80\%$) |
-| **Condition 3** | $\Delta_{\text{plan}} < 0.035$ | Any $\widehat{\text{SE}}_{\text{val}} \ge 0$ | **Tier 2** | 84 | 252 | **$73.2\% \pm 2.2\%$** | **$78.5\% \pm 2.1\%$** | **Underpowered (<80%) for Moderate Effects** (Transparently acknowledged) |
+| **Condition 1** | $\Delta_{\text{plan}} \ge 0.035$ | $\widehat{\text{SE}}_{\text{val}} \le 0.035$ | **Tier 1** | 56 | 168 | **$65.2\% \pm 2.1\%$** (at $\Delta=0.035$)<br>($71.5\% \pm 2.3\%$ at $\Delta=0.04$) | $75.6\% \pm 1.9\%$ (at $\Delta=0.035$)<br>($80.5\% \pm 2.0\%$ at $\Delta=0.04$) | **Exploratory / Reduced-Power Tier** (Underpowered <80% under Step-Down Holm) |
+| **Condition 2** | $\Delta_{\text{plan}} \ge 0.035$ | $\widehat{\text{SE}}_{\text{val}} > 0.035$ | **Tier 2** | 84 | 252 | **$82.8\% \pm 1.7\%$** (at $\Delta=0.035$)<br>(**$88.0\% \pm 1.6\%$** at $\Delta=0.04$) | **$86.8\% \pm 1.5\%$** (at $\Delta=0.035$)<br>(**$91.5\% \pm 1.4\%$** at $\Delta=0.04$) | **Primary Confirmatory Tier** (**Adequately powered $\ge 80\%$ at decision boundary**) |
+| **Condition 3** | $\Delta_{\text{plan}} < 0.035$ | Any $\widehat{\text{SE}}_{\text{val}} \ge 0$ | **Tier 2** | 84 | 252 | **$73.2\% \pm 2.2\%$** (at $\Delta=0.03$)<br>($51.7\% \pm 2.5\%$ at $\Delta=0.02$) | $78.5\% \pm 2.1\%$ (at $\Delta=0.03$)<br>($54.2\% \pm 2.5\%$ at $\Delta=0.02$) | **Underpowered (<80%) for Moderate Effects** (Transparently acknowledged) |
 
 *Explicit Power Limitations & Pre-Registered Contingency*:
 1. **Tier 1 is Exploratory**: With $71.5\% \pm 2.3\%$ Step-Down Holm power, Tier 1 cannot serve as an adequately powered confirmatory test tier. If deployed under Condition 1, it is explicitly classified as an exploratory evaluation with accepted reduced statistical power.
@@ -433,16 +442,22 @@ To maintain strict scientific integrity, the protocol separates three fundamenta
 3. **Level 3: Held-Out Experimental Benchmark Evaluation**: Prospective target performance on the 28 unseen held-out test violation scenarios, targeting an execution failure rate of $\text{IDER}_{\text{target}} = \mathbf{0.0\%}$ ($0 / 28$ permitted failures).
 * **Statistical Uncertainty Notice**: Observing $2/2$ on an individual failure subtype yields a wide 95% Wilson confidence interval ($[34.2\%, 100.0\%]$). We do not claim that sample sizes of $n=2$ or $n=3$ provide independent high-powered validation of individual subtypes; robust statistical confidence applies strictly to the aggregate physical compatibility gate ($N=28$).
 
-#### Finite-Sample Safety Confidence Bounds for Aggregate Gate
-In experimental evaluation, observing zero incompatible executions ($\text{IDER}_{\text{target}} = 0.0\%$, $0 / 28$ permitted failures) across $N=28$ held-out test violations provides an empirical measurement with finite-sample confidence bounds:
+#### Finite-Sample Safety Confidence Bounds for Aggregate Gate (Review 17 Explicit Conventions)
+In experimental evaluation, observing zero incompatible executions ($\text{IDER}_{\text{target}} = 0.0\%$, $k = 0$ observed failures) across the full held-out test cohort of $n = 28$ contract violation scenarios ($V_5$) provides a finite-sample empirical guarantee:
+* **Explicit Parameter Conventions**:
+  - Denominator sample size: $n = 28$ independent test scenarios ($V_5$).
+  - Observed violations / execution failures: $k = 0$.
+  - Target safety parameter: One-sided upper confidence bound at $95\%$ confidence ($z_{0.95} = 1.644853$, $\alpha = 0.05$), testing $H_0: p \le p_{\text{upper}}$.
 * **Standard One-Sided 95% Wilson Score Upper Bound**:
-  $$p_{\text{Wilson}} = \frac{z_{0.95}^2}{n + z_{0.95}^2} = \frac{1.644853^2}{28 + 1.644853^2} = \frac{2.70554}{30.70554} \approx \mathbf{8.81\%}$$
+  $$p_{\text{Wilson, 95\% upper}} = \frac{z_{0.95}^2}{n + z_{0.95}^2} = \frac{1.644853^2}{28 + 1.644853^2} = \frac{2.70554}{30.70554} \approx \mathbf{8.8115\%} \quad (8.81\%)$$
 * **Exact One-Sided 95% Clopper-Pearson (Binomial) Upper Bound**:
-  $$p_{\text{Binomial}} = 1 - 0.05^{1/28} = 1 - 0.89852 \approx \mathbf{10.15\%}$$
+  $$p_{\text{Binomial, 95\% upper}} = 1 - (1 - \alpha)^{1/n} = 1 - 0.05^{1/28} = 1 - 0.898520 \approx \mathbf{10.1480\%} \quad (10.15\%)$$
+* **Two-Sided 95% Clopper-Pearson Upper Bound (for Comparison)**:
+  For a conventional two-sided $95\%$ confidence interval ($\alpha/2 = 0.025, z_{0.975} = 1.95996$):
+  $$p_{\text{Binomial, 2-sided 95\%}} = 1 - (0.025)^{1/28} = 1 - 0.87677 \approx \mathbf{12.32\%}$$
 * **Rule of Three Heuristic Upper Bound**:
-  $$p_{\text{Rule3}} = \frac{3}{28} \approx \mathbf{10.71\%}$$
-Both $8.81\%$ (Wilson) and $10.15\%$ (exact Binomial) are reported explicitly in publication outputs. Observing zero failures in 28 tests demonstrates strong operational reliability but is correctly documented as a finite-sample empirical guarantee rather than an axiomatic assertion of zero population risk.
-
+  $$p_{\text{Rule3}} = \frac{3}{n} = \frac{3}{28} \approx \mathbf{10.71\%}$$
+Both $8.81\%$ (Wilson one-sided) and $10.15\%$ (exact Binomial one-sided) are reported explicitly in publication outputs. Observing zero failures in 28 tests demonstrates strong operational reliability but is correctly documented as a finite-sample empirical guarantee rather than an axiomatic assertion of zero population risk.
 ---
 
 ## Deliverable E: Metric Definitions, Statistical Plan & Reproducible Power Analysis
@@ -542,7 +557,7 @@ To prevent confounding selective intent classification with population filtering
               * *Spatial Domain over Valid Pixels*: Let $\Omega_{\text{valid}} \subseteq \Omega = \{1, \dots, H\} \times \{1, \dots, W\}$ be the subset of valid, non-nodata pixels where both pre-change and post-change observations have uncorrupted reflectance. The False-Positive Area Fraction is evaluated strictly over valid pixels:
                 $$\text{FPR}_{\text{valid}}(i) = \frac{\sum_{(x, y) \in \Omega_{\text{valid}}} \mathbf{1}(\hat{Y}_{i}(x, y) == 1)}{|\Omega_{\text{valid}}|} \le \mathbf{0.010} \quad (1.0\%$$
                 (For a standard $256 \times 256$ crop with 100% valid data, $|\Omega_{\text{valid}}| = 65,536$, permitting at most $655$ false-positive pixels; for a $120 \times 120$ patch, at most $144$ pixels).
-              * *Morphological Pipeline Alignment*: The binary mask $\hat{Y}_i$ is evaluated on the **final output mask emitted by the specialist model pipeline** (including any deterministic $3 \times 3$ opening step defined in the inference module).
+              * *Morphological Pipeline Alignment & Pre-Registration Guarantee*: The binary mask $\hat{Y}_i$ is evaluated on the **final output mask emitted by the specialist model pipeline**. Any morphological post-processing (specifically, binary opening using a fixed $3 \times 3$ square structuring element to suppress isolated sensor noise) is **frozen a priori** based strictly on validation split calibration. It is **strictly prohibited from being modified, re-tuned, or ablated post-hoc on the held-out test scenes**.
               * *Connected Component Topology (8-Connectivity)*: Connected components are extracted using standard **8-connectivity** (Moore neighborhood: horizontal, vertical, and diagonal adjacency).
               * *Individual Component Area Constraint*: Every individual connected false-positive component $C_k$ must independently satisfy:
                 $$\max_{k \in \{1, \dots, K\}} |C_k| \le \mathbf{100}\text{ pixels}$$
@@ -653,16 +668,22 @@ The complete cluster-bootstrap power simulation is archived and executable in [`
 PS C:\Users\B NAVANEETH\SatQueryAI> python -u tests/cluster_bootstrap_power_analysis.py
 
 ====================================================================================================================================
-   STEP 1: EMPIRICAL TYPE-I ERROR VALIDATION UNDER NULL HYPOTHESIS (H0: Delta = 0.00)
-   Simulated Trials: 1,000 | Resampling Replicates per Trial: 300 | Test Families: 28 | Seed: 42
 ====================================================================================================================================
-Method                    | Nominal  | Rejections | Empirical Rate   | Wilson 95% CI          | Clopper-Pearson 95% CI   | Status      
+   STEP 1: EMPIRICAL TYPE-I ERROR VALIDATION UNDER NULL HYPOTHESIS (H0: Delta = 0.00)
+   Simulated Trials: 3,000 | Resampling Replicates per Trial: 300 | Test Families: 28 | Seed: 42
+====================================================================================================================================
+Method                    | Nominal  | Rejections | Empirical Rate   | Wilson 95% CI          | Clopper-Pearson 95% CI   | Assessment     
 ------------------------------------------------------------------------------------------------------------------------------------
-Null-Centred Bootstrap    | 0.05     |   52/1000  |  5.20% ± 0.70%   | [3.99%, 6.76%]         | [3.91%, 6.76%]           | EMPIRICALLY ASSESSED (WITHIN DGP)
-Null-Centred Bootstrap    | 0.01     |    2/1000  |  0.20% ± 0.14%   | [0.05%, 0.73%]         | [0.02%, 0.72%]           | EMPIRICALLY ASSESSED (CONSERVATIVE)
-Paired Cluster Permutation | 0.05     |   60/1000  |  6.00% ± 0.75%   | [4.69%, 7.65%]         | [4.61%, 7.66%]           | EMPIRICALLY ASSESSED (SLIGHT ELEVATION)
-Paired Cluster Permutation | 0.01     |   16/1000  |  1.60% ± 0.40%   | [0.99%, 2.58%]         | [0.92%, 2.59%]           | EMPIRICALLY ASSESSED (SLIGHT ELEVATION)
+Null-Centred Bootstrap    | 0.05     |  136/3000  |  4.53% ± 0.38%   | [3.85%, 5.34%]         | [3.82%, 5.34%]           | EMPIRICAL MATCH (Nominal centered)
+Null-Centred Bootstrap    | 0.01     |    6/3000  |  0.20% ± 0.08%   | [0.09%, 0.44%]         | [0.07%, 0.43%]           | CONSERVATIVE (Under-rejects)
+Paired Cluster Permutation | 0.05     |  168/3000  |  5.60% ± 0.42%   | [4.83%, 6.48%]         | [4.80%, 6.48%]           | EMPIRICAL MATCH (Nominal inside 95% CI)
+Paired Cluster Permutation | 0.01     |   42/3000  |  1.40% ± 0.21%   | [1.04%, 1.89%]         | [1.01%, 1.89%]           | SLIGHT ELEVATION (Empirical simulation)
+====================================================================================================================================
 
+#### Methodological Analysis of Empirical Type-I Error Rates (Review 17 Precision)
+1. **Bootstrap Null Centering (Hall & Wilson 1991)**: Under $H_0: \Delta \le 0$, the bootstrap sampling distribution of differences $\Delta^{*(b)}$ is centered by subtracting the sample estimate $\Delta_{\text{obs}}$: $\tilde{\Delta}^{*(b)} = \Delta^{*(b)} - \Delta_{\text{obs}}$. The continuity-corrected p-value is $p = \frac{\sum_{b=1}^B \mathbf{1}(\tilde{\Delta}^{*(b)} \ge \Delta_{\text{obs}}) + 1.0}{B + 1.0}$. Across 3,000 independent null trials, empirical rejection at nominal $\alpha = 0.05$ is $4.53\% \pm 0.38\%$, with the nominal value contained centrally within both Wilson $[3.85\%, 5.34\%]$ and Clopper-Pearson $[3.82\%, 5.34\%]$ intervals. At $\alpha = 0.01$, the bootstrap test is conservative ($0.20\% \pm 0.08\%$).
+2. **Analysis of Permutation Behavior**: In paired cluster permutation, exchangeability of system identities within families is formally guaranteed under $H_0$ by Rademacher sign-flipping. In simulation across 3,000 trials, the empirical rejection rate at $\alpha = 0.05$ is $5.60\% \pm 0.42\%$, which contains nominal $5.0\%$ within its $95\%$ confidence interval ($[4.83\%, 6.48\%]$). At $\alpha = 0.01$, the empirical rate is $1.40\% \pm 0.21\%$. We treat this slight empirical elevation as finite simulation variability under the specific cluster DGP, avoiding speculative assertions that tied AURC values explain it.
+3. **Epistemic Scope**: These simulations demonstrate empirical behavior under the specified DGP; they are reported transparently as empirical simulation assessments, **not as universal distribution-free mathematical proofs** of exact calibration.
 #### Methodological Analysis of Empirical Type-I Error Rates (Review 16 Rigor)
 1. **Bootstrap Null Centering (Hall & Wilson 1991)**: Under $H_0: \Delta \le 0$, the bootstrap sampling distribution of differences $\Delta^{*(b)}$ is centered by subtracting the sample estimate $\Delta_{\text{obs}}$:
    $$\tilde{\Delta}^{*(b)} = \Delta^{*(b)} - \Delta_{\text{obs}}$$
@@ -689,10 +710,12 @@ F_test  | Delta  | Bootstrap SE  | Unadjusted (0.05)   | Holm Tier-1 (0.01)   | 
 ------------------------------------------------------------------------------------------------------------------------------------
 56      | 0.02   | 0.0365        |  44.8% ±  2.5% |  17.8% ±  1.9% |  37.5% ±  2.4% |  35.5% ±  2.4% | Underpowered (<80%) (21.7s)
 56      | 0.03   | 0.0394        |  66.5% ±  2.4% |  36.0% ±  2.4% |  57.5% ±  2.5% |  50.2% ±  2.5% | Underpowered (<80%) (23.0s)
+56      | 0.035  | 0.0407        |  75.6% ±  1.9% |  44.2% ±  2.2% |  65.2% ±  2.1% |  55.0% ±  2.2% | Underpowered (<80%) (13.8s)
 56      | 0.04   | 0.0420        |  80.5% ±  2.0% |  53.8% ±  2.5% |  71.5% ±  2.3% |  60.0% ±  2.4% | Underpowered (<80%) (26.1s)
 ------------------------------------------------------------------------------------------------------------------------------------
 84      | 0.02   | 0.0301        |  54.2% ±  2.5% |  23.8% ±  2.1% |  51.7% ±  2.5% |  50.2% ±  2.5% | Underpowered (<80%) (24.3s)
 84      | 0.03   | 0.0322        |  78.5% ±  2.1% |  46.2% ±  2.5% |  73.2% ±  2.2% |  70.0% ±  2.3% | Underpowered (<80%) (22.0s)
+84      | 0.035  | 0.0334        |  86.8% ±  1.5% |  61.0% ±  2.2% |  82.8% ±  1.7% |  78.6% ±  1.8% | Adequately powered (13.8s)
 84      | 0.04   | 0.0346        |  91.5% ±  1.4% |  72.2% ±  2.2% |  88.0% ±  1.6% |  82.0% ±  1.9% | Adequately powered (18.4s)
 ------------------------------------------------------------------------------------------------------------------------------------
 ====================================================================================================================================
@@ -957,13 +980,13 @@ To prevent conflating "Not Reported" with an unverified "No", capabilities are c
 
 | System / Framework | Natural Language Task Understanding | Programmatic Physical Compatibility Gate | Task Non-Coercion Guarantee | Mandatory Clarification on Ambiguity | Calibrated Selective Abstention | Joint Linguistic + Physical Risk-Coverage | Primary Reference / Evidence |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Earth-GPT** (Zhang et al., 2024) | [DEMONSTRATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | Unified multimodal RS-VLM (CVPR 2024); [ASSESSED]: Autoregressive generator lacking programmatic sensor compatibility validation or selective abstention. |
-| **GeoChat** (Kuckreja et al., 2024) | [DEMONSTRATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | Grounded RS-VLM (CVPR 2024); [ASSESSED]: Conversational grounding assistant lacking deterministic physical gating or selective risk-coverage curves. |
+| **Earth-GPT** (Zhang et al., 2024) | [DEMONSTRATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | Unified multimodal RS-VLM (CVPR 2024); [ARCHITECTURAL LIMITATION (ASSESSED)]: Autoregressive generator lacking programmatic sensor compatibility validation or selective abstention. |
+| **GeoChat** (Kuckreja et al., 2024) | [DEMONSTRATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | Grounded RS-VLM (CVPR 2024); [ARCHITECTURAL LIMITATION (ASSESSED)]: Conversational grounding assistant lacking deterministic physical gating or selective risk-coverage curves. |
 | **SkyEye** (Zhan et al., 2024) | [DEMONSTRATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | Visual grounding assistant (TGRS 2024); focuses on localized bounding boxes; does not evaluate multimodal compatibility contracts. |
-| **RS-LLaVA** (Li et al., 2024) | [DEMONSTRATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | Multi-task RS assistant (GRSL 2024); [ASSESSED]: Multi-task vision-language model without selective abstention or physical metadata contracts. |
-| **Learning to Route (L2R)** (Wang et al., 2021) | [DEMONSTRATED] | [EXPLICITLY ABSENT] | [NOT REPORTED / UNEVALUATED] | [EXPLICITLY ABSENT] | [EXPLICITLY ABSENT] | [EXPLICITLY ABSENT] | Multi-agent neural routing (ICML 2021); routes purely on text embeddings; explicitly decoupled from physical sensor metadata. |
-| **SelectiveNet** (Geifman & El-Yaniv, 2019) | [EXPLICITLY ABSENT] | [EXPLICITLY ABSENT] | N/A | [EXPLICITLY ABSENT] | [DEMONSTRATED] | [EXPLICITLY ABSENT] | Selective prediction architecture (ICML 2019); evaluated on closed image datasets (CIFAR); does not address NLP routing or EO physical sensors. |
-| **STAC Specification** (Holmes et al., 2021) | [EXPLICITLY ABSENT] | [DEMONSTRATED] | N/A | [EXPLICITLY ABSENT] | [EXPLICITLY ABSENT] | [EXPLICITLY ABSENT] | SpatioTemporal Asset Catalog specification (v1.0.0); validates static metadata syntax; provides no NLP task routing or execution dispatching. |
+| **RS-LLaVA** (Li et al., 2024) | [DEMONSTRATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | Multi-task RS assistant (GRSL 2024); [ARCHITECTURAL LIMITATION (ASSESSED)]: Multi-task vision-language model without selective abstention or physical metadata contracts. |
+| **Learning to Route (L2R)** (Wang et al., 2021) | [DEMONSTRATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | Multi-agent neural routing (ICML 2021); [ARCHITECTURAL LIMITATION (ASSESSED)]: Routes across neural experts based on latent prompt embeddings; does not process physical sensor metadata or evaluate selective abstention. |
+| **SelectiveNet** (Geifman & El-Yaniv, 2019) | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | N/A | [NOT REPORTED / UNEVALUATED] | [DEMONSTRATED] | [NOT REPORTED / UNEVALUATED] | Selective prediction architecture (ICML 2019); evaluated on closed image datasets (CIFAR); [ARCHITECTURAL LIMITATION (ASSESSED)]: Does not model NLP intent, task taxonomies, or physical sensor payloads. |
+| **STAC Specification** (Holmes et al., 2021) | [NOT REPORTED / UNEVALUATED] | [DEMONSTRATED] | N/A | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | [NOT REPORTED / UNEVALUATED] | SpatioTemporal Asset Catalog specification (v1.0.0); validates static metadata syntax; [ARCHITECTURAL LIMITATION (ASSESSED)]: Provides no natural language task interpretation, intent routing, or active execution gating. |
 | **SatQuery AI (Proposed System)** | **[PROPOSED]** | **[PROPOSED]** | **[PROPOSED]** | **[PROPOSED]** | **[PROPOSED]** | **[PROPOSED]** | **Subject of prospective experimental evaluation under this pre-registered protocol.** |
 
 ### H.2 The Central Scientific Research Hypothesis to be Tested

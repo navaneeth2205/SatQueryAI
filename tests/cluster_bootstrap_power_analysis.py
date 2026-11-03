@@ -306,14 +306,14 @@ def validate_null_type1_error(K=28, n_sims=1000, n_boot=300, seed=42, max_worker
 
 def run_cluster_bootstrap_power(
     family_sizes=[28, 42, 56, 84],
-    delta_aurcs=[0.02, 0.03, 0.04],
+    delta_aurcs=[0.02, 0.03, 0.035, 0.04],
     n_sims=400,
     n_boot=300,
     seed=42,
     max_workers=6
 ):
     print("=" * 132, flush=True)
-    print("   STEP 2: FULL 12-CONDITION GLOBAL AURC STATISTICAL POWER SIMULATION", flush=True)
+    print("   STEP 2: FULL GLOBAL AURC STATISTICAL POWER SIMULATION (INCLUDING BOUNDARY DELTA = 0.035)", flush=True)
     print(f"   Monte Carlo Iterations: {n_sims:,} | Bootstrap Replicates per Trial: {n_boot:,} | Seed: {seed}", flush=True)
     print("   Eligible Population E_eval: Exactly 3 scenarios/family (V1, V2, V4). V3 (clarify) & V5 (violations) segregated.", flush=True)
     print("   Multiplicity: Complete 5-Comparison Step-Down Holm Procedure (R4 vs R0, R1, R1-Gated, R2, R3)", flush=True)
