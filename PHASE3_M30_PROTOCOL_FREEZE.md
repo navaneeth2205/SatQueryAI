@@ -42,6 +42,20 @@ This document provides the final, reconciled scientific protocol for Milestone M
 | **E** | **Metric 5b Two-Specialist Execution Aggregation** | Formulated two-tier evaluation framework: (1) Dataset-level model certification benchmark (BigEarthNet Macro $F_1 \ge 0.60$, OSCD Macro $F_1 \ge 0.50$); (2) Scenario-level execution scoring ($N_{\text{valid}}^{(2)} = 24$) requiring correct routing, gate approval, runtime stability, and scenario quality thresholds ($F_{1, \text{sample}} \ge 0.50$ LC, $F_{1, \text{patch}} \ge 0.40$ CD). | Deliverable E.2 |
 | **+** | **Operational Affine Resampling Specification** | Formulated complete 5-step operational resampling protocol: reference grid $I_1$ canvas, cubic spline for continuous imagery vs nearest-neighbor for categorical masks, valid-data mask preservation, mandatory post-resampling gate re-evaluation, and provenance logging. | Deliverable B.2 |
 
+### Review 14 Scientific Defense & Mathematical Reconciliation Matrix
+
+| # | Review 14 Finding | Protocol Resolution & Mathematical Implementation | Primary Section |
+| :-: | :--- | :--- | :--- |
+| **1** | **Critical 1: Affine Displacement Rounding Artifact** | Previous equation $\vec{p}_{1, k} - \text{round}(\vec{p}_{1, k})$ computed distance to nearest integer pixel, erroneously yielding 0 residual on integer shifts (e.g. 2px shift). **Corrected to true coordinate-relative physical displacement**: $\vec{\delta}_k = \vec{p}_{1, k} - C_k = (\mathbf{M}_{\text{rel}} - \mathbf{I}) C_k + \vec{d}_{\text{rel}}$, $\delta_k = \|\vec{\delta}_k\|_2$. Added full footprint extent/dimension equivalence ($W_1 == W_2, H_1 == H_2$) and CRS identity. Verified via 9 unit tests in `tests/test_affine_full_footprint_gate.py`, including `test_integer_pixel_shift_fails_footprint_gate` confirming 2.0px shift fails ($2.0\text{ px} > 0.05\text{ px}$). | Deliverable B.2 |
+| **2** | **Critical 2: T34TCS Geographic Leakage Resolution** | Phase 2 audit established tile `T34TCS` allocation: 573 train, 54 val, 0 test patches. Sourcing test scenarios from `T34TCS` constituted geographic leakage. **Resolution**: All 12 benchmark Land-Cover scenarios are sampled strictly from the verified held-out test split ($N = 3,248$ patches in `data/test_full_metadata.parquet`, disjoint from train tiles). Tile `T34TCS` is **strictly excluded** from held-out benchmark evaluation. Any diagnostic sanity checks on `T34TCS` are classified strictly as **in-distribution operational tests**, explicitly disclaiming spatial independence or geographic generalization. | Deliverables D.3, E.2 (Metric 5b) |
+| **3** | **Blocker 3: Cluster Permutation & Bootstrap Validation** | Permutation testing requires recomputing complete pooled global AURC after family swaps, not sign-flipping family differences. 400 null trials with 0 rejections at $\alpha=0.01$ was insufficient for 1% calibration. **Resolution**: Implemented paired cluster permutation with family-level model swapping and global AURC re-ranking on every replicate. Expanded null simulations to $N_{\text{sim}} = 1,000$ trials in `tests/cluster_bootstrap_power_analysis.py`. Reported Wilson and Clopper-Pearson 95% CIs for both bootstrap (5.20% at 0.05, 0.20% at 0.01) and permutation (6.00% at 0.05, 1.60% at 0.01). | Deliverable E.5 |
+| **4** | **Blocker 4: CB-BCE Loss Reduction Inconsistency** | Formula divided by $B$ while PyTorch default `reduction="mean"` divides by $16B$, creating a factor-of-16 gradient scale discrepancy vs ASL. **Resolution**: Formulated $\mathcal{L}_{\text{CB-BCE}} = \frac{1}{16B} \sum_{i=1}^B \sum_{c=1}^{16} \ell_{i, c}$ matching PyTorch default `reduction='mean'` and aligning gradient scales identically with $\mathcal{L}_{\text{ASL}}$. | Deliverable F.1 |
+| **5a** | **Power Contingency Simulation Wording** | Replaced "guaranteeing" with "estimated under the specified simulation assumptions" in Section E.5 Rule 1. | Deliverable E.5 |
+| **5b** | **Power Tiers Transparency (<80% for Moderate Effects)** | Explicitly documented that for moderate effects ($\Delta = 0.03$), Tier 2 ($F_{\text{test}} = 84$) achieves $73.2\% \pm 2.2\%$ power under complete Step-Down Holm FWER control, remaining underpowered (<80%) under strict multi-comparison correction. | Deliverable E.5 |
+| **5c** | **Operational Selection vs Selective Threshold Reconciliation** | Reconciled joint selection score with operational dispatch: query is dispatched if and only if $s_{\text{joint}}(q) \ge \tau_{\text{sel}} \land A^*(q) == 0 \land \mathcal{C}(\hat{t}, o) == 1$, where default operating point $\tau_{\text{sel}} = 1.0$ matches $c_{\text{intent}} \ge \tau_{\text{intent}} \land \Delta c \ge \tau_{\text{margin}}$. | Deliverables A.2, E.3 |
+| **5d** | **Land-Cover Macro F1 Zero-Division Policy** | Formulated exact mathematical zero-division policy: $F_{1, c} := 1.0$ if $\text{TP}_c = \text{FP}_c = \text{FN}_c = 0$, else $0.0$. Dual-reported both standard 16-class Macro $F_1$ and Test-Present Macro $F_1$ (classes with $N_{c, +}^{\text{test}} > 0$). | Deliverables E.2, F.1 |
+| **5e** | **Syntactic vs Semantic Scope of n-gram Filtering** | Explicitly documented that zero n-gram overlap ($n \in \{3,4,5\}$) is an objective syntactic anti-leakage filter that eliminates template copying, but does not prove semantic independence. Retained mandatory dual independent human linguistic annotation and adjudication. | Deliverable D.3 |
+
 ---
 
 ## Deliverable A: Revised Mathematical Formulation of Selective Routing
@@ -84,9 +98,11 @@ flowchart TD
 ```
 
 1. **Outcome 1: Qualified Dispatch (`DISPATCH_QUALIFIED`)**:
-   Occurs if and only if:
-   $$c_{\text{intent}} \ge \tau_{\text{intent}} \quad \land \quad \Delta c \ge \tau_{\text{margin}} \quad \land \quad \mathcal{C}(\hat{t}_{\text{intent}}, o) == 1$$
-   If $c_{\text{intent}} \ge \tau_{\text{sel}}$, the request is executed by specialist $\hat{t}_{\text{intent}}$. If $c_{\text{intent}} < \tau_{\text{sel}}$, the system abstains under selective risk control (`ABSTAIN_LOW_CONFIDENCE`).
+   Occurs if and only if all three of the following conditions are simultaneously satisfied:
+   $$s_{\text{joint}}(q) \ge \tau_{\text{sel}} \quad \land \quad A^*(q) == 0 \quad \land \quad \mathcal{C}(\hat{t}_{\text{intent}}, o) == 1$$
+   where $s_{\text{joint}}(q) = \min\left(\frac{c_{\text{intent}}(q)}{\tau_{\text{intent}}}, \frac{\Delta c(q)}{\tau_{\text{margin}}}\right)$ is the standardized joint selection score (Section E.3), and $\tau_{\text{sel}} \ge 1.0$ is the operational selective threshold. At the primary operating point ($\tau_{\text{sel}} = 1.0$), this condition is mathematically identical to:
+   $$c_{\text{intent}}(q) \ge \tau_{\text{intent}} \quad \land \quad \Delta c(q) \ge \tau_{\text{margin}} \quad \land \quad \mathcal{C}(\hat{t}_{\text{intent}}, o) == 1$$
+   If $s_{\text{joint}}(q) < \tau_{\text{sel}}$, the request is intercepted under selective risk control (`ABSTAIN_LOW_CONFIDENCE`) and routed for human review, preventing low-confidence or marginal-confidence dispatches.
 
 2. **Outcome 2: Incompatible Observation Rejection (`REJECT_INCOMPATIBLE_OBSERVATION`)**:
    Occurs when linguistic intent is unambiguous ($c_{\text{intent}} \ge \tau_{\text{intent}}, \Delta c \ge \tau_{\text{margin}}$), but the attached observation violates the intended task's contract ($\mathcal{C}(\hat{t}_{\text{intent}}, o) == 0$).
@@ -147,14 +163,24 @@ The physical compatibility gate executes the following sequence:
    * **Crucial Scientific Limitation of SVD Checks Alone**:
      These SVD checks bound differential distortion and rotation, but **they do NOT guarantee pixel-level registration across an image footprint**. For example, in a $120 \times 120$ patch, a $1\%$ scale deviation ($|\sigma_i - 1| = 0.01$) accumulates to $120 \times 0.01 = 1.2\text{ pixels}$ of displacement across the width; and a $0.28^\circ$ rotation produces $R \cdot \theta \approx \sqrt{120^2 + 120^2} \times 0.004887 \approx 0.83\text{ pixels}$ of displacement at the outer corner. Checking only the origin phase ($\delta_{\text{origin}} \le 0.05\text{ px}$) is therefore completely insufficient.
 4. **Step 4: Full-Footprint Corner Displacement Verification & Mandatory Resampling Trigger**:
-   To guarantee pixel-level correspondence across the entire image area, the gate maps all four corners of raster 2:
-   $$C_1 = (0, 0)^T, \quad C_2 = (W_2, 0)^T, \quad C_3 = (0, H_2)^T, \quad C_4 = (W_2, H_2)^T$$
-   into raster 1 pixel coordinate space:
-   $$\vec{p}_{1, k} = \mathbf{M}_{\text{rel}} C_k + \vec{d}_{\text{rel}} \quad \text{for } k \in \{1, 2, 3, 4\}$$
-   For each corner, the residual displacement to the nearest integer grid point is:
-   $$\vec{\delta}_k = \vec{p}_{1, k} - \text{round}(\vec{p}_{1, k}), \qquad \delta_k = \|\vec{\delta}_k\|_2 = \sqrt{\delta_{x, k}^2 + \delta_{y, k}^2}$$
-   Because the affine map is linear and the footprint is convex, the maximum displacement over the entire footprint is strictly bounded by the four vertices:
-   $$\delta_{\text{max\_footprint}} = \max_{k \in \{1, 2, 3, 4\}} \delta_k$$
+   To verify physical pixel-level co-registration across the entire image area, the gate evaluates:
+   * **Full Footprint & Spatial Extent Identity Checks**:
+     - **CRS Identity**: Asserts $\text{CRS}_1 == \text{CRS}_2$ (after Step 1 projected reprojection).
+     - **Dimension & Shape Equivalence**: Asserts $W_1 == W_2$ and $H_1 == H_2$. Any spatial resolution or array dimension mismatch triggers `ERR_DIMENSION_MISMATCH`.
+     - **Spatial Overlap**: Evaluates bounding box intersection; full co-registration requires $100\%$ footprint overlap for equal-dimension patch pairs.
+   * **Corner Displacement Relative to Reference Grid Coordinates**:
+     The gate maps the four corner vertices of raster 2:
+     $$C_1 = (0, 0)^T, \quad C_2 = (W_2, 0)^T, \quad C_3 = (0, H_2)^T, \quad C_4 = (W_2, H_2)^T$$
+     into raster 1 pixel coordinate space:
+     $$\vec{p}_{1, k} = \mathbf{M}_{\text{rel}} C_k + \vec{d}_{\text{rel}} \quad \text{for } k \in \{1, 2, 3, 4\}$$
+     For each corner, the physical displacement vector relative to the corresponding reference grid coordinate $C_k^{\text{ref}} = C_k$ is:
+     $$\vec{\delta}_k = \vec{p}_{1, k} - C_k = (\mathbf{M}_{\text{rel}} - \mathbf{I}) C_k + \vec{d}_{\text{rel}}$$
+     $$\delta_k = \|\vec{\delta}_k\|_2 = \sqrt{\delta_{x, k}^2 + \delta_{y, k}^2}$$
+   * **Mathematical Rejection of Nearest-Integer Rounding (Review 14 Correction)**:
+     Previous drafts incorrectly formulated displacement as $\vec{p}_{1, k} - \text{round}(\vec{p}_{1, k})$. That formulation measured distance to the nearest integer grid point, not displacement from the reference grid. Consequently, an integer-pixel translation (e.g. exactly $+2.0\text{ px}$) produced a zero residual $(\vec{p}_{1, k} - \text{round}(\vec{p}_{1, k}) = \vec{0})$, falsely passing a severely misaligned raster pair. The corrected formula $\vec{\delta}_k = \vec{p}_{1, k} - C_k$ rigorously captures the full translation vector $\vec{d}_{\text{rel}}$ and any differential affine deformation, correctly detecting integer shifts ($2.0\text{ px} > 0.05\text{ px}$), rotations ($0.83\text{ px} > 0.05\text{ px}$), and scale distortions ($1.70\text{ px} > 0.05\text{ px}$).
+   * **Footprint Convexity Guarantee**:
+     Because the affine mapping $\mathbf{p}_1(\vec{x}) - \vec{x} = (\mathbf{M}_{\text{rel}} - \mathbf{I})\vec{x} + \vec{d}_{\text{rel}}$ is affine, its Euclidean norm $\|\vec{\delta}(\vec{x})\|_2$ is a convex function over the rectangular compact footprint $[0, W_2] \times [0, H_2]$. By the maximum principle for convex functions on compact polytopes, the maximum displacement over the continuous footprint is strictly attained at one of the four corner vertices:
+     $$\delta_{\text{max\_footprint}} = \max_{\vec{x} \in [0, W_2] \times [0, H_2]} \|\vec{\delta}(\vec{x})\|_2 = \max_{k \in \{1, 2, 3, 4\}} \delta_k$$
    * **Two-Tier Execution Policy**:
      1. **Direct "As-Is" Execution**: Permitted if and only if $\delta_{\text{max\_footprint}} \le 0.05\text{ pixels}$ ($0.5\text{ m}$ on a 10m grid) across all four corners.
      2. **Mandatory Grid Resampling / Coregistration Pipeline**: If $\delta_{\text{max\_footprint}} > 0.05\text{ pixels}$ (or if diagnostic SVD checks detect residual scale/rotation drift), the orchestrator **mandates automated grid resampling onto the primary raster's exact reference grid** prior to specialist tensor construction.
@@ -332,7 +358,12 @@ To eliminate conflicting sample-size rules across earlier planning drafts, the t
      - *Zero-Overlap Enforcement*: For every generated query $q \in \mathcal{F}_{\text{test}}$, the generator verifies:
        $$\text{ng}_n(q) \cap \mathcal{N}_n(\text{Train}) = \emptyset \quad \forall n \in \{3, 4, 5\}$$
        Any candidate template failing this assertion is rejected and resynthesized.
-   - **Disjoint Geospatial & Temporal Partitions**: Payloads are sampled exclusively from held-out geographic tiles (e.g. tile `T34TCS` for BigEarthNet) and held-out scenes (e.g. 10 test cities for OSCD), with zero spatial or temporal overlap with training or validation splits.
+   - **Syntactic vs Semantic Scope of n-gram Filtering (Review 14 Limitation)**:
+     Zero n-gram overlap ($n \in \{3, 4, 5\}$) is an objective syntactic anti-leakage filter that eliminates verbatim template copying. However, zero n-gram overlap does not mathematically prove semantic independence (e.g. synonymous paraphrasing or reworded prompts). Therefore, all scenario families undergo mandatory dual independent human linguistic annotation and expert adjudication (Section D.1) to certify semantic distinctness and intent validity.
+   - **Disjoint Geospatial & Temporal Partitions & Geographic Holdout Integrity (Review 14 Resolution)**:
+     * *Land-Cover Scenarios*: Payloads are sampled strictly from the **verified held-out test split** ($N = 3,248$ patches in `data/test_full_metadata.parquet`), which is strictly disjoint from all training-split tiles.
+     * *Explicit Classification of Tile T34TCS*: The Phase 2 dataset audit established that tile `T34TCS` contributes 573 patches to training and 54 patches to validation ($N=0$ to test). Therefore, **no patches from tile `T34TCS` are used for held-out benchmark evaluation**. Any diagnostic sanity evaluations utilizing `T34TCS` patches are classified strictly as **in-distribution operational tests**, and the protocol disclaims any claim of geographic holdout generalization or spatial independence for `T34TCS`.
+     * *Change-Detection Scenarios*: Payloads are sampled strictly from the 10 held-out OSCD test cities (`aguasclaras`, `austin`, `beihai`, `berlin`, `brasilia`, `budapest`, `campinas`, `mumbai`, `nantes`, `pisa`), which have zero spatial or temporal overlap with the 14 training and 4 validation scenes.
    - **Immutable Training & Validation Baselines**: The training split ($F=84, N=420$) and validation split ($F=28, N=140$) remain bitwise identical across all tiers.
 
 ### D.4 Pre-Registered Target Allocation for Contract Violations ($V_5$) Across Dimensions & Subtypes
@@ -423,7 +454,10 @@ To prevent confounding selective intent classification with population filtering
         Prior to benchmark evaluation, each trained specialist must pass operational certification on its full held-out domain test split:
         - *Multimodal Land Cover (BigEarthNet-14k test split, $N=3,248$ patches)*:
           Class-wise $F_{1, c}$ is computed from the accumulated confusion matrix across all test patches:
-          $$\text{Macro } F_1^{(\text{LC})} = \frac{1}{16} \sum_{c=1}^{16} \frac{2 \text{TP}_c}{2 \text{TP}_c + \text{FP}_c + \text{FN}_c}$$
+          $$\text{Macro } F_1^{(\text{LC})} = \frac{1}{16} \sum_{c=1}^{16} F_{1, c}$$
+          *Rigorous Zero-Division Policy (Review 14 Resolution)*: For any class $c$ with zero true positive ground-truth instances in the test partition ($N_{c, +}^{\text{test}} = 0$):
+          $$F_{1, c} = \begin{cases} 1.0 & \text{if } \text{TP}_c = 0 \land \text{FP}_c = 0 \land \text{FN}_c = 0 \quad (\text{correct zero-positive empty prediction}) \\ 0.0 & \text{if } \text{FP}_c > 0 \quad (\text{false-positive commission error}) \\ \frac{2 \text{TP}_c}{2 \text{TP}_c + \text{FP}_c + \text{FN}_c} & \text{otherwise} \end{cases}$$
+          Additionally, to eliminate reliance on empty-class conventions, the protocol reports both standard 16-class Macro $F_1$ and **Test-Present Macro $F_1$** (averaged strictly over classes with $N_{c, +}^{\text{test}} > 0$).
           *Certification Threshold*: The model must achieve $\text{Macro } F_1^{(\text{LC})} \ge 0.60$ across all 16 classes.
         - *Bitemporal Change Detection (OSCD 10 held-out test scenes)*:
           Scene-wise $F_{1, s}$ is computed from pixel confusion matrices for each test city $s \in \{1, \dots, 10\}$:
@@ -437,7 +471,7 @@ To prevent confounding selective intent classification with population filtering
         - *Condition 2 (Physical Gate Approval)*: The physical compatibility gate passes the attached observation ($\mathcal{C}(T_i^*, o_i) == 1$).
         - *Condition 3 (Runtime Inference Stability)*: The specialist neural model executes without crash, timeout, memory overflow, or numerical corruption (no NaNs, no Infs, output tensor shape conforms to schema).
         - *Condition 4 (Scenario-Level Prediction Quality Acceptance)*:
-          * For a **Land-Cover scenario** $i$: Payload is a $120 \times 120$ patch sampled from held-out tile `T34TCS` with ground-truth label $\vec{y}_i \in \{0, 1\}^{16}$. Quality is evaluated via sample-level $F_1$:
+          * For a **Land-Cover scenario** $i$: Payload is a $120 \times 120$ patch sampled strictly from the **verified held-out test split** ($N=3,248$ patches in `data/test_full_metadata.parquet`, disjoint from all training-split tiles; no patches from `T34TCS` are used for held-out benchmark evaluation) with ground-truth label $\vec{y}_i \in \{0, 1\}^{16}$. Quality is evaluated via sample-level $F_1$:
             $$F_{1, \text{sample}}(i) = \frac{2 \sum_{c=1}^{16} y_{i, c} \hat{y}_{i, c}}{2 \sum y_{i, c} \hat{y}_{i, c} + \sum y_{i, c} (1 - \hat{y}_{i, c}) + \sum (1 - y_{i, c}) \hat{y}_{i, c}}$$
             Acceptance criterion: $F_{1, \text{sample}}(i) \ge 0.50$ (or exact empty match if $\sum y_{i, c} == 0$).
           * For a **Change-Detection scenario** $i$: Payload is a $256 \times 256$ bitemporal crop sampled from a held-out OSCD test scene with ground-truth binary mask $\mathbf{Y}_i \in \{0, 1\}^{256 \times 256}$. Quality is evaluated via patch-level $F_1$:
@@ -516,8 +550,14 @@ The statistically rigorous inference procedure for global AURC differences is th
      The one-sided continuity-corrected p-value is computed as the proportion of null-centered bootstrap replicates exceeding or equal to the observed effect:
      $$p_m = \frac{1 + \sum_{b=1}^B \mathbb{I}(\tilde{\Delta}_m^{*(b)} \ge \hat{\Delta}_m)}{B + 1}$$
      This formulation tests the test statistic strictly against the simulated null distribution $H_0: \Delta_m = 0$, guaranteeing proper calibration.
-   - *Paired Cluster Permutation Test (Rademacher Sign-Flipping)*:
-     As an exact non-parametric alternative under the cluster exchangeability null $H_{0, m}: R_4 \stackrel{d}{=} R_m$, model identities are swapped within each template family with probability 0.5 ($s_f \in \{-1, +1\}$ across all scenarios in family $f$). The permuted differences $\Delta_m^{\text{perm}(p)}$ are identically centered at zero by symmetry:
+   - *Paired Cluster Permutation Test (Rademacher Sign-Flipping with Global Re-Ranking)*:
+     As an exact non-parametric alternative under the cluster exchangeability null $H_{0, m}: R_4 \stackrel{d}{=} R_m$, model identities are swapped within each complete template family $f$ with probability 0.5 via a Rademacher sign $s_f \in \{-1, +1\}$.
+     *Rigorous Global AURC Recomputation (Review 14 Requirement)*: Because AURC is a nonlinear rank-based population integral evaluated over pooled scenarios, family differences cannot be averaged or sign-flipped post-hoc. On every permutation replicate $p \in \{1, \dots, P\}$, the algorithm:
+     1. Swaps predictions between System $R_4$ and baseline $R_m$ across all scenarios in family $f$ if $s_f = -1$;
+     2. Pools all permuted scenario predictions across the entire evaluation population $\mathcal{E}_{\text{eval}}$;
+     3. Completely re-ranks scenarios descending by confidence, traces out the permuted risk-coverage curve, and numerically integrates the global trapezoidal area to obtain $\text{AURC}(R_m^{(p)})$ and $\text{AURC}(R_4^{(p)})$;
+     4. Recomputes the global permuted difference: $\Delta_m^{\text{perm}(p)} = \text{AURC}(R_m^{(p)}) - \text{AURC}(R_4^{(p)})$.
+     The one-sided continuity-corrected p-value is:
      $$p_m^{\text{perm}} = \frac{1 + \sum_{p=1}^P \mathbb{I}(\Delta_m^{\text{perm}(p)} \ge \hat{\Delta}_m)}{P + 1}$$
 6. **Multiplicity Control via Complete 5-Comparison Step-Down Holm Procedure**:
    To strictly control the family-wise error rate at $\alpha = 0.05$ across all five baseline comparisons ($R_4$ vs $R_0, R_1, R_{1\text{-Gated}}, R_2, R_3$), the five comparison p-values are sorted ascending:
@@ -544,11 +584,14 @@ PS C:\Users\B NAVANEETH\SatQueryAI> python -u tests/cluster_bootstrap_power_anal
 
 ====================================================================================================================================
    STEP 1: EMPIRICAL TYPE-I ERROR VALIDATION UNDER NULL HYPOTHESIS (H0: Delta = 0.00)
-   Simulated Trials: 400 | Bootstrap Replicates per Trial: 300 | Test Families: 28 | Seed: 42
+   Simulated Trials: 1,000 | Resampling Replicates per Trial: 300 | Test Families: 28 | Seed: 42
 ====================================================================================================================================
-   Empirical Type-I Error at alpha = 0.05:  4.75% ± 1.06% (Nominal: 5.00%)
-   Empirical Type-I Error at alpha = 0.01:  0.00% ± 0.00% (Nominal: 1.00%)
-   Validation Status: VALIDATED (Within MC error)
+Method                    | Nominal  | Rejections | Empirical Rate   | Wilson 95% CI          | Clopper-Pearson 95% CI   | Status      
+------------------------------------------------------------------------------------------------------------------------------------
+Null-Centred Bootstrap    | 0.05     |   52/1000  |  5.20% ± 0.70%   | [3.99%, 6.76%]         | [3.91%, 6.76%]           | VALIDATED
+Null-Centred Bootstrap    | 0.01     |    2/1000  |  0.20% ± 0.14%   | [0.05%, 0.73%]         | [0.02%, 0.72%]           | VALIDATED
+Paired Cluster Permutation | 0.05     |   60/1000  |  6.00% ± 0.75%   | [4.69%, 7.65%]         | [4.61%, 7.66%]           | VALIDATED
+Paired Cluster Permutation | 0.01     |   16/1000  |  1.60% ± 0.40%   | [0.99%, 2.58%]         | [0.92%, 2.59%]           | VALIDATED
 ====================================================================================================================================
 
 ====================================================================================================================================
@@ -601,10 +644,10 @@ Replicates (B)  | Bootstrap SE    | Step-Down Holm Power      | All-5 Holm Power
    - For $\Delta = 0.03$, power reaches **$57.5\% \pm 2.5\%$** under Complete Step-Down Holm testing ($66.5\% \pm 2.4\%$ unadjusted).
 3. **Full Expansion to $F_{\text{test}} = 84$ Families ($N_{\text{total}} = 420, N_{\text{eval}} = 252$ scenarios)**:
    - For $\Delta = 0.04$, power reaches **$88.0\% \pm 1.6\%$** under Complete Step-Down Holm testing, **$91.5\% \pm 1.4\%$** unadjusted, and **$82.0\% \pm 1.9\%$** across all five comparisons simultaneously, surpassing the 80% target with statistical confidence.
-   - For $\Delta = 0.03$, power reaches **$73.2\% \pm 2.2\%$** under Complete Step-Down Holm testing and **$78.5\% \pm 2.1\%$** unadjusted.
+   - For $\Delta = 0.03$, power reaches **$73.2\% \pm 2.2\%$** under Complete Step-Down Holm testing and **$78.5\% \pm 2.1\%$** unadjusted. *Statistical Power Limitation*: Notice that for moderate effect size $\Delta = 0.03$, Tier 2 ($F_{\text{test}} = 84$) remains underpowered (<80%) under full Step-Down Holm FWER multiplicity control ($73.2\% \pm 2.2\%$), even while achieving $78.5\% \pm 2.1\%$ unadjusted power. This limitation is explicitly acknowledged in benchmark reporting.
 4. **Pre-Registered Power Contingency Rule (Protocol Contract)**:
    - **Contingency Trigger**: Prior to unblinding the held-out test split, the empirical cluster bootstrap standard error $\widehat{\text{SE}}_{\text{boot}}$ will be measured on the validation pilot split ($F_{\text{val}} = 28, N_{\text{eval}} = 84$).
-   - **Rule 1 (Target $\Delta \ge 0.04$)**: If the validation pilot targets $\Delta \ge 0.04$ and $\widehat{\text{SE}}_{\text{boot}} \le 0.035$, the test split of **$F_{\text{test}} = 84$ families** ($N_{\text{total}}=420, N_{\text{eval}}=252$ scenarios) is deployed, guaranteeing **$88.0\% \pm 1.6\%$** Complete Holm power.
+   - **Rule 1 (Target $\Delta \ge 0.04$)**: If the validation pilot targets $\Delta \ge 0.04$ and $\widehat{\text{SE}}_{\text{boot}} \le 0.035$, the test split of **$F_{\text{test}} = 84$ families** ($N_{\text{total}}=420, N_{\text{eval}}=252$ scenarios) is deployed, estimated under the specified simulation assumptions to achieve **$88.0\% \pm 1.6\%$** Complete Holm power.
    - **Rule 2 (Target $\Delta \le 0.03$)**: If the validation pilot indicates that true effect size between $R_4$ and $R_3$ is moderate ($\Delta \approx 0.03$) or $\widehat{\text{SE}}_{\text{boot}} > 0.035$, the test split formally maintains **$F_{\text{test}} = 84$ families** (yielding $73.2\% \pm 2.2\%$ Complete Holm power and $78.5\%$ unadjusted power) or optionally expands to Tier 3 ($F_{\text{test}} = 112$ families) if the advisor requires $>80\%$ power under conservative Holm Tier-1 correction.
    - **Simulation Estimate Disclaimer**: Power figures are Monte Carlo simulation estimates under the specified data-generating process, not experimental guarantees. This pre-registered rule prevents post-hoc sample expansion (p-hacking) by anchoring all split size decisions to pre-unblinding validation metrics.
 
@@ -650,12 +693,13 @@ Replicates (B)  | Bootstrap SE    | Step-Down Holm Power      | All-5 Holm Power
       If any rare class exhibits zero positive instances in the training set ($N_{c, +}^{\text{train}} = 0$), the effective sample number is $E_{n, c, +} = 0$, rendering direct division undefined ($0/0$). The class is assigned a finite fallback raw weight $w_{c, +}^{\text{raw}} := 1.0$. This finite assignment preserves the unweighted BCE loss scale for that class head if an instance were ever encountered, prevents gradient NaN corruption, and maintains valid participation in the weight normalization sum. (In our static training split of $N_{\text{train}} = 7,180$ patches across the 4 BigEarthNet tiles, all 16 classes exhibit $N_{c, +}^{\text{train}} \ge 42$, so zero-support clamping is an edge-case guard rather than an active condition in the primary training split).
     - With epsilon guard $\epsilon = 10^{-5}$, fixed normalized positive weights are pre-computed:
       $$\tilde{w}_{c, +} = \frac{w_{c, +}^{\text{raw}} + \epsilon}{\sum_{j=1}^{16} (w_{j, +}^{\text{raw}} + \epsilon)} \times 16$$
-    - *Fixed Buffer & Numerically Stable Logits Loss*: The resulting vector $\vec{w}_{+} = (\tilde{w}_{1, +}, \dots, \tilde{w}_{16, +})^T$ is registered as a non-trainable fixed constant buffer (`register_buffer('pos_weight', ...)`). Loss computation uses numerically stable BCE-with-logits:
-      $$\mathcal{L}_{\text{CB-BCE}} = \frac{1}{B} \sum_{i=1}^B \sum_{c=1}^{16} \left[ - \tilde{w}_{c, +} y_{i, c} \log(\sigma(z_{i, c})) - (1 - y_{i, c}) \log(1 - \sigma(z_{i, c})) \right]$$
-      implemented directly via `torch.nn.BCEWithLogitsLoss(pos_weight=pos_weight)`.
+    - *Fixed Buffer & Numerically Stable Logits Loss (Review 14 Reduction Parity)*: The resulting vector $\vec{w}_{+} = (\tilde{w}_{1, +}, \dots, \tilde{w}_{16, +})^T$ is registered as a non-trainable fixed constant buffer (`register_buffer('pos_weight', ...)`). The loss computation averages over both the batch dimension $B$ and class dimension $C=16$:
+      $$\mathcal{L}_{\text{CB-BCE}} = \frac{1}{16B} \sum_{i=1}^B \sum_{c=1}^{16} \left[ - \tilde{w}_{c, +} y_{i, c} \log(\sigma(z_{i, c})) - (1 - y_{i, c}) \log(1 - \sigma(z_{i, c})) \right]$$
+      implemented directly via `torch.nn.BCEWithLogitsLoss(pos_weight=pos_weight, reduction='mean')`.
+      *Mathematical Reduction Consistency*: Default PyTorch `reduction='mean'` normalizes across all elements in the target tensor ($16B$). Dividing by $16B$ in the formulation guarantees mathematical equivalence with the PyTorch call and maintains exact gradient scale parity with multi-label Asymmetric Loss ($\mathcal{L}_{\text{ASL}}$), which is likewise mean-reduced over $16B$ logits.
   * *Config B: Asymmetric Loss (ASL)*:
-    $$\mathcal{L}_{\text{ASL}} = -\frac{1}{16}\sum_{c=1}^{16} \left[ y_c (1 - p_c)^{\gamma_+} \log(p_c) + (1 - y_c) (p_{c, m})^{\gamma_-} \log(1 - p_{c, m}) \right]$$
-    with $\gamma_+ = 0, \gamma_- = 4, m = 0.05$.
+    $$\mathcal{L}_{\text{ASL}} = -\frac{1}{16B} \sum_{i=1}^B \sum_{c=1}^{16} \left[ y_{i, c} (1 - p_{i, c})^{\gamma_+} \log(p_{i, c}) + (1 - y_{i, c}) (p_{i, c, m})^{\gamma_-} \log(1 - p_{i, c, m}) \right]$$
+    with $\gamma_+ = 0, \gamma_- = 4, m = 0.05$. Both CB-BCE and ASL share the exact same $\frac{1}{16B}$ normalization, ensuring identical learning-rate dynamics and fair loss ablation.
 * **Validation & Metrics**: Report Macro $F_1$ (16 classes), Macro $F_1$ (14 test-present classes), Micro $F_1$, and Hamming Loss on held-out test set ($N=3,248$).
 
 ### F.2 Bitemporal Change Detection Specialist (OSCD)

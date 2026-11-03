@@ -1,6 +1,6 @@
 """
-Cluster-Bootstrap Power Analysis for Global AURC Comparison in SatQuery AI (SIH26167).
-Milestone M3.0 Experimental Protocol — Reconciled Statistical Implementation.
+Cluster-Bootstrap and Paired-Permutation Power Analysis for Global AURC Comparison in SatQuery AI (SIH26167).
+Milestone M3.0 Experimental Protocol — Reconciled Statistical Implementation (Review 14 Compliance).
 
 Methodology:
 1. Data-Generating Process (DGP):
@@ -32,23 +32,32 @@ Methodology:
        Delta_tilde_m*(b) = Delta_m*(b) - Delta_m
      The one-sided continuity-corrected p-value is:
        p_m = (sum(Delta_tilde_m* >= Delta_m) + 1.0) / (B + 1.0)
-     which properly evaluates the probability of observing an effect as large as Delta_m under H0.
 
-3. Multiplicity Control via Complete 5-Comparison Step-Down Holm Procedure:
+3. Paired Cluster Permutation Testing (Review 14 Compliance):
+   - Under H0 (exchangeability of system identities within families):
+     For each permutation replicate p = 1, ..., P:
+     * Draw Rademacher sign s_f in {-1, +1} for each family f.
+     * If s_f == -1, swap scenario predictions between system A and system B for all scenarios in family f.
+     * CRITICAL: Recompute complete pooled global AURC for permuted systems A^(p) and B^(p)
+       across all K * scenarios_per_family scenarios.
+     * Delta^(p) = AURC(A^(p)) - AURC(B^(p)).
+     * Permutation p-value: (sum(Delta^(p) >= Delta_obs) + 1.0) / (P + 1.0)
+
+4. Multiplicity Control via Complete 5-Comparison Step-Down Holm Procedure:
    - Full 5-comparison Step-Down Holm Procedure across R4 vs {R0, R1, R1-Gated, R2, R3}:
      Sort p-values: p_(1) <= p_(2) <= p_(3) <= p_(4) <= p_(5).
      Compare against step-down critical thresholds alpha / (5 - k + 1) for k = 1, ..., 5 (alpha = 0.05).
      Step 1: p_(1) <= 0.010; Step 2: p_(2) <= 0.0125; Step 3: p_(3) <= 0.0167; Step 4: p_(4) <= 0.025; Step 5: p_(5) <= 0.050.
    - Sequential termination: If any step fails to reject, the testing sequence terminates.
-   - Step-Down Holm Power (Target Claim R4 vs R3): Evaluates whether the hypothesis H0, R4 vs R3
-     is reached and rejected under FWER control (primary research target).
-   - Conjunctive All-5 Rejection: Evaluates whether all 5 baseline comparisons are simultaneously rejected.
    - Monte Carlo standard error: SE_MC(p) = sqrt(p * (1 - p) / N_sim).
+   - Wilson and Clopper-Pearson 95% Confidence Intervals reported for Type-I error rates.
 """
 
 import numpy as np
+import scipy.stats as stats
 import time
 from concurrent.futures import ProcessPoolExecutor
+
 
 def compute_global_aurc_fast(conf, err):
     """
@@ -74,9 +83,74 @@ def compute_global_aurc_fast(conf, err):
     aurc = risks[0] * coverages[0] + np.sum(trap)
     return aurc
 
+
+def compute_wilson_ci(k, n, confidence=0.95):
+    """Computes Wilson score interval for binomial proportion."""
+    if n == 0:
+        return 0.0, 0.0
+    z = float(stats.norm.ppf(1.0 - (1.0 - confidence) / 2.0))
+    p_hat = k / n
+    denominator = 1.0 + z**2 / n
+    centre_adjusted = p_hat + z**2 / (2.0 * n)
+    adjusted_se = z * np.sqrt((p_hat * (1.0 - p_hat) + z**2 / (4.0 * n)) / n)
+    low = max(0.0, (centre_adjusted - adjusted_se) / denominator)
+    high = min(1.0, (centre_adjusted + adjusted_se) / denominator)
+    return float(low), float(high)
+
+
+def compute_clopper_pearson_ci(k, n, confidence=0.95):
+    """Computes exact Clopper-Pearson binomial confidence interval."""
+    if n == 0:
+        return 0.0, 0.0
+    alpha = 1.0 - confidence
+    low = 0.0 if k == 0 else float(stats.beta.ppf(alpha / 2.0, k, n - k + 1))
+    high = 1.0 if k == n else float(stats.beta.ppf(1.0 - alpha / 2.0, k + 1, n - k))
+    return low, high
+
+
+def run_paired_cluster_permutation_fast(c_A, e_A, c_B, e_B, K, scenarios_per_family=3, n_perm=300):
+    """
+    Paired Cluster Permutation Test (Rademacher Sign-Flipping across Families):
+    1. Observed difference: Delta_obs = AURC(A) - AURC(B).
+    2. Under H0 (exchangeability of system identities within families):
+       For each permutation p = 1, ..., n_perm:
+       - Sample Rademacher sign s_f in {-1, +1} for each family f.
+       - If s_f == -1, swap scenario predictions between system A and system B for all scenarios in family f.
+       - CRITICAL (Review 14): Recompute complete pooled global AURC for permuted systems A^(p) and B^(p)
+         across all K * scenarios_per_family scenarios.
+       - Delta^(p) = AURC(A^(p)) - AURC(B^(p)).
+    3. One-sided p-value: (sum(Delta^(p) >= Delta_obs) + 1.0) / (n_perm + 1.0)
+    4. Two-sided p-value: (sum(|Delta^(p)| >= |Delta_obs|) + 1.0) / (n_perm + 1.0)
+    """
+    delta_obs = compute_global_aurc_fast(c_A, e_A) - compute_global_aurc_fast(c_B, e_B)
+    
+    # Vectorized permutation generation:
+    # Rademacher signs: (n_perm, K)
+    signs = np.random.choice([-1, 1], size=(n_perm, K))
+    # Expand to scenario level: (n_perm, K * scenarios_per_family)
+    swap_masks = np.repeat(signs == -1, scenarios_per_family, axis=1)
+    
+    perm_deltas = np.zeros(n_perm)
+    for p in range(n_perm):
+        mask = swap_masks[p]
+        c_A_p = np.where(mask, c_B, c_A)
+        e_A_p = np.where(mask, e_B, e_A)
+        c_B_p = np.where(mask, c_A, c_B)
+        e_B_p = np.where(mask, e_A, e_B)
+        
+        aurc_A_p = compute_global_aurc_fast(c_A_p, e_A_p)
+        aurc_B_p = compute_global_aurc_fast(c_B_p, e_B_p)
+        perm_deltas[p] = aurc_A_p - aurc_B_p
+        
+    p_one_sided = (np.sum(perm_deltas >= delta_obs) + 1.0) / (n_perm + 1.0)
+    p_two_sided = (np.sum(np.abs(perm_deltas) >= np.abs(delta_obs)) + 1.0) / (n_perm + 1.0)
+    return delta_obs, p_one_sided, p_two_sided
+
+
 def run_single_simulation_trial(args):
     """
-    Executes a single Monte Carlo trial for a given (K, delta, n_boot, seed).
+    Executes a single Monte Carlo trial for a given (K, delta, n_boot, seed, is_null).
+    Computes both Null-Centred Cluster Bootstrap and Paired Cluster Permutation p-values.
     """
     K, delta, n_boot, seed, is_null = args
     np.random.seed(seed)
@@ -114,7 +188,7 @@ def run_single_simulation_trial(args):
         for m in range(5)
     ])
     
-    # Cluster bootstrap: resample whole template families with replacement
+    # 1. Cluster bootstrap: resample whole template families with replacement
     fams = np.random.choice(K, size=(n_boot, K), replace=True)
     scens = (fams[:, :, None] * scenarios_per_family + offsets).reshape(n_boot, -1)
     
@@ -130,18 +204,26 @@ def run_single_simulation_trial(args):
             
     # Null-Centred Cluster Bootstrap P-Values:
     # Under H0: Delta_m <= 0, the shifted bootstrap differences are tilde_delta = boot_deltas - obs_deltas
-    # P-value is the proportion of null replicates exceeding or equal to observed sample delta
     p_vals = [
         (np.sum((boot_deltas[m] - obs_deltas[m]) >= obs_deltas[m]) + 1.0) / (n_boot + 1.0)
         for m in range(5)
     ]
     
+    # 2. Paired Cluster Permutation for target comparison (R4 vs R3, index 4)
+    _, p_perm_1sided, p_perm_2sided = run_paired_cluster_permutation_fast(
+        c_baselines[4], e_baselines[4], c4, e4, K, scenarios_per_family=scenarios_per_family, n_perm=n_boot
+    )
+    
     # Standard error of primary comparison (R4 vs R3, index 4)
     se_target = float(np.std(boot_deltas[4], ddof=1))
     
-    # Target hypothesis rejection checks
-    rej_05 = bool(p_vals[4] <= 0.05)
-    rej_01 = bool(p_vals[4] <= 0.01)
+    # Bootstrap target rejections
+    rej_boot_05 = bool(p_vals[4] <= 0.05)
+    rej_boot_01 = bool(p_vals[4] <= 0.01)
+    
+    # Permutation target rejections (one-sided)
+    rej_perm_05 = bool(p_perm_1sided <= 0.05)
+    rej_perm_01 = bool(p_perm_1sided <= 0.01)
     
     # Complete 5-comparison Step-Down Holm procedure
     idx_sorted = np.argsort(p_vals)
@@ -160,38 +242,67 @@ def run_single_simulation_trial(args):
     return {
         "p_vals": p_vals,
         "se_target": se_target,
-        "rej_05": rej_05,
-        "rej_01": rej_01,
+        "rej_05": rej_boot_05,
+        "rej_01": rej_boot_01,
+        "rej_perm_05": rej_perm_05,
+        "rej_perm_01": rej_perm_01,
         "rej_holm_target": rej_holm_target,
         "rej_all5": rej_all5
     }
 
-def validate_null_type1_error(K=28, n_sims=400, n_boot=300, seed=42, max_workers=6):
+
+def validate_null_type1_error(K=28, n_sims=1000, n_boot=300, seed=42, max_workers=6):
     """
     Validates empirical Type-I error rate under simulated null conditions (Delta = 0.00).
-    Confirms that nominal alpha = 0.05 is properly controlled.
+    Exhaustively compares Null-Centred Cluster Bootstrap and Paired Cluster Permutation
+    across N_sim = 1,000 trials, reporting SE, Wilson CIs, and Clopper-Pearson CIs.
     """
     print("\n" + "=" * 132, flush=True)
     print("   STEP 1: EMPIRICAL TYPE-I ERROR VALIDATION UNDER NULL HYPOTHESIS (H0: Delta = 0.00)", flush=True)
-    print(f"   Simulated Trials: {n_sims:,} | Bootstrap Replicates per Trial: {n_boot:,} | Test Families: {K} | Seed: {seed}", flush=True)
+    print(f"   Simulated Trials: {n_sims:,} | Resampling Replicates per Trial: {n_boot:,} | Test Families: {K} | Seed: {seed}", flush=True)
     print("=" * 132, flush=True)
     
     args = [(K, 0.00, n_boot, seed + i, True) for i in range(n_sims)]
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         results = list(executor.map(run_single_simulation_trial, args))
         
-    rej_05_count = sum(r["rej_05"] for r in results)
-    rej_01_count = sum(r["rej_01"] for r in results)
-    type1_05 = rej_05_count / n_sims
-    type1_01 = rej_01_count / n_sims
-    se_type1_05 = np.sqrt(type1_05 * (1 - type1_05) / n_sims)
-    se_type1_01 = np.sqrt(type1_01 * (1 - type1_01) / n_sims)
+    # Bootstrap counts
+    b_05_k = sum(r["rej_05"] for r in results)
+    b_01_k = sum(r["rej_01"] for r in results)
+    b_05_rate = b_05_k / n_sims
+    b_01_rate = b_01_k / n_sims
+    b_05_se = np.sqrt(b_05_rate * (1 - b_05_rate) / n_sims)
+    b_01_se = np.sqrt(b_01_rate * (1 - b_01_rate) / n_sims)
+    b_05_wilson = compute_wilson_ci(b_05_k, n_sims)
+    b_01_wilson = compute_wilson_ci(b_01_k, n_sims)
+    b_05_cp = compute_clopper_pearson_ci(b_05_k, n_sims)
+    b_01_cp = compute_clopper_pearson_ci(b_01_k, n_sims)
     
-    print(f"   Empirical Type-I Error at alpha = 0.05: {type1_05*100:>5.2f}% ± {se_type1_05*100:>4.2f}% (Nominal: 5.00%)", flush=True)
-    print(f"   Empirical Type-I Error at alpha = 0.01: {type1_01*100:>5.2f}% ± {se_type1_01*100:>4.2f}% (Nominal: 1.00%)", flush=True)
-    print(f"   Validation Status: {'VALIDATED (Within MC error)' if type1_05 <= 0.070 else 'ELEVATED'}", flush=True)
+    # Permutation counts
+    p_05_k = sum(r["rej_perm_05"] for r in results)
+    p_01_k = sum(r["rej_perm_01"] for r in results)
+    p_05_rate = p_05_k / n_sims
+    p_01_rate = p_01_k / n_sims
+    p_05_se = np.sqrt(p_05_rate * (1 - p_05_rate) / n_sims)
+    p_01_se = np.sqrt(p_01_rate * (1 - p_01_rate) / n_sims)
+    p_05_wilson = compute_wilson_ci(p_05_k, n_sims)
+    p_01_wilson = compute_wilson_ci(p_01_k, n_sims)
+    p_05_cp = compute_clopper_pearson_ci(p_05_k, n_sims)
+    p_01_cp = compute_clopper_pearson_ci(p_01_k, n_sims)
+    
+    print(f"{'Method':<25} | {'Nominal':<8} | {'Rejections':<10} | {'Empirical Rate':<16} | {'Wilson 95% CI':<22} | {'Clopper-Pearson 95% CI':<24} | {'Status':<12}", flush=True)
+    print("-" * 132, flush=True)
+    print(f"{'Null-Centred Bootstrap':<25} | {'0.05':<8} | {b_05_k:>4}/{n_sims:<5} | {b_05_rate*100:>5.2f}% ± {b_05_se*100:>4.2f}% | [{b_05_wilson[0]*100:.2f}%, {b_05_wilson[1]*100:.2f}%]     | [{b_05_cp[0]*100:.2f}%, {b_05_cp[1]*100:.2f}%]            | {'VALIDATED' if b_05_rate <= 0.065 else 'ELEVATED'}", flush=True)
+    print(f"{'Null-Centred Bootstrap':<25} | {'0.01':<8} | {b_01_k:>4}/{n_sims:<5} | {b_01_rate*100:>5.2f}% ± {b_01_se*100:>4.2f}% | [{b_01_wilson[0]*100:.2f}%, {b_01_wilson[1]*100:.2f}%]     | [{b_01_cp[0]*100:.2f}%, {b_01_cp[1]*100:.2f}%]            | {'VALIDATED' if b_01_rate <= 0.020 else 'ELEVATED'}", flush=True)
+    print(f"{'Paired Cluster Permutation':<25} | {'0.05':<8} | {p_05_k:>4}/{n_sims:<5} | {p_05_rate*100:>5.2f}% ± {p_05_se*100:>4.2f}% | [{p_05_wilson[0]*100:.2f}%, {p_05_wilson[1]*100:.2f}%]     | [{p_05_cp[0]*100:.2f}%, {p_05_cp[1]*100:.2f}%]            | {'VALIDATED' if p_05_rate <= 0.065 else 'ELEVATED'}", flush=True)
+    print(f"{'Paired Cluster Permutation':<25} | {'0.01':<8} | {p_01_k:>4}/{n_sims:<5} | {p_01_rate*100:>5.2f}% ± {p_01_se*100:>4.2f}% | [{p_01_wilson[0]*100:.2f}%, {p_01_wilson[1]*100:.2f}%]     | [{p_01_cp[0]*100:.2f}%, {p_01_cp[1]*100:.2f}%]            | {'VALIDATED' if p_01_rate <= 0.020 else 'ELEVATED'}", flush=True)
     print("=" * 132 + "\n", flush=True)
-    return type1_05, type1_01
+    
+    return {
+        "bootstrap": {"0.05": (b_05_rate, b_05_se, b_05_wilson, b_05_cp), "0.01": (b_01_rate, b_01_se, b_01_wilson, b_01_cp)},
+        "permutation": {"0.05": (p_05_rate, p_05_se, p_05_wilson, p_05_cp), "0.01": (p_01_rate, p_01_se, p_01_wilson, p_01_cp)}
+    }
+
 
 def run_cluster_bootstrap_power(
     family_sizes=[28, 42, 56, 84],
@@ -258,6 +369,7 @@ def run_cluster_bootstrap_power(
     print("=" * 132, flush=True)
     return all_results
 
+
 def run_sensitivity_analysis(K=56, delta=0.04, replicates_list=[300, 1000], n_sims=400, seed=42, max_workers=6):
     """
     Executes empirical sensitivity analysis comparing B=300 vs B=1,000 bootstrap replicates.
@@ -302,9 +414,10 @@ def run_sensitivity_analysis(K=56, delta=0.04, replicates_list=[300, 1000], n_si
     print("=" * 132 + "\n", flush=True)
     return sens_results
 
+
 if __name__ == "__main__":
-    # 1. Type-I error validation under null
-    validate_null_type1_error(K=28, n_sims=400, n_boot=300, seed=42)
+    # 1. Type-I error validation under null with N_sim = 1,000 trials
+    validate_null_type1_error(K=28, n_sims=1000, n_boot=300, seed=42)
     # 2. Main 12-condition power table
     run_cluster_bootstrap_power(family_sizes=[28, 42, 56, 84], delta_aurcs=[0.02, 0.03, 0.04], n_sims=400, n_boot=300, seed=42)
     # 3. Reconciled sensitivity analysis
