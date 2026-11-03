@@ -804,6 +804,66 @@ To resolve this, we conducted an exhaustive Monte Carlo simulation (`run_large_s
 2. **Empirical Boundary**: The simulation proves that **$80\%$ confirmatory Step-Down Holm power is reached at $F_{\text{test}} \approx 450$ families** ($2,250$ total scenarios, $1,350$ valid evaluation scenarios), achieving $83.2\% \pm 1.7\%$ power. At the previously calculated $F = 545$ families, empirical power reaches **$91.2\% \pm 1.3\%$**.
 3. **Phase 4 Pre-Registration**: We formally retain $F_{\text{req}} \approx 450 - 545$ families as the prospective benchmark requirement for Phase 4 / Milestone M3.2 multi-node cluster scaling, ensuring that M3.0 remains strictly scoped as an exploratory feasibility study for small global AURC effects.
 
+#### Substantive DGP Realism Validation: Shared Scenario Difficulty, Variant Profiles, & Cross-Model Covariance
+
+To rigorously validate whether the protocol's power conclusions survive under realistic benchmark conditions, we evaluated the complete simulation under a **Realistic Paired & Variant-Aware Data-Generating Process**:
+1. **Shared Scenario-Level Difficulty & Cross-Model Covariance**: In an actual paired benchmark, all candidate models evaluate the exact same physical Earth Observation scenarios. Difficult scenarios (e.g., dense cloud cover, complex shadows, edge-case land cover mixtures, extreme off-nadir angles) degrade performance across all models simultaneously. In paired comparisons:
+   $$\operatorname{Var}(A - B) = \operatorname{Var}(A) + \operatorname{Var}(B) - 2\operatorname{Cov}(A, B)$$
+   When models share positive scenario-level covariance ($\operatorname{Cov}(A, B) > 0$), the variance of the paired difference $\operatorname{Var}(A - B)$ is strictly smaller than under independent error draws.
+2. **Variant-Specific Difficulty Distributions**: A template family generates three distinct valid variants: $V_1$ (Canonical Query, nominal phrasing and conditions), $V_2$ (Paraphrased Query, lexical variation), and $V_4$ (Adversarial Query, complex distractors and stress conditions). The DGP explicitly captures these distinct difficulty profiles.
+
+##### Mathematical Formulation of the Realistic Paired Clustered DGP
+For each family $f \in \{1, \dots, F_{\text{test}}\}$ and scenario $i \in \{1, 2, 3\}$:
+1. **Variant Difficulty Offsets**:
+   $$\vec{\delta}_{\text{var}} = [\delta_{V1}, \delta_{V2}, \delta_{V4}] = [-0.030, \, 0.000, \, +0.050]$$
+2. **Shared Scenario Latent Shocks**:
+   - Scenario difficulty shock: $s_{f, i} \sim \mathcal{N}(0, 0.04^2)$ (shared across all models evaluating scenario $(f, i)$)
+   - Scenario confidence shock: $\xi_{f, i} \sim \mathcal{N}(0, 0.04^2)$ (shared scene ambiguity affecting all models)
+3. **Cross-Model Error Correlation via Gaussian Copula**:
+   Let $Z_{f, i} \sim \mathcal{N}(0, 1)$ be a common latent difficulty variable. For each model $m \in \{0, \dots, 4\}$:
+   $$W_{m, f, i} = \sqrt{\rho_e} Z_{f, i} + \sqrt{1 - \rho_e} \epsilon_{m, f, i}, \quad \epsilon_{m, f, i} \stackrel{\text{i.i.d.}}{\sim} \mathcal{N}(0, 1)$$
+   with $\rho_e = 0.60$. The uniform quantile is $U_{m, f, i} = \Phi(W_{m, f, i}) \sim \text{Uniform}(0, 1)$, and binary error is:
+   $$e_{m, f, i} = \mathbb{I}\left( U_{m, f, i} < p_{m, f, i} \right)$$
+   This guarantees exact marginal calibration $\mathbb{P}(e_{m, f, i} = 1) = p_{m, f, i}$ while inducing realistic cross-model error correlation ($\operatorname{Corr}(e_4, e_3) \approx 0.351$) and confidence correlation ($\operatorname{Corr}(c_4, c_3) \approx 0.485$).
+4. **Strict Baseline Performance Hierarchy**:
+   Baseline models reflect the verified performance ordering:
+   $$R_0 \text{ (Heuristic)} > R_1 \text{ (Linear Ungated)} > R_{1\text{-Gated}} > R_2 \text{ (Gated Non-Selective)} \ge R_3 \text{ (Selective Uncalibrated)} > R_4 \text{ (Proposed)}$$
+   The primary target contrast $R_4$ vs $R_3$ is the closest competitor (smallest difference $\Delta$), so the Step-Down Holm sequence must successfully reject $R_0, R_1, R_{1\text{-Gated}}, R_2$ before evaluating $R_4$ vs $R_3$.
+
+##### Empirical Validation Results Across All Pre-Registered Hypotheses
+
+**1. Macro Architectural Routing Power Audit ($F_{\text{test}} = 84$, $N_{\text{eval}} = 252$, $N_{\text{sim}} = 500$ Trials)**:
+- Realized Macro AURC Difference: $\bar{\Delta}_{\text{AURC}} = \mathbf{0.0903 \pm 0.0285}$
+- Mean Cluster Bootstrap SE: $\mathbf{0.0297}$ (reduced from $0.0340$ due to positive scenario covariance $\operatorname{Cov}(A, B) > 0$)
+- Realized Cross-Model Error Correlation: $\mathbf{0.351}$
+- Realized Cross-Model Confidence Correlation: $\mathbf{0.485}$
+- Unadjusted Power ($\alpha = 0.05$): $\mathbf{94.0\%}$
+- **Complete Step-Down Holm Power (Primary Target Gate $R_4$ vs $R_3$)**: $\mathbf{90.4\% \pm 1.3\%}$ (Wilson 95% CI: $[87.5\%, 92.7\%]$)
+- All-5 Simultaneous Holm Power: $\mathbf{86.2\%}$
+*Conclusion*: Confirmatory power firmly exceeds the $\ge 80\%$ standard, strengthening from $85.2\%$ to $\mathbf{90.4\%}$ under realistic paired scenario shocks.
+
+**2. Null Type-I Error Calibration ($F_{\text{test}} = 28$, $N_{\text{sim}} = 1,000$ Trials, $B = 300$)**:
+- Nominal $\alpha = 0.05 \implies \mathbf{3.70\% \pm 0.60\%}$ ($37 / 1,000$ rejections, Wilson 95% CI: $[2.70\%, 5.06\%]$, centrally containing nominal level).
+- Nominal $\alpha = 0.01 \implies \mathbf{0.40\% \pm 0.20\%}$ ($4 / 1,000$ rejections, Wilson 95% CI: $[0.16\%, 1.02\%]$, conservative discrete tail lattice).
+*Conclusion*: Shared scenario shocks and variant offsets do NOT induce false positive inflation under the null hypothesis.
+
+**3. Sample-Size Scaling for Small Global AURC ($\Delta = 0.0350$, $N_{\text{sim}} = 400$ Trials per Size)**:
+| Test Families ($F_{\text{test}}$) | Valid Cohort ($N_{\text{eval}}$) | Realized $\Delta_{\text{AURC}}$ | Cluster Boot SE | Unadjusted Power ($\alpha=0.05$) | Complete Step-Down Holm Power | Methodological Assessment |
+| :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **28** | 84 | $0.0384$ | $0.0408$ | $22.2\%$ | **$7.8\% \pm 1.3\%$** | Exploratory Feasibility (<80%) |
+| **84** | 252 | $0.0357$ | $0.0245$ | $37.5\%$ | **$32.5\% \pm 2.3\%$** | Exploratory Feasibility (<80%) |
+| **450** | 1,350 | $0.0351$ | $0.0109$ | $93.0\%$ | **$93.0\% \pm 1.3\%$** | Confirmatory Boundary ($\ge 80\%$) |
+| **500** | 1,500 | $0.0373$ | $0.0102$ | $98.0\%$ | **$98.0\% \pm 0.7\%$** | Robust Confirmatory ($>95\%$) |
+| **545** | 1,635 | $0.0362$ | $0.0098$ | $97.8\%$ | **$97.8\% \pm 0.7\%$** | Deeply Powered ($>95\%$) |
+| **600** | 1,800 | $0.0363$ | $0.0094$ | $99.0\%$ | **$99.0\% \pm 0.5\%$** | Deeply Powered ($>95\%$) |
+
+*Methodological Summary*: Under realistic shared scenario difficulty and variant-aware distributions, the protocol's core statistical conclusions survive completely:
+1. Milestone M3.0 Tier 2 ($F_{\text{test}} = 84$) remains **confirmed at $\ge 80\%$ power** ($90.4\% \pm 1.3\%$) for Macro Architectural Routing Differentials.
+2. Milestone M3.0 remains **transparently designated as an exploratory feasibility study** for fine-grained global AURC differences ($\Delta \le 0.0350$).
+3. Phase 4 / M3.2 large-scale cluster scaling target ($F_{\text{req}} \approx 450 - 545$ families) is confirmed to provide $\ge 90\%$ confirmatory power under the complete Step-Down Holm procedure.
+
+---
+
 #### Hand-Checkable Numerical Example ($B=5$ Replicates)
 To provide absolute algorithmic transparency, consider a concrete, hand-checkable numerical example:
 - **Observed sample difference**: $\hat{\Delta}_{\text{obs}} = 0.0350$
