@@ -22,8 +22,10 @@
   "models": {
     "phase2_classical_random_forest": {
       "type": "Classical Baseline (84 Handcrafted Features + Random Forest)",
-      "test_macro_f1_16_standard": 0.3321,
-      "test_macro_f1_14_present": 0.3795,
+      "test_macro_f1_16_standard_tuned": 0.34,
+      "test_macro_f1_14_present": 0.3886,
+      "test_macro_f1_16_standard_default": 0.3321,
+      "test_macro_f1_14_present_default": 0.3795,
       "test_micro_f1": 0.4795,
       "test_hamming_loss": 0.2228,
       "training_duration_sec": 270.0
