@@ -140,7 +140,7 @@ The multimodal land-cover classification model takes paired Sentinel-1 SAR and S
     $$\vec{\sigma} = [0.082, 0.076, 0.074, 0.089, 0.098, 0.108, 0.113, 0.112, 0.095, 0.078]$$
 
 ### 4.2 Dual-Branch ResNet-34 Architecture
-The deep perception model comprises two independent ResNet-34 convolutional backbones:
+The multimodal architecture was trained on BigEarthNet using ImageNet-pretrained initialization for the corresponding optical backbone filters, with newly initialized additional spectral and SAR input channels and cross-attention fusion. The deep perception model comprises two independent ResNet-34 convolutional backbones:
 1. **Optical Branch ($f_{\text{opt}}$)**:
    - Input channel count: 10 channels.
    - *ImageNet Pretrained Weight Transfer*: The first convolutional layer (`conv1`, $7 \times 7$, stride 2) transfers pretrained ImageNet-1k weights into the corresponding RGB spectral bands:

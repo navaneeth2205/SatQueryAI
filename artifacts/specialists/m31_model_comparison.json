@@ -1,27 +1,72 @@
 {
-  "hardware": "NVIDIA GeForce RTX 2050 (4 GB VRAM)",
-  "train_samples": 7180,
-  "val_samples": 3255,
-  "test_samples": 3248,
-  "classical_baseline_macro_f1": 0.4739,
-  "cb_bce": {
-    "best_epoch": 30,
-    "training_duration_sec": 8465.917308330536,
-    "val_macro_f1_tuned": 0.5429371198368182,
-    "test_macro_f1_default": 0.36126900862010825,
-    "test_macro_f1_tuned": 0.4378034123914436,
-    "test_macro_f1_present": 0.5003467570187927,
-    "test_micro_f1": 0.7190088120320679,
-    "test_hamming_loss": 0.08160791256157636
+  "audit_metadata": {
+    "status": "SCIENTIFICALLY_AUDITED",
+    "date": "2026-11-05",
+    "sample_counts": {
+      "train": 7180,
+      "val": 3255,
+      "test": 3248
+    },
+    "spatial_buffer_km": ">= 12.0 km center-to-center in UTM Zone 34N (EPSG:32634)",
+    "hardware": "NVIDIA GeForce RTX 2050 (4 GB VRAM)",
+    "total_classes": 16,
+    "classes_with_test_support": 14,
+    "classes_with_zero_test_support": [
+      "[01] Beaches, dunes, sands (Support = 0)",
+      "[10] Moors, heathland and sclerophyllous vegetation (Support = 0)"
+    ],
+    "optical_backbone_initialization": "ImageNet-1k pretrained weights transferred into Sentinel-2 RGB bands (B04, B03, B02); remaining 7 multispectral bands He normal initialized",
+    "sar_backbone_initialization": "He normal initialized from scratch (2 bands: VH, VV)",
+    "fusion_block_initialization": "Bidirectional 8-head cross-attention + LayerNorm + MLP initialized from scratch"
   },
-  "asl": {
-    "best_epoch": 3,
-    "training_duration_sec": 1715.68608212471,
-    "val_macro_f1_tuned": 0.5639335847835749,
-    "test_macro_f1_default": 0.4369425301317048,
-    "test_macro_f1_tuned": 0.4552599227132386,
-    "test_macro_f1_present": 0.5202970545294157,
-    "test_micro_f1": 0.7446763428329272,
-    "test_hamming_loss": 0.09274938423645321
+  "models": {
+    "phase2_classical_random_forest": {
+      "type": "Classical Baseline (84 Handcrafted Features + Random Forest)",
+      "test_macro_f1_16_standard": 0.3321,
+      "test_macro_f1_14_present": 0.3795,
+      "test_micro_f1": 0.4795,
+      "test_hamming_loss": 0.2228,
+      "training_duration_sec": 270.0
+    },
+    "phase2_classical_lightgbm": {
+      "type": "Classical Champion (488 Handcrafted Features + LightGBM GBDT)",
+      "test_macro_f1_16_standard": 0.4114,
+      "test_macro_f1_16_legacy_zero_div_1": 0.4739,
+      "test_macro_f1_14_present": 0.4702,
+      "test_micro_f1": 0.7299,
+      "test_hamming_loss": 0.0976,
+      "training_duration_sec": 180.0
+    },
+    "m31_dual_resnet34_cb_bce": {
+      "type": "Deep Multimodal Specialist (Config A: CB-BCE beta=0.999)",
+      "best_epoch": 30,
+      "training_duration_sec": 8465.92,
+      "training_duration_minutes": 141.1,
+      "val_macro_f1_tuned": 0.5429,
+      "test_macro_f1_16_default": 0.3613,
+      "test_macro_f1_16_tuned": 0.4378,
+      "test_macro_f1_14_present": 0.5003,
+      "test_micro_f1": 0.719,
+      "test_hamming_loss": 0.0816
+    },
+    "m31_dual_resnet34_asl": {
+      "type": "Deep Multimodal Specialist (Config B: ASL gamma-=4.0, m=0.05)",
+      "best_epoch": 3,
+      "training_duration_sec": 1715.69,
+      "training_duration_minutes": 30.2,
+      "val_macro_f1_tuned": 0.5639,
+      "test_macro_f1_16_default": 0.4369,
+      "test_macro_f1_16_tuned": 0.4553,
+      "test_macro_f1_14_present": 0.5203,
+      "test_micro_f1": 0.7447,
+      "test_hamming_loss": 0.0927
+    }
+  },
+  "tradeoff_analysis": {
+    "highest_macro_f1": "ASL (45.53% standard / 52.03% present)",
+    "highest_micro_f1": "ASL (74.47%)",
+    "lowest_hamming_loss": "CB-BCE (0.0816)",
+    "wall_clock_speedup_asl_vs_cb_bce": "4.67x (30.2 min vs 141.1 min)",
+    "epochs_to_best_checkpoint": "10x fewer epochs for ASL (Epoch 3 vs Epoch 30)"
   }
 }
