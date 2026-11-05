@@ -1,4 +1,4 @@
-# Pinned production and research dependencies for SatQuery AI (SIH26167)
+# Pinned production and research dependencies for SatQuery AI (Academic ML Research Project)
 # Python 3.14 / Windows AMD64 environment
 numpy==2.5.3
 pandas==3.0.6

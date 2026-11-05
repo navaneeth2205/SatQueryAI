@@ -2,7 +2,7 @@
 Task and Modality Taxonomy for SatQuery AI.
 
 Defines the analytical categories, required input configurations,
-specialist model targets, and benchmark datasets aligned with SIH26167.
+specialist model targets, and benchmark datasets aligned with the academic research taxonomy.
 """
 
 from dataclasses import dataclass

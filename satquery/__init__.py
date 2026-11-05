@@ -1,7 +1,7 @@
 """
 SatQuery AI: Interactive Vision-Language Assistant for Multimodal Remote-Sensing Image Analysis.
 
-Based on SIH 2026 Problem Statement SIH26167 (ISRO).
+Academic Machine Learning Research Project in Earth Observation.
 """
 
 __version__ = "0.1.0"

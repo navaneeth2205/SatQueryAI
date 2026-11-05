@@ -1,7 +1,7 @@
 {
   "manifest_name": "SatQuery AI Phase 1 Reproducibility Manifest",
   "project_title": "Sensor- and Task-Compatibility-Constrained Selective Routing for Multimodal Earth Observation",
-  "sih_problem_code": "SIH26167",
+  "project_type": "Academic_ML_Research",
   "phase": "Phase 1 - Router and Compatibility Engine Hardening (Final Closure)",
   "timestamp_utc": "2026-11-01T07:36:14Z",
   "environment": {

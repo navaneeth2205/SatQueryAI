@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "satquery-ai"
 version = "0.1.0"
-description = "Interactive Vision-Language Assistant for Multimodal Remote-Sensing Image Analysis (SIH26167)"
+description = "Interactive Vision-Language Assistant for Multimodal Remote-Sensing Image Analysis (Academic ML Project)"
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

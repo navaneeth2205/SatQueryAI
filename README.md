@@ -1,9 +1,8 @@
 # SatQuery AI 🛰️
 **Interactive Vision-Language Assistant for Multimodal Remote-Sensing Image Analysis**
 
-*SIH 2026 Problem Statement: SIH26167*  
-*Organization: Indian Space Research Organisation (ISRO)*  
-*Theme: Space Technology | Category: Software*
+*Academic Machine Learning Research Project*
+*Domain: Earth Observation, Multi-Modal Deep Learning & Selective Classification*
 
 ---
 
@@ -174,5 +173,5 @@ In Kaggle notebooks, you can clone and test the repository without needing local
 
 ---
 
-## 8. License & Acknowledgments
-Developed for **Smart India Hackathon (SIH 2026)** problem statement **SIH26167** in collaboration with ISRO guidelines.
+## 8. License & Academic Attribution
+Developed as an **Academic Machine Learning Research Project** investigating selective intent classification, physical sensor compatibility verification, and multimodal deep learning for satellite remote sensing.
