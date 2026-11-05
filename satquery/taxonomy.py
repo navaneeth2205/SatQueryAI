@@ -7,7 +7,7 @@ specialist model targets, and benchmark datasets aligned with SIH26167.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class InputType(str, Enum):

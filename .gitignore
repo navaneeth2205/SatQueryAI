@@ -54,3 +54,5 @@ data/oscd/
 *.npy
 initial_trails/
 web_Game/
+*.pt
+*.pth
