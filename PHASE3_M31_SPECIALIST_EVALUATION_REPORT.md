@@ -23,35 +23,55 @@ Following a strict independent numerical audit of the saved test predictions (`y
    `Urban fabric` (Index 15) achieved high accuracy across both models:
    - **ASL**: $\text{TP} = 358, \text{FP} = 96, \text{FN} = 159 \implies \text{Precision} = 78.85\%, \text{Recall} = 69.25\%, \mathbf{F_1 = 73.74\%}$.
    - **CB-BCE**: $\text{TP} = 331, \text{FP} = 41, \text{FN} = 186 \implies \text{Precision} = 88.98\%, \text{Recall} = 64.02\%, \mathbf{F_1 = 74.47\%}$.
-3. **Classical Baseline Disambiguation**:
-   The Phase 2 classical baseline is explicitly partitioned into:
-   - **Phase 2 Random Forest**: $34.00\%$ standard Macro $F_1$ and **$38.86\%$ test-present Macro $F_1$** under validation-tuned thresholds ($33.21\%$ standard and $37.95\%$ test-present under default threshold $\tau=0.50$), with $47.95\%$ Micro $F_1$ and $0.2228$ Hamming loss.
-   - **Phase 2 LightGBM (Classical Champion)**: $41.14\%$ standard Macro $F_1$ and **$47.02\%$ test-present Macro $F_1$** ($47.39\%$ legacy `zero_division=1.0`), $72.99\%$ Micro $F_1$, and $0.0976$ Hamming loss under validation-tuned thresholds ($46.13\%$ standard and $52.72\%$ test-present under default threshold $\tau=0.50$).
+3. **Classical Baseline Disambiguation & Strict Threshold Separation**:
+   The Phase 2 classical baselines are partitioned into strictly separated threshold regimes:
+   - **Phase 2 Random Forest**:
+     - *Validation-Tuned Regime ($\tau^*$)*: $34.00\%$ standard Macro $F_1$, $38.86\%$ test-present Macro $F_1$, $44.81\%$ Micro $F_1$, $0.3153$ Hamming loss.
+     - *Default Regime ($\tau = 0.50$)*: $33.21\%$ standard Macro $F_1$, $37.95\%$ test-present Macro $F_1$, $47.95\%$ Micro $F_1$, $0.2228$ Hamming loss.
+   - **Phase 2 LightGBM (Classical Champion)**:
+     - *Validation-Tuned Regime ($\tau^*$)*: $47.39\%$ standard Macro $F_1$, $54.16\%$ test-present Macro $F_1$, $72.99\%$ Micro $F_1$, $0.0976$ Hamming loss.
+     - *Default Regime ($\tau = 0.50$)*: $46.13\%$ standard Macro $F_1$, $52.72\%$ test-present Macro $F_1$, $73.28\%$ Micro $F_1$, $0.0899$ Hamming loss.
 4. **Metric-Specific Loss Comparison**:
    ASL is **not universally superior**:
-   - **ASL** leads in **Macro $F_1$** ($45.53\%$ standard / $52.03\%$ present) and **Micro $F_1$** ($74.47\%$).
-   - **CB-BCE** leads in **Hamming loss** ($0.0816$ vs. $0.0927$), achieving the lowest overall label prediction error.
+   - **ASL** leads in **Macro $F_1$** ($45.53\%$ standard / $52.03\%$ present) and **Micro $F_1$** ($74.47\%$) among deep models.
+   - **CB-BCE** leads in **Hamming loss** ($0.0816$ vs. $0.0927$), achieving the lowest overall label prediction error across all models.
 5. **Convergence Time Rectification**:
    ASL peaked at Epoch 3 ($30.2$ minutes) and CB-BCE peaked at Epoch 30 ($141.1$ minutes). ASL required $10\times$ fewer training epochs and achieved a **$4.67\times$ wall-clock speedup** ($30.2$ min vs. $141.1$ min).
 
 ---
 
-## 2. Authoritative Model Comparison Matrix
+## 2. Authoritative Model Comparison Matrices
 
-Evaluated strictly on the held-out test split ($N = 3,248$ patches, $120 \times 120$ pixels at 10m GSD). All metrics use scikit-learn standard `zero_division=0.0`.
+All evaluations performed on held-out test split ($N = 3,248$ patches, $120 \times 120$ pixels at 10m GSD) with standard scikit-learn convention `zero_division=0.0`. To prevent deceptive comparisons, metrics are strictly partitioned by threshold selection regime.
+
+### 2.1 Primary Comparison Matrix: Validation-Tuned Threshold Regime ($\tau^*$)
+
+Every metric in this primary scorecard is generated strictly using per-class thresholds optimized on the validation set ($N = 3,255$). **No default-threshold metrics are mixed into this table.**
 
 | Metric | Phase 2 Baseline (Random Forest) | Phase 2 Baseline (LightGBM Champion) | Config A: Dual ResNet-34 (CB-BCE) | Config B: Dual ResNet-34 (ASL) | Best Model on Metric |
 | :--- | :---: | :---: | :---: | :---: | :---: |
 | **Model Type** | 84 Handcrafted Features + RF | 488 Handcrafted Features + GBDT | Deep Dual ResNet-34 + Cross-Attention | Deep Dual ResNet-34 + Cross-Attention | Deep Feature Learning |
 | **Loss Function** | Gini Impurity | Multi-Output Log-Loss | Class-Balanced BCE ($\beta=0.999$) | Asymmetric Loss ($\gamma_-=4.0, m=0.05$) | — |
+| **Threshold Regime** | Validation-Tuned $\tau^*$ | Validation-Tuned $\tau^*$ | Validation-Tuned $\tau^*$ | Validation-Tuned $\tau^*$ | Pure Validation Selection |
 | **Best Training Epoch** | — | — | Epoch 30 / 40 | **Epoch 3 / 40** | **ASL (10x fewer epochs)** |
 | **Training Duration** | 4.5 minutes (CPU) | 3.0 minutes (CPU) | 141.1 minutes (GPU) | **30.2 minutes (GPU)** | **ASL (4.67x speedup vs CB-BCE)** |
 | **Validation Macro $F_1$ (Tuned)** | 36.99% | 54.92% | 54.29% | **56.39%** | **ASL (+1.47% over LightGBM)** |
-| **Test Macro $F_1$ (Default $\tau=0.50$)** | 33.21% | 46.13% | 36.13% | **43.69%** | **ASL** |
-| **Test Macro $F_1$ (Tuned $\tau^*$, 16 cls)** | 34.00% | 41.14% | 43.78% | **$\mathbf{45.53\%}$** | **ASL (+4.39% over LightGBM)** |
-| **Test-Present Macro $F_1$ (14 cls)** | 38.86% | 47.02% | 50.03% | **$\mathbf{52.03\%}$** | **ASL (+5.01% over LightGBM)** |
-| **Test Micro $F_1$** | 47.95% | 72.99% | 71.90% | **$\mathbf{74.47\%}$** | **ASL (+1.48% over LightGBM)** |
-| **Test Hamming Loss (Error Rate)** | 0.2228 | 0.0976 | **$\mathbf{0.0816}$** | 0.0927 | **CB-BCE (Lowest label error: 8.16%)** |
+| **Test Macro $F_1$ (16 cls, standard)** | 34.00% | **47.39%** | 43.78% | 45.53% | **LightGBM (Classical) / ASL (Deep)** |
+| **Test-Present Macro $F_1$ (14 cls)** | 38.86% | **54.16%** | 50.03% | 52.03% | **LightGBM (Classical) / ASL (Deep)** |
+| **Test Micro $F_1$** | 44.81% | 72.99% | 71.90% | **$\mathbf{74.47\%}$** | **ASL (+1.48% over LightGBM)** |
+| **Test Hamming Loss (Error Rate)** | 0.3153 | 0.0976 | **$\mathbf{0.0816}$** | 0.0927 | **CB-BCE (Lowest label error: 8.16%)** |
+
+### 2.2 Secondary Comparison Matrix: Default Fixed Threshold Regime ($\tau = 0.50$)
+
+Every metric in this secondary ablation scorecard is generated strictly using fixed default decision threshold $\tau = 0.50$.
+
+| Metric | Phase 2 Baseline (Random Forest) | Phase 2 Baseline (LightGBM Champion) | Config A: Dual ResNet-34 (CB-BCE) | Config B: Dual ResNet-34 (ASL) | Best Model on Metric |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Threshold Regime** | Default Fixed ($\tau=0.50$) | Default Fixed ($\tau=0.50$) | Default Fixed ($\tau=0.50$) | Default Fixed ($\tau=0.50$) | Fixed Baseline |
+| **Test Macro $F_1$ (16 cls, standard)** | 33.21% | **46.13%** | 36.13% | 43.69% | **LightGBM (Classical) / ASL (Deep)** |
+| **Test-Present Macro $F_1$ (14 cls)** | 37.95% | **52.72%** | 41.29% | 49.94% | **LightGBM (Classical) / ASL (Deep)** |
+| **Test Micro $F_1$** | 47.95% | **73.28%** | 64.13% | 68.72% | **LightGBM** |
+| **Test Hamming Loss (Error Rate)** | 0.2228 | **0.0899** | 0.0928 | 0.1380 | **LightGBM** |
 
 ---
 
@@ -77,8 +97,8 @@ The table below reflects the exact class ordering of `classes.json`, verified fr
 | 13 | Permanent crops | 46 | 0.0556 | 0.10 | **0.3478** | 0.45 | 0.0796 | 9 | 171 | 37 | 0.0500 | 0.1957 |
 | 14 | Transitional woodland, shrub | 1,197 | 0.6232 | 0.10 | 0.3365 | 0.60 | **0.6777** | 944 | 645 | 253 | 0.5941 | 0.7886 |
 | 15 | Urban fabric | 517 | 0.6939 | 0.10 | **0.7447** | 0.65 | 0.7374 | 358 | 96 | 159 | 0.7885 | 0.6925 |
-| — | **Standard 16-Class Macro $F_1$** | — | **41.14%** | — | **43.78%** | — | **$\mathbf{45.53\%}$** | — | — | — | — | — |
-| — | **Test-Present 14-Class Macro $F_1$** | — | **47.02%** | — | **50.03%** | — | **$\mathbf{52.03\%}$** | — | — | — | — | — |
+| — | **Standard 16-Class Macro $F_1$** | — | **47.39%** | — | **43.78%** | — | **$\mathbf{45.53\%}$** | — | — | — | — | — |
+| — | **Test-Present 14-Class Macro $F_1$** | — | **54.16%** | — | **50.03%** | — | **$\mathbf{52.03\%}$** | — | — | — | — | — |
 
 ### Arithmetic Verification of Macro Averages:
 * **ASL (14 Test-Present Classes)**:
@@ -89,8 +109,12 @@ The table below reflects the exact class ordering of `classes.json`, verified fr
   $$\text{Macro } F_1 = \frac{0.9272 + 0.9205 + 0.5235 + 0.2222 + 0.3567 + 0.8319 + 0.4410 + 0.6976 + 0.1720 + 0.2477 + 0.2355 + 0.3478 + 0.3365 + 0.7447}{14} = \frac{7.0048}{14} = \mathbf{0.500347} \quad (50.03\%)$$
 * **CB-BCE (All 16 Classes, Standard Zero-Division 0.0)**:
   $$\text{Macro } F_1 = \frac{7.0048 + 0.0000 + 0.0000}{16} = \frac{7.0048}{16} = \mathbf{0.437803} \quad (43.78\%)$$
+* **LightGBM Champion (14 Test-Present Classes)**:
+  $$\text{Macro } F_1 = \frac{0.9147 + 0.8967 + 0.6582 + 0.4675 + 0.2692 + 0.8310 + 0.4134 + 0.7185 + 0.3125 + 0.3418 + 0.3856 + 0.0556 + 0.6232 + 0.6939}{14} = \frac{7.5818}{14} = \mathbf{0.541557} \quad (54.16\%)$$
+* **LightGBM Champion (All 16 Classes, Standard Zero-Division 0.0)**:
+  $$\text{Macro } F_1 = \frac{7.5818 + 0.0000 + 0.0000}{16} = \frac{7.5818}{16} = \mathbf{0.473862} \quad (47.39\%)$$
 
-Both aggregate macro scores match the arithmetic mean of individual class scores to $10^{-6}$ numerical precision.
+All aggregate macro scores match the arithmetic mean of individual class scores to $10^{-6}$ numerical precision.
 
 ---
 

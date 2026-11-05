@@ -19,25 +19,25 @@
     "sar_backbone_initialization": "He normal initialized from scratch (2 bands: VH, VV)",
     "fusion_block_initialization": "Bidirectional 8-head cross-attention + LayerNorm + MLP initialized from scratch"
   },
-  "models": {
+  "primary_comparison_validation_tuned": {
+    "description": "Primary benchmark scorecard where all models are evaluated strictly under validation-tuned thresholds (tau*)",
     "phase2_classical_random_forest": {
       "type": "Classical Baseline (84 Handcrafted Features + Random Forest)",
-      "test_macro_f1_16_standard_tuned": 0.34,
-      "test_macro_f1_14_present": 0.3886,
-      "test_macro_f1_16_standard_default": 0.3321,
-      "test_macro_f1_14_present_default": 0.3795,
-      "test_micro_f1": 0.4795,
-      "test_hamming_loss": 0.2228,
-      "training_duration_sec": 270.0
+      "training_duration_sec": 270.0,
+      "regime": "validation_tuned",
+      "macro_f1_16_standard": 0.34,
+      "macro_f1_14_present": 0.3886,
+      "micro_f1": 0.4481,
+      "hamming_loss": 0.3153
     },
     "phase2_classical_lightgbm": {
       "type": "Classical Champion (488 Handcrafted Features + LightGBM GBDT)",
-      "test_macro_f1_16_standard": 0.4114,
-      "test_macro_f1_16_legacy_zero_div_1": 0.4739,
-      "test_macro_f1_14_present": 0.4702,
-      "test_micro_f1": 0.7299,
-      "test_hamming_loss": 0.0976,
-      "training_duration_sec": 180.0
+      "training_duration_sec": 180.0,
+      "regime": "validation_tuned",
+      "macro_f1_16_standard": 0.4739,
+      "macro_f1_14_present": 0.5416,
+      "micro_f1": 0.7299,
+      "hamming_loss": 0.0976
     },
     "m31_dual_resnet34_cb_bce": {
       "type": "Deep Multimodal Specialist (Config A: CB-BCE beta=0.999)",
@@ -45,11 +45,11 @@
       "training_duration_sec": 8465.92,
       "training_duration_minutes": 141.1,
       "val_macro_f1_tuned": 0.5429,
-      "test_macro_f1_16_default": 0.3613,
-      "test_macro_f1_16_tuned": 0.4378,
-      "test_macro_f1_14_present": 0.5003,
-      "test_micro_f1": 0.719,
-      "test_hamming_loss": 0.0816
+      "regime": "validation_tuned",
+      "macro_f1_16_standard": 0.4378,
+      "macro_f1_14_present": 0.5003,
+      "micro_f1": 0.719,
+      "hamming_loss": 0.0816
     },
     "m31_dual_resnet34_asl": {
       "type": "Deep Multimodal Specialist (Config B: ASL gamma-=4.0, m=0.05)",
@@ -57,17 +57,56 @@
       "training_duration_sec": 1715.69,
       "training_duration_minutes": 30.2,
       "val_macro_f1_tuned": 0.5639,
-      "test_macro_f1_16_default": 0.4369,
-      "test_macro_f1_16_tuned": 0.4553,
-      "test_macro_f1_14_present": 0.5203,
-      "test_micro_f1": 0.7447,
-      "test_hamming_loss": 0.0927
+      "regime": "validation_tuned",
+      "macro_f1_16_standard": 0.4553,
+      "macro_f1_14_present": 0.5203,
+      "micro_f1": 0.7447,
+      "hamming_loss": 0.0927
     }
   },
-  "tradeoff_analysis": {
-    "highest_macro_f1": "ASL (45.53% standard / 52.03% present)",
+  "secondary_comparison_default_threshold": {
+    "description": "Ablation benchmark scorecard where all models are evaluated strictly under default fixed threshold (tau = 0.50)",
+    "phase2_classical_random_forest": {
+      "type": "Classical Baseline (84 Handcrafted Features + Random Forest)",
+      "regime": "default_threshold",
+      "threshold": 0.5,
+      "macro_f1_16_standard": 0.3321,
+      "macro_f1_14_present": 0.3795,
+      "micro_f1": 0.4795,
+      "hamming_loss": 0.2228
+    },
+    "phase2_classical_lightgbm": {
+      "type": "Classical Champion (488 Handcrafted Features + LightGBM GBDT)",
+      "regime": "default_threshold",
+      "threshold": 0.5,
+      "macro_f1_16_standard": 0.4613,
+      "macro_f1_14_present": 0.5272,
+      "micro_f1": 0.7328,
+      "hamming_loss": 0.0899
+    },
+    "m31_dual_resnet34_cb_bce": {
+      "type": "Deep Multimodal Specialist (Config A: CB-BCE beta=0.999)",
+      "regime": "default_threshold",
+      "threshold": 0.5,
+      "macro_f1_16_standard": 0.3613,
+      "macro_f1_14_present": 0.4129,
+      "micro_f1": 0.6413,
+      "hamming_loss": 0.0928
+    },
+    "m31_dual_resnet34_asl": {
+      "type": "Deep Multimodal Specialist (Config B: ASL gamma-=4.0, m=0.05)",
+      "regime": "default_threshold",
+      "threshold": 0.5,
+      "macro_f1_16_standard": 0.4369,
+      "macro_f1_14_present": 0.4994,
+      "micro_f1": 0.6872,
+      "hamming_loss": 0.138
+    }
+  },
+  "tradeoff_analysis_validation_tuned": {
     "highest_micro_f1": "ASL (74.47%)",
     "lowest_hamming_loss": "CB-BCE (0.0816)",
+    "highest_macro_f1_deep": "ASL (45.53% standard / 52.03% present)",
     "wall_clock_speedup_asl_vs_cb_bce": "4.67x (30.2 min vs 141.1 min)",
     "epochs_to_best_checkpoint": "10x fewer epochs for ASL (Epoch 3 vs Epoch 30)"
   }
