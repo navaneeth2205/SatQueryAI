@@ -18,6 +18,7 @@ from typing import Any, Dict, List, Optional, Tuple, Union
 
 import joblib
 import numpy as np
+import scipy.special as sp
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
@@ -100,6 +101,9 @@ class ExecutionRoute:
     input_compatibility: bool = True   # Whether linguistic top task matches attached inputs
     routing_reason: str = ""           # Transparent justification of selection
     attached_modality: Optional[str] = None  # Detected modality of attached inputs
+    confidence_margin: float = 0.0     # Delta c = c_intent - second_max (M3.3)
+    joint_selection_score: float = 0.0 # s_joint(q) = min(c_intent/tau_intent, Delta_c/tau_margin) (M3.3)
+    is_ambiguous: bool = False         # Linguistic ambiguity flag (M3.3)
 
     def to_dict(self) -> Dict[str, Any]:
         return asdict(self)
@@ -114,12 +118,16 @@ class TaskRouter:
     def __init__(
         self,
         confidence_threshold: float = 0.65,
+        margin_threshold: float = 0.15,
+        temperature: float = 1.0,
         version: str = "0.1.0",
         ngram_range: tuple = (1, 2),
         C: float = 1.0,
         random_state: int = 42
     ):
         self.confidence_threshold = confidence_threshold
+        self.margin_threshold = margin_threshold
+        self.temperature = temperature
         self.version = version
         self.ngram_range = ngram_range
         self.C = C
@@ -318,7 +326,16 @@ class TaskRouter:
                 f"disambiguated by attached '{obs_meta.modality}' input to '{selected_task}'."
             )
 
-        # 4. Review flag check: Strictly tied to unconditioned linguistic confidence and threshold
+        # 4. Review flag check & Margin-Aware Selective Scoring (Milestone M3.3)
+        sorted_p = np.sort(probs)
+        margin_th = getattr(self, "margin_threshold", 0.15)
+        conf_th = getattr(self, "confidence_threshold", 0.65)
+        delta_c = float(sorted_p[-1] - sorted_p[-2]) if len(sorted_p) > 1 else float(sorted_p[-1])
+        s_joint = float(min(
+            text_confidence / max(conf_th, 1e-6),
+            delta_c / max(margin_th, 1e-6)
+        ))
+        is_ambiguous = (text_confidence < conf_th) or (delta_c < margin_th)
         requires_review = text_confidence < self.confidence_threshold
         if requires_review:
             trace.append(
@@ -353,8 +370,98 @@ class TaskRouter:
             selected_task=selected_task,
             input_compatibility=input_compatibility,
             routing_reason=routing_reason,
-            attached_modality=obs_meta.modality
+            attached_modality=obs_meta.modality,
+            confidence_margin=round(delta_c, 4),
+            joint_selection_score=round(s_joint, 4),
+            is_ambiguous=is_ambiguous
         )
+
+    def predict_logits(self, queries: Union[List[str], np.ndarray]) -> np.ndarray:
+        """
+        Extract raw uncalibrated decision function scores (logits) from the underlying linear classifier.
+        Used for clean calibration ablations (R3 vs R4).
+        """
+        if not self.is_fitted:
+            raise RuntimeError("TaskRouter must be fitted before calling predict_logits().")
+        tfidf = self.pipeline.named_steps["tfidf"]
+        clf = self.pipeline.named_steps["clf"]
+        X = tfidf.transform(queries)
+        if hasattr(clf, "calibrated_classifiers_"):
+            # Ensemble of calibrated base estimators: average the raw linear decision function
+            return np.mean([cc.estimator.decision_function(X) for cc in clf.calibrated_classifiers_], axis=0)
+        elif hasattr(clf, "decision_function"):
+            return clf.decision_function(X)
+        else:
+            probs = self.pipeline.predict_proba(queries)
+            return np.log(np.clip(probs, 1e-12, 1.0))
+
+    def predict_calibrated_proba(
+        self,
+        queries: Union[List[str], np.ndarray],
+        temperature: Optional[float] = None
+    ) -> np.ndarray:
+        """
+        Compute Softmax probabilities with temperature scaling:
+            P(t | q) = Softmax(z / T_cal)
+        """
+        T = temperature if temperature is not None else getattr(self, "temperature", 1.0)
+        logits = self.predict_logits(queries)
+        scaled_logits = logits / max(T, 1e-6)
+        return sp.softmax(scaled_logits, axis=-1)
+
+    def fit_temperature(
+        self,
+        val_queries: Union[List[str], np.ndarray],
+        val_labels: Union[List[str], np.ndarray]
+    ) -> float:
+        """
+        Fit post-hoc calibration temperature T_cal strictly on validation queries via NLL minimization.
+        """
+        import scipy.optimize as opt
+        logits = self.predict_logits(val_queries)
+        classes = list(self.classes_)
+        y_idx = np.array([classes.index(str(lbl)) for lbl in val_labels])
+
+        def nll(T_arr):
+            T = T_arr[0]
+            scaled = logits / max(T, 1e-6)
+            log_probs = scaled - sp.logsumexp(scaled, axis=1, keepdims=True)
+            return -float(np.mean(log_probs[np.arange(len(y_idx)), y_idx]))
+
+        res = opt.minimize(nll, [1.0], bounds=[(0.01, 10.0)], method="L-BFGS-B")
+        self.temperature = float(res.x[0])
+        return self.temperature
+
+    def compute_ece(
+        self,
+        queries: Union[List[str], np.ndarray],
+        labels: Union[List[str], np.ndarray],
+        n_bins: int = 15,
+        use_temperature: bool = True
+    ) -> float:
+        """
+        Compute Top-Label Expected Calibration Error (ECE) across M quantile/uniform bins.
+        """
+        if use_temperature:
+            probs = self.predict_calibrated_proba(queries)
+        else:
+            probs = self.pipeline.predict_proba(queries)
+        classes = list(self.classes_)
+        y_idx = np.array([classes.index(str(lbl)) for lbl in labels])
+        top_pred = np.argmax(probs, axis=1)
+        top_conf = np.max(probs, axis=1)
+        correct = (top_pred == y_idx).astype(float)
+        bin_boundaries = np.linspace(0, 1, n_bins + 1)
+        ece = 0.0
+        n_total = len(queries)
+        for i in range(n_bins):
+            b_low, b_high = bin_boundaries[i], bin_boundaries[i + 1]
+            mask = (top_conf > b_low) & (top_conf <= b_high) if i > 0 else (top_conf >= b_low) & (top_conf <= b_high)
+            if np.sum(mask) > 0:
+                bin_acc = float(np.mean(correct[mask]))
+                bin_conf = float(np.mean(top_conf[mask]))
+                ece += (float(np.sum(mask)) / n_total) * abs(bin_acc - bin_conf)
+        return float(ece)
 
     def save(self, filepath: str | Path) -> None:
         """Persist fitted router to disk."""

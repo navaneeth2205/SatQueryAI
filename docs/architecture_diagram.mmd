@@ -1,0 +1,33 @@
+flowchart TD
+    UserReq["User Request:\nQuery instruction q, Observation payload o"] --> Stage1["Stage 1: Input-Constrained Intent Router\nz = f_theta(q), P(t|q) = Softmax(z / T_cal)"]
+    
+    Stage1 --> MarginCalc["Compute Confidence & Margin:\nc_intent = max P(t|q), Delta c = c_intent - second_max\ns_joint(q) = min(c_intent / tau_intent, Delta c / tau_margin)"]
+    
+    MarginCalc --> AmbiguityTest{"Ambiguity Check:\nc_intent >= tau_intent\nAND Delta c >= tau_margin?"}
+    
+    AmbiguityTest -->|No: Polysemous/Uncertain| Pathway3["Pathway 3: CLARIFY_AMBIGUOUS_INTENT\n(Mandatory Prompt to User;\nTask Coercion Strictly Prohibited)"]
+    
+    AmbiguityTest -->|Yes: Qualified Intent| Stage2["Stage 2: Deterministic Physical Gate\nC(t_intent, o) = prod_{d=1}^8 C_d(t_intent, o)"]
+    
+    Stage2 --> GateTest{"Physical Sensor Contract:\nC(t_intent, o) == 1?"}
+    
+    GateTest -->|Fail: Contract Violated| Pathway2["Pathway 2: REJECT_INCOMPATIBLE_OBSERVATION\n(Halt Execution with Specific Violation Code;\nNever Coerce to Alternative Task)"]
+    
+    GateTest -->|Pass: Invariants Satisfied| SelTest{"Selective Threshold:\ns_joint(q) >= tau_sel?"}
+    
+    SelTest -->|Yes: High Selection Score| Pathway1A["Pathway 1: DISPATCH_QUALIFIED\n(Execute Certified Specialist S_intent)"]
+    SelTest -->|No: Low Selection Score| Pathway1B["Sub-Outcome: ABSTAIN_LOW_CONFIDENCE\n(Graceful Deferral / Human Review)"]
+    
+    subgraph SpecialistsRegistry["Perception Specialist Registry"]
+        direction TB
+        S1["Land-Cover Specialist [IMPLEMENTED & EVALUATED]\nDual-Branch ResNet-34 + Cross-Attention\n(Sentinel-1 SAR + Sentinel-2 MSI)"]
+        S2["Change-Detection Specialist [IMPLEMENTED & EVALUATED]\nFC-Siam-diff / BIT\n(Bitemporal Sentinel-2 RGB)"]
+        S3["Single-Image VQA [FORMAL ROUTING TARGET / PLANNED]"]
+        S4["Change VQA [FORMAL ROUTING TARGET / PLANNED]"]
+        S5["Visual Grounding [FORMAL ROUTING TARGET / PLANNED]"]
+        S6["Scene Captioning [FORMAL ROUTING TARGET / PLANNED]"]
+        S7["Optical-SAR Fusion [FORMAL ROUTING TARGET / PLANNED]"]
+    end
+    
+    Pathway1A --> SpecialistsRegistry
+    SpecialistsRegistry --> FinalOutput["Final Response & Supporting Evidence:\nTask Predictions + Verification Certificate"]
