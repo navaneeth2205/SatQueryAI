@@ -1,0 +1,43 @@
+{
+  "loss_type": "asl",
+  "best_epoch": 3,
+  "default_threshold": 0.5,
+  "tuned_class_thresholds": [
+    0.7000000476837158,
+    0.5,
+    0.6000000834465027,
+    0.6500000953674316,
+    0.5500000715255737,
+    0.6500000953674316,
+    0.7500000596046448,
+    0.5500000715255737,
+    0.6000000834465027,
+    0.5500000715255737,
+    0.3500000238418579,
+    0.5500000715255737,
+    0.6000000834465027,
+    0.45000001788139343,
+    0.6000000834465027,
+    0.6500000953674316
+  ],
+  "classes": [
+    "Arable land",
+    "Beaches, dunes, sands",
+    "Broad-leaved forest",
+    "Complex cultivation patterns",
+    "Coniferous forest",
+    "Industrial or commercial units",
+    "Inland waters",
+    "Inland wetlands",
+    "Land principally occupied by agriculture, with significant areas of natural vegetation",
+    "Mixed forest",
+    "Moors, heathland and sclerophyllous vegetation",
+    "Natural grassland and sparsely vegetated areas",
+    "Pastures",
+    "Permanent crops",
+    "Transitional woodland, shrub",
+    "Urban fabric"
+  ],
+  "validation_macro_f1_best": 0.5639335847835749,
+  "validation_loss_best": 0.06567275940495379
+}

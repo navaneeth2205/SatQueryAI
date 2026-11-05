@@ -1,0 +1,27 @@
+{
+  "hardware": "NVIDIA GeForce RTX 2050 (4 GB VRAM)",
+  "train_samples": 7180,
+  "val_samples": 3255,
+  "test_samples": 3248,
+  "classical_baseline_macro_f1": 0.4739,
+  "cb_bce": {
+    "best_epoch": 30,
+    "training_duration_sec": 8465.917308330536,
+    "val_macro_f1_tuned": 0.5429371198368182,
+    "test_macro_f1_default": 0.36126900862010825,
+    "test_macro_f1_tuned": 0.4378034123914436,
+    "test_macro_f1_present": 0.5003467570187927,
+    "test_micro_f1": 0.7190088120320679,
+    "test_hamming_loss": 0.08160791256157636
+  },
+  "asl": {
+    "best_epoch": 3,
+    "training_duration_sec": 1715.68608212471,
+    "val_macro_f1_tuned": 0.5639335847835749,
+    "test_macro_f1_default": 0.4369425301317048,
+    "test_macro_f1_tuned": 0.4552599227132386,
+    "test_macro_f1_present": 0.5202970545294157,
+    "test_micro_f1": 0.7446763428329272,
+    "test_hamming_loss": 0.09274938423645321
+  }
+}

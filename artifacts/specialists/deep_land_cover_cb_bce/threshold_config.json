@@ -1,0 +1,43 @@
+{
+  "loss_type": "cb_bce",
+  "best_epoch": 30,
+  "default_threshold": 0.5,
+  "tuned_class_thresholds": [
+    0.10000000149011612,
+    0.5,
+    0.10000000149011612,
+    0.10000000149011612,
+    0.10000000149011612,
+    0.10000000149011612,
+    0.10000000149011612,
+    0.15000000596046448,
+    0.10000000149011612,
+    0.10000000149011612,
+    0.10000000149011612,
+    0.10000000149011612,
+    0.10000000149011612,
+    0.10000000149011612,
+    0.10000000149011612,
+    0.10000000149011612
+  ],
+  "classes": [
+    "Arable land",
+    "Beaches, dunes, sands",
+    "Broad-leaved forest",
+    "Complex cultivation patterns",
+    "Coniferous forest",
+    "Industrial or commercial units",
+    "Inland waters",
+    "Inland wetlands",
+    "Land principally occupied by agriculture, with significant areas of natural vegetation",
+    "Mixed forest",
+    "Moors, heathland and sclerophyllous vegetation",
+    "Natural grassland and sparsely vegetated areas",
+    "Pastures",
+    "Permanent crops",
+    "Transitional woodland, shrub",
+    "Urban fabric"
+  ],
+  "validation_macro_f1_best": 0.5429371198368182,
+  "validation_loss_best": 0.028780297211864415
+}
