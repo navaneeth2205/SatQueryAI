@@ -98,13 +98,14 @@ Both aggregate macro scores match the arithmetic mean of individual class scores
 
 Rather than claiming one loss formulation is universally superior, the empirical evidence demonstrates clear operational trade-offs:
 
-1. **ASL Advantages (Positive-Class Generalization & Training Speed)**:
-   - **Higher Macro $F_1$ ($+1.75\%$ over CB-BCE)**: By downweighting easy negative background pixels with hard margin thresholding ($m = 0.05, \gamma_- = 4.0$), ASL achieved higher sensitivity and balanced precision across complex vegetative and transitional classes (`Arable land`: $93.92\%$, `Complex cultivation`: $68.54\%$, `Transitional shrub`: $67.77\%$, `Natural grassland`: $43.39\%$).
+1. **ASL Characteristics (Higher Aggregate F1 & Rapid Training)**:
+   - **Higher Macro $F_1$ ($+1.75\%$ over CB-BCE)**: By downweighting easy negative background pixels with hard margin thresholding ($m = 0.05, \gamma_- = 4.0$), ASL achieved higher sensitivity and balanced precision across several major vegetative and transitional categories (`Arable land`: $93.92\%$, `Complex cultivation`: $68.54\%$, `Transitional shrub`: $67.77\%$, `Natural grassland`: $43.39\%$).
+   - **Mixed Class-Wise Behavior**: ASL's advantage is not uniform across all classes. Classes such as `Permanent crops` ($34.78\%$ under CB-BCE vs. $7.96\%$ under ASL), `Inland wetlands` ($44.10\%$ under CB-BCE vs. $36.51\%$ under ASL), and `Coniferous forest` ($22.22\%$ under CB-BCE vs. $20.78\%$ under ASL) perform substantially better under CB-BCE.
    - **Higher Micro $F_1$ ($74.47\%$ vs. $71.90\%$)**: Overall global true positive recall is higher.
    - **Computational Efficiency**: Peaked at Epoch 3, achieving a **$4.67\times$ wall-clock speedup** ($30.2$ min vs. $141.1$ min).
-2. **CB-BCE Advantages (Lowest Label Error Rate & Specific Class Gains)**:
-   - **Lower Hamming Loss ($0.0816$ vs. $0.0927$)**: CB-BCE achieved an overall label error rate of $8.16\%$, lower than ASL ($9.27\%$) and lower than LightGBM ($9.76\%$). This reflects fewer total false positive commitments across the 16 label dimensions.
-   - **Superior Performance on Rare/Forest Classes**: CB-BCE achieved higher $F_1$ on `Permanent crops` ($34.78\%$ vs. $7.96\%$), `Inland wetlands` ($44.10\%$ vs. $36.51\%$), `Coniferous forest` ($22.22\%$ vs. $20.78\%$), and `Broad-leaved forest` ($92.05\%$ vs. $89.48\%$).
+2. **CB-BCE Characteristics (Lowest Label Error Rate & Specific Class Gains)**:
+   - **Lower Hamming Loss ($0.0816$ vs. $0.0927$)**: CB-BCE achieved lower Hamming loss, indicating a lower proportion of incorrectly predicted label-instance pairs across the complete multilabel test matrix.
+   - **Superior Performance on Specific Forest/Wetland/Crop Classes**: CB-BCE achieved higher $F_1$ on `Permanent crops` ($34.78\%$ vs. $7.96\%$), `Inland wetlands` ($44.10\%$ vs. $36.51\%$), `Coniferous forest` ($22.22\%$ vs. $20.78\%$), and `Broad-leaved forest` ($92.05\%$ vs. $89.48\%$).
 
 ---
 
@@ -112,21 +113,23 @@ Rather than claiming one loss formulation is universally superior, the empirical
 
 1. **Initialization Framing**:
    The multimodal architecture was trained on BigEarthNet using ImageNet-pretrained initialization for the corresponding optical backbone filters (Sentinel-2 B04, B03, B02), with newly initialized additional spectral channels (7 channels, He normal), SAR input channels (2 channels, He normal), and bidirectional 8-head cross-attention fusion block.
-2. **Spatial Generalization Scope**:
-   Generalization is confirmed under the **spatially buffered split** ($\ge 12.0\text{ km}$ minimum center-to-center Euclidean separation between training and test sub-tiles in UTM Zone 34N). This evaluates spatially separated in-distribution generalization within shared biomes. It does not constitute a full unseen-region or continental holdout.
+2. **Spatial Scope vs Geographic Generalization**:
+   Performance claims apply strictly to the **spatially buffered split** ($\ge 12.0\text{ km}$ minimum center-to-center Euclidean separation between training and test sub-tiles across shared MGRS tiles in UTM Zone 34N). This assesses spatially separated in-distribution generalization within shared biomes and sensor footprints. It does not evaluate full regional, tile-level, or continental holdout generalization.
 3. **Threshold Selection Integrity**:
    Thresholds ($\tau_c^*$) were selected by sweeping $[0.10, 0.90]$ strictly on the validation set ($N = 3,255$). Test labels were unblinded strictly once for the final evaluation pass.
 
 ---
 
-## 6. Audit Certification
+## 6. Audit Certification and Epistemic Status
 
-All figures reported in this document are independently verifiable from:
+The metrics reported in this document are programmatically reproduced directly from the saved prediction arrays (`y_test_prob.npy`) and ground-truth arrays (`y_test_true.npy`) generated during the training runs, using the verified reproduction script `scripts/reproduce_m31_audit_tables.py`.
+
+Underlying verification files:
 - Raw test ground truth: `artifacts/specialists/deep_land_cover_cb_bce/y_test_true.npy`
 - CB-BCE test probabilities: `artifacts/specialists/deep_land_cover_cb_bce/y_test_prob.npy`
 - ASL test probabilities: `artifacts/specialists/deep_land_cover_asl/y_test_prob.npy`
-- Full audit reproduction script: `scripts/reproduce_m31_audit_tables.py`
+- Reproduction script: `scripts/reproduce_m31_audit_tables.py`
 - Output per-class audit CSV: `artifacts/specialists/m31_per_class_audit.csv`
 - Audited summary manifest: `artifacts/specialists/m31_model_comparison.json`
 
-**Milestone M3.1 is scientifically reconciled and certified.**
+**Milestone M3.1 is formally closed as reconciled.**
