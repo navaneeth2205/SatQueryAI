@@ -102,14 +102,14 @@ def test_m33_four_discrete_execution_pathways(router):
     """Test 3: The 4 discrete execution pathways enforced under M3.3."""
     # Pathway 4: CLARIFY_AMBIGUOUS (Linguistic ambiguity)
     ambig_query = "Analyze and survey this satellite observation."
-    valid_pair = {"t1": np.zeros((64, 64, 3)), "t2": np.zeros((64, 64, 3))}
-    r4_ambig = predict_r4_proposed(ambig_query, valid_pair, router, router.predict_logits([ambig_query])[0], tau_intent=0.85, tau_margin=0.05)
+    valid_pair = {"t1": np.zeros((128, 128, 3)), "t2": np.zeros((128, 128, 3))}
+    r4_ambig = predict_r4_proposed(ambig_query, valid_pair, router, router.predict_logits([ambig_query])[0] / 0.0991, tau_intent=0.65, tau_margin=0.15)
     assert r4_ambig["action"] == "CLARIFY_AMBIGUOUS"
     assert r4_ambig["is_ambiguous"] is True
 
     # Pathway 3: REJECT_INCOMPATIBLE (Observation contract violation)
     clear_cd_query = "What changed between 2021 and 2024?"
-    incompat_single = np.zeros((64, 64, 3), dtype=np.uint8)  # Single image for CD
+    incompat_single = np.zeros((128, 128, 3), dtype=np.uint8)  # Single image for CD
     cal_logits_cd = router.predict_logits([clear_cd_query])[0] / 0.0991
     r4_incompat = predict_r4_proposed(clear_cd_query, incompat_single, router, cal_logits_cd, tau_intent=0.40, tau_margin=0.05)
     assert r4_incompat["action"] == "REJECT_INCOMPATIBLE"
@@ -207,3 +207,82 @@ def test_m33_cluster_bootstrap_reproducibility():
     low, high = compute_wilson_ci(0, 35)
     assert low == pytest.approx(0.0, abs=1e-6)
     assert high < 0.10  # 9.89% bound for 0 failures in 35
+
+
+def test_m33_ambiguity_confusion_matrix_and_denominator():
+    """Test 7: Full ambiguity confusion matrix and precision denominator consistency."""
+    manifest_path = REPO_ROOT / "artifacts" / "benchmarks" / "m33_selective_routing_comparison.json"
+    assert manifest_path.exists(), "Benchmark manifest must exist"
+
+    import json
+    with open(manifest_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    ambig_metrics = data["ambiguity_clarification_metrics"]
+    for m_id in ["R3", "R4", "R4-Tuned"]:
+        m = ambig_metrics[m_id]
+        tp = m["TP_clarify"]
+        fp = m["FP_clarify"]
+        fn = m["FN_clarify"]
+        tn = m["TN_clarify"]
+        total = m["Total_Predicted_Clarify"]
+
+        # Check partition of 100 test scenarios
+        assert tp + fp + fn + tn == 100, f"Sum of confusion matrix must equal 100 for {m_id}"
+        assert tp + fn == 20, f"Total ambiguous scenarios (Cohort 4) must equal 20 for {m_id}"
+        assert fp + tn == 80, f"Total non-ambiguous scenarios must equal 80 for {m_id}"
+        assert total == tp + fp, f"Denominator Total_Predicted_Clarify must equal TP + FP for {m_id}"
+
+        # Check precision and recall arithmetic
+        expected_rec = round(tp / 20.0 * 100, 2)
+        expected_prec = round(tp / total * 100, 2) if total > 0 else 0.0
+        assert m["Clarify_Recall"] == pytest.approx(expected_rec, abs=0.02)
+        assert m["Clarify_Precision"] == pytest.approx(expected_prec, abs=0.02)
+
+
+def test_m33_negative_aurc_finding_and_frozen_protocol():
+    """Test 8: Frozen threshold governance and negative AURC result verification."""
+    manifest_path = REPO_ROOT / "artifacts" / "benchmarks" / "m33_selective_routing_comparison.json"
+    import json
+    with open(manifest_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # 1. Router architecture provenance
+    assert "Logistic Regression" in data["router_architecture"]
+    assert "TF-IDF" in data["router_architecture"]
+
+    # 2. Frozen protocol thresholds
+    frozen = data["frozen_protocol_thresholds"]
+    assert frozen["tau_intent"] == 0.65
+    assert frozen["tau_margin"] == 0.15
+    assert frozen["tau_sel"] == 1.0
+
+    # 3. Calibration direction
+    cal = data["calibration"]
+    assert cal["T_cal"] < 1.0, "T_cal must be < 1.0 to sharpen underconfident linear scores"
+    assert cal["calibrated_ece_pct"] < cal["raw_ece_pct"], "Calibration must reduce ECE"
+
+    # 4. Negative AURC finding
+    scorecard = data["selective_risk_scorecard"]
+    r0_aurc = scorecard["R0"]["AURC"]
+    r1_aurc = scorecard["R1"]["AURC"]
+    r4_aurc = scorecard["R4"]["AURC"]
+    assert r4_aurc > r0_aurc, "R4 must have higher AURC than R0 (negative result on E_eval)"
+    assert r4_aurc > r1_aurc, "R4 must have higher AURC than R1 (negative result on E_eval)"
+
+
+def test_m33_tsr_arch_statistical_inference_and_mcnemar():
+    """Test 9: Clustered bootstrap and McNemar paired tests for TSR_arch^(7)."""
+    manifest_path = REPO_ROOT / "artifacts" / "benchmarks" / "m33_selective_routing_comparison.json"
+    import json
+    with open(manifest_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    tsr_tests = data["tsr_arch_statistical_tests"]
+    r4_vs_r1 = tsr_tests["R1"]
+
+    # Observed architectural improvement over unconstrained linear baseline
+    assert r4_vs_r1["Risk_Difference_pct"] > 30.0, "R4 TSR_arch must show substantial difference over R1"
+    assert r4_vs_r1["CI_95_Low_pct"] > 0.0, "95% Clustered CI lower bound must be > 0"
+    assert r4_vs_r1["McNemar_Chi2"] > 20.0, "McNemar Chi2 must be > 20 for R4 vs R1"
+    assert r4_vs_r1["McNemar_p_val"] < 1e-4, "McNemar p-value must be < 0.0001"

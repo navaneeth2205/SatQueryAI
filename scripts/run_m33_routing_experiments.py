@@ -649,6 +649,7 @@ def run_m33_experiments():
         "R2-Cal": [],
         "R3": [],
         "R4": [],
+        "R4-Tuned": [],
         "R5": []
     }
 
@@ -664,10 +665,25 @@ def run_m33_experiments():
         r2_out = predict_r2_gated_non_selective(q, payload, router, test_logits[i])
         r2cal_out = predict_r2_cal_gated_non_selective(q, payload, router, test_cal_logits[i])
         r3_out = predict_r3_uncalibrated_selective(q, payload, router, test_logits[i], tau_sel=0.65)
-        r4_out = predict_r4_proposed(q, payload, router, test_cal_logits[i], tau_intent=best_tau_int, tau_margin=best_tau_mar, tau_sel=1.0)
+        # Primary Certified Specification: Frozen M3.0 Thresholds (tau_intent=0.65, tau_margin=0.15, tau_sel=1.0)
+        r4_frozen_out = predict_r4_proposed(q, payload, router, test_cal_logits[i], tau_intent=0.65, tau_margin=0.15, tau_sel=1.0)
+        r4_frozen_out["model_id"] = "R4"
+        # Secondary Exploratory Analysis: Validation Grid Search Thresholds (tau_intent=0.85, tau_margin=0.05, tau_sel=1.0)
+        r4_tuned_out = predict_r4_proposed(q, payload, router, test_cal_logits[i], tau_intent=best_tau_int, tau_margin=best_tau_mar, tau_sel=1.0)
+        r4_tuned_out["model_id"] = "R4-Tuned"
         r5_out = predict_r5_frontier_llm_baseline(q, payload, exp_task, is_ood)
 
-        for m_id, out in [("R0", r0_out), ("R1", r1_out), ("R1-Gated", r1g_out), ("R2", r2_out), ("R2-Cal", r2cal_out), ("R3", r3_out), ("R4", r4_out), ("R5", r5_out)]:
+        for m_id, out in [
+            ("R0", r0_out),
+            ("R1", r1_out),
+            ("R1-Gated", r1g_out),
+            ("R2", r2_out),
+            ("R2-Cal", r2cal_out),
+            ("R3", r3_out),
+            ("R4", r4_frozen_out),
+            ("R4-Tuned", r4_tuned_out),
+            ("R5", r5_out)
+        ]:
             out["scenario_id"] = sc.get("scenario_id", f"TEST-{i:03d}")
             out["template_family"] = sc.get("template_family", "unknown")
             out["cohort"] = sc["cohort"]
@@ -689,7 +705,7 @@ def run_m33_experiments():
     curve_metrics: Dict[str, Any] = {}
     curves_data: Dict[str, Tuple[np.ndarray, np.ndarray, float]] = {}
 
-    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4"]:
+    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R4-Tuned"]:
         records = [model_evaluations[m_id][idx] for idx in e_eval_indices]
         scores = np.array([r["selective_score"] for r in records], dtype=float)
         # Error indicator: predicted != expected
@@ -737,37 +753,60 @@ def run_m33_experiments():
 
     # 7A. Ambiguity Clarification Fidelity (Cohort 4: 4_ambiguous_multi_intent, N=20)
     v3_indices = [i for i, sc in enumerate(test_scenarios) if sc["cohort"] == "4_ambiguous_multi_intent"]
-    ambig_results: Dict[str, Dict[str, float]] = {}
+    ambig_results: Dict[str, Dict[str, Any]] = {}
 
-    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R5"]:
+    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R4-Tuned", "R5"]:
         all_evals = model_evaluations[m_id]
-        v3_evals = [all_evals[idx] for idx in v3_indices]
-
-        # Interceptions in V3
-        tp_clarify = sum(1 for r in v3_evals if r["action"] in ("CLARIFY_AMBIGUOUS", "HALTED_UNCERTAINTY", "ABSTAIN_LOW_CONFIDENCE"))
-        # Total clarification / abstention actions across entire test split
-        total_clarify = sum(1 for r in all_evals if r["action"] in ("CLARIFY_AMBIGUOUS", "HALTED_UNCERTAINTY", "ABSTAIN_LOW_CONFIDENCE"))
-
+        
+        tp_clarify = 0
+        fp_clarify = 0
+        fn_clarify = 0
+        tn_clarify = 0
+        fp_cohort_breakdown: Dict[str, int] = {}
+        
+        for sc_idx, sc in enumerate(test_scenarios):
+            r = all_evals[sc_idx]
+            is_v3 = (sc["cohort"] == "4_ambiguous_multi_intent")
+            is_clarify = (r["action"] in ("CLARIFY_AMBIGUOUS", "HALTED_UNCERTAINTY", "ABSTAIN_LOW_CONFIDENCE"))
+            
+            if is_v3 and is_clarify:
+                tp_clarify += 1
+            elif is_v3 and not is_clarify:
+                fn_clarify += 1
+            elif not is_v3 and is_clarify:
+                fp_clarify += 1
+                c_name = sc["cohort"]
+                fp_cohort_breakdown[c_name] = fp_cohort_breakdown.get(c_name, 0) + 1
+            else:
+                tn_clarify += 1
+        
+        total_clarify = tp_clarify + fp_clarify
         rec_c = tp_clarify / len(v3_indices) if len(v3_indices) > 0 else 0.0
         prec_c = tp_clarify / total_clarify if total_clarify > 0 else 0.0
         f1_c = 2 * prec_c * rec_c / (prec_c + rec_c) if (prec_c + rec_c) > 0 else 0.0
 
         ambig_results[m_id] = {
+            "TP_clarify": tp_clarify,
+            "FP_clarify": fp_clarify,
+            "FN_clarify": fn_clarify,
+            "TN_clarify": tn_clarify,
+            "Total_Predicted_Clarify": total_clarify,
             "Clarify_Recall": round(rec_c * 100, 2),
             "Clarify_Precision": round(prec_c * 100, 2),
             "Clarify_F1": round(f1_c * 100, 2),
-            "V3_False_Dispatches": len(v3_indices) - tp_clarify
+            "V3_False_Dispatches": fn_clarify,
+            "FP_Cohort_Breakdown": fp_cohort_breakdown
         }
 
     df_ambig = pd.DataFrame(ambig_results).T
-    print("\nAmbiguity Clarification Fidelity (Cohort V3, N=20):")
-    print(df_ambig.to_string())
+    print("\nAmbiguity Clarification Fidelity & Confusion Matrix (Cohort V3, N=20 in N=100 Test):")
+    print(df_ambig[["TP_clarify", "FP_clarify", "FN_clarify", "TN_clarify", "Total_Predicted_Clarify", "Clarify_Recall", "Clarify_Precision", "Clarify_F1"]].to_string())
 
     # 7B. Physical Compatibility Interception & Safety (Cohorts 2 & 3: Contract Violations, N=35)
     v5_indices = [i for i, sc in enumerate(test_scenarios) if sc["cohort"] in ("2_supported_incompatible_input", "3_missing_sensor_modalities")]
     safety_results: Dict[str, Dict[str, Any]] = {}
 
-    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R5"]:
+    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R4-Tuned", "R5"]:
         v5_evals = [model_evaluations[m_id][idx] for idx in v5_indices]
         # Incompatible dispatches: executed despite incompatible payload
         incompat_dispatches = sum(1 for r in v5_evals if r["action"] == "DISPATCH_QUALIFIED")
@@ -805,7 +844,7 @@ def run_m33_experiments():
     # - V5: Rejected with contract violation
     # - Unsupported / OOD: Refused or halted
     tsr_arch: Dict[str, float] = {}
-    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R5"]:
+    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R4-Tuned", "R5"]:
         successes = 0
         for sc, r in zip(test_scenarios, model_evaluations[m_id]):
             c = sc["cohort"]
@@ -827,13 +866,11 @@ def run_m33_experiments():
     # Specialist inference success: correct routing + gate approval + quality threshold (LC F1>=0.50, CD F1>=0.40)
     # Using frozen milestone specialist quality outcomes
     tsr_exec: Dict[str, float] = {}
-    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R5"]:
+    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R4-Tuned", "R5"]:
         exec_success = 0
         for idx in e_eval_indices:
             r = model_evaluations[m_id][idx]
             if r["action"] == "DISPATCH_QUALIFIED" and r["is_correct_intent"] and r["is_compatible"]:
-                # Specialist model execution quality simulation based on M3.1 and M3.2 verified benchmarks:
-                # Land Cover specialist pass rate: ~82%; Change Detection specialist pass rate: ~50%
                 exec_success += 1
         tsr_exec[m_id] = round(exec_success / len(e_eval_indices) * 100, 2)
 
@@ -844,7 +881,8 @@ def run_m33_experiments():
     print("\nSegregated Success Rate Breakdown:")
     print(df_tsr.to_string())
 
-    # 8. Paired Cluster Bootstrap Statistical Inference
+    # 8. Statistical Inference
+    # 8A. Paired Cluster Bootstrap Statistical Inference for Global AURC Differences on E_eval (N=25)
     print("\n" + "-" * 60)
     print("[Statistical Inference] Running Paired Cluster Bootstrap (B=1000) for Global AURC Differences...")
     print("-" * 60)
@@ -926,8 +964,89 @@ def run_m33_experiments():
         bootstrap_results[m_id]["Holm_Reject_at_05"] = (running_max <= 0.05)
 
     df_boot = pd.DataFrame(bootstrap_results).T
-    print("\nPaired Cluster Bootstrap Statistical Test Results (Target Contrast vs R4 Proposed, B=1000):")
+    print("\nPaired Cluster Bootstrap Statistical Test Results (AURC Baseline - R4 Proposed, B=1000):")
     print(df_boot[["Delta_AURC_obs", "Bootstrap_SE", "CI_95_Low", "CI_95_High", "p_value_raw", "Step_Down_Holm_p_val", "Holm_Reject_at_05"]].to_string())
+    print("      Note: Delta_AURC_obs <= 0 confirms R4 has higher/worse AURC than baselines (negative result).")
+
+    # 8B. Paired Cluster Bootstrap & McNemar Test for TSR_arch^(7) (N=100)
+    print("\n" + "-" * 60)
+    print("[Statistical Inference] Running Paired Cluster Bootstrap (B=1000) & McNemar Tests for TSR_arch^(7)...")
+    print("-" * 60)
+
+    all_fams = sorted(list(set(s["template_family"] for s in test_scenarios)))
+    fam_to_all_indices = {fam: [idx for idx, s in enumerate(test_scenarios) if s["template_family"] == fam] for fam in all_fams}
+    K_all_fams = len(all_fams)
+
+    # Precompute success indicators
+    model_success_indicators: Dict[str, np.ndarray] = {}
+    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R4-Tuned", "R5"]:
+        succs = []
+        for sc, r in zip(test_scenarios, model_evaluations[m_id]):
+            c = sc["cohort"]
+            if c == "1_supported_compatible":
+                succs.append(1 if (r["action"] == "DISPATCH_QUALIFIED" and r["is_correct_intent"] and r["is_compatible"]) else 0)
+            elif c in ("2_supported_incompatible_input", "3_missing_sensor_modalities"):
+                succs.append(1 if r["action"] == "REJECT_INCOMPATIBLE" else 0)
+            elif c == "4_ambiguous_multi_intent":
+                succs.append(1 if r["action"] in ("CLARIFY_AMBIGUOUS", "HALTED_UNCERTAINTY") else 0)
+            elif c in ("5_unsupported_tasks", "6_out_of_distribution"):
+                succs.append(1 if r["action"] in ("REFUSED_UNAVAILABLE", "ABSTAIN_LOW_CONFIDENCE", "CLARIFY_AMBIGUOUS", "REJECT_INCOMPATIBLE") else 0)
+            else:
+                succs.append(0)
+        model_success_indicators[m_id] = np.array(succs, dtype=int)
+
+    tsr_targets = ["R0", "R1", "R1-Gated", "R2", "R3"]
+    tsr_boot_results: Dict[str, Dict[str, Any]] = {}
+
+    r4_succ_arr = model_success_indicators["R4"]
+    for b_id in tsr_targets:
+        base_succ_arr = model_success_indicators[b_id]
+        diff_obs = float(np.mean(r4_succ_arr) - np.mean(base_succ_arr))
+
+        # McNemar contingency counts: n00 (both fail), n01 (R4 fail, Base win), n10 (R4 win, Base fail), n11 (both win)
+        n00 = int(np.sum((r4_succ_arr == 0) & (base_succ_arr == 0)))
+        n01 = int(np.sum((r4_succ_arr == 0) & (base_succ_arr == 1)))
+        n10 = int(np.sum((r4_succ_arr == 1) & (base_succ_arr == 0)))
+        n11 = int(np.sum((r4_succ_arr == 1) & (base_succ_arr == 1)))
+
+        b_c = n01 + n10
+        if b_c > 0:
+            stat = ((abs(n10 - n01) - 1.0) ** 2) / float(b_c)
+            p_mcnemar = float(stats.chi2.sf(stat, df=1))
+        else:
+            stat = 0.0
+            p_mcnemar = 1.0
+
+        # Cluster bootstrap over 24 template families
+        b_diffs = np.zeros(B, dtype=float)
+        for b in range(B):
+            resampled = np.random.choice(all_fams, size=K_all_fams, replace=True)
+            b_indices = []
+            for fam in resampled:
+                b_indices.extend(fam_to_all_indices[fam])
+            b_r4_rate = np.mean(r4_succ_arr[b_indices])
+            b_base_rate = np.mean(base_succ_arr[b_indices])
+            b_diffs[b] = b_r4_rate - b_base_rate
+
+        ci_low = float(np.percentile(b_diffs, 2.5))
+        ci_high = float(np.percentile(b_diffs, 97.5))
+        se_boot = float(np.std(b_diffs, ddof=1))
+
+        tsr_boot_results[b_id] = {
+            "R4_TSR_arch_pct": round(float(np.mean(r4_succ_arr)) * 100, 2),
+            "Baseline_TSR_arch_pct": round(float(np.mean(base_succ_arr)) * 100, 2),
+            "Risk_Difference_pct": round(diff_obs * 100, 2),
+            "Clustered_SE_pct": round(se_boot * 100, 2),
+            "CI_95_Low_pct": round(ci_low * 100, 2),
+            "CI_95_High_pct": round(ci_high * 100, 2),
+            "Contingency_n00_n01_n10_n11": [n00, n01, n10, n11],
+            "McNemar_Chi2": round(stat, 4),
+            "McNemar_p_val": round(p_mcnemar, 6)
+        }
+
+    df_tsr_boot = pd.DataFrame(tsr_boot_results).T
+    print("\nTSR_arch^(7) Paired Statistical Tests (R4 Proposed vs Baselines, N=100, B=1000):")
+    print(df_tsr_boot[["R4_TSR_arch_pct", "Baseline_TSR_arch_pct", "Risk_Difference_pct", "CI_95_Low_pct", "CI_95_High_pct", "McNemar_Chi2", "McNemar_p_val"]].to_string())
 
     # 9. Plot Publication-Quality Risk-Coverage Curves
     print("\n" + "-" * 60)
@@ -936,7 +1055,7 @@ def run_m33_experiments():
     plot_path = REPO_ROOT / "artifacts" / "benchmarks" / "risk_coverage_curves_m33.png"
     plot_path.parent.mkdir(parents=True, exist_ok=True)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6), dpi=300)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6), dpi=300)
 
     # Plot 1: Empirical Risk-Coverage Curves over Common Population E_eval
     colors = {
@@ -946,7 +1065,8 @@ def run_m33_experiments():
         "R2": "#9467bd",
         "R2-Cal": "#8c564b",
         "R3": "#ff7f0e",
-        "R4": "#1f77b4"
+        "R4": "#1f77b4",
+        "R4-Tuned": "#17becf"
     }
     styles = {
         "R0": "--",
@@ -955,7 +1075,8 @@ def run_m33_experiments():
         "R2": ":",
         "R2-Cal": "-.",
         "R3": "--",
-        "R4": "-"
+        "R4": "-",
+        "R4-Tuned": "--"
     }
     labels = {
         "R0": f"R0: Heuristic (AURC={curve_metrics['R0']['AURC']:.3f})",
@@ -964,24 +1085,25 @@ def run_m33_experiments():
         "R2": f"R2: Gated Non-Selective (AURC={curve_metrics['R2']['AURC']:.3f})",
         "R2-Cal": f"R2-Cal: Calibrated Non-Selective (AURC={curve_metrics['R2-Cal']['AURC']:.3f})",
         "R3": f"R3: Uncalibrated Selective (AURC={curve_metrics['R3']['AURC']:.3f})",
-        "R4": f"R4: Proposed SatQuery AI (AURC={curve_metrics['R4']['AURC']:.3f})"
+        "R4": f"R4: Proposed (Frozen: AURC={curve_metrics['R4']['AURC']:.3f})",
+        "R4-Tuned": f"R4-Tuned: Grid Ablation (AURC={curve_metrics['R4-Tuned']['AURC']:.3f})"
     }
 
-    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4"]:
+    for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R4-Tuned"]:
         cov_p, risk_p, _ = curves_data[m_id]
-        lw = 2.4 if m_id == "R4" else 1.6
+        lw = 2.4 if m_id in ("R4", "R4-Tuned") else 1.5
         ax1.plot(cov_p * 100, risk_p * 100, color=colors[m_id], linestyle=styles[m_id], linewidth=lw, label=labels[m_id])
 
     ax1.set_title("Empirical Selective Risk vs. Coverage (Common Population $\\mathcal{E}_{\\mathrm{eval}}$, N=25)", fontsize=11, fontweight="bold")
     ax1.set_xlabel("Supported Request Coverage $\\Phi$ (%)", fontsize=10)
     ax1.set_ylabel("Selective Risk $\\mathcal{R}(\\Phi)$ (%)", fontsize=10)
     ax1.set_xlim(-2, 102)
-    ax1.set_ylim(-2, 50)
+    ax1.set_ylim(-2, 55)
     ax1.grid(True, linestyle="--", alpha=0.5)
-    ax1.legend(loc="upper left", fontsize=8, framealpha=0.9)
+    ax1.legend(loc="upper left", fontsize=7.5, framealpha=0.9)
 
     # Plot 2: Safety & Interception Tradeoff
-    policies = ["R0", "R1", "R1-Gated", "R2", "R3", "R4", "R5"]
+    policies = ["R0", "R1", "R1-Gated", "R2", "R3", "R4", "R4-Tuned", "R5"]
     cvdr_vals = [safety_results[m]["CVDR_pct"] for m in policies]
     ider_vals = [safety_results[m]["IDER_pct"] for m in policies]
     clarify_f1 = [ambig_results[m]["Clarify_F1"] for m in policies]
@@ -997,7 +1119,7 @@ def run_m33_experiments():
     ax2.set_xlabel("Routing Policy Configuration", fontsize=10)
     ax2.set_ylabel("Rate (%)", fontsize=10)
     ax2.set_xticks(x)
-    ax2.set_xticklabels(policies, fontweight="bold")
+    ax2.set_xticklabels(policies, fontweight="bold", fontsize=8)
     ax2.set_ylim(0, 115)
     ax2.grid(True, linestyle="--", alpha=0.5, axis="y")
     ax2.legend(loc="upper right", fontsize=8, framealpha=0.9)
@@ -1017,14 +1139,21 @@ def run_m33_experiments():
         "milestone": "M3.3",
         "description": "Advanced Selective Routing & Risk-Coverage Optimization",
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "router_architecture": "TF-IDF Vectorizer + Calibrated Logistic Regression Linear Classifier",
         "calibration": {
             "T_cal": round(T_cal, 4),
+            "explanation": "T_cal < 1.0 (0.0991) sharpens underconfident linear decision function logits, reducing NLL and ECE.",
             "raw_nll": round(raw_nll, 4),
             "calibrated_nll": round(cal_nll, 4),
             "raw_ece_pct": round(raw_ece * 100, 2),
             "calibrated_ece_pct": round(temp_ece * 100, 2)
         },
-        "optimal_thresholds": {
+        "frozen_protocol_thresholds": {
+            "tau_intent": 0.65,
+            "tau_margin": 0.15,
+            "tau_sel": 1.0
+        },
+        "exploratory_grid_search_thresholds": {
             "tau_intent": best_tau_int,
             "tau_margin": best_tau_mar,
             "tau_sel": 1.0
@@ -1037,7 +1166,8 @@ def run_m33_experiments():
             "TSR_arch_7_task_pct": tsr_arch,
             "TSR_exec_2_specialist_pct": tsr_exec
         },
-        "paired_cluster_bootstrap": bootstrap_results
+        "paired_cluster_bootstrap_aurc": bootstrap_results,
+        "tsr_arch_statistical_tests": tsr_boot_results
     }
     json_path = out_dir / "m33_selective_routing_comparison.json"
     with open(json_path, "w", encoding="utf-8") as f:
@@ -1061,7 +1191,7 @@ def run_m33_experiments():
             "expected_task": sc.get("expected_task", ""),
             "expected_action": sc.get("expected_action", "")
         }
-        for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R5"]:
+        for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R4-Tuned", "R5"]:
             eval_res = model_evaluations[m_id][sc_idx]
             row[f"{m_id}_predicted_task"] = eval_res["predicted_task"]
             row[f"{m_id}_action"] = eval_res["action"]

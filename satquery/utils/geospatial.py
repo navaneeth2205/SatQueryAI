@@ -265,6 +265,11 @@ def evaluate_physical_compatibility_gate(
                 if np.isnan(t1).any() or np.isnan(t2).any() or np.isinf(t1).any() or np.isinf(t2).any():
                     failure_codes.append("ERR_CORRUPT_PAYLOAD")
                     failure_reasons.append("ERR_CORRUPT_PAYLOAD: Temporal pair contains NaN or Inf values")
+                if payload.get("product_type") == "s2_l2a" and t1.dtype == np.float32 and np.max(t1) <= 1.05:
+                    failure_codes.append("ERR_CORRUPT_PAYLOAD")
+                    failure_reasons.append("ERR_CORRUPT_PAYLOAD: Sentinel-2 L2A product expects raw DN [0, 10000], got normalized float [0.0, 1.0] (double scaling trap)")
+                if "spatial_shape" not in meta:
+                    meta["spatial_shape"] = t1.shape[:2]
         elif isinstance(payload, (tuple, list)) and len(payload) == 2:
             im1, im2 = payload[0], payload[1]
             if isinstance(im1, np.ndarray) and isinstance(im2, np.ndarray):
@@ -274,6 +279,8 @@ def evaluate_physical_compatibility_gate(
                 if np.isnan(im1).any() or np.isnan(im2).any() or np.isinf(im1).any() or np.isinf(im2).any():
                     failure_codes.append("ERR_CORRUPT_PAYLOAD")
                     failure_reasons.append("ERR_CORRUPT_PAYLOAD: Temporal pair contains NaN or Inf values")
+                if "spatial_shape" not in meta:
+                    meta["spatial_shape"] = im1.shape[:2]
 
     elif task == "OPTICAL_SAR_FUSION":
         if isinstance(payload, dict):

@@ -50,7 +50,7 @@ class NumberedCanvas(canvas.Canvas):
         # Footer
         page_text = f"Page {self._pageNumber} of {page_count}"
         self.drawRightString(letter[0] - 54, 32, page_text)
-        self.drawString(54, 32, "CONFIDENTIAL & AUTHORITATIVE — Frozen Protocol v3.0.0-freeze-rev21")
+        self.drawString(54, 32, "ML Group Project — SatQuery AI")
         self.setStrokeColor(colors.HexColor("#CBD5E0"))
         self.setLineWidth(0.5)
         self.line(54, 44, letter[0] - 54, 44)

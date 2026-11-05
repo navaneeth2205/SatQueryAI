@@ -198,6 +198,7 @@ This is enforced as an **architectural design constraint** on the router: the te
 $$\vec{z} = f_\theta(q) \in \mathbb{R}^K, \qquad P_{\text{text}}(t \mid q) = \text{Softmax}(\vec{z} / T_{\text{cal}})_t = \frac{\exp(z_t / T_{\text{cal}})}{\sum_{j=1}^K \exp(z_j / T_{\text{cal}})}$$
 where $T_{\text{cal}} > 0$ is a post-hoc calibration temperature fitted on validation queries via negative log-likelihood minimization:
 $$T_{\text{cal}}^* = \arg\min_{T > 0} - \sum_{i \in \text{Val}} \log \left( \frac{\exp(z_{i, y_i} / T)}{\sum_{j=1}^K \exp(z_{i, j} / T)} \right)$$
+Empirical validation optimization via NLL minimization yielded $T_{\text{cal}}^* = 0.0991$, reducing NLL from $1.5991$ to $0.6366$ ($-60.19\%$) and decreasing Expected Calibration Error (ECE) from $22.72\%$ to $17.45\%$.
 
 ### 6.2 Competitive Confidence Margin & The Joint Selection Function
 The candidate task and competitive margin against the runner-up task are:
@@ -205,8 +206,10 @@ $$\hat{t}_{\text{intent}} = \arg\max_{t \in \mathcal{T}} P_{\text{text}}(t \mid 
 $$\Delta c = c_{\text{intent}} - \max_{j \ne \hat{t}_{\text{intent}}} P_{\text{text}}(j \mid q)$$
 To prevent single-threshold distortions, the **Standardized Joint Selection Function** is defined as:
 $$s_{\text{joint}}(q) = \min\left( \frac{c_{\text{intent}}}{\tau_{\text{intent}}}, \frac{\Delta c}{\tau_{\text{margin}}} \right)$$
-Under nominal calibrated operating thresholds ($\tau_{\text{intent}} = 0.65, \tau_{\text{margin}} = 0.15$):
-$$s_{\text{joint}}(q) \ge 1.0 \iff c_{\text{intent}} \ge 0.65 \land \Delta c \ge 0.15$$
+We define two operational parameterizations:
+1. **Nominal Protocol Baseline**: $\tau_{\text{intent}} = 0.65, \tau_{\text{margin}} = 0.15$ ($s_{\text{joint}}(q) \ge 1.0 \iff c_{\text{intent}} \ge 0.65 \land \Delta c \ge 0.15$).
+2. **Validation Grid-Search Tuned**: $\tau_{\text{intent}}^* = 0.85, \tau_{\text{margin}}^* = 0.05$ (optimizing validation operational $F_1$ to $43.75\%$ with $95\%$ ambiguity interception).
+
 Any query with $s_{\text{joint}}(q) < 1.0$ is ambiguous or low-margin, triggering Pathway 3 (`CLARIFY_AMBIGUOUS_INTENT`) before observation payload evaluation.
 
 For queries that pass the ambiguity check ($s_{\text{joint}}(q) \ge 1.0$) and satisfy physical sensor compatibility ($\mathcal{C}(\hat{t}_{\text{intent}}, o) == 1$), the selective threshold $\tau_{\text{sel}}$ governs dispatch:
@@ -352,7 +355,7 @@ Output: Optimal per-class threshold vector tau* in [0.10, 0.90]^C, Optimal Valid
 
 | Component | Model Architecture | Key Hyperparameters | Software / Libraries Used |
 | :--- | :--- | :--- | :--- |
-| **Linguistic Router** | Calibrated DistilBERT / Fine-Tuned DeBERTa-v3 | Max Length: 64, AdamW, $\text{lr}=2 \times 10^{-5}$, $T_{\text{cal}}^* = 1.24$, Nominal $\tau_{\text{intent}}=0.65, \tau_{\text{margin}}=0.15$ | PyTorch 2.6, HuggingFace Transformers, scikit-learn |
+| **Linguistic Router (Evaluated)** | TF-IDF Vectorizer + Balanced Logistic Regression | N-gram range (1, 2), sublinear TF, $C=1.0$, L-BFGS, $T_{\text{cal}}^* = 0.0991$, Nominal $\tau_{\text{intent}}=0.65, \tau_{\text{margin}}=0.15$; Validation-Tuned $\tau_{\text{intent}}^*=0.85, \tau_{\text{margin}}^*=0.05$ | scikit-learn, SciPy, NumPy, Python 3.14 |
 | **Land-Cover Specialist** | Dual-Branch ResNet-34 + Cross-Attention | Optical: 10 bands (ImageNet RGB init, He normal bands 4–10); SAR: 2 bands (He normal init); 8-head cross-attention ($d_k=64$, dim 512), 2-layer MLP (512 $\to$ 1024 $\to$ 512); Batch size: 64, AdamW, $\text{lr}=10^{-4}$, CosineAnnealingLR, 40 epochs | PyTorch 2.6, torchvision, NumPy, SciPy |
 | **Change-Detection Baseline** | FC-Siam-diff (Daudt et al., 2018) | 4-stage convolutional encoder with skip differencing, transpose-conv decoder (1.4M params); Batch size: 16, AdamW, $\text{lr}=10^{-3}$, 20 epochs on 586 patches ($256 \times 256$, stride 64), $\tau^* = 0.25$ | PyTorch 2.6, rasterio, Pillow, scikit-learn |
 | **Change-Detection Transformer** | Bitemporal Image Transformer (BIT) (Chen et al., 2021) | Siamese ResNet-18 backbone, Spatial Tokenizer ($L=64$), 4 Transformer Encoder + 4 Transformer Decoder layers, FCN prediction head; Batch size: 16, AdamW, $\text{lr}=10^{-4}$, 20 epochs, $\tau^* = 0.45$ | PyTorch 2.6, einops, timm |
@@ -471,10 +474,29 @@ Under pre-registered protocol `v3.0.0-freeze-rev21`, the required certification 
 
 ---
 
-### 8.3 Routing & Safety Gate Evaluation (Preliminary Benchmark)
-Evaluated across controlled test scenarios ($N=84$ in Tier 2):
-- **Safety Interception on Contract Violations ($V_5$)**: In our preliminary benchmark evaluation of 28 contract-violation scenarios ($V_5$), **no incompatible dispatches were observed** ($\text{IDER}_{\text{obs}} = 0.0\%$, $0/28$). While zero errors were observed empirically, finite-sample statistical bounds establish the true population risk interval (one-sided 95% Wilson upper bound is **$8.81\%$**, exact Clopper-Pearson Binomial bound is **$10.15\%$**). The architecture does not claim zero population risk a priori.
-- **Ambiguity Clarification Fidelity ($V_3$)**: Standardized joint margin gating successfully intercepted ambiguous prompts without task coercion, achieving $\text{PRF}_1^{\text{clarify}} \ge 0.95$.
+### 8.3 Milestone M3.3: Routing, Safety, & Selective Prediction Results
+Evaluated on the locked held-out test split of $N = 100$ multi-modal operational scenarios across 5 cohorts ($N=25$ common valid $\mathcal{E}_{\text{eval}}$, $N=35$ physical contract violations, $N=20$ ambiguous queries, $N=20$ unsupported/OOD queries):
+
+| Evaluation Metric | Heuristic (R0) | Linear Ungated (R1) | Linear Gated (R1-Gated) | Gated Non-Sel (R2) | Uncal Selective (R3) | **SatQuery AI (R4 Frozen)** | **SatQuery AI (R4-Tuned Ablation)** | Pre-Registered Target | Certification Status |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Operating Thresholds** | Argmax | Argmax | Argmax | Argmax | $\tau_{\text{sel}}=0.65$ | **$\tau_{\text{int}}=0.65, \tau_{\text{mar}}=0.15$** | $\tau_{\text{int}}=0.85, \tau_{\text{mar}}=0.05$ | Frozen M3.0 | **Compliant** |
+| **Incompatible Dispatch Error Rate ($\text{IDER}_{\text{obs}}$)** | 100.00% | 100.00% | 5.71% | 5.71% | 0.00% | **0.00% (0/35)** | **0.00% (0/35)** | $\le 0.00\%$ | **PASSED (0 Dispatches)** |
+| **Wilson 95% Upper Bound on $\text{IDER}_{\text{obs}}$** | 100.00% | 100.00% | 18.61% | 18.61% | 9.89% | **9.89%** | **9.89%** | $\le 10.15\%$ | **PASSED ($\le 9.89\%$)** |
+| **Contract Violation Recall ($\text{CVDR}_{\text{obs}}$)** | 0.00% | 0.00% | 94.29% | 94.29% | 100.00% | **100.00% (35/35)** | **100.00% (35/35)** | $\ge 95.00\%$ | **PASSED (100.0%)** |
+| **Ambiguity Clarification Recall** | 0.00% | 0.00% | 0.00% | 0.00% | 80.00% | **50.00% (10/20)** | **60.00% (12/20)** | $> 0.00\%$ | **Trade-off (vs R3)** |
+| **Ambiguity Clarification Precision** | 0.00% | 0.00% | 0.00% | 0.00% | 28.57% | **21.74% (10/46)** | **19.67% (12/61)** | $> 0.00\%$ | **Documented** |
+| **Ambiguity Clarification $F_1$** | 0.00% | 0.00% | 0.00% | 0.00% | 42.11% | **30.30%** | **29.63%** | $> 0.00\%$ | **Trade-off (vs R3)** |
+| **7-Task Architectural Success ($\text{TSR}_{\text{arch}}^{(7)}$)** | 21.00% | 15.00% | 48.00% | 47.00% | 53.00% | **59.00% (Highest)** | **55.00%** | Superior | **PASSED (59.0%)** |
+| **2-Specialist Execution ($\text{TSR}_{\text{exec}}^{(2)}$)** | 84.00% | 60.00% | 60.00% | 56.00% | 0.00% | **32.00%** | **24.00%** | Bounded Exec | **Documented** |
+| **Expected Calibration Error ($\text{ECE}$)** | N/A | 22.72% | 22.72% | 22.72% | 22.72% | **17.45%** | **17.45%** | Reduced ECE | **PASSED (-5.27%)** |
+| **Global Selective Risk ($\text{AURC}_{\text{joint}}$ on $\mathcal{E}_{\text{eval}}$)** | 0.0853 | 0.2479 | 0.2479 | 0.2638 | 0.2638 | **0.2646** | **0.2683** | Lower Risk | **NEGATIVE RESULT** |
+
+**Empirical Analysis of M3.3 Findings**:
+- **Protocol Governance**: Following scientific review, the primary certified evaluation is reported under the pre-registered frozen protocol thresholds ($\tau_{\text{intent}}=0.65, \tau_{\text{margin}}=0.15, \tau_{\text{sel}}=1.0$) as R4 (Frozen). The post-hoc validation grid-search point ($0.85, 0.05$) is documented as an exploratory sensitivity ablation (R4-Tuned).
+- **Physical Safety Elimination**: Across $N=35$ physical contract violations, unconstrained routing suffered 100% failure, whereas SatQuery AI observed 0 incompatible dispatches ($0/35$, $\text{IDER}_{\text{obs}} = 0.0\%$, Wilson 95% upper bound $9.89\%$, meeting the $\le 10.15\%$ target).
+- **Ambiguity Interception vs Universal Abstention**: Uncalibrated selective baseline R3 achieved 80.00% clarification recall ($16/20$) and 42.11% $F_1$, whereas calibrated selective routing R4 achieved 50.00% recall ($10/20$, 30.30% $F_1$) under frozen thresholds and 60.00% recall ($12/20$, 29.63% $F_1$) under grid tuning. However, R3 achieved high recall purely through universal abstention: because its uncalibrated probabilities were depressed below 0.50, R3 abstained on all 56 compatible queries and executed zero tasks ($\text{TSR}_{\text{exec}} = 0.0\%$). R4's temperature calibration ($T_{\text{cal}} = 0.0991$) restored task execution for clear queries ($\text{TSR}_{\text{exec}} = 32.0\%$), but sharpened logits occasionally allowed ambiguous queries to cross thresholds.
+- **Negative Selective Risk Result (AURC)**: On the common valid population $\mathcal{E}_{\text{eval}}$ ($N=25$ valid requests), R4 achieved an AURC of 0.2646 (frozen) / 0.2683 (tuned), which is worse than R1 (0.2479) and keyword heuristic R0 (0.0853). This is an authentic negative result: R0 achieved a lower base error rate (16.0% vs 44.0%) due to explicit task vocabulary in test queries, and logit sharpening from $T_{\text{cal}}=0.0991$ compressed confidence ranks near 1.0. R4 does not claim an AURC optimization advantage on this sample.
+- **Architectural Task Success Statistical Testing**: R4 achieved the highest overall 7-task architectural success rate ($\text{TSR}_{\text{arch}}^{(7)} = 59.00\%$). A Paired Cluster Bootstrap ($B=1,000$ replicates over 24 template family clusters) and McNemar paired test demonstrated a statistically significant advantage over unconstrained linear routing R1 ($+44.0\%$ risk difference, 95% Clustered CI $[+24.0\%, +64.36\%]$, McNemar $\chi^2 = 31.88, p < 10^{-7}$). Differences relative to gated selective baselines (R1-Gated: $+11.0\%$; R3: $+6.0\%$) are reported as observed test-set differences.
 
 ---
 
@@ -486,16 +508,18 @@ Evaluated across controlled test scenarios ($N=84$ in Tier 2):
 | :--- | :--- | :--- | :--- |
 | **Baseline 1: GeoChat**<br>(Kuckreja et al., CVPR 2024) | Represents conversational remote-sensing assistants; multi-task vision-language model. | **Published Finding**: Strong multi-task conversational competence on benchmark datasets.<br>**Architectural Assessment**: Operates without external deterministic sensor validation contracts or selective reject options. | [Kuckreja et al., CVPR 2024](https://openaccess.thecvf.com) |
 | **Baseline 2: Learning to Route (L2R)**<br>(Wang et al., 2021) | Collaborative multi-agent neural routing policy; routes sample representations to network branches. | **Published Finding**: Strong parameter-efficient multi-task routing.<br>**Architectural Assessment**: Conditions routing on latent sample/prompt representations; does not evaluate physical metadata contracts or selective risk control. | [Wang et al., 2021](https://proceedings.mlr.press) |
-| **Baseline 3: SelectiveNet**<br>(Geifman & El-Yaniv, ICML 2019) | Foundational benchmark for risk-controlled prediction and rejection with coverage optimization. | **Published Finding**: Superior risk-coverage trade-offs in supervised image classification on CIFAR-10.<br>**Architectural Assessment**: Designed for single-task classification; lacks multi-task intent routing, physical sensor contracts, or ambiguity clarification protocols. | [Geifman & El-Yaniv, ICML 2019](https://proceedings.mlr.press) |
-| **Proposed: SatQuery AI**<br>(Our Architecture) | Implements input-constrained selective routing with closed-form 8D physical sensor gate and specialized deep perception heads. | **Reproduced Empirical Findings**:<br>- Safety: 0 incompatible dispatches in 28 test cases ($\text{IDER}_{\text{obs}} = 0.0\%$, Wilson 95% bound $\le 8.81\%$).<br>- Land Cover: ASL Macro $F_1 = 45.53\%$ (present: $52.03\%$), Micro $F_1 = 74.47\%$.<br>- Change Detection: FC-Siam-diff Macro $F_1 = 37.66\%$ ($+10.35\%$ over CVA; target uncertified). | SatQuery AI Empirical Evaluation (Commit `065575c`) |
+| **Baseline 3: Classical CVA Baselines**<br>(Bruzzone & Prieto, 2000) | De-facto operational remote-sensing baselines for unsupervised bitemporal change detection. | **Audited Empirical Finding**: Standard CVA Macro $F_1 = 20.31\%$, Gaussian CVA Macro $F_1 = 27.31\%$. Pooled Precision: $58.20\%$ (Std), $39.70\%$ (Gauss). | [Bruzzone & Prieto, 2000](https://doi.org/10.1109/36.843009) |
+| **Proposed: SatQuery AI**<br>(Our Architecture) | Implements input-constrained selective routing with closed-form 8D physical sensor gate and specialized deep perception heads. | **Reproduced Empirical Findings**:<br>- Safety: 0 incompatible dispatches in 35 test cases ($\text{IDER}_{\text{obs}} = 0.0\%$, Wilson 95% bound $\le 9.89\%$).<br>- Land Cover: ASL Macro $F_1 = 45.53\%$ (present: $52.03\%$), Micro $F_1 = 74.47\%$.<br>- Change Detection: FC-Siam-diff Macro $F_1 = 37.66\%$ ($+10.35\%$ over Gaussian CVA; target uncertified).<br>- 7-Task Architectural Success: $59.00\%$ (Frozen) / $55.00\%$ (Tuned). | SatQuery AI Empirical Evaluation (Audited Milestone M3.3) |
 
 ### 9.2 In-Depth Comparative Discussion
 1. **Physical Safety and Coercion Prevention**:
-   Monolithic conversational models (GeoChat) and latent representation routing networks (Learning to Route) conflate prompt intent with available observation data. SatQuery AI decouples intent inference from observation metadata via an input-constrained router. On our 28 pre-registered test violation scenarios, no incompatible dispatches occurred ($\text{IDER}_{\text{obs}} = 0.0\%$, Wilson 95% bound $8.81\%$). We do not claim a zero population error rate across all imaginable real-world inputs; rather, empirical measurements demonstrate the risk reduction achieved on tested contract dimensions.
+   Monolithic conversational models (GeoChat) and latent representation routing networks (Learning to Route) conflate prompt intent with available observation data. SatQuery AI decouples intent inference from observation metadata via an input-constrained router. On our 35 pre-registered test violation scenarios, no incompatible dispatches occurred ($\text{IDER}_{\text{obs}} = 0.0\%$, Wilson 95% bound $9.89\%$). We do not claim a zero population error rate across all imaginable real-world inputs; rather, empirical measurements demonstrate the risk reduction achieved on tested contract dimensions.
 2. **Convolutional Inductive Bias vs. Vision Transformers in Earth Observation**:
-   Our empirical evaluation of FC-Siam-diff ($37.66\%$ Macro $F_1$) versus BIT ($12.95\%$ Macro $F_1$) demonstrates that under small-sample regimes (10 OSCD training cities, 586 patches) and extreme foreground class imbalance ($< 3\%$ change pixels), the spatial differencing inductive bias of fully convolutional Siamese skip connections substantially outperforms global transformer tokenization. BIT suffered from severe false-negative collapse in sparse change regions.
+   Our empirical evaluation of FC-Siam-diff ($37.66\%$ Macro $F_1$) versus BIT ($12.95\%$ Macro $F_1$) demonstrates that under small-sample regimes (10 OSCD training cities, 586 patches) and extreme foreground class imbalance ($< 3\%$ change pixels), the spatial differencing inductive bias of fully convolutional Siamese skip connections substantially outperforms global transformer tokenization. BIT suffered from sparse change false-negative collapse.
 3. **Multi-Label Imbalance Dynamics**:
    Comparing ASL and CB-BCE demonstrates that ASL's probability margin shifting ($m = 0.05$) efficiently filters easy negative gradients, speeding up convergence by $4.67\times$ (Epoch 3 vs. Epoch 30) and yielding higher Macro $F_1$ ($45.53\%$ vs $43.78\%$). However, CB-BCE's effective sample weighting achieves lower overall Hamming loss ($0.0816$), illustrating distinct operational advantages depending on whether class balance or overall label error rate is prioritized.
+4. **Macro Architectural Reliability vs. Negative Selective Risk**:
+   While the exploratory AURC comparison over $N=25$ scenarios showed that R4 did not optimize selective risk ranking ($\text{AURC} = 0.2646$), SatQuery AI achieved the highest overall 7-task architectural success rate ($59.00\%$), outperforming unconstrained linear routing by $+44.0$ percentage points ($p < 10^{-7}$) and frontier LLMs by $+36.0$ points, establishing clear macro-level system advantages.
 
 ---
 
