@@ -335,7 +335,7 @@ def test_m33_tsr_arch_statistical_inference_and_mcnemar():
     assert r4_vs_r1["McNemar_Chi2"] > 20.0, "McNemar Chi2 must be > 20 for R4 vs R1"
     assert r4_vs_r1["McNemar_p_val"] < 1e-4, "McNemar p-value must be < 0.0001"
 
-    # Step-Down Holm Multiplicity Assertions
+    # Step-Down Holm Multiplicity Assertions (Edwards continuity-corrected)
     assert r4_vs_r1["Reject_H0_Holm_05"] is True, "R4 vs R1 must reject H0 under Holm adjustment"
     assert r4_vs_r1["McNemar_p_Holm"] < 1e-6
 
@@ -350,6 +350,22 @@ def test_m33_tsr_arch_statistical_inference_and_mcnemar():
 
     assert r4_vs_r3["Reject_H0_Holm_05"] is False, "R4 vs R3 must fail to reject H0 under Holm adjustment"
     assert r4_vs_r3["McNemar_p_Holm"] > 0.05
+
+    # Separate Step-Down Holm Multiplicity Assertions for Exact Two-Sided Binomial Tests
+    assert r4_vs_r1["Exact_Binomial_p_Holm"] == pytest.approx(1.2011e-8, rel=1e-3)
+    assert r4_vs_r1["Reject_H0_Exact_Binomial_Holm_05"] is True
+
+    assert r4_vs_r0["Exact_Binomial_p_Holm"] == pytest.approx(1.1288e-5, rel=1e-3)
+    assert r4_vs_r0["Reject_H0_Exact_Binomial_Holm_05"] is True
+
+    assert r4_vs_r2["Exact_Binomial_p_Holm"] == pytest.approx(0.19574, rel=1e-3)
+    assert r4_vs_r2["Reject_H0_Exact_Binomial_Holm_05"] is False
+
+    assert r4_vs_r1_gated["Exact_Binomial_p_Holm"] == pytest.approx(0.19774, rel=1e-3)
+    assert r4_vs_r1_gated["Reject_H0_Exact_Binomial_Holm_05"] is False
+
+    assert r4_vs_r3["Exact_Binomial_p_Holm"] == pytest.approx(0.36159, rel=1e-3)
+    assert r4_vs_r3["Reject_H0_Exact_Binomial_Holm_05"] is False
 
 
 def test_m33_physical_gate_not_called_when_ambiguous(router):

@@ -329,22 +329,33 @@ To rigorously evaluate the macro architectural success rate difference between R
 1. **Paired Cluster Bootstrap ($B=1,000$, Resampling 24 Template Family Clusters)**: Computes cluster-robust 95% confidence intervals on the risk difference $\Delta \text{TSR}_{\text{arch}} = \text{TSR}_{\text{arch}}(R_4) - \text{TSR}_{\text{arch}}(R_m)$.
 2. **McNemar Paired Test with Edwards Continuity Correction**: Evaluates discordant pairs ($n_{01}$ and $n_{10}$) where one model succeeded and the other failed:
    $$\chi^2 = \frac{(|n_{10} - n_{01}| - 1)^2}{n_{10} + n_{01}}, \qquad p_{\text{raw}} = P(\chi_1^2 \ge \text{stat})$$
-3. **Exact Two-Sided Binomial Test**: Evaluates exact cumulative binomial probabilities over discordant pairs $\min(n_{01}, n_{10}) \sim \text{Binomial}(n_{01} + n_{10}, 0.5)$ to avoid asymptotic continuity artifacts.
-4. **Step-Down Holm Multiplicity Control**: Controls the family-wise error rate across the $m=5$ paired architectural contrasts at $\alpha = 0.05$:
+3. **Exact Two-Sided Binomial Test**: Evaluates exact cumulative binomial probabilities over discordant pairs $\min(n_{01}, n_{10}) \sim \text{Binomial}(n_{01} + n_{10}, 0.5)$ to eliminate asymptotic continuity artifacts.
+4. **Independent Step-Down Holm Multiplicity Control**: The complete 5-comparison Step-Down Holm procedure ($\alpha = 0.05$) is applied **separately and independently** to both the Edwards continuity-corrected chi-square $p$-values and the exact two-sided binomial $p$-values:
 
-| Contrast ($R_4$ vs Baseline) | $R_4$ $\text{TSR}_{\text{arch}}$ | Baseline $\text{TSR}_{\text{arch}}$ | Risk Difference ($\Delta \text{TSR}$) | Bootstrap SE | 95% Clustered CI | Contingency $[n_{00}, n_{01}, n_{10}, n_{11}]$ | Edwards Continuity-Corrected McNemar $\chi^2$ Formula | McNemar $\chi^2$ | Edwards $p_{\text{raw}}$ | Exact Binomial $p_{\text{binom}}$ | Holm Mult. | Step-Down Holm $p$-value | Confirmatory Rejection ($\alpha=0.05$) |
+| Contrast ($R_4$ vs Baseline) | $R_4$ $\text{TSR}_{\text{arch}}$ | Baseline $\text{TSR}_{\text{arch}}$ | Risk Diff. ($\Delta \text{TSR}$) | Bootstrap SE | 95% Clustered CI | Contingency $[n_{00}, n_{01}, n_{10}, n_{11}]$ | Edwards $\chi^2$ Formula | McNemar $\chi^2$ | Edwards $p_{\text{raw}}$ | Edwards $p_{\text{Holm}}$ | Exact Binom. $p_{\text{raw}}$ | Exact Binom. $p_{\text{Holm}}$ | Confirmatory Rejection ($\alpha=0.05$) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **R4 vs R1 (Linear Ungated)** | $59.00\%$ | $15.00\%$ | **$+44.00\%$** | $10.14\%$ | $[+24.00\%, +64.36\%]$ | $[34, 7, 51, 8]$ | $\frac{(|51-7|-1)^2}{51+7} = \frac{1849}{58}$ | **$31.879$** | $1.64 \times 10^{-8}$ | **$2.40 \times 10^{-9}$** | $5$ | **$8.20 \times 10^{-8}$** | **REJECTED ($H_0$ Rejected)** |
-| **R4 vs R0 (Heuristic)** | $59.00\%$ | $21.00\%$ | **$+38.00\%$** | $12.74\%$ | $[+11.88\%, +61.11\%]$ | $[27, 14, 52, 7]$ | $\frac{(|52-14|-1)^2}{52+14} = \frac{1369}{66}$ | **$20.742$** | $5.25 \times 10^{-6}$ | **$2.82 \times 10^{-6}$** | $4$ | **$2.10 \times 10^{-5}$** | **REJECTED ($H_0$ Rejected)** |
-| **R4 vs R2 (Gated Non-Sel)** | $59.00\%$ | $47.00\%$ | $+12.00\%$ | $8.77\%$ | $[-3.48\%, +30.77\%]$ | $[29, 12, 24, 35]$ | $\frac{(|24-12|-1)^2}{24+12} = \frac{121}{36}$ | **$3.361$** | $0.0668$ | **$0.0652$** | $3$ | $0.2003$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
-| **R4 vs R1-Gated** | $59.00\%$ | $48.00\%$ | $+11.00\%$ | $8.77\%$ | $[-6.25\%, +28.77\%]$ | $[28, 13, 24, 35]$ | $\frac{(|24-13|-1)^2}{24+13} = \frac{100}{37}$ | **$2.703$** | $0.1002$ | **$0.0989$** | $2$ | $0.2004$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
-| **R4 vs R3 (Uncalibrated Sel)** | $59.00\%$ | $53.00\%$ | $+6.00\%$ | $8.23\%$ | $[-10.38\%, +21.11\%]$ | $[29, 12, 18, 41]$ | $\frac{(|18-12|-1)^2}{18+12} = \frac{25}{30}$ | **$0.833$** | $0.3613$ | **$0.3616$** | $1$ | $0.3613$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
+| **R4 vs R1 (Linear Ungated)** | $59.00\%$ | $15.00\%$ | **$+44.00\%$** | $10.14\%$ | $[+24.00\%, +64.36\%]$ | $[34, 7, 51, 8]$ | $\frac{(|51-7|-1)^2}{51+7} = \frac{1849}{58}$ | **$31.879$** | $1.64 \times 10^{-8}$ | **$8.20 \times 10^{-8}$** | $2.40 \times 10^{-9}$ | **$1.2011 \times 10^{-8}$** | **REJECTED ($H_0$ Rejected)** |
+| **R4 vs R0 (Heuristic)** | $59.00\%$ | $21.00\%$ | **$+38.00\%$** | $12.74\%$ | $[+11.88\%, +61.11\%]$ | $[27, 14, 52, 7]$ | $\frac{(|52-14|-1)^2}{52+14} = \frac{1369}{66}$ | **$20.742$** | $5.25 \times 10^{-6}$ | **$2.10 \times 10^{-5}$** | $2.82 \times 10^{-6}$ | **$1.1288 \times 10^{-5}$** | **REJECTED ($H_0$ Rejected)** |
+| **R4 vs R2 (Gated Non-Sel)** | $59.00\%$ | $47.00\%$ | $+12.00\%$ | $8.77\%$ | $[-3.48\%, +30.77\%]$ | $[29, 12, 24, 35]$ | $\frac{(|24-12|-1)^2}{24+12} = \frac{121}{36}$ | **$3.361$** | $0.0668$ | $0.2003$ | $0.06525$ | $0.19574$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
+| **R4 vs R1-Gated** | $59.00\%$ | $48.00\%$ | $+11.00\%$ | $8.77\%$ | $[-6.25\%, +28.77\%]$ | $[28, 13, 24, 35]$ | $\frac{(|24-13|-1)^2}{24+13} = \frac{100}{37}$ | **$2.703$** | $0.1002$ | $0.2004$ | $0.09887$ | $0.19774$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
+| **R4 vs R3 (Uncalibrated Sel)** | $59.00\%$ | $53.00\%$ | $+6.00\%$ | $8.23\%$ | $[-10.38\%, +21.11\%]$ | $[29, 12, 18, 41]$ | $\frac{(|18-12|-1)^2}{18+12} = \frac{25}{30}$ | **$0.833$** | $0.3613$ | $0.3613$ | $0.36159$ | $0.36159$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
 
 > [!NOTE]
-> **Statistical Agreement Between Edwards $\chi^2$ and Exact Binomial Inferences**:
-> The Edwards continuity-corrected McNemar $\chi^2$ approximation and the exact two-sided binomial test agree identically across all contrasts:
-> - For R4 vs R1 ($n_{01}=7, n_{10}=51$) and R4 vs R0 ($n_{01}=14, n_{10}=52$), both the Edwards approximation ($p = 1.64 \times 10^{-8}$ and $p = 5.25 \times 10^{-6}$) and exact binomial test ($p = 2.40 \times 10^{-9}$ and $p = 2.82 \times 10^{-6}$) reject the null hypothesis at extreme significance levels surviving 5-comparison Step-Down Holm adjustment ($p_{\text{Holm}} < 10^{-4}$).
-> - For R4 vs R2, R1-Gated, and R3, neither the Edwards test ($p \ge 0.0668$) nor the exact binomial test ($p \ge 0.0652$) achieves significance after Holm adjustment ($p_{\text{Holm}} \ge 0.2002$).
+> **Independent Multiplicity Multiplier Derivation for Both Tests**:
+> The 5-contrast Step-Down Holm step-down sequence ($M = 5, 4, 3, 2, 1$) is calculated independently for each test:
+> 1. **Edwards Continuity-Corrected McNemar $\chi^2$ Test**:
+>    - Rank 1 (R1): $p_{\text{raw}} = 1.6406 \times 10^{-8} \times 5 = 8.2028 \times 10^{-8} \implies \text{Reject } H_0$
+>    - Rank 2 (R0): $p_{\text{raw}} = 5.2539 \times 10^{-6} \times 4 = 2.1016 \times 10^{-5} \implies \text{Reject } H_0$
+>    - Rank 3 (R2): $p_{\text{raw}} = 0.06675 \times 3 = 0.20026 \implies \text{Fail to Reject } H_0$
+>    - Rank 4 (R1-Gated): $p_{\text{raw}} = 0.10018 \times 2 = 0.20036 \implies \text{Fail to Reject } H_0$
+>    - Rank 5 (R3): $p_{\text{raw}} = 0.36131 \times 1 = 0.36131 \implies \text{Fail to Reject } H_0$
+> 2. **Exact Two-Sided Binomial McNemar Test**:
+>    - Rank 1 (R1): $p_{\text{binom}} = 2.4022 \times 10^{-9} \times 5 = 1.2011 \times 10^{-8} \implies \text{Reject } H_0$
+>    - Rank 2 (R0): $p_{\text{binom}} = 2.8220 \times 10^{-6} \times 4 = 1.1288 \times 10^{-5} \implies \text{Reject } H_0$
+>    - Rank 3 (R2): $p_{\text{binom}} = 0.06525 \times 3 = 0.19574 \implies \text{Fail to Reject } H_0$
+>    - Rank 4 (R1-Gated): $p_{\text{binom}} = 0.09887 \times 2 = 0.19774 \implies \text{Fail to Reject } H_0$
+>    - Rank 5 (R3): $p_{\text{binom}} = 0.36159 \times 1 = 0.36159 \implies \text{Fail to Reject } H_0$
+> Both tests agree identically across all 5 contrasts: R4 demonstrates statistically certified superiority over unconstrained linear routing R1 and heuristic R0, but does not achieve certified significance over R2, R1-Gated, or R3.
 
 **Assessment of Architectural Improvement & Multiplicity**:
 1. **R4 vs Unconstrained Baselines (R0, R1)**: The architectural advantage of R4 is decisive and survives rigorous Step-Down Holm multiplicity correction ($p_{\text{Holm}} < 10^{-7}$ vs R1; $p_{\text{Holm}} < 10^{-4}$ vs R0). The 95% cluster-bootstrap confidence interval ($[+24.00\%, +64.36\%]$) excludes zero, statistically confirming that physical compatibility gating and selective uncertainty handling decisively outperform unconstrained routing.

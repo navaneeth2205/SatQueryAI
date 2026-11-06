@@ -1104,11 +1104,11 @@ def run_m33_experiments():
             "CI_95_High_pct": round(ci_high * 100, 2),
             "Contingency_n00_n01_n10_n11": [n00, n01, n10, n11],
             "McNemar_Chi2": round(stat, 4),
-            "McNemar_p_val": round(p_mcnemar, 8),
-            "Exact_Binomial_p_val": round(p_binom, 8)
+            "McNemar_p_val": float(p_mcnemar),
+            "Exact_Binomial_p_val": float(p_binom)
         }
 
-    # 5-Comparison Step-Down Holm Multiplicity Adjustment for McNemar Tests
+    # 5-Comparison Step-Down Holm Multiplicity Adjustment for Edwards McNemar Tests
     sorted_tsr_targets = sorted(tsr_targets, key=lambda b: tsr_boot_results[b]["McNemar_p_val"])
     M_tests = len(sorted_tsr_targets)
     cum_max = 0.0
@@ -1120,12 +1120,26 @@ def run_m33_experiments():
         cum_max = adj_p
         reject_h0 = bool(adj_p < 0.05)
         tsr_boot_results[b_id]["Holm_multiplier"] = multiplier
-        tsr_boot_results[b_id]["McNemar_p_Holm"] = round(adj_p, 8)
+        tsr_boot_results[b_id]["McNemar_p_Holm"] = float(adj_p)
         tsr_boot_results[b_id]["Reject_H0_Holm_05"] = reject_h0
+
+    # 5-Comparison Step-Down Holm Multiplicity Adjustment for Exact Binomial Tests
+    sorted_binom_targets = sorted(tsr_targets, key=lambda b: tsr_boot_results[b]["Exact_Binomial_p_val"])
+    cum_max_binom = 0.0
+    for rank_idx, b_id in enumerate(sorted_binom_targets):
+        k = rank_idx + 1
+        raw_p = tsr_boot_results[b_id]["Exact_Binomial_p_val"]
+        multiplier = M_tests - k + 1
+        adj_p = min(1.0, max(cum_max_binom, raw_p * multiplier))
+        cum_max_binom = adj_p
+        reject_h0 = bool(adj_p < 0.05)
+        tsr_boot_results[b_id]["Exact_Binomial_Holm_multiplier"] = multiplier
+        tsr_boot_results[b_id]["Exact_Binomial_p_Holm"] = float(adj_p)
+        tsr_boot_results[b_id]["Reject_H0_Exact_Binomial_Holm_05"] = reject_h0
 
     df_tsr_boot = pd.DataFrame(tsr_boot_results).T
     print("\nTSR_arch^(7) Paired Statistical Tests (R4 Proposed vs Baselines, N=100, B=1000):")
-    print(df_tsr_boot[["R4_TSR_arch_pct", "Baseline_TSR_arch_pct", "Risk_Difference_pct", "CI_95_Low_pct", "CI_95_High_pct", "McNemar_Chi2", "McNemar_p_val", "McNemar_p_Holm", "Reject_H0_Holm_05"]].to_string())
+    print(df_tsr_boot[["R4_TSR_arch_pct", "Baseline_TSR_arch_pct", "Risk_Difference_pct", "CI_95_Low_pct", "CI_95_High_pct", "McNemar_Chi2", "McNemar_p_val", "McNemar_p_Holm", "Exact_Binomial_p_val", "Exact_Binomial_p_Holm", "Reject_H0_Holm_05"]].to_string())
 
     # 9. Plot Publication-Quality Risk-Coverage Curves
     print("\n" + "-" * 60)

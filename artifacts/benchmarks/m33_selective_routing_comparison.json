@@ -1,7 +1,7 @@
 {
   "milestone": "M3.3",
   "description": "Advanced Selective Routing & Risk-Coverage Optimization",
-  "timestamp": "2026-11-06T09:59:02Z",
+  "timestamp": "2026-11-06T10:24:44Z",
   "router_architecture": "TF-IDF Vectorizer + Calibrated Logistic Regression Linear Classifier",
   "calibration": {
     "T_cal": 0.0991,
@@ -696,11 +696,14 @@
         7
       ],
       "McNemar_Chi2": 20.7424,
-      "McNemar_p_val": 5.25e-06,
-      "Exact_Binomial_p_val": 2.82e-06,
+      "McNemar_p_val": 5.2539015167267015e-06,
+      "Exact_Binomial_p_val": 2.8220182313622557e-06,
       "Holm_multiplier": 4,
-      "McNemar_p_Holm": 2.1e-05,
-      "Reject_H0_Holm_05": true
+      "McNemar_p_Holm": 2.1015606066906806e-05,
+      "Reject_H0_Holm_05": true,
+      "Exact_Binomial_Holm_multiplier": 4,
+      "Exact_Binomial_p_Holm": 1.1288072925449023e-05,
+      "Reject_H0_Exact_Binomial_Holm_05": true
     },
     "R1": {
       "R4_TSR_arch_pct": 59.0,
@@ -716,11 +719,14 @@
         8
       ],
       "McNemar_Chi2": 31.8793,
-      "McNemar_p_val": 2e-08,
-      "Exact_Binomial_p_val": 0.0,
+      "McNemar_p_val": 1.6405531550029904e-08,
+      "Exact_Binomial_p_val": 2.4021645783633976e-09,
       "Holm_multiplier": 5,
-      "McNemar_p_Holm": 1e-07,
-      "Reject_H0_Holm_05": true
+      "McNemar_p_Holm": 8.202765775014953e-08,
+      "Reject_H0_Holm_05": true,
+      "Exact_Binomial_Holm_multiplier": 5,
+      "Exact_Binomial_p_Holm": 1.2010822891816987e-08,
+      "Reject_H0_Exact_Binomial_Holm_05": true
     },
     "R1-Gated": {
       "R4_TSR_arch_pct": 59.0,
@@ -736,11 +742,14 @@
         35
       ],
       "McNemar_Chi2": 2.7027,
-      "McNemar_p_val": 0.10017829,
-      "Exact_Binomial_p_val": 0.09887175,
+      "McNemar_p_val": 0.10017829422626791,
+      "Exact_Binomial_p_val": 0.09887174959294498,
       "Holm_multiplier": 2,
-      "McNemar_p_Holm": 0.20035658,
-      "Reject_H0_Holm_05": false
+      "McNemar_p_Holm": 0.20035658845253582,
+      "Reject_H0_Holm_05": false,
+      "Exact_Binomial_Holm_multiplier": 2,
+      "Exact_Binomial_p_Holm": 0.19774349918588996,
+      "Reject_H0_Exact_Binomial_Holm_05": false
     },
     "R2": {
       "R4_TSR_arch_pct": 59.0,
@@ -756,11 +765,14 @@
         35
       ],
       "McNemar_Chi2": 3.3611,
-      "McNemar_p_val": 0.06675302,
-      "Exact_Binomial_p_val": 0.06524534,
+      "McNemar_p_val": 0.06675301516963421,
+      "Exact_Binomial_p_val": 0.06524533522315325,
       "Holm_multiplier": 3,
-      "McNemar_p_Holm": 0.20025906,
-      "Reject_H0_Holm_05": false
+      "McNemar_p_Holm": 0.2002590455089026,
+      "Reject_H0_Holm_05": false,
+      "Exact_Binomial_Holm_multiplier": 3,
+      "Exact_Binomial_p_Holm": 0.19573600566945976,
+      "Reject_H0_Exact_Binomial_Holm_05": false
     },
     "R3": {
       "R4_TSR_arch_pct": 59.0,
@@ -776,11 +788,14 @@
         41
       ],
       "McNemar_Chi2": 0.8333,
-      "McNemar_p_val": 0.36131043,
-      "Exact_Binomial_p_val": 0.36159461,
+      "McNemar_p_val": 0.3613104285261789,
+      "Exact_Binomial_p_val": 0.36159460805356514,
       "Holm_multiplier": 1,
-      "McNemar_p_Holm": 0.36131043,
-      "Reject_H0_Holm_05": false
+      "McNemar_p_Holm": 0.3613104285261789,
+      "Reject_H0_Holm_05": false,
+      "Exact_Binomial_Holm_multiplier": 1,
+      "Exact_Binomial_p_Holm": 0.36159460805356514,
+      "Reject_H0_Exact_Binomial_Holm_05": false
     }
   }
 }
