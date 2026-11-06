@@ -355,7 +355,7 @@ To rigorously evaluate the macro architectural success rate difference between R
 >    - Rank 3 (R2): $p_{\text{binom}} = 0.06525 \times 3 = 0.19574 \implies \text{Fail to Reject } H_0$
 >    - Rank 4 (R1-Gated): $p_{\text{binom}} = 0.09887 \times 2 = 0.19774 \implies \text{Fail to Reject } H_0$
 >    - Rank 5 (R3): $p_{\text{binom}} = 0.36159 \times 1 = 0.36159 \implies \text{Fail to Reject } H_0$
-> Both tests agree identically across all 5 contrasts: R4 demonstrates statistically certified superiority over unconstrained linear routing R1 and heuristic R0, but does not achieve certified significance over R2, R1-Gated, or R3.
+> Both tests agree identically across all 5 contrasts: R4 demonstrated statistically significant improvement in architectural success over the unconstrained R1 and heuristic R0 baselines on the evaluated 100-scenario benchmark. Differences against R2, R1-Gated, and R3 were not statistically significant after multiplicity correction.
 
 **Assessment of Architectural Improvement & Multiplicity**:
 1. **R4 vs Unconstrained Baselines (R0, R1)**: The architectural advantage of R4 is decisive and survives rigorous Step-Down Holm multiplicity correction ($p_{\text{Holm}} < 10^{-7}$ vs R1; $p_{\text{Holm}} < 10^{-4}$ vs R0). The 95% cluster-bootstrap confidence interval ($[+24.00\%, +64.36\%]$) excludes zero, statistically confirming that physical compatibility gating and selective uncertainty handling decisively outperform unconstrained routing.
