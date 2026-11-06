@@ -308,6 +308,26 @@ def test_m33_tsr_arch_statistical_inference_and_mcnemar():
     r4_vs_r1_gated = tsr_tests["R1-Gated"]
     r4_vs_r3 = tsr_tests["R3"]
 
+    # Exact contingency count verification matching Edwards continuity-corrected McNemar formula
+    # Formula: chi2 = (|n10 - n01| - 1)^2 / (n10 + n01)
+    expected_contingencies = {
+        "R1": ([34, 7, 51, 8], 31.8793),
+        "R0": ([27, 14, 52, 7], 20.7424),
+        "R2": ([29, 12, 24, 35], 3.3611),
+        "R1-Gated": ([28, 13, 24, 35], 2.7027),
+        "R3": ([29, 12, 18, 41], 0.8333),
+    }
+
+    for b_id, (counts, expected_chi2) in expected_contingencies.items():
+        res = tsr_tests[b_id]
+        assert res["Contingency_n00_n01_n10_n11"] == counts, f"Contingency counts mismatch for {b_id}"
+        n00, n01, n10, n11 = counts
+        assert n00 + n01 + n10 + n11 == 100, f"Sum of contingency counts must equal 100 for {b_id}"
+        assert n10 + n11 == 59, f"R4 successes must equal 59 for {b_id}"
+        calc_chi2 = ((abs(n10 - n01) - 1.0) ** 2) / float(n10 + n01)
+        assert res["McNemar_Chi2"] == pytest.approx(expected_chi2, abs=1e-3)
+        assert res["McNemar_Chi2"] == pytest.approx(calc_chi2, abs=1e-3)
+
     # Observed architectural improvement over unconstrained linear baseline
     assert r4_vs_r1["Risk_Difference_pct"] > 30.0, "R4 TSR_arch must show substantial difference over R1"
     assert r4_vs_r1["CI_95_Low_pct"] > 0.0, "95% Clustered CI lower bound must be > 0"
