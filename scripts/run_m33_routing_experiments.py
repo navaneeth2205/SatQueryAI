@@ -751,56 +751,102 @@ def run_m33_experiments():
     print("[Safety Metrics] Evaluating Ambiguity Clarification & Physical Contract Safety...")
     print("-" * 60)
 
-    # 7A. Ambiguity Clarification Fidelity (Cohort 4: 4_ambiguous_multi_intent, N=20)
+    # 7A. Ambiguity Clarification Fidelity (Strict: action == "CLARIFY_AMBIGUOUS" / "HALTED_UNCERTAINTY", Cohort 4, N=20)
     v3_indices = [i for i, sc in enumerate(test_scenarios) if sc["cohort"] == "4_ambiguous_multi_intent"]
-    ambig_results: Dict[str, Dict[str, Any]] = {}
+    strict_clarify_results: Dict[str, Dict[str, Any]] = {}
+    abstention_results: Dict[str, Dict[str, Any]] = {}
+    broad_uncertainty_results: Dict[str, Dict[str, Any]] = {}
 
     for m_id in ["R0", "R1", "R1-Gated", "R2", "R2-Cal", "R3", "R4", "R4-Tuned", "R5"]:
         all_evals = model_evaluations[m_id]
-        
-        tp_clarify = 0
-        fp_clarify = 0
-        fn_clarify = 0
-        tn_clarify = 0
+
+        # 1. Strict Clarification (action == CLARIFY_AMBIGUOUS / HALTED_UNCERTAINTY)
+        tp_c, fp_c, fn_c, tn_c = 0, 0, 0, 0
         fp_cohort_breakdown: Dict[str, int] = {}
-        
+
         for sc_idx, sc in enumerate(test_scenarios):
             r = all_evals[sc_idx]
             is_v3 = (sc["cohort"] == "4_ambiguous_multi_intent")
-            is_clarify = (r["action"] in ("CLARIFY_AMBIGUOUS", "HALTED_UNCERTAINTY", "ABSTAIN_LOW_CONFIDENCE"))
-            
-            if is_v3 and is_clarify:
-                tp_clarify += 1
-            elif is_v3 and not is_clarify:
-                fn_clarify += 1
-            elif not is_v3 and is_clarify:
-                fp_clarify += 1
+            is_strict_clarify = (r["action"] in ("CLARIFY_AMBIGUOUS", "HALTED_UNCERTAINTY"))
+
+            if is_v3 and is_strict_clarify:
+                tp_c += 1
+            elif is_v3 and not is_strict_clarify:
+                fn_c += 1
+            elif not is_v3 and is_strict_clarify:
+                fp_c += 1
                 c_name = sc["cohort"]
                 fp_cohort_breakdown[c_name] = fp_cohort_breakdown.get(c_name, 0) + 1
             else:
-                tn_clarify += 1
-        
-        total_clarify = tp_clarify + fp_clarify
-        rec_c = tp_clarify / len(v3_indices) if len(v3_indices) > 0 else 0.0
-        prec_c = tp_clarify / total_clarify if total_clarify > 0 else 0.0
+                tn_c += 1
+
+        tot_c = tp_c + fp_c
+        rec_c = tp_c / len(v3_indices) if len(v3_indices) > 0 else 0.0
+        prec_c = tp_c / tot_c if tot_c > 0 else 0.0
         f1_c = 2 * prec_c * rec_c / (prec_c + rec_c) if (prec_c + rec_c) > 0 else 0.0
 
-        ambig_results[m_id] = {
-            "TP_clarify": tp_clarify,
-            "FP_clarify": fp_clarify,
-            "FN_clarify": fn_clarify,
-            "TN_clarify": tn_clarify,
-            "Total_Predicted_Clarify": total_clarify,
+        strict_clarify_results[m_id] = {
+            "TP_clarify": tp_c,
+            "FP_clarify": fp_c,
+            "FN_clarify": fn_c,
+            "TN_clarify": tn_c,
+            "Total_Predicted_Clarify": tot_c,
             "Clarify_Recall": round(rec_c * 100, 2),
             "Clarify_Precision": round(prec_c * 100, 2),
             "Clarify_F1": round(f1_c * 100, 2),
-            "V3_False_Dispatches": fn_clarify,
+            "V3_False_Dispatches": sum(1 for idx in v3_indices if all_evals[idx]["action"] == "DISPATCH_QUALIFIED"),
             "FP_Cohort_Breakdown": fp_cohort_breakdown
         }
 
-    df_ambig = pd.DataFrame(ambig_results).T
-    print("\nAmbiguity Clarification Fidelity & Confusion Matrix (Cohort V3, N=20 in N=100 Test):")
+        # 2. Confidence Abstention (action == ABSTAIN_LOW_CONFIDENCE)
+        abstain_cohort_breakdown: Dict[str, int] = {}
+        for sc_idx, sc in enumerate(test_scenarios):
+            r = all_evals[sc_idx]
+            if r["action"] == "ABSTAIN_LOW_CONFIDENCE":
+                c_name = sc["cohort"]
+                abstain_cohort_breakdown[c_name] = abstain_cohort_breakdown.get(c_name, 0) + 1
+        abstention_results[m_id] = {
+            "Total_Abstentions": sum(abstain_cohort_breakdown.values()),
+            "Abstain_Cohort_Breakdown": abstain_cohort_breakdown
+        }
+
+        # 3. Broad Uncertainty Halts (action in CLARIFY_AMBIGUOUS, ABSTAIN_LOW_CONFIDENCE)
+        tp_u, fp_u, fn_u, tn_u = 0, 0, 0, 0
+        for sc_idx, sc in enumerate(test_scenarios):
+            r = all_evals[sc_idx]
+            is_v3 = (sc["cohort"] == "4_ambiguous_multi_intent")
+            is_uncertain = (r["action"] in ("CLARIFY_AMBIGUOUS", "HALTED_UNCERTAINTY", "ABSTAIN_LOW_CONFIDENCE"))
+
+            if is_v3 and is_uncertain:
+                tp_u += 1
+            elif is_v3 and not is_uncertain:
+                fn_u += 1
+            elif not is_v3 and is_uncertain:
+                fp_u += 1
+            else:
+                tn_u += 1
+        tot_u = tp_u + fp_u
+        rec_u = tp_u / len(v3_indices) if len(v3_indices) > 0 else 0.0
+        prec_u = tp_u / tot_u if tot_u > 0 else 0.0
+        f1_u = 2 * prec_u * rec_u / (prec_u + rec_u) if (prec_u + rec_u) > 0 else 0.0
+        broad_uncertainty_results[m_id] = {
+            "TP_uncertain": tp_u,
+            "FP_uncertain": fp_u,
+            "FN_uncertain": fn_u,
+            "TN_uncertain": tn_u,
+            "Total_Predicted_Uncertain": tot_u,
+            "Uncertainty_Recall": round(rec_u * 100, 2),
+            "Uncertainty_Precision": round(prec_u * 100, 2),
+            "Uncertainty_F1": round(f1_u * 100, 2)
+        }
+
+    df_ambig = pd.DataFrame(strict_clarify_results).T
+    print("\nStrict Ambiguity Clarification Fidelity (action == CLARIFY_AMBIGUOUS, N=20 in N=100 Test):")
     print(df_ambig[["TP_clarify", "FP_clarify", "FN_clarify", "TN_clarify", "Total_Predicted_Clarify", "Clarify_Recall", "Clarify_Precision", "Clarify_F1"]].to_string())
+
+    df_broad = pd.DataFrame(broad_uncertainty_results).T
+    print("\nBroad Uncertainty Halting Profile (action in CLARIFY_AMBIGUOUS, ABSTAIN_LOW_CONFIDENCE):")
+    print(df_broad[["TP_uncertain", "FP_uncertain", "FN_uncertain", "TN_uncertain", "Total_Predicted_Uncertain", "Uncertainty_Recall", "Uncertainty_Precision", "Uncertainty_F1"]].to_string())
 
     # 7B. Physical Compatibility Interception & Safety (Cohorts 2 & 3: Contract Violations, N=35)
     v5_indices = [i for i, sc in enumerate(test_scenarios) if sc["cohort"] in ("2_supported_incompatible_input", "3_missing_sensor_modalities")]
@@ -1041,12 +1087,27 @@ def run_m33_experiments():
             "CI_95_High_pct": round(ci_high * 100, 2),
             "Contingency_n00_n01_n10_n11": [n00, n01, n10, n11],
             "McNemar_Chi2": round(stat, 4),
-            "McNemar_p_val": round(p_mcnemar, 6)
+            "McNemar_p_val": round(p_mcnemar, 8)
         }
+
+    # 5-Comparison Step-Down Holm Multiplicity Adjustment for McNemar Tests
+    sorted_tsr_targets = sorted(tsr_targets, key=lambda b: tsr_boot_results[b]["McNemar_p_val"])
+    M_tests = len(sorted_tsr_targets)
+    cum_max = 0.0
+    for rank_idx, b_id in enumerate(sorted_tsr_targets):
+        k = rank_idx + 1
+        raw_p = tsr_boot_results[b_id]["McNemar_p_val"]
+        multiplier = M_tests - k + 1
+        adj_p = min(1.0, max(cum_max, raw_p * multiplier))
+        cum_max = adj_p
+        reject_h0 = bool(adj_p < 0.05)
+        tsr_boot_results[b_id]["Holm_multiplier"] = multiplier
+        tsr_boot_results[b_id]["McNemar_p_Holm"] = round(adj_p, 8)
+        tsr_boot_results[b_id]["Reject_H0_Holm_05"] = reject_h0
 
     df_tsr_boot = pd.DataFrame(tsr_boot_results).T
     print("\nTSR_arch^(7) Paired Statistical Tests (R4 Proposed vs Baselines, N=100, B=1000):")
-    print(df_tsr_boot[["R4_TSR_arch_pct", "Baseline_TSR_arch_pct", "Risk_Difference_pct", "CI_95_Low_pct", "CI_95_High_pct", "McNemar_Chi2", "McNemar_p_val"]].to_string())
+    print(df_tsr_boot[["R4_TSR_arch_pct", "Baseline_TSR_arch_pct", "Risk_Difference_pct", "CI_95_Low_pct", "CI_95_High_pct", "McNemar_Chi2", "McNemar_p_val", "McNemar_p_Holm", "Reject_H0_Holm_05"]].to_string())
 
     # 9. Plot Publication-Quality Risk-Coverage Curves
     print("\n" + "-" * 60)
@@ -1106,7 +1167,7 @@ def run_m33_experiments():
     policies = ["R0", "R1", "R1-Gated", "R2", "R3", "R4", "R4-Tuned", "R5"]
     cvdr_vals = [safety_results[m]["CVDR_pct"] for m in policies]
     ider_vals = [safety_results[m]["IDER_pct"] for m in policies]
-    clarify_f1 = [ambig_results[m]["Clarify_F1"] for m in policies]
+    clarify_f1 = [strict_clarify_results[m]["Clarify_F1"] for m in policies]
 
     x = np.arange(len(policies))
     width = 0.28
@@ -1160,7 +1221,10 @@ def run_m33_experiments():
         },
         "common_population_e_eval_size": N_eval,
         "selective_risk_scorecard": curve_metrics,
-        "ambiguity_clarification_metrics": ambig_results,
+        "strict_clarification_metrics": strict_clarify_results,
+        "confidence_abstention_metrics": abstention_results,
+        "broad_uncertainty_metrics": broad_uncertainty_results,
+        "ambiguity_clarification_metrics": strict_clarify_results,
         "physical_contract_safety_metrics": safety_results,
         "segregated_success_rates": {
             "TSR_arch_7_task_pct": tsr_arch,

@@ -210,7 +210,7 @@ def test_m33_cluster_bootstrap_reproducibility():
 
 
 def test_m33_ambiguity_confusion_matrix_and_denominator():
-    """Test 7: Full ambiguity confusion matrix and precision denominator consistency."""
+    """Test 7: Full ambiguity confusion matrix, cohort arithmetic, and abstention separation."""
     manifest_path = REPO_ROOT / "artifacts" / "benchmarks" / "m33_selective_routing_comparison.json"
     assert manifest_path.exists(), "Benchmark manifest must exist"
 
@@ -218,7 +218,7 @@ def test_m33_ambiguity_confusion_matrix_and_denominator():
     with open(manifest_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    ambig_metrics = data["ambiguity_clarification_metrics"]
+    ambig_metrics = data["strict_clarification_metrics"]
     for m_id in ["R3", "R4", "R4-Tuned"]:
         m = ambig_metrics[m_id]
         tp = m["TP_clarify"]
@@ -238,6 +238,29 @@ def test_m33_ambiguity_confusion_matrix_and_denominator():
         expected_prec = round(tp / total * 100, 2) if total > 0 else 0.0
         assert m["Clarify_Recall"] == pytest.approx(expected_rec, abs=0.02)
         assert m["Clarify_Precision"] == pytest.approx(expected_prec, abs=0.02)
+
+    # Specific Cohort Arithmetic Audit for R4 False Positives
+    r4_fp = ambig_metrics["R4"]["FP_Cohort_Breakdown"]
+    assert sum(r4_fp.values()) == 36, "R4 FP total across cohorts must sum to exactly 36"
+    assert r4_fp.get("6_out_of_distribution", 0) == 8, "Cohort 6 false positives must be 8 (<= 10 cohort total)"
+    assert r4_fp.get("1_supported_compatible", 0) == 14
+    assert r4_fp.get("2_supported_incompatible_input", 0) == 7
+    assert r4_fp.get("3_missing_sensor_modalities", 0) == 1
+    assert r4_fp.get("5_unsupported_tasks", 0) == 6
+
+    # Verify R3 emits zero strict clarifications, but 56 confidence abstentions
+    assert ambig_metrics["R3"]["Total_Predicted_Clarify"] == 0
+    assert data["confidence_abstention_metrics"]["R3"]["Total_Abstentions"] == 56
+    assert data["confidence_abstention_metrics"]["R4"]["Total_Abstentions"] == 0
+
+    # Verify Broad Uncertainty Metrics
+    broad_metrics = data["broad_uncertainty_metrics"]
+    assert broad_metrics["R3"]["Total_Predicted_Uncertain"] == 56
+    assert broad_metrics["R3"]["TP_uncertain"] == 16
+    assert broad_metrics["R3"]["FP_uncertain"] == 40
+    assert broad_metrics["R3"]["Uncertainty_Recall"] == 80.0
+    assert broad_metrics["R3"]["Uncertainty_Precision"] == 28.57
+    assert broad_metrics["R4"]["Total_Predicted_Uncertain"] == 46
 
 
 def test_m33_negative_aurc_finding_and_frozen_protocol():
@@ -272,7 +295,7 @@ def test_m33_negative_aurc_finding_and_frozen_protocol():
 
 
 def test_m33_tsr_arch_statistical_inference_and_mcnemar():
-    """Test 9: Clustered bootstrap and McNemar paired tests for TSR_arch^(7)."""
+    """Test 9: Clustered bootstrap, McNemar paired tests, and Step-Down Holm adjustment for TSR_arch^(7)."""
     manifest_path = REPO_ROOT / "artifacts" / "benchmarks" / "m33_selective_routing_comparison.json"
     import json
     with open(manifest_path, "r", encoding="utf-8") as f:
@@ -280,9 +303,29 @@ def test_m33_tsr_arch_statistical_inference_and_mcnemar():
 
     tsr_tests = data["tsr_arch_statistical_tests"]
     r4_vs_r1 = tsr_tests["R1"]
+    r4_vs_r0 = tsr_tests["R0"]
+    r4_vs_r2 = tsr_tests["R2"]
+    r4_vs_r1_gated = tsr_tests["R1-Gated"]
+    r4_vs_r3 = tsr_tests["R3"]
 
     # Observed architectural improvement over unconstrained linear baseline
     assert r4_vs_r1["Risk_Difference_pct"] > 30.0, "R4 TSR_arch must show substantial difference over R1"
     assert r4_vs_r1["CI_95_Low_pct"] > 0.0, "95% Clustered CI lower bound must be > 0"
     assert r4_vs_r1["McNemar_Chi2"] > 20.0, "McNemar Chi2 must be > 20 for R4 vs R1"
     assert r4_vs_r1["McNemar_p_val"] < 1e-4, "McNemar p-value must be < 0.0001"
+
+    # Step-Down Holm Multiplicity Assertions
+    assert r4_vs_r1["Reject_H0_Holm_05"] is True, "R4 vs R1 must reject H0 under Holm adjustment"
+    assert r4_vs_r1["McNemar_p_Holm"] < 1e-6
+
+    assert r4_vs_r0["Reject_H0_Holm_05"] is True, "R4 vs R0 must reject H0 under Holm adjustment"
+    assert r4_vs_r0["McNemar_p_Holm"] < 1e-4
+
+    assert r4_vs_r2["Reject_H0_Holm_05"] is False, "R4 vs R2 must fail to reject H0 under Holm adjustment"
+    assert r4_vs_r2["McNemar_p_Holm"] > 0.05
+
+    assert r4_vs_r1_gated["Reject_H0_Holm_05"] is False, "R4 vs R1-Gated must fail to reject H0 under Holm adjustment"
+    assert r4_vs_r1_gated["McNemar_p_Holm"] > 0.05
+
+    assert r4_vs_r3["Reject_H0_Holm_05"] is False, "R4 vs R3 must fail to reject H0 under Holm adjustment"
+    assert r4_vs_r3["McNemar_p_Holm"] > 0.05

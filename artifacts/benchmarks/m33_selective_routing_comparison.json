@@ -1,7 +1,7 @@
 {
   "milestone": "M3.3",
   "description": "Advanced Selective Routing & Risk-Coverage Optimization",
-  "timestamp": "2026-11-05T16:58:23Z",
+  "timestamp": "2026-11-06T07:39:17Z",
   "router_architecture": "TF-IDF Vectorizer + Calibrated Logistic Regression Linear Classifier",
   "calibration": {
     "T_cal": 0.0991,
@@ -120,6 +120,264 @@
       "Base_Error_Rate": 44.0
     }
   },
+  "strict_clarification_metrics": {
+    "R0": {
+      "TP_clarify": 0,
+      "FP_clarify": 0,
+      "FN_clarify": 20,
+      "TN_clarify": 80,
+      "Total_Predicted_Clarify": 0,
+      "Clarify_Recall": 0.0,
+      "Clarify_Precision": 0.0,
+      "Clarify_F1": 0.0,
+      "V3_False_Dispatches": 20,
+      "FP_Cohort_Breakdown": {}
+    },
+    "R1": {
+      "TP_clarify": 0,
+      "FP_clarify": 0,
+      "FN_clarify": 20,
+      "TN_clarify": 80,
+      "Total_Predicted_Clarify": 0,
+      "Clarify_Recall": 0.0,
+      "Clarify_Precision": 0.0,
+      "Clarify_F1": 0.0,
+      "V3_False_Dispatches": 20,
+      "FP_Cohort_Breakdown": {}
+    },
+    "R1-Gated": {
+      "TP_clarify": 0,
+      "FP_clarify": 0,
+      "FN_clarify": 20,
+      "TN_clarify": 80,
+      "Total_Predicted_Clarify": 0,
+      "Clarify_Recall": 0.0,
+      "Clarify_Precision": 0.0,
+      "Clarify_F1": 0.0,
+      "V3_False_Dispatches": 17,
+      "FP_Cohort_Breakdown": {}
+    },
+    "R2": {
+      "TP_clarify": 0,
+      "FP_clarify": 0,
+      "FN_clarify": 20,
+      "TN_clarify": 80,
+      "Total_Predicted_Clarify": 0,
+      "Clarify_Recall": 0.0,
+      "Clarify_Precision": 0.0,
+      "Clarify_F1": 0.0,
+      "V3_False_Dispatches": 16,
+      "FP_Cohort_Breakdown": {}
+    },
+    "R2-Cal": {
+      "TP_clarify": 0,
+      "FP_clarify": 0,
+      "FN_clarify": 20,
+      "TN_clarify": 80,
+      "Total_Predicted_Clarify": 0,
+      "Clarify_Recall": 0.0,
+      "Clarify_Precision": 0.0,
+      "Clarify_F1": 0.0,
+      "V3_False_Dispatches": 16,
+      "FP_Cohort_Breakdown": {}
+    },
+    "R3": {
+      "TP_clarify": 0,
+      "FP_clarify": 0,
+      "FN_clarify": 20,
+      "TN_clarify": 80,
+      "Total_Predicted_Clarify": 0,
+      "Clarify_Recall": 0.0,
+      "Clarify_Precision": 0.0,
+      "Clarify_F1": 0.0,
+      "V3_False_Dispatches": 0,
+      "FP_Cohort_Breakdown": {}
+    },
+    "R4": {
+      "TP_clarify": 10,
+      "FP_clarify": 36,
+      "FN_clarify": 10,
+      "TN_clarify": 44,
+      "Total_Predicted_Clarify": 46,
+      "Clarify_Recall": 50.0,
+      "Clarify_Precision": 21.74,
+      "Clarify_F1": 30.3,
+      "V3_False_Dispatches": 9,
+      "FP_Cohort_Breakdown": {
+        "1_supported_compatible": 14,
+        "2_supported_incompatible_input": 7,
+        "3_missing_sensor_modalities": 1,
+        "5_unsupported_tasks": 6,
+        "6_out_of_distribution": 8
+      }
+    },
+    "R4-Tuned": {
+      "TP_clarify": 12,
+      "FP_clarify": 49,
+      "FN_clarify": 8,
+      "TN_clarify": 31,
+      "Total_Predicted_Clarify": 61,
+      "Clarify_Recall": 60.0,
+      "Clarify_Precision": 19.67,
+      "Clarify_F1": 29.63,
+      "V3_False_Dispatches": 7,
+      "FP_Cohort_Breakdown": {
+        "1_supported_compatible": 19,
+        "2_supported_incompatible_input": 13,
+        "3_missing_sensor_modalities": 1,
+        "5_unsupported_tasks": 6,
+        "6_out_of_distribution": 10
+      }
+    },
+    "R5": {
+      "TP_clarify": 0,
+      "FP_clarify": 0,
+      "FN_clarify": 20,
+      "TN_clarify": 80,
+      "Total_Predicted_Clarify": 0,
+      "Clarify_Recall": 0.0,
+      "Clarify_Precision": 0.0,
+      "Clarify_F1": 0.0,
+      "V3_False_Dispatches": 20,
+      "FP_Cohort_Breakdown": {}
+    }
+  },
+  "confidence_abstention_metrics": {
+    "R0": {
+      "Total_Abstentions": 0,
+      "Abstain_Cohort_Breakdown": {}
+    },
+    "R1": {
+      "Total_Abstentions": 0,
+      "Abstain_Cohort_Breakdown": {}
+    },
+    "R1-Gated": {
+      "Total_Abstentions": 0,
+      "Abstain_Cohort_Breakdown": {}
+    },
+    "R2": {
+      "Total_Abstentions": 0,
+      "Abstain_Cohort_Breakdown": {}
+    },
+    "R2-Cal": {
+      "Total_Abstentions": 0,
+      "Abstain_Cohort_Breakdown": {}
+    },
+    "R3": {
+      "Total_Abstentions": 56,
+      "Abstain_Cohort_Breakdown": {
+        "1_supported_compatible": 18,
+        "2_supported_incompatible_input": 2,
+        "4_ambiguous_multi_intent": 16,
+        "5_unsupported_tasks": 10,
+        "6_out_of_distribution": 10
+      }
+    },
+    "R4": {
+      "Total_Abstentions": 0,
+      "Abstain_Cohort_Breakdown": {}
+    },
+    "R4-Tuned": {
+      "Total_Abstentions": 0,
+      "Abstain_Cohort_Breakdown": {}
+    },
+    "R5": {
+      "Total_Abstentions": 0,
+      "Abstain_Cohort_Breakdown": {}
+    }
+  },
+  "broad_uncertainty_metrics": {
+    "R0": {
+      "TP_uncertain": 0,
+      "FP_uncertain": 0,
+      "FN_uncertain": 20,
+      "TN_uncertain": 80,
+      "Total_Predicted_Uncertain": 0,
+      "Uncertainty_Recall": 0.0,
+      "Uncertainty_Precision": 0.0,
+      "Uncertainty_F1": 0.0
+    },
+    "R1": {
+      "TP_uncertain": 0,
+      "FP_uncertain": 0,
+      "FN_uncertain": 20,
+      "TN_uncertain": 80,
+      "Total_Predicted_Uncertain": 0,
+      "Uncertainty_Recall": 0.0,
+      "Uncertainty_Precision": 0.0,
+      "Uncertainty_F1": 0.0
+    },
+    "R1-Gated": {
+      "TP_uncertain": 0,
+      "FP_uncertain": 0,
+      "FN_uncertain": 20,
+      "TN_uncertain": 80,
+      "Total_Predicted_Uncertain": 0,
+      "Uncertainty_Recall": 0.0,
+      "Uncertainty_Precision": 0.0,
+      "Uncertainty_F1": 0.0
+    },
+    "R2": {
+      "TP_uncertain": 0,
+      "FP_uncertain": 0,
+      "FN_uncertain": 20,
+      "TN_uncertain": 80,
+      "Total_Predicted_Uncertain": 0,
+      "Uncertainty_Recall": 0.0,
+      "Uncertainty_Precision": 0.0,
+      "Uncertainty_F1": 0.0
+    },
+    "R2-Cal": {
+      "TP_uncertain": 0,
+      "FP_uncertain": 0,
+      "FN_uncertain": 20,
+      "TN_uncertain": 80,
+      "Total_Predicted_Uncertain": 0,
+      "Uncertainty_Recall": 0.0,
+      "Uncertainty_Precision": 0.0,
+      "Uncertainty_F1": 0.0
+    },
+    "R3": {
+      "TP_uncertain": 16,
+      "FP_uncertain": 40,
+      "FN_uncertain": 4,
+      "TN_uncertain": 40,
+      "Total_Predicted_Uncertain": 56,
+      "Uncertainty_Recall": 80.0,
+      "Uncertainty_Precision": 28.57,
+      "Uncertainty_F1": 42.11
+    },
+    "R4": {
+      "TP_uncertain": 10,
+      "FP_uncertain": 36,
+      "FN_uncertain": 10,
+      "TN_uncertain": 44,
+      "Total_Predicted_Uncertain": 46,
+      "Uncertainty_Recall": 50.0,
+      "Uncertainty_Precision": 21.74,
+      "Uncertainty_F1": 30.3
+    },
+    "R4-Tuned": {
+      "TP_uncertain": 12,
+      "FP_uncertain": 49,
+      "FN_uncertain": 8,
+      "TN_uncertain": 31,
+      "Total_Predicted_Uncertain": 61,
+      "Uncertainty_Recall": 60.0,
+      "Uncertainty_Precision": 19.67,
+      "Uncertainty_F1": 29.63
+    },
+    "R5": {
+      "TP_uncertain": 0,
+      "FP_uncertain": 0,
+      "FN_uncertain": 20,
+      "TN_uncertain": 80,
+      "Total_Predicted_Uncertain": 0,
+      "Uncertainty_Recall": 0.0,
+      "Uncertainty_Precision": 0.0,
+      "Uncertainty_F1": 0.0
+    }
+  },
   "ambiguity_clarification_metrics": {
     "R0": {
       "TP_clarify": 0,
@@ -154,7 +412,7 @@
       "Clarify_Recall": 0.0,
       "Clarify_Precision": 0.0,
       "Clarify_F1": 0.0,
-      "V3_False_Dispatches": 20,
+      "V3_False_Dispatches": 17,
       "FP_Cohort_Breakdown": {}
     },
     "R2": {
@@ -166,7 +424,7 @@
       "Clarify_Recall": 0.0,
       "Clarify_Precision": 0.0,
       "Clarify_F1": 0.0,
-      "V3_False_Dispatches": 20,
+      "V3_False_Dispatches": 16,
       "FP_Cohort_Breakdown": {}
     },
     "R2-Cal": {
@@ -178,25 +436,20 @@
       "Clarify_Recall": 0.0,
       "Clarify_Precision": 0.0,
       "Clarify_F1": 0.0,
-      "V3_False_Dispatches": 20,
+      "V3_False_Dispatches": 16,
       "FP_Cohort_Breakdown": {}
     },
     "R3": {
-      "TP_clarify": 16,
-      "FP_clarify": 40,
-      "FN_clarify": 4,
-      "TN_clarify": 40,
-      "Total_Predicted_Clarify": 56,
-      "Clarify_Recall": 80.0,
-      "Clarify_Precision": 28.57,
-      "Clarify_F1": 42.11,
-      "V3_False_Dispatches": 4,
-      "FP_Cohort_Breakdown": {
-        "1_supported_compatible": 18,
-        "2_supported_incompatible_input": 2,
-        "5_unsupported_tasks": 10,
-        "6_out_of_distribution": 10
-      }
+      "TP_clarify": 0,
+      "FP_clarify": 0,
+      "FN_clarify": 20,
+      "TN_clarify": 80,
+      "Total_Predicted_Clarify": 0,
+      "Clarify_Recall": 0.0,
+      "Clarify_Precision": 0.0,
+      "Clarify_F1": 0.0,
+      "V3_False_Dispatches": 0,
+      "FP_Cohort_Breakdown": {}
     },
     "R4": {
       "TP_clarify": 10,
@@ -207,7 +460,7 @@
       "Clarify_Recall": 50.0,
       "Clarify_Precision": 21.74,
       "Clarify_F1": 30.3,
-      "V3_False_Dispatches": 10,
+      "V3_False_Dispatches": 9,
       "FP_Cohort_Breakdown": {
         "1_supported_compatible": 14,
         "2_supported_incompatible_input": 7,
@@ -225,7 +478,7 @@
       "Clarify_Recall": 60.0,
       "Clarify_Precision": 19.67,
       "Clarify_F1": 29.63,
-      "V3_False_Dispatches": 8,
+      "V3_False_Dispatches": 7,
       "FP_Cohort_Breakdown": {
         "1_supported_compatible": 19,
         "2_supported_incompatible_input": 13,
@@ -416,7 +669,10 @@
         7
       ],
       "McNemar_Chi2": 20.7424,
-      "McNemar_p_val": 5e-06
+      "McNemar_p_val": 5.25e-06,
+      "Holm_multiplier": 4,
+      "McNemar_p_Holm": 2.1e-05,
+      "Reject_H0_Holm_05": true
     },
     "R1": {
       "R4_TSR_arch_pct": 59.0,
@@ -432,7 +688,10 @@
         8
       ],
       "McNemar_Chi2": 31.8793,
-      "McNemar_p_val": 0.0
+      "McNemar_p_val": 2e-08,
+      "Holm_multiplier": 5,
+      "McNemar_p_Holm": 1e-07,
+      "Reject_H0_Holm_05": true
     },
     "R1-Gated": {
       "R4_TSR_arch_pct": 59.0,
@@ -448,7 +707,10 @@
         35
       ],
       "McNemar_Chi2": 2.7027,
-      "McNemar_p_val": 0.100178
+      "McNemar_p_val": 0.10017829,
+      "Holm_multiplier": 2,
+      "McNemar_p_Holm": 0.20035658,
+      "Reject_H0_Holm_05": false
     },
     "R2": {
       "R4_TSR_arch_pct": 59.0,
@@ -464,7 +726,10 @@
         35
       ],
       "McNemar_Chi2": 3.3611,
-      "McNemar_p_val": 0.066753
+      "McNemar_p_val": 0.06675302,
+      "Holm_multiplier": 3,
+      "McNemar_p_Holm": 0.20025906,
+      "Reject_H0_Holm_05": false
     },
     "R3": {
       "R4_TSR_arch_pct": 59.0,
@@ -480,7 +745,10 @@
         41
       ],
       "McNemar_Chi2": 0.8333,
-      "McNemar_p_val": 0.36131
+      "McNemar_p_val": 0.36131043,
+      "Holm_multiplier": 1,
+      "McNemar_p_Holm": 0.36131043,
+      "Reject_H0_Holm_05": false
     }
   }
 }
