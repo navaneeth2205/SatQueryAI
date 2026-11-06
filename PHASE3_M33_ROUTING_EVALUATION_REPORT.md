@@ -157,19 +157,27 @@ The fact that R4 achieved an AURC of $0.2646$ (worse than R0 at $0.0853$ and R1 
 
 ## 3. Dedicated Safety and Interception Breakdown
 
-### 3.1 Physical Contract Violation Defense ($\text{IDER}_{\text{obs}}$ & $\text{CVDR}_{\text{obs}}$)
+### 3.1 Physical Contract Violation Defense ($\text{IDER}_{\text{obs}}$, $\text{CVDR}_{\text{obs}}$, & Pathway Segmentation)
 Evaluated across $N=35$ synthetic held-out contract violations (Cohorts 2 and 3) covering missing sensor modalities, temporal window violations, dimensional discrepancies, and data corruption traps:
 
-| Policy | Interceptions ($N=35$) | Incompatible Dispatches | Interception Recall ($\text{CVDR}$) | Incompatible Dispatch Error Rate ($\text{IDER}_{\text{obs}}$) | Wilson 95% Upper Bound | Clopper-Pearson 95% Bound |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
-| **R0 (Heuristic)** | $0 / 35$ | $35$ | $0.00\%$ | $100.00\%$ | $100.00\%$ | $100.00\%$ |
-| **R1 (Linear Ungated)** | $0 / 35$ | $35$ | $0.00\%$ | $100.00\%$ | $100.00\%$ | $100.00\%$ |
-| **R1-Gated** | $33 / 35$ | $2$ | $94.29\%$ | $5.71\%$ | $18.61\%$ | $19.23\%$ |
-| **R2 / R2-Cal** | $33 / 35$ | $2$ | $94.29\%$ | $5.71\%$ | $18.61\%$ | $19.23\%$ |
-| **R3 (Uncalibrated Selective)** | $35 / 35$ | $0$ | $100.00\%$ | **$0.00\%$** | **$9.89\%$** | **$10.00\%$** |
-| **R4 (Proposed Frozen)** | **$35 / 35$** | **$0$** | **$100.00\%$** | **$0.00\%$** | **$9.89\%$** | **$10.00\%$** |
-| **R4-Tuned (Grid Ablation)** | **$35 / 35$** | **$0$** | **$100.00\%$** | **$0.00\%$** | **$9.89\%$** | **$10.00\%$** |
-| **R5 (Frontier LLM)** | $0 / 35$ | $35$ | $0.00\%$ | $100.00\%$ | $100.00\%$ | $100.00\%$ |
+| Policy Configuration | Total Tested Violations | Strict Physical Gate Rejections (`REJECT_INCOMPATIBLE`) | Linguistic Pre-Interceptions (`CLARIFY_AMBIGUOUS`) | Total Safety Interceptions | Incompatible Dispatches | Strict Gate Recall ($\text{CVDR}_{\text{strict}}$) | Total Safety Recall ($\text{CVDR}_{\text{total}}$) | Incompatible Dispatch Error Rate ($\text{IDER}_{\text{obs}}$) | Wilson 95% Upper Bound | Clopper-Pearson 95% Bound |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **R0 (Heuristic)** | $35$ | $0$ | $0$ | $0 / 35$ | $35$ | $0.00\%$ | $0.00\%$ | $100.00\%$ | $100.00\%$ | $100.00\%$ |
+| **R1 (Linear Ungated)** | $35$ | $0$ | $0$ | $0 / 35$ | $35$ | $0.00\%$ | $0.00\%$ | $100.00\%$ | $100.00\%$ | $100.00\%$ |
+| **R1-Gated** | $35$ | $33$ | $0$ | $33 / 35$ | $2$ | $94.29\%$ | $94.29\%$ | $5.71\%$ | $18.61\%$ | $19.16\%$ |
+| **R2 / R2-Cal** | $35$ | $33$ | $0$ | $33 / 35$ | $2$ | $94.29\%$ | $94.29\%$ | $5.71\%$ | $18.61\%$ | $19.16\%$ |
+| **R3 (Uncalibrated Selective)** | $35$ | $33$ | $0$ | $35 / 35$ | $0$ | $94.29\%$ | $100.00\%$ | **$0.00\%$** | **$9.89\%$** | **$10.00\%$** |
+| **R4 (Proposed Frozen)** | **$35$** | **$27$** | **$8$** | **$35 / 35$** | **$0$** | **$77.14\%$** | **$100.00\%$** | **$0.00\%$** | **$9.89\%$** | **$10.00\%$** |
+| **R4-Tuned (Grid Ablation)** | **$35$** | **$21$** | **$14$** | **$35 / 35$** | **$0$** | **$60.00\%$** | **$100.00\%$** | **$0.00\%$** | **$9.89\%$** | **$10.00\%$** |
+| **R5 (Frontier LLM)** | $35$ | $0$ | $0$ | $0 / 35$ | $35$ | $0.00\%$ | $0.00\%$ | $100.00\%$ | $100.00\%$ | $100.00\%$ |
+
+> [!IMPORTANT]
+> **Mechanistic Breakdown: Strict Physical Gate Rejection vs. Linguistic Pre-Interception**:
+> In accordance with the frozen M3.0 protocol, intent ambiguity is checked *strictly prior* to observation payload evaluation in R4:
+> 1. **Linguistic Pre-Interception ($8 / 35 = 22.86\%$)**: Eight contract-violating scenarios contained ambiguous phrasing (e.g. multi-task polysemy or marginal intent confidence). In accordance with protocol ordering, these requests were halted immediately for clarification (`CLARIFY_AMBIGUOUS`) before payload inspection, eliminating unnecessary compute and preventing coercive dispatches.
+> 2. **Strict Physical Gate Evaluation ($27 / 35 = 77.14\%$)**: The remaining 27 scenarios exhibited unambiguous intent ($c_{\text{intent}} \ge 0.65$ and $\Delta c \ge 0.15$). For these unambiguous requests, the observation payload was inspected by $\mathcal{C}(t, o)$, which detected physical contract violations across sensor dimensions and rejected all 27 without exception (`REJECT_INCOMPATIBLE`, strict gate recall $27/27 = 100.0\%$).
+> 3. **Non-Coercive Safety Guarantee ($35 / 35 = 100.0\%$)**: Across all 35 contract violations, zero invalid requests were dispatched to downstream specialists ($\text{IDER}_{\text{obs}} = 0.00\%$, observed dispatches $0/35$).
+> 4. **Comparison with R3**: Uncalibrated baseline R3 rejected 33 requests at the physical gate and halted 2 via confidence abstention (`ABSTAIN_LOW_CONFIDENCE`), while R4 transparently separates interactive clarification from deterministic physical rejection.
 
 > [!NOTE]
 > **Finite-Sample Safety Bounds**:
@@ -321,15 +329,22 @@ To rigorously evaluate the macro architectural success rate difference between R
 1. **Paired Cluster Bootstrap ($B=1,000$, Resampling 24 Template Family Clusters)**: Computes cluster-robust 95% confidence intervals on the risk difference $\Delta \text{TSR}_{\text{arch}} = \text{TSR}_{\text{arch}}(R_4) - \text{TSR}_{\text{arch}}(R_m)$.
 2. **McNemar Paired Test with Edwards Continuity Correction**: Evaluates discordant pairs ($n_{01}$ and $n_{10}$) where one model succeeded and the other failed:
    $$\chi^2 = \frac{(|n_{10} - n_{01}| - 1)^2}{n_{10} + n_{01}}, \qquad p_{\text{raw}} = P(\chi_1^2 \ge \text{stat})$$
-3. **Step-Down Holm Multiplicity Control**: Controls the family-wise error rate across the $m=5$ paired architectural contrasts at $\alpha = 0.05$:
+3. **Exact Two-Sided Binomial Test**: Evaluates exact cumulative binomial probabilities over discordant pairs $\min(n_{01}, n_{10}) \sim \text{Binomial}(n_{01} + n_{10}, 0.5)$ to avoid asymptotic continuity artifacts.
+4. **Step-Down Holm Multiplicity Control**: Controls the family-wise error rate across the $m=5$ paired architectural contrasts at $\alpha = 0.05$:
 
-| Contrast ($R_4$ vs Baseline) | $R_4$ $\text{TSR}_{\text{arch}}$ | Baseline $\text{TSR}_{\text{arch}}$ | Risk Difference ($\Delta \text{TSR}$) | Bootstrap Standard Error | 95% Clustered CI | Contingency $[n_{00}, n_{01}, n_{10}, n_{11}]$ | McNemar $\chi^2$ Formula | McNemar $\chi^2$ | Raw $p$-value | Holm Multiplier | Step-Down Holm $p$-value | Confirmatory Rejection ($\alpha=0.05$) |
-| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **R4 vs R1 (Linear Ungated)** | $59.00\%$ | $15.00\%$ | **$+44.00\%$** | $10.14\%$ | $[+24.00\%, +64.36\%]$ | $[34, 7, 51, 8]$ | $\frac{(|51-7|-1)^2}{51+7} = \frac{1849}{58}$ | **$31.879$** | $1.64 \times 10^{-8}$ | $5$ | **$8.20 \times 10^{-8}$** | **REJECTED ($H_0$ Rejected)** |
-| **R4 vs R0 (Heuristic)** | $59.00\%$ | $21.00\%$ | **$+38.00\%$** | $12.74\%$ | $[+11.88\%, +61.11\%]$ | $[27, 14, 52, 7]$ | $\frac{(|52-14|-1)^2}{52+14} = \frac{1369}{66}$ | **$20.742$** | $5.25 \times 10^{-6}$ | $4$ | **$2.10 \times 10^{-5}$** | **REJECTED ($H_0$ Rejected)** |
-| **R4 vs R2 (Gated Non-Sel)** | $59.00\%$ | $47.00\%$ | $+12.00\%$ | $8.77\%$ | $[-3.48\%, +30.77\%]$ | $[29, 12, 24, 35]$ | $\frac{(|24-12|-1)^2}{24+12} = \frac{121}{36}$ | **$3.361$** | $0.0668$ | $3$ | $0.2003$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
-| **R4 vs R1-Gated** | $59.00\%$ | $48.00\%$ | $+11.00\%$ | $8.77\%$ | $[-6.25\%, +28.77\%]$ | $[28, 13, 24, 35]$ | $\frac{(|24-13|-1)^2}{24+13} = \frac{100}{37}$ | **$2.703$** | $0.1002$ | $2$ | $0.2004$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
-| **R4 vs R3 (Uncalibrated Sel)** | $59.00\%$ | $53.00\%$ | $+6.00\%$ | $8.23\%$ | $[-10.38\%, +21.11\%]$ | $[29, 12, 18, 41]$ | $\frac{(|18-12|-1)^2}{18+12} = \frac{25}{30}$ | **$0.833$** | $0.3613$ | $1$ | $0.3613$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
+| Contrast ($R_4$ vs Baseline) | $R_4$ $\text{TSR}_{\text{arch}}$ | Baseline $\text{TSR}_{\text{arch}}$ | Risk Difference ($\Delta \text{TSR}$) | Bootstrap SE | 95% Clustered CI | Contingency $[n_{00}, n_{01}, n_{10}, n_{11}]$ | Edwards Continuity-Corrected McNemar $\chi^2$ Formula | McNemar $\chi^2$ | Edwards $p_{\text{raw}}$ | Exact Binomial $p_{\text{binom}}$ | Holm Mult. | Step-Down Holm $p$-value | Confirmatory Rejection ($\alpha=0.05$) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| **R4 vs R1 (Linear Ungated)** | $59.00\%$ | $15.00\%$ | **$+44.00\%$** | $10.14\%$ | $[+24.00\%, +64.36\%]$ | $[34, 7, 51, 8]$ | $\frac{(|51-7|-1)^2}{51+7} = \frac{1849}{58}$ | **$31.879$** | $1.64 \times 10^{-8}$ | **$2.40 \times 10^{-9}$** | $5$ | **$8.20 \times 10^{-8}$** | **REJECTED ($H_0$ Rejected)** |
+| **R4 vs R0 (Heuristic)** | $59.00\%$ | $21.00\%$ | **$+38.00\%$** | $12.74\%$ | $[+11.88\%, +61.11\%]$ | $[27, 14, 52, 7]$ | $\frac{(|52-14|-1)^2}{52+14} = \frac{1369}{66}$ | **$20.742$** | $5.25 \times 10^{-6}$ | **$2.82 \times 10^{-6}$** | $4$ | **$2.10 \times 10^{-5}$** | **REJECTED ($H_0$ Rejected)** |
+| **R4 vs R2 (Gated Non-Sel)** | $59.00\%$ | $47.00\%$ | $+12.00\%$ | $8.77\%$ | $[-3.48\%, +30.77\%]$ | $[29, 12, 24, 35]$ | $\frac{(|24-12|-1)^2}{24+12} = \frac{121}{36}$ | **$3.361$** | $0.0668$ | **$0.0652$** | $3$ | $0.2003$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
+| **R4 vs R1-Gated** | $59.00\%$ | $48.00\%$ | $+11.00\%$ | $8.77\%$ | $[-6.25\%, +28.77\%]$ | $[28, 13, 24, 35]$ | $\frac{(|24-13|-1)^2}{24+13} = \frac{100}{37}$ | **$2.703$** | $0.1002$ | **$0.0989$** | $2$ | $0.2004$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
+| **R4 vs R3 (Uncalibrated Sel)** | $59.00\%$ | $53.00\%$ | $+6.00\%$ | $8.23\%$ | $[-10.38\%, +21.11\%]$ | $[29, 12, 18, 41]$ | $\frac{(|18-12|-1)^2}{18+12} = \frac{25}{30}$ | **$0.833$** | $0.3613$ | **$0.3616$** | $1$ | $0.3613$ | Not Rejected ($p_{\text{Holm}} > 0.05$) |
+
+> [!NOTE]
+> **Statistical Agreement Between Edwards $\chi^2$ and Exact Binomial Inferences**:
+> The Edwards continuity-corrected McNemar $\chi^2$ approximation and the exact two-sided binomial test agree identically across all contrasts:
+> - For R4 vs R1 ($n_{01}=7, n_{10}=51$) and R4 vs R0 ($n_{01}=14, n_{10}=52$), both the Edwards approximation ($p = 1.64 \times 10^{-8}$ and $p = 5.25 \times 10^{-6}$) and exact binomial test ($p = 2.40 \times 10^{-9}$ and $p = 2.82 \times 10^{-6}$) reject the null hypothesis at extreme significance levels surviving 5-comparison Step-Down Holm adjustment ($p_{\text{Holm}} < 10^{-4}$).
+> - For R4 vs R2, R1-Gated, and R3, neither the Edwards test ($p \ge 0.0668$) nor the exact binomial test ($p \ge 0.0652$) achieves significance after Holm adjustment ($p_{\text{Holm}} \ge 0.2002$).
 
 **Assessment of Architectural Improvement & Multiplicity**:
 1. **R4 vs Unconstrained Baselines (R0, R1)**: The architectural advantage of R4 is decisive and survives rigorous Step-Down Holm multiplicity correction ($p_{\text{Holm}} < 10^{-7}$ vs R1; $p_{\text{Holm}} < 10^{-4}$ vs R0). The 95% cluster-bootstrap confidence interval ($[+24.00\%, +64.36\%]$) excludes zero, statistically confirming that physical compatibility gating and selective uncertainty handling decisively outperform unconstrained routing.
@@ -350,7 +365,7 @@ All evaluation results, model artifacts, and test suites are permanently committ
 | **Risk-Coverage Curve Plot** | [`artifacts/benchmarks/risk_coverage_curves_m33.png`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/artifacts/benchmarks/risk_coverage_curves_m33.png) | High-resolution publication curves and safety profile bar chart |
 | **Physical Compatibility Gate** | [`satquery/utils/geospatial.py`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/satquery/utils/geospatial.py) | Implementation of the 8 physical observation contract dimensions |
 | **Benchmark Runner Script** | [`scripts/run_m33_routing_experiments.py`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/scripts/run_m33_routing_experiments.py) | Fully reproducible benchmark script executing M3.3 evaluation |
-| **Automated Test Suite** | [`tests/test_m33_selective_routing.py`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/tests/test_m33_selective_routing.py) | 9/9 passing pytest assertions verifying M3.3 invariants |
+| **Automated Test Suite** | [`tests/test_m33_selective_routing.py`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/tests/test_m33_selective_routing.py) | 10/10 passing pytest assertions verifying M3.3 invariants |
 
 ---
 
@@ -368,6 +383,6 @@ All evaluation results, model artifacts, and test suites are permanently committ
    - Deterministic physical observation gating completely eliminated all tested contract violations ($\text{IDER}_{\text{obs}} = 0.00\%$, Wilson 95% upper bound $9.89\%$ vs $100\%$ for ungated baselines).
    - R4 achieved the highest 7-task architectural task success rate ($59.00\%$), demonstrating a statistically significant $+44.0\%$ advantage over unconstrained linear routing.
 4. **Transition to Phase 4**:
-   - All 103 tests in the repository test suite are passing.
+   - All 104 tests in the repository test suite are passing.
    - Milestone M3.3 is closed with full scientific audit reconciliation.
    - Ready to proceed to Phase 4 Integration and Research Methodology consolidation.

@@ -426,17 +426,26 @@ def predict_r4_proposed(
     s_joint = float(min(c_intent / max(tau_intent, 1e-6), delta_c / max(tau_margin, 1e-6)))
     is_ambiguous = (c_intent < tau_intent) or (delta_c < tau_margin)
 
-    gate_res = evaluate_physical_compatibility_gate(best_task, payload)
-
-    # 4 Discrete Pathways
+    # 4 Discrete Pathways — Enforce strict M3.0 protocol ordering:
+    # Ambiguous intent halts for clarification BEFORE observation payload is inspected
     if is_ambiguous:
         action = "CLARIFY_AMBIGUOUS"
-    elif not gate_res.is_compatible:
-        action = "REJECT_INCOMPATIBLE"
-    elif s_joint < tau_sel:
-        action = "ABSTAIN_LOW_CONFIDENCE"
+        gate_passed = False
+        is_compatible = False
+        failure_codes = ["HALTED_AMBIGUITY_BEFORE_PAYLOAD"]
     else:
-        action = "DISPATCH_QUALIFIED"
+        # Only inspect observation payload if linguistic intent is unambiguous
+        gate_res = evaluate_physical_compatibility_gate(best_task, payload)
+        gate_passed = gate_res.is_compatible
+        is_compatible = gate_res.is_compatible
+        failure_codes = gate_res.failure_codes
+
+        if not gate_res.is_compatible:
+            action = "REJECT_INCOMPATIBLE"
+        elif s_joint < tau_sel:
+            action = "ABSTAIN_LOW_CONFIDENCE"
+        else:
+            action = "DISPATCH_QUALIFIED"
 
     return {
         "model_id": "R4",
@@ -444,10 +453,10 @@ def predict_r4_proposed(
         "confidence": c_intent,
         "margin": delta_c,
         "selective_score": s_joint,  # Standardized joint selection score
-        "gate_passed": gate_res.is_compatible,
+        "gate_passed": gate_passed,
         "action": action,
-        "is_compatible": gate_res.is_compatible,
-        "failure_codes": gate_res.failure_codes,
+        "is_compatible": is_compatible,
+        "failure_codes": failure_codes,
         "is_ambiguous": is_ambiguous
     }
 
@@ -856,6 +865,8 @@ def run_m33_experiments():
         v5_evals = [model_evaluations[m_id][idx] for idx in v5_indices]
         # Incompatible dispatches: executed despite incompatible payload
         incompat_dispatches = sum(1 for r in v5_evals if r["action"] == "DISPATCH_QUALIFIED")
+        strict_gate_rejects = sum(1 for r in v5_evals if r["action"] == "REJECT_INCOMPATIBLE")
+        clarify_pre_halts = sum(1 for r in v5_evals if r["action"] == "CLARIFY_AMBIGUOUS")
         interceptions = sum(1 for r in v5_evals if r["action"] in ("REJECT_INCOMPATIBLE", "ABSTAIN_LOW_CONFIDENCE", "CLARIFY_AMBIGUOUS"))
 
         ider = incompat_dispatches / len(v5_indices) if len(v5_indices) > 0 else 0.0
@@ -867,8 +878,11 @@ def run_m33_experiments():
         safety_results[m_id] = {
             "Total_Violations": len(v5_indices),
             "Interceptions": interceptions,
+            "Strict_Gate_Rejections": strict_gate_rejects,
+            "Linguistic_Pre_Interceptions": clarify_pre_halts,
             "Incompatible_Dispatches": incompat_dispatches,
             "CVDR_pct": round(cvdr * 100, 2),
+            "Strict_Gate_Recall_pct": round(strict_gate_rejects / len(v5_indices) * 100, 2),
             "IDER_pct": round(ider * 100, 2),
             "Wilson_95_Upper_pct": round(w_high * 100, 2),
             "Clopper_Pearson_95_Upper_pct": round(cp_high * 100, 2)
@@ -876,7 +890,7 @@ def run_m33_experiments():
 
     df_safety = pd.DataFrame(safety_results).T
     print(f"\nPhysical Contract Safety & Incompatible Dispatch Error Rate (IDER_obs, N={len(v5_indices)}):")
-    print(df_safety[["Interceptions", "Incompatible_Dispatches", "CVDR_pct", "IDER_pct", "Wilson_95_Upper_pct"]].to_string())
+    print(df_safety[["Interceptions", "Strict_Gate_Rejections", "Linguistic_Pre_Interceptions", "Incompatible_Dispatches", "CVDR_pct", "Strict_Gate_Recall_pct", "IDER_pct", "Wilson_95_Upper_pct"]].to_string())
 
     # 7C. Segregated End-to-End Success Rates (Metric 5a TSR_arch vs Metric 5b TSR_exec)
     print("\n" + "-" * 60)
@@ -1059,9 +1073,12 @@ def run_m33_experiments():
         if b_c > 0:
             stat = ((abs(n10 - n01) - 1.0) ** 2) / float(b_c)
             p_mcnemar = float(stats.chi2.sf(stat, df=1))
+            binom_res = stats.binomtest(min(n01, n10), b_c, 0.5, alternative="two-sided")
+            p_binom = float(binom_res.pvalue)
         else:
             stat = 0.0
             p_mcnemar = 1.0
+            p_binom = 1.0
 
         # Cluster bootstrap over 24 template families
         b_diffs = np.zeros(B, dtype=float)
@@ -1087,7 +1104,8 @@ def run_m33_experiments():
             "CI_95_High_pct": round(ci_high * 100, 2),
             "Contingency_n00_n01_n10_n11": [n00, n01, n10, n11],
             "McNemar_Chi2": round(stat, 4),
-            "McNemar_p_val": round(p_mcnemar, 8)
+            "McNemar_p_val": round(p_mcnemar, 8),
+            "Exact_Binomial_p_val": round(p_binom, 8)
         }
 
     # 5-Comparison Step-Down Holm Multiplicity Adjustment for McNemar Tests

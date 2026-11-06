@@ -15,6 +15,7 @@ Verifies all core scientific and machine-enforceable requirements:
 
 import sys
 from pathlib import Path
+from unittest.mock import patch
 import numpy as np
 import pytest
 
@@ -349,3 +350,45 @@ def test_m33_tsr_arch_statistical_inference_and_mcnemar():
 
     assert r4_vs_r3["Reject_H0_Holm_05"] is False, "R4 vs R3 must fail to reject H0 under Holm adjustment"
     assert r4_vs_r3["McNemar_p_Holm"] > 0.05
+
+
+def test_m33_physical_gate_not_called_when_ambiguous(router):
+    """
+    Test 10: Strict protocol ordering enforcement in R4 routing.
+    Asserts that evaluate_physical_compatibility_gate is NOT invoked when
+    the user query is ambiguous, short-circuiting to CLARIFY_AMBIGUOUS before
+    observation payload inspection.
+    """
+    ambig_query = "Analyze and survey this satellite observation."
+    cal_logits_ambig = router.predict_logits([ambig_query])[0] / 0.0991
+
+    with patch("scripts.run_m33_routing_experiments.evaluate_physical_compatibility_gate") as mock_gate:
+        res = predict_r4_proposed(
+            ambig_query,
+            payload=None,
+            router=router,
+            cal_logits=cal_logits_ambig,
+            tau_intent=0.65,
+            tau_margin=0.15
+        )
+        assert res["action"] == "CLARIFY_AMBIGUOUS"
+        assert res["is_ambiguous"] is True
+        mock_gate.assert_not_called()
+
+    # Conversely, for an unambiguous query, evaluate_physical_compatibility_gate MUST be called
+    clear_query = "What changed between 2021 and 2024?"
+    cal_logits_clear = router.predict_logits([clear_query])[0] / 0.0991
+    valid_pair = {"t1": np.zeros((128, 128, 3)), "t2": np.zeros((128, 128, 3))}
+
+    with patch("scripts.run_m33_routing_experiments.evaluate_physical_compatibility_gate", wraps=evaluate_physical_compatibility_gate) as mock_gate:
+        res_clear = predict_r4_proposed(
+            clear_query,
+            payload=valid_pair,
+            router=router,
+            cal_logits=cal_logits_clear,
+            tau_intent=0.40,
+            tau_margin=0.05
+        )
+        assert res_clear["is_ambiguous"] is False
+        mock_gate.assert_called_once()
+

@@ -1,7 +1,7 @@
 {
   "milestone": "M3.3",
   "description": "Advanced Selective Routing & Risk-Coverage Optimization",
-  "timestamp": "2026-11-06T07:39:17Z",
+  "timestamp": "2026-11-06T09:59:02Z",
   "router_architecture": "TF-IDF Vectorizer + Calibrated Logistic Regression Linear Classifier",
   "calibration": {
     "T_cal": 0.0991,
@@ -504,8 +504,11 @@
     "R0": {
       "Total_Violations": 35,
       "Interceptions": 0,
+      "Strict_Gate_Rejections": 0,
+      "Linguistic_Pre_Interceptions": 0,
       "Incompatible_Dispatches": 35,
       "CVDR_pct": 0.0,
+      "Strict_Gate_Recall_pct": 0.0,
       "IDER_pct": 100.0,
       "Wilson_95_Upper_pct": 100.0,
       "Clopper_Pearson_95_Upper_pct": 100.0
@@ -513,8 +516,11 @@
     "R1": {
       "Total_Violations": 35,
       "Interceptions": 0,
+      "Strict_Gate_Rejections": 0,
+      "Linguistic_Pre_Interceptions": 0,
       "Incompatible_Dispatches": 35,
       "CVDR_pct": 0.0,
+      "Strict_Gate_Recall_pct": 0.0,
       "IDER_pct": 100.0,
       "Wilson_95_Upper_pct": 100.0,
       "Clopper_Pearson_95_Upper_pct": 100.0
@@ -522,8 +528,11 @@
     "R1-Gated": {
       "Total_Violations": 35,
       "Interceptions": 33,
+      "Strict_Gate_Rejections": 33,
+      "Linguistic_Pre_Interceptions": 0,
       "Incompatible_Dispatches": 2,
       "CVDR_pct": 94.29,
+      "Strict_Gate_Recall_pct": 94.29,
       "IDER_pct": 5.71,
       "Wilson_95_Upper_pct": 18.61,
       "Clopper_Pearson_95_Upper_pct": 19.16
@@ -531,8 +540,11 @@
     "R2": {
       "Total_Violations": 35,
       "Interceptions": 33,
+      "Strict_Gate_Rejections": 33,
+      "Linguistic_Pre_Interceptions": 0,
       "Incompatible_Dispatches": 2,
       "CVDR_pct": 94.29,
+      "Strict_Gate_Recall_pct": 94.29,
       "IDER_pct": 5.71,
       "Wilson_95_Upper_pct": 18.61,
       "Clopper_Pearson_95_Upper_pct": 19.16
@@ -540,8 +552,11 @@
     "R2-Cal": {
       "Total_Violations": 35,
       "Interceptions": 33,
+      "Strict_Gate_Rejections": 33,
+      "Linguistic_Pre_Interceptions": 0,
       "Incompatible_Dispatches": 2,
       "CVDR_pct": 94.29,
+      "Strict_Gate_Recall_pct": 94.29,
       "IDER_pct": 5.71,
       "Wilson_95_Upper_pct": 18.61,
       "Clopper_Pearson_95_Upper_pct": 19.16
@@ -549,8 +564,11 @@
     "R3": {
       "Total_Violations": 35,
       "Interceptions": 35,
+      "Strict_Gate_Rejections": 33,
+      "Linguistic_Pre_Interceptions": 0,
       "Incompatible_Dispatches": 0,
       "CVDR_pct": 100.0,
+      "Strict_Gate_Recall_pct": 94.29,
       "IDER_pct": 0.0,
       "Wilson_95_Upper_pct": 9.89,
       "Clopper_Pearson_95_Upper_pct": 10.0
@@ -558,8 +576,11 @@
     "R4": {
       "Total_Violations": 35,
       "Interceptions": 35,
+      "Strict_Gate_Rejections": 27,
+      "Linguistic_Pre_Interceptions": 8,
       "Incompatible_Dispatches": 0,
       "CVDR_pct": 100.0,
+      "Strict_Gate_Recall_pct": 77.14,
       "IDER_pct": 0.0,
       "Wilson_95_Upper_pct": 9.89,
       "Clopper_Pearson_95_Upper_pct": 10.0
@@ -567,8 +588,11 @@
     "R4-Tuned": {
       "Total_Violations": 35,
       "Interceptions": 35,
+      "Strict_Gate_Rejections": 21,
+      "Linguistic_Pre_Interceptions": 14,
       "Incompatible_Dispatches": 0,
       "CVDR_pct": 100.0,
+      "Strict_Gate_Recall_pct": 60.0,
       "IDER_pct": 0.0,
       "Wilson_95_Upper_pct": 9.89,
       "Clopper_Pearson_95_Upper_pct": 10.0
@@ -576,8 +600,11 @@
     "R5": {
       "Total_Violations": 35,
       "Interceptions": 0,
+      "Strict_Gate_Rejections": 0,
+      "Linguistic_Pre_Interceptions": 0,
       "Incompatible_Dispatches": 35,
       "CVDR_pct": 0.0,
+      "Strict_Gate_Recall_pct": 0.0,
       "IDER_pct": 100.0,
       "Wilson_95_Upper_pct": 100.0,
       "Clopper_Pearson_95_Upper_pct": 100.0
@@ -670,6 +697,7 @@
       ],
       "McNemar_Chi2": 20.7424,
       "McNemar_p_val": 5.25e-06,
+      "Exact_Binomial_p_val": 2.82e-06,
       "Holm_multiplier": 4,
       "McNemar_p_Holm": 2.1e-05,
       "Reject_H0_Holm_05": true
@@ -689,6 +717,7 @@
       ],
       "McNemar_Chi2": 31.8793,
       "McNemar_p_val": 2e-08,
+      "Exact_Binomial_p_val": 0.0,
       "Holm_multiplier": 5,
       "McNemar_p_Holm": 1e-07,
       "Reject_H0_Holm_05": true
@@ -708,6 +737,7 @@
       ],
       "McNemar_Chi2": 2.7027,
       "McNemar_p_val": 0.10017829,
+      "Exact_Binomial_p_val": 0.09887175,
       "Holm_multiplier": 2,
       "McNemar_p_Holm": 0.20035658,
       "Reject_H0_Holm_05": false
@@ -727,6 +757,7 @@
       ],
       "McNemar_Chi2": 3.3611,
       "McNemar_p_val": 0.06675302,
+      "Exact_Binomial_p_val": 0.06524534,
       "Holm_multiplier": 3,
       "McNemar_p_Holm": 0.20025906,
       "Reject_H0_Holm_05": false
@@ -746,6 +777,7 @@
       ],
       "McNemar_Chi2": 0.8333,
       "McNemar_p_val": 0.36131043,
+      "Exact_Binomial_p_val": 0.36159461,
       "Holm_multiplier": 1,
       "McNemar_p_Holm": 0.36131043,
       "Reject_H0_Holm_05": false
