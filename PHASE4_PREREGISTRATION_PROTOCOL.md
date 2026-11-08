@@ -1,9 +1,9 @@
 # SatQuery AI — Phase 4 Preregistration Protocol: Robustness, Generalization, and Adversarial Envelope Discovery
 
-**Document Identifier**: `SATQUERY-P4-PROTOCOL-V1.3-DRAFT`  
+**Document Identifier**: `SATQUERY-P4-PROTOCOL-V1.4-DRAFT`  
 **Phase**: Phase 4 — Robustness, Generalization, and Operational Envelope Discovery  
 **Date**: November 8, 2026  
-**Status**: **PROPOSED PREREGISTRATION PROTOCOL — DRAFT v1.3 (Confirmatory Statistical Lock — Awaiting Final Freeze)**  
+**Status**: **PROPOSED PREREGISTRATION PROTOCOL — DRAFT v1.4 (Dependence-Aware Statistical Lock — Awaiting Final Freeze)**  
 **Repository Branch**: `feature/phase4-generalization-protocol`  
 **Preceding Milestones**: Phase 3 Closed (M3.1 Multimodal ASL/CB-BCE, M3.2 FC-Siam-diff, M3.3 Selective Routing) with Pre-Registered Limitations  
 **Model Weight & Artifact Provenance**: Completely Frozen from Phase 3  
@@ -27,7 +27,7 @@ To preserve open-science methodological integrity:
 1. **Zero Weight / Parameter Tuning**: No specialist neural weights, router calibration temperatures ($T_{\text{cal}} = 0.0991$), or routing operating thresholds ($\tau_{\text{intent}}=0.65, \tau_{\text{margin}}=0.15, \tau_{\text{sel}}=1.0$) will be re-trained, fine-tuned, or adjusted against Phase 4 evaluation data.
 2. **Strict Confirmatory Testing**: Hypotheses H1 through H5 represent confirmatory evaluations of the frozen Phase 3 checkpoints. Any exploratory analyses, failure post-mortems, or adaptation experiments will be formally quarantined into separate, non-confirmatory reporting sections.
 3. **Transparent Reporting of Operational Limits**: Performance degradations, out-of-domain failure modes, or edge-case gate rejections will be documented transparently as scientific characterizations of the system's operational envelope rather than concealed.
-4. **Pre-Registered Protocol Lock**: Hypotheses, comparison populations, test definitions, and acceptance criteria are finalized prior to execution; no post-hoc amendments based on observed results will be permitted.
+4. **Pre-Registered Protocol Lock**: Hypotheses, comparison populations, statistical test definitions, and acceptance criteria are finalized prior to execution; no post-hoc amendments based on observed results will be permitted.
 
 ---
 
@@ -160,7 +160,7 @@ flowchart LR
        - **Biome 2 (Tropical Rainforest)**: Amazon Basin, Brazil and Congo Basin, Central Africa (Lat $5^\circ\text{S}$ to $5^\circ\text{N}$, Lon $65^\circ\text{W}$ to $55^\circ\text{W}$ and $15^\circ\text{E}$ to $25^\circ\text{E}$).
        - **Biome 3 (Boreal Forest / Sub-Arctic)**: Fennoscandia and Interior Alaska (Lat $60^\circ\text{N}$ to $68^\circ\text{N}$, Lon $15^\circ\text{E}$ to $30^\circ\text{E}$ and $150^\circ\text{W}$ to $140^\circ\text{W}$).
        - **Biome 4 (Humid Subtropical / Monsoon Cropland)**: Indo-Gangetic Plain and Mekong Delta (Lat $10^\circ\text{N}$ to $26^\circ\text{N}$, Lon $75^\circ\text{E}$ to $105^\circ\text{E}$).
-     - **Exact Cross-Taxonomy Harmonization & Ground-Truth Validity Table**:
+     - **Cross-Taxonomy Ground-Truth Validity Table**:
        The target taxonomy consists of the 16 classes from `artifacts/specialists/land_cover/classes.json`. Ground truth is derived from MODIS IGBP (MCD12Q1 Version 6, 500m). To maintain scientific integrity, classes are explicitly categorized as **Directly Mapped**, **Approximate Mapping**, or **Quarantined / Inevaluable**:
        | BigEarthNet-16 Target Class | Mapped MODIS IGBP Class(es) | Semantic Alignment / Rationale | Categorization Status |
        | :--- | :--- | :--- | :--- |
@@ -205,33 +205,34 @@ flowchart LR
 ### Track 4.2: Cross-Sensor & Cross-Resolution Compatibility Defense
 
 - **Research Question**: Does the physical compatibility gate deterministically intercept observations from off-target sensors (Landsat, PlanetScope) before dispatching to Sentinel-2 specialists?
-- **Hypothesis (H2) & Non-Inferiority Safety Formulation**:
-  Let $\delta_{\text{tol}} = 0.05$ ($5.0\%$) represent the pre-registered maximum tolerable incompatible dispatch error rate. We formulate the one-sided safety hypothesis:
-  $$H_0: \text{IDER}_{\text{off-sensor}} \ge 0.05 \quad \text{vs.} \quad H_1: \text{IDER}_{\text{off-sensor}} < 0.05$$
-  Under $H_0$, observing 0 errors in $N=80$ independent off-sensor trials has exact binomial probability:
-  $$p = (1 - 0.05)^{80} = 0.95^{80} \approx 0.0165$$
-  Because $p = 0.0165 < 0.05$, observing zero incompatible dispatches will formally reject $H_0$ at significance level $\alpha = 0.05$.
-- **Target Population ($N=100$ Payloads)**:
-  - Source independence: The 80 off-sensor payloads are derived from **20 independent Landsat-8/9 scene footprints** and **20 independent PlanetScope scene footprints** ($N_{\text{scenes}} = 40$), preventing repeated perturbation of a single acquisition.
-  - **40 Landsat-8/9 Payloads**:
+- **Source-Level Unit of Analysis & Safety Formulation**:
+  - The 80 off-sensor payloads are derived from **$N_{\text{source}} = 40$ independent acquisition footprints** (20 Landsat-8/9 scenes, 20 PlanetScope scenes). Because perturbations sharing a source footprint are statistically dependent, the primary statistical unit of analysis is defined at the **independent source footprint level**:
+    $$\text{Fail}_{\text{source}, i} = \max_{j} \mathbb{I}(\text{Payload}_{i, j} \text{ dispatched to specialist})$$
+  - Let $\delta_{\text{tol}} = 0.10$ ($10.0\%$) represent the pre-registered maximum tolerable source-level error rate. We formulate the one-sided safety hypothesis:
+    $$H_0: \text{IDER}_{\text{source}} \ge 0.10 \quad \text{vs.} \quad H_1: \text{IDER}_{\text{source}} < 0.10$$
+    Under $H_0$, observing 0 failures in $N_{\text{source}} = 40$ independent trials has exact binomial probability:
+    $$p = (1 - 0.10)^{40} = 0.90^{40} \approx 0.0148 < 0.05$$
+    Observing zero source-level dispatches formally rejects $H_0$ at $\alpha = 0.05$.
+- **Target Population ($N=100$ Payloads from $N_{\text{scenes}} = 60$)**:
+  - **40 Landsat-8/9 Payloads (from 20 independent scenes)**:
     - 15 payloads testing resolution violation alone (`gsd_m = 30.0`, valid band names) $\to$ Expected: `ERR_RESOLUTION_INCOMPATIBLE`.
     - 15 payloads testing missing SAR for Land Cover (optical-only payload sent to LC) $\to$ Expected: `ERR_MISSING_MODALITY`.
     - 10 payloads testing spectral band mismatch (Landsat band nomenclature `['B2', 'B3', 'B4', 'B5']` lacking Sentinel-2 identifiers) $\to$ Expected: `ERR_INSUFFICIENT_BANDS`.
-  - **40 PlanetScope Scene Payloads**:
+  - **40 PlanetScope Scene Payloads (from 20 independent scenes)**:
     - 15 payloads testing resolution violation alone (`gsd_m = 3.0`) $\to$ Expected: `ERR_RESOLUTION_INCOMPATIBLE`.
     - 15 payloads testing missing SAR for Land Cover (RGB-NIR payload sent to LC) $\to$ Expected: `ERR_MISSING_MODALITY`.
     - 10 payloads testing spectral band mismatch (PlanetScope identifiers `['Blue', 'Green', 'Red', 'NIR']`) $\to$ Expected: `ERR_INSUFFICIENT_BANDS`.
-  - **20 Sentinel-2 Level-2A Control Payloads**:
+  - **20 Sentinel-2 Level-2A Control Payloads (from 20 independent scenes)**:
     - 10 valid Land Cover multimodal payloads (10 optical + 2 SAR bands, $120 \times 120$, GSD 10m).
     - 10 valid Change Detection bitemporal pairs (RGB, $256 \times 256$, GSD 10m, $\Delta t \in [5, 730]\text{ days}$).
-- **Evaluation Metrics & Finite-Sample Uncertainty**:
-  - Incompatible Dispatch Error Rate: $\widehat{\text{IDER}}_{\text{off-sensor}} = N_{\text{incompatible off-sensor dispatches}} / 80$.
-  - Control False Rejection Rate: $\widehat{\text{FRR}}_{\text{control}} = N_{\text{falsely rejected Sentinel-2 controls}} / 20$.
-  - Reporting of Uncertainty:
-    - For 0 errors in 80 trials: **Two-sided 95% Wilson bound: $[0.00\%, 4.56\%]$**, **Clopper-Pearson exact bound: $[0.00\%, 4.51\%]$**.
-    - For 0 false rejections in 20 controls: **Two-sided 95% Wilson bound: $[0.00\%, 16.11\%]$**, **Clopper-Pearson exact bound: $[0.00\%, 16.84\%]$** (finite-sample uncertainty acknowledged).
+- **Evaluation Metrics & Disentangled Reporting**:
+  - **Confirmatory Source-Level Metric**: $\widehat{\text{IDER}}_{\text{source}} = N_{\text{failed source scenes}} / 40$.
+    - For 0 errors in 40 trials: **Two-sided 95% Clopper-Pearson exact bound: $[0.00\%, 8.81\%]$**, **Wilson bound: $[0.00\%, 8.81\%]$**.
+  - **Descriptive Engineering Metric**: $\widehat{\text{IDER}}_{\text{payload}} = N_{\text{dispatched payloads}} / 80 = 0.00\%$ and $\text{CVDR}_{\text{payload}} = 80 / 80 = 100.0\%$.
+  - **Control False Rejection Rate**: $\widehat{\text{FRR}}_{\text{control}} = N_{\text{rejected controls}} / 20 = 0.00\%$ (Wilson 95% bound $[0.00\%, 16.11\%]$, Clopper-Pearson $[0.00\%, 16.84\%]$).
 - **Pre-Registered Acceptance Criteria**:
-  - Safety Rejection: $\widehat{\text{IDER}}_{\text{off-sensor}} = 0.00\%$ ($0 / 80$), rejecting $H_0: \text{IDER} \ge 0.05$ with $p = 0.0165$.
+  - Statistical Safety Confirmation: $\widehat{\text{IDER}}_{\text{source}} = 0.00\%$ ($0 / 40$), rejecting $H_0: \text{IDER}_{\text{source}} \ge 0.10$ with $p = 0.0148$.
+  - Descriptive Engineering Target: $\widehat{\text{IDER}}_{\text{payload}} = 0.00\%$ ($0 / 80$).
   - Control Preservation: $\widehat{\text{FRR}}_{\text{control}} = 0.00\%$ ($0 / 20$).
 
 ---
@@ -241,26 +242,30 @@ flowchart LR
 - **Scope & Architectural Clarification**:
   This track explicitly evaluates two decoupled mechanisms:
   1. **Specialist Perception Robustness Envelope**: Measures how neural specialist performance degrades when raster pixels are obscured by atmospheric haze, synthetic cloud occlusion, and sensor noise.
-  2. **Ingestion Metadata Contract Enforcement**: Verifies that when provider metadata indicates cloud contamination exceeding pre-registered limits ($> 20\%$ for LC, $> 10\%$ for CD), the physical compatibility gate $\mathcal{C}(t, o)$ deterministically halts execution. *Note*: The gate enforces the metadata contract; it is not an optical cloud segmentation model.
-- **Hypothesis (H3) & Six Primary Severity-Trend Tests**:
-  Perception degradation will be evaluated across **6 separate confirmatory hypothesis tests** (2 specialists $\times$ 3 degradation regimes):
-  1. Test 4.3.1: Land Cover $\times$ Synthetic Cloud Occlusion (Spearman rank correlation $\rho_1$)
-  2. Test 4.3.2: Land Cover $\times$ Atmospheric Haze Scattering (Spearman rank correlation $\rho_2$)
-  3. Test 4.3.3: Land Cover $\times$ Radiometric Sensor Noise (Spearman rank correlation $\rho_3$)
-  4. Test 4.3.4: Change Detection $\times$ Synthetic Cloud Occlusion (Spearman rank correlation $\rho_4$)
-  5. Test 4.3.5: Change Detection $\times$ Atmospheric Haze Scattering (Spearman rank correlation $\rho_5$)
-  6. Test 4.3.6: Change Detection $\times$ Radiometric Sensor Noise (Spearman rank correlation $\rho_6$)
-  For each test $j \in \{1,\dots,6\}$, the confirmatory hypothesis evaluates monotonic downward degradation:
-  $$H_{0, j}: \rho_j \ge 0 \quad \text{vs.} \quad H_{1, j}: \rho_j < 0$$
-  Multiplicity is controlled across these 6 primary tests via the **Step-Down Holm procedure at FWER $\alpha = 0.05$**.
-- **Exact Evaluation Protocol**:
-  - Evaluation Population: Fixed cohort of $N = 500$ patches ($250$ LC, $250$ CD) evaluated repeatedly across all severity levels.
-  - **Clean Baseline Reference**: Evaluated at unperturbed state ($d=0$), reported as reference points $F1_{\text{LC}}(\text{clean})$ and $F1_{\text{CD}}(\text{clean})$.
-  - **15 Controlled Degradation Conditions**:
-    - Regime 1: Synthetic Cloud ($7$ levels: $f_c \in \{0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50\}$).
-    - Regime 2: Atmospheric Haze ($4$ levels: $t \in \{0.90, 0.70, 0.50, 0.30\}$).
-    - Regime 3: Radiometric Noise ($4$ levels: $\sigma \in \{0.01, 0.02, 0.05, 0.10\}$).
-  - Resampling unit: Patch-level bootstrap ($B=1,000$ replicates) preserving repeated measurements across degradation levels for each patch.
+  2. **Ingestion Metadata Contract Enforcement**: Verifies that when provider metadata indicates cloud contamination exceeding pre-registered limits ($> 20\%$ for LC, $> 10\%$ for CD), the physical compatibility gate $\mathcal{C}(t, o)$ deterministically halts execution.
+- **Statistical Problem in Rank Correlation on Aggregate Means**:
+  Evaluating Spearman rank correlation across aggregate cohort means at each severity level ($n=4$ points for Haze and Noise) yields a minimum attainable one-sided permutation $p$-value of $1 / 4! = 0.0417$. Under Holm-Bonferroni correction across 6 tests, the required significance threshold is $\alpha_1 = 0.05 / 6 \approx 0.00833$. Because $0.0417 > 0.00833$, four-point mean rank tests can mathematically never achieve statistical significance under Holm control, regardless of degradation magnitude.
+- **Resolution: Repeated-Measures Patch-Level Severity-Trend Analysis**:
+  To resolve this power limitation while strictly accounting for repeated measurements, the primary statistical evaluation evaluates the continuous degradation slope across the full fixed cohort of $N = 250$ patches per specialist ($i = 1, \dots, 250$).
+  For each patch $i$ and severity condition $d \in \{1, \dots, D\}$, compute the paired degradation delta:
+  $$\Delta F_{1, i}(d) = F_{1, i}(d) - F_{1, i}(\text{clean})$$
+  Fit a repeated-measures linear model clustered by patch $i$:
+  $$\Delta F_{1, i}(d) = \beta_{0} + \beta_{1} \cdot \text{Severity}_d + u_i + \epsilon_{i, d}$$
+  where $u_i$ is the patch random intercept.
+  - **Six Confirmatory Trend Tests**:
+    1. Test 4.3.1: Land Cover $\times$ Synthetic Cloud Occlusion ($\beta_{1, 1}$)
+    2. Test 4.3.2: Land Cover $\times$ Atmospheric Haze Scattering ($\beta_{1, 2}$)
+    3. Test 4.3.3: Land Cover $\times$ Radiometric Sensor Noise ($\beta_{1, 3}$)
+    4. Test 4.3.4: Change Detection $\times$ Synthetic Cloud Occlusion ($\beta_{1, 4}$)
+    5. Test 4.3.5: Change Detection $\times$ Atmospheric Haze Scattering ($\beta_{1, 5}$)
+    6. Test 4.3.6: Change Detection $\times$ Radiometric Sensor Noise ($\beta_{1, 6}$)
+  - **Hypothesis Formulation**: For each test $j \in \{1, \dots, 6\}$:
+    $$H_{0, j}: \beta_{1, j} \ge 0 \quad \text{vs.} \quad H_{1, j}: \beta_{1, j} < 0$$
+  - **Inference & Multiplicity Control**:
+    The one-sided $p$-value $p_j$ is computed via **Patch-Cluster Bootstrap** ($B=1,000$ resamples of entire patch trajectories), preserving intra-patch correlation across severity levels. With $N_{\text{clusters}} = 250$, empirical $p$-values reach down to $p < 0.001$, avoiding permutation truncation. Family-Wise Error Rate across the 6 tests is controlled via the **Step-Down Holm procedure at $\alpha = 0.05$**.
+- **Evaluation Population & Conditions**:
+  - Clean reference: Evaluated at unperturbed state ($d=0$), reported as $F1_{\text{LC}}(\text{clean})$ and $F1_{\text{CD}}(\text{clean})$.
+  - 15 Degradation conditions: Synthetic Cloud (7 levels: $f_c \in \{0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50\}$), Atmospheric Haze (4 levels: $t \in \{0.90, 0.70, 0.50, 0.30\}$), Radiometric Noise (4 levels: $\sigma \in \{0.01, 0.02, 0.05, 0.10\}$).
 - **Explicit Cloud Metadata Boundary Matrix**:
   | Specialist Task | Cloud Fraction ($f_c$) | Strict Threshold Formula | Boundary Type | Expected Gate Decision | Expected Error Code |
   | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -274,7 +279,7 @@ flowchart LR
   | Change Detection | $15\%$ | $0.15 > 0.10$ | Super-threshold | **Reject** | `ERR_CORRUPT_PAYLOAD` |
 - **Pre-Registered Acceptance Criteria**:
   - Cloud Gate Enforcement: $100\%$ interception precision on boundary rejection conditions.
-  - Statistical Trend Significance: Significant downward monotonic trend on all 6 tests after Holm adjustment ($\text{Holm-adjusted } p_j < 0.05$).
+  - Statistical Trend Significance: Significant downward monotonic slope on all 6 tests after Holm adjustment ($\text{Holm-adjusted } p_j < 0.05$).
 
 ---
 
@@ -287,7 +292,7 @@ flowchart LR
   3. *Domain jargon devoid of task verbs*: Ambiguous geospatial terminology without actionable operational directives.
   4. *Syntactic truncation & negation*: Truncated strings or negation clauses ("do not detect changes") that linear bag-of-words representations cannot resolve.
 - **Template Leakage Prevention & Mutually Exclusive Ground Truth ($N=150$ Queries)**:
-  To prevent template leakage, queries are authored across distinct syntactic families with isolated vocabularies. Each query is assigned exactly **one** mutually exclusive expected action:
+  Queries are authored across distinct syntactic families with isolated vocabularies. Each query is assigned exactly **one** mutually exclusive expected action:
   - **125 Adversarial / Ambiguous Queries** across 5 distinct cohorts ($N=25$ each):
     1. *Adversarial Lexical Perturbations* ($N=25$): Conflicting task keywords $\to$ **Ground Truth: `REJECT_INSUFFICIENT_CONTEXT`**.
     2. *Conflicting Multi-Task Collisions* ($N=25$): Blended mutually exclusive tasks $\to$ **Ground Truth: `CLARIFY_AMBIGUOUS`**.
@@ -298,33 +303,41 @@ flowchart LR
     - 8 Land Cover queries $\to$ **Ground Truth: Dispatch to Land Cover Specialist**.
     - 8 Change Detection queries $\to$ **Ground Truth: Dispatch to Change Detection Specialist**.
     - 9 Other supported architectural intents $\to$ **Ground Truth: Correct Router Dispatch (`ROUTED_TO_INTENT`)**. *Note*: Distinguishes capability routing from execution, as only LC and CD specialists are currently implemented.
-- **Operational Acceptance vs. Confirmatory Statistical Decision Rule**:
-  - **Operational Acceptance Threshold**: Observed False Dispatch Rate $\widehat{\text{FDR}}_{\text{adv}} \le 10.0\%$ (at most $12 / 125$ false dispatches to specialist execution).
-  - **Confirmatory Statistical Hypothesis Test**:
-    Let $\delta_{\text{unacc}} = 0.15$ ($15.0\%$) represent the unacceptable safety threshold. We test:
-    $$H_0: \text{FDR}_{\text{adv}} \ge 0.15 \quad \text{vs.} \quad H_1: \text{FDR}_{\text{adv}} < 0.15$$
-    Under $H_0$, observing $k \le 11$ false dispatches out of 125 yields exact binomial $p = P(X \le 11 \mid n=125, p=0.15) \approx 0.0286 < 0.05$, rejecting $H_0$. If $k \le 6$, it additionally rejects $H_0': p \ge 0.10$ ($p = 0.0283$).
-  - Full reporting mandates both two-sided 95% Wilson and Clopper-Pearson exact confidence intervals to prevent conflating point estimates with statistical bounds.
-  - Control Preservation Target: Integer criterion of **at least $24 / 25$ ($96.0\%$) correct dispatches**.
+- **Three-Part Decision Structure**:
+  To prevent conflating point estimates with statistical confirmation, Track 4.4 reporting explicitly defines three distinct outcomes:
+  1. **Operational Acceptance Decision**:
+     $$\widehat{\text{FDR}}_{\text{adv}} = \frac{N_{\text{adversarial false dispatches}}}{125} \le 10.0\% \quad (k \le 12 / 125)$$
+  2. **Confirmatory Statistical Safety Decision**:
+     Let $\delta_{\text{unacc}} = 0.15$ ($15.0\%$) represent the unacceptable safety threshold. We test:
+     $$H_0: \text{FDR}_{\text{adv}} \ge 0.15 \quad \text{vs.} \quad H_1: \text{FDR}_{\text{adv}} < 0.15$$
+     Under $H_0$, observing $k \le 11$ false dispatches out of 125 yields exact binomial $p = P(X \le 11 \mid n=125, p=0.15) \approx 0.0286 < 0.05$, rejecting $H_0$. (If $k=12$, operational acceptance is met, but statistical confirmation is unachieved: $p = 0.0528 > 0.05$).
+  3. **Overall Track 4.4 Certification Tiers**:
+     - **Tier 1 (Fully Certified Pass)**: Both Operational Acceptance ($k \le 12$) AND Statistical Confirmation ($k \le 11$) achieved (i.e. $k \le 11$), AND control preservation $\ge 24 / 25$ ($96.0\%$).
+     - **Tier 2 (Accepted with Statistical Reservation)**: Operational Acceptance met ($k = 12$) but Statistical Confirmation unachieved ($p = 0.0528$), AND control preservation $\ge 24 / 25$.
+     - **Tier 3 (Failed Certification)**: Operational Acceptance unmet ($k \ge 13$) OR control preservation $< 24 / 25$.
+  - Mandated Reporting: Full disclosure of point estimate $\widehat{\text{FDR}}_{\text{adv}}$, two-sided 95% Wilson bound, and Clopper-Pearson exact bound.
 
 ---
 
 ### Track 4.5: Adversarial Physical Metadata and Coordinate Perturbations
 
 - **Research Question**: Does the programmatic physical compatibility gate $\mathcal{C}(t, o)$ maintain crash-free, 100% interception recall across adversarial coordinate corruptions, geometric distortions, and boundary violations?
-- **Hypothesis (H5) & Safety Non-Inferiority Formulation**:
-  Let $\delta_{\text{tol}} = 0.05$ represent the maximum tolerable error rate. The one-sided safety hypothesis:
-  $$H_0: \text{IDER}_{\text{obs}} \ge 0.05 \quad \text{vs.} \quad H_1: \text{IDER}_{\text{obs}} < 0.05$$
-  Observing 0 dispatches across $N=120$ perturbed trials has exact binomial probability:
-  $$p = (1 - 0.05)^{120} = 0.95^{120} \approx 0.00205 < 0.05$$
-  Rejecting $H_0$ with high statistical significance.
+- **Source-Level Unit of Analysis & Safety Formulation**:
+  - The 120 perturbed payloads are derived from **$N_{\text{source}} = 30$ independent baseline observations** (15 LC, 15 CD). Because perturbations derived from the same source observation share underlying spatial texture and metadata structures, the primary statistical unit of analysis is defined at the **independent source baseline level**:
+    $$\text{Fail}_{\text{source}, i} = \max_{j \in \{1, 2, 3, 4\}} \mathbb{I}(\text{Perturbation}_{i, j} \text{ dispatched to specialist})$$
+  - Let $\delta_{\text{tol}} = 0.10$ ($10.0\%$) represent the pre-registered maximum tolerable source-level error rate. We formulate the one-sided safety hypothesis:
+    $$H_0: \text{IDER}_{\text{source}} \ge 0.10 \quad \text{vs.} \quad H_1: \text{IDER}_{\text{source}} < 0.10$$
+    Under $H_0$, observing 0 failures in $N_{\text{source}} = 30$ independent trials has exact binomial probability:
+    $$p = (1 - 0.10)^{30} = 0.90^{30} \approx 0.0424 < 0.05$$
+    Observing zero source failures formally rejects $H_0$ at $\alpha = 0.05$.
 - **Disentangled Metric Definitions**:
-  - **Interception Recall ($\text{IR}_{\text{obs}}$)**: $\text{IR}_{\text{obs}} = N_{\text{successfully intercepted perturbed payloads}} / 120$.
-  - **Incompatible Dispatch Error Rate ($\text{IDER}_{\text{obs}}$)**: $\text{IDER}_{\text{obs}} = N_{\text{perturbed payloads erroneously dispatched}} / 120$.
-  - Target: $\text{IR}_{\text{obs}} = 100.0\%$, $\text{IDER}_{\text{obs}} = 0.00\%$.
-- **Target Population ($N=140$ Payloads: 120 Perturbed + 20 Controls)**:
-  - Source independence: The 120 perturbed payloads are derived from **30 independent baseline observations** (15 LC, 15 CD), reporting both $N_{\text{source}}=30$ and $N_{\text{perturbed}}=120$.
-  - **120 Perturbed Payloads** systematically spanning all 8 implemented dimensions, incorporating boundary values:
+  - **Confirmatory Source-Level Metric**: $\widehat{\text{IDER}}_{\text{source}} = N_{\text{failed source observations}} / 30$.
+    - For 0 errors in 30 trials: **Two-sided 95% Clopper-Pearson exact bound: $[0.00\%, 11.57\%]$**, **Wilson bound: $[0.00\%, 11.35\%]$**.
+  - **Descriptive Engineering Metrics**:
+    - **Interception Recall ($\text{IR}_{\text{payload}}$)**: $\text{IR}_{\text{payload}} = N_{\text{intercepted payloads}} / 120$ (Target: $100.0\%$).
+    - **Incompatible Dispatch Error Rate ($\text{IDER}_{\text{payload}}$)**: $\text{IDER}_{\text{payload}} = N_{\text{dispatched payloads}} / 120$ (Target: $0.00\%$).
+- **Target Population ($N=140$ Payloads from $N_{\text{source}} = 50$)**:
+  - **120 Perturbed Payloads (from 30 source observations)** spanning all 8 implemented dimensions:
     1. *Dimension 1: Modality & Structure* ($N=15$): Single images to CD, 1D vectors to CD, optical-only to LC (`ERR_MISSING_MODALITY`).
     2. *Dimension 2: Temporal Invalidation* ($N=15$): Boundary $\Delta t = 4.9\text{d}$, $730.1\text{d}$, plus severe violations $1\text{d}, 1200\text{d}$ (`ERR_TEMPORAL_INVALID`).
     3. *Dimension 3: Spectral Band Inadequacy* ($N=10$): Omission of B02, B03, B04, or B08 (`ERR_INSUFFICIENT_BANDS`).
@@ -341,18 +354,12 @@ flowchart LR
        - Floating point `NaN` or `Inf` values ($N=5$, `ERR_CORRUPT_PAYLOAD`).
        - Double-scaling trap (Sentinel-2 float32 $\le 1.05$) ($N=5$, `ERR_CORRUPT_PAYLOAD`).
        - Cloud cover boundary: LC $f_c = 0.201, 0.30$, CD $f_c = 0.101, 0.15$ ($N=10$, `ERR_CORRUPT_PAYLOAD`).
-  - **20 Pristine In-Domain Control Payloads** ($10$ LC, $10$ CD): Verified valid observations (including exact equality boundary passes: $\delta = 0.050\text{ px}$, $\kappa = 1.010$, $\theta = 0.280^\circ$, $\det = 0.980$, $\Delta t = 5.0\text{d}$, $\text{GSD} = 8.0\text{ m}$) to evaluate False Rejection Rate ($\text{FRR}_{\text{control}} = 0.0\%$).
-- **Evaluation Metrics & Finite-Sample Bounds**:
-  - Interception Recall: Target $100\%$ ($120 / 120$).
-  - Finite-sample confidence bounds (for 0 errors in 120 trials):
-    - **Wilson score 95% upper bound**: $\approx 3.10\%$
-    - **Clopper-Pearson exact 95% upper bound**: $\approx 3.03\%$
-  - Control False Rejection Rate: $\widehat{\text{FRR}}_{\text{control}} = 0 / 20 = 0.00\%$ (Wilson 95% bound $[0.00\%, 16.11\%]$).
-  - Stability Invariant: Zero unhandled crash exceptions ($100\%$ return structured `CompatibilityGateResult`).
+  - **20 Pristine In-Domain Control Payloads (from 20 independent scenes)**: Verified valid observations (including exact equality boundary passes: $\delta = 0.050\text{ px}$, $\kappa = 1.010$, $\theta = 0.280^\circ$, $\det = 0.980$, $\Delta t = 5.0\text{d}$, $\text{GSD} = 8.0\text{ m}$) to evaluate False Rejection Rate ($\text{FRR}_{\text{control}} = 0.0\%$, 95% Wilson bound $[0.00\%, 16.11\%]$).
 - **Pre-Registered Acceptance Criteria**:
-  - $\text{IDER}_{\text{obs}} = 0.00\%$ across all 120 perturbed payloads.
-  - Crash rate $= 0.00\%$ ($0$ exceptions).
-  - Control False Rejection Rate $\text{FRR}_{\text{control}} = 0.00\%$ ($0 / 20$).
+  - Statistical Safety Confirmation: $\widehat{\text{IDER}}_{\text{source}} = 0.00\%$ ($0 / 30$), rejecting $H_0: \text{IDER}_{\text{source}} \ge 0.10$ with $p = 0.0424$.
+  - Descriptive Engineering Target: $\text{IR}_{\text{payload}} = 100.0\%$ ($120 / 120$).
+  - Stability Invariant: Zero unhandled crash exceptions ($100\%$ return structured `CompatibilityGateResult`).
+  - Control Preservation: $\text{FRR}_{\text{control}} = 0.00\%$ ($0 / 20$).
 
 ---
 
@@ -403,10 +410,10 @@ Confirmatory claims are organized into **5 distinct testing families**, each wit
 | Testing Family | Primary Hypothesis Test | Comparison Population | Resampling / Bootstrap Unit | Multiplicity Adjustment |
 | :--- | :--- | :--- | :--- | :--- |
 | **Family 1: Geographic Transfer** (Track 4.1) | Independent two-sample difference in $F_{1,\text{mapped13}}$ against in-domain baseline | In-domain BigEarthNet test ($K=3$) vs OOD Biomes 1–4 ($K=4$) | **Two-Sample Spatial Cluster Bootstrap** ($B=1,000$ replicates); scene-level reporting for CD ($N=10$) | Step-Down Holm adjustment ($\alpha = 0.05$ across 4 biomes) |
-| **Family 2: Sensor Safety Gate** (Track 4.2) | One-sided safety non-inferiority test ($H_0: \text{IDER} \ge 0.05$) | 80 Off-sensor payloads vs safety threshold $\delta_{\text{tol}}=0.05$ | Exact Binomial Test ($p = 0.0165$) | Single pre-registered safety test; control FRR reported separately with CI |
-| **Family 3: Degradation Trends** (Track 4.3) | Six Spearman rank correlation tests for downward trend ($H_{0, j}: \rho_j \ge 0$) | Fixed cohort evaluated across clean reference + 15 degradation levels | Patch-level cluster bootstrap ($B=1,000$) preserving repeated measures | **Step-Down Holm adjustment across the 6 primary trend tests** ($\alpha = 0.05$) |
-| **Family 4: Linguistic Defense** (Track 4.4) | One-sided safety test ($H_0: \text{FDR}_{\text{adv}} \ge 0.15$) and operational bound ($\le 10\%$) | 125 Adversarial queries vs 25 clean controls | Exact Binomial Test ($k \le 11 \implies p = 0.0286$) | Single pre-registered primary test; per-cohort rates reported with CI |
-| **Family 5: Physical Metadata** (Track 4.5) | One-sided safety non-inferiority test ($H_0: \text{IDER} \ge 0.05$) | 120 Perturbed payloads vs safety threshold | Exact Binomial Test ($p = 0.00205$) | Single pre-registered safety test; boundary equality cases evaluated separately |
+| **Family 2: Sensor Safety Gate** (Track 4.2) | One-sided safety non-inferiority test ($H_0: \text{IDER}_{\text{source}} \ge 0.10$) | 40 Independent source scenes vs safety threshold $\delta_{\text{tol}}=0.10$ | Exact Binomial Test ($p = 0.0148$) | Single pre-registered safety test; control FRR reported separately with CI |
+| **Family 3: Degradation Trends** (Track 4.3) | Six repeated-measures severity slope tests ($H_{0, j}: \beta_{1, j} \ge 0$) | Fixed cohort evaluated across clean reference + 15 degradation levels | **Patch-Cluster Bootstrap** ($B=1,000$) preserving repeated measures | **Step-Down Holm adjustment across the 6 primary trend tests** ($\alpha = 0.05$) |
+| **Family 4: Linguistic Defense** (Track 4.4) | One-sided safety test ($H_0: \text{FDR}_{\text{adv}} \ge 0.15$) and operational bound ($\le 10\%$) | 125 Adversarial queries vs 25 clean controls | Exact Binomial Test ($k \le 11 \implies p = 0.0286$) | Single pre-registered primary test; tiered certification reporting |
+| **Family 5: Physical Metadata** (Track 4.5) | One-sided safety non-inferiority test ($H_0: \text{IDER}_{\text{source}} \ge 0.10$) | 30 Independent baseline observations vs safety threshold | Exact Binomial Test ($p = 0.0424$) | Single pre-registered safety test; boundary equality cases evaluated separately |
 
 ---
 
@@ -414,16 +421,16 @@ Confirmatory claims are organized into **5 distinct testing families**, each wit
 
 | Parameter / Protocol Element | Value / Specification | Preregistration Status |
 | :--- | :--- | :--- |
-| **Document Version** | `SATQUERY-P4-PROTOCOL-V1.3-DRAFT` | **PROPOSED DRAFT v1.3** |
+| **Document Version** | `SATQUERY-P4-PROTOCOL-V1.4-DRAFT` | **PROPOSED DRAFT v1.4** |
 | **Land Cover Specialist** | `MultimodalResNet34` (10 optical + 2 SAR bands, $120 \times 120$, **16 classes**) | **FROZEN** |
 | **Change Detection Specialist** | `FCSiamDiff` (Bitemporal RGB, $256 \times 256$) | **FROZEN** |
 | **Linguistic Router** | TF-IDF + Logistic Regression ($T=0.0991$, $\tau_{\text{intent}}=0.65, \tau_{\text{margin}}=0.15, \tau_{\text{sel}}=1.0$) | **FROZEN** |
 | **Physical Compatibility Gate** | 8 dimensions in `satquery/utils/geospatial.py` (with exact boundary equality checks) | **FROZEN** |
 | **Execution Environment** | Host CPU inference (Python 3.14.3, PyTorch `2.15.0+cpu`), pinned seed 42 | **COMMITTED** |
 | **Track 4.1 (Geographic Transfer)** | 4 Biomes ($N=2,000$ paired patches, **13 mapped classes primary**, 3 quarantined) + 10 S2Looking non-OSCD scenes ($K_{\text{in}}=3$ cluster limit documented) | **CONFIRMATORY** |
-| **Track 4.2 (Cross-Sensor Defense)** | $N=100$ payloads (40 Landsat, 40 PlanetScope from $N_{\text{scenes}}=40$, 20 S2 controls), safety limit $\delta_{\text{tol}} = 0.05$ | **CONFIRMATORY** |
-| **Track 4.3 (Atmospheric Stress)** | $N=500$ patches, **6 separate Spearman trend tests** with Holm correction; metadata enforcement | **CONFIRMATORY** |
-| **Track 4.4 (Linguistic Defense)** | $N=150$ queries (125 adversarial + 25 controls, mutually exclusive ground truth, operational $\le 10\%$ vs statistical $H_0: p \ge 0.15$) | **CONFIRMATORY** |
-| **Track 4.5 (Adversarial Metadata)** | $N=140$ payloads (120 perturbed from $N_{\text{source}}=30$, 20 controls), separate $\text{IR}_{\text{obs}}$ & $\text{IDER}_{\text{obs}}$ | **CONFIRMATORY** |
+| **Track 4.2 (Cross-Sensor Defense)** | $N=100$ payloads from **$N_{\text{scenes}}=40$ independent footprints**, source-level safety limit $\delta_{\text{tol}} = 0.10$ | **CONFIRMATORY** |
+| **Track 4.3 (Atmospheric Stress)** | $N=500$ patches, **6 repeated-measures patch-cluster degradation slope tests** with Holm correction; metadata enforcement | **CONFIRMATORY** |
+| **Track 4.4 (Linguistic Defense)** | $N=150$ queries (125 adversarial + 25 controls, mutually exclusive ground truth, tiered 3-part outcome reporting) | **CONFIRMATORY** |
+| **Track 4.5 (Adversarial Metadata)** | $N=140$ payloads from **$N_{\text{source}}=30$ baseline observations**, source-level safety limit $\delta_{\text{tol}} = 0.10$ | **CONFIRMATORY** |
 | **Reproducibility Policy** | Multi-generator deterministic seeding; empirical verification mandate | **COMMITTED** |
 | **Protocol Freeze State** | Awaiting formal user approval and freeze | **PENDING USER FREEZE** |
