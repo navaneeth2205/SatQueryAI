@@ -1,0 +1,27 @@
+{
+  "description": "Frozen perturbation operator configuration for Phase 4 Track 4.3 atmospheric and image-quality stress testing.",
+  "cloud_occlusion": {
+    "operator": "perlin_topk_nested_mask",
+    "cloud_albedo": 0.95,
+    "cloud_opacity": 0.90,
+    "severity_fractions": [0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50],
+    "patch_size": [120, 120],
+    "pixel_counts": [720, 1440, 2160, 2880, 4320, 5760, 7200],
+    "seed_policy": "42 + 100 * patch_id",
+    "subset_property": "strictly_increasing_proper_subsets"
+  },
+  "atmospheric_haze": {
+    "operator": "koschmieder_1d_scattering",
+    "atmospheric_airlight": 0.85,
+    "transmittances": [0.90, 0.70, 0.50, 0.30],
+    "severities_opacity": [0.10, 0.30, 0.50, 0.70],
+    "clean_reference_transmittance": 1.00
+  },
+  "additive_gaussian_noise": {
+    "operator": "common_random_numbers_gaussian",
+    "domain": "scaled_0_1_pre_standardization",
+    "severity_sigmas": [0.01, 0.02, 0.05, 0.10],
+    "seed_policy": "10007 + 100 * patch_id",
+    "interpretation": "normalized_tensor_numerical_sensitivity"
+  }
+}

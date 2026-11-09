@@ -1,0 +1,48 @@
+{
+  "description": "Frozen configuration for MODIS MCD12Q1 label harmonization and quarantine rules for Phase 4 Track 4.1.",
+  "modis_product": {
+    "product_id": "MCD12Q1",
+    "version": "061",
+    "collection": "6.1",
+    "band": "LC_Type1",
+    "spatial_resolution_meters": 500,
+    "coordinate_system": "Sinusoidal"
+  },
+  "decision_thresholds": {
+    "area_fraction_threshold": 0.20,
+    "quarantine_rule": "patches where no mapped class reaches >= 0.20 fractional coverage are strictly quarantined",
+    "plurality_fallback": "none (strictly prohibited)"
+  },
+  "taxonomy_mapping": {
+    "directly_mapped_count": 6,
+    "approximately_mapped_count": 7,
+    "quarantined_count": 3,
+    "direct_mappings": {
+      "Coniferous forest": [1, 3],
+      "Broad-leaved forest": [2, 4],
+      "Mixed forest": [5],
+      "Arable land": [12],
+      "Urban fabric": [13],
+      "Inland wetlands": [11]
+    },
+    "approximate_mappings": {
+      "Transitional woodland, shrub": [6],
+      "Moors, heathland and sclerophyllous vegetation": [7],
+      "Natural grassland and sparsely vegetated areas": [8, 9],
+      "Pastures": [10],
+      "Land principally occupied by agriculture, with significant areas of natural vegetation": [14],
+      "Inland waters": [17],
+      "Beaches, dunes, sands": [16]
+    },
+    "quarantined_classes": {
+      "zero_based_indices": [3, 5, 13],
+      "one_based_indices": [4, 6, 14],
+      "names": [
+        "Complex cultivation patterns",
+        "Industrial or commercial units",
+        "Permanent crops"
+      ],
+      "rationale": "Sub-pixel parcel geometries, industrial/commercial separation from residential fabric, and orchard/vineyard distinctions cannot be resolved from 500m MODIS IGBP Class 13/12"
+    }
+  }
+}

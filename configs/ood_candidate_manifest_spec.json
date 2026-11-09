@@ -1,0 +1,56 @@
+{
+  "description": "Preregistered candidate manifest schema and geographic target specifications for Phase 4 Track 4.1 OOD cohorts.",
+  "ood_land_cover": {
+    "target_cohort_initial_size": 2000,
+    "target_biomes": {
+      "Biome_1_Arid": {
+        "description": "Arid / Hyper-arid & Semi-arid (Sahara margins, Sinai, Rub' al Khali)",
+        "bounding_box": {"min_lat": 24.0, "max_lat": 32.0, "min_lon": 25.0, "max_lon": 45.0},
+        "target_initial_patches": 500,
+        "min_subregions": 5
+      },
+      "Biome_2_Tropical_Rainforest": {
+        "description": "Tropical Rainforest (Amazon Basin, Congo Basin)",
+        "bounding_boxes": [
+          {"min_lat": -5.0, "max_lat": 5.0, "min_lon": -65.0, "max_lon": -55.0},
+          {"min_lat": -5.0, "max_lat": 5.0, "min_lon": 15.0, "max_lon": 25.0}
+        ],
+        "target_initial_patches": 500,
+        "min_subregions": 5
+      },
+      "Biome_3_Boreal_Forest": {
+        "description": "Boreal Forest / Sub-Arctic (Fennoscandia, Interior Alaska)",
+        "bounding_boxes": [
+          {"min_lat": 60.0, "max_lat": 68.0, "min_lon": 15.0, "max_lon": 30.0},
+          {"min_lat": 60.0, "max_lat": 68.0, "min_lon": -150.0, "max_lon": -140.0}
+        ],
+        "target_initial_patches": 500,
+        "min_subregions": 5
+      },
+      "Biome_4_Humid_Subtropical_Cropland": {
+        "description": "Humid Subtropical / Monsoon Cropland (Indo-Gangetic Plain, Mekong Delta)",
+        "bounding_box": {"min_lat": 10.0, "max_lat": 26.0, "min_lon": 75.0, "max_lon": 105.0},
+        "target_initial_patches": 500,
+        "min_subregions": 5
+      }
+    },
+    "manifest_target_path": "data/manifests/phase4_ood_manifest.csv",
+    "manifest_schema": [
+      "patch_id", "scene_id", "biome_id", "cluster_id", "subregion_id",
+      "center_lat", "center_lon", "epsg", "s2_granule_id", "s2_acq_date",
+      "s1_scene_id", "s1_acq_date", "modis_product_year", "modis_qc_valid_ratio"
+    ]
+  },
+  "s2looking_change_detection": {
+    "target_scene_count": 10,
+    "target_cities": [
+      "Cairo", "Nairobi", "Santiago", "Ulaanbaatar", "Perth",
+      "Brisbane", "Jakarta", "Johannesburg", "Calgary", "Tashkent"
+    ],
+    "manifest_target_path": "data/manifests/s2looking_manifest.csv",
+    "manifest_schema": [
+      "scene_id", "city_name", "country", "center_lat", "center_lon",
+      "t1_date", "t2_date", "temporal_delta_days", "image_width", "image_height"
+    ]
+  }
+}
