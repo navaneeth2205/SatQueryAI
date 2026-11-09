@@ -1,9 +1,9 @@
 # SatQuery AI — Phase 4 Preregistration Protocol: Robustness, Generalization, and Adversarial Envelope Discovery
 
-**Document Identifier**: `SATQUERY-P4-PROTOCOL-V1.9-DRAFT`  
+**Document Identifier**: `SATQUERY-P4-PROTOCOL-V1.10-DRAFT`  
 **Phase**: Phase 4 — Robustness, Generalization, and Operational Envelope Discovery  
 **Date**: November 9, 2026  
-**Status**: **PROPOSED PREREGISTRATION PROTOCOL — DRAFT v1.9 (Methodological & Statistical Lock — Pending Final User Freeze)**  
+**Status**: **PROPOSED PREREGISTRATION PROTOCOL — DRAFT v1.10 (Methodological & Statistical Lock — Pending Final User Freeze)**  
 **Repository Branch**: `feature/phase4-generalization-protocol`  
 **Preceding Milestones**: Phase 3 Closed (M3.1 Multimodal ASL/CB-BCE, M3.2 FC-Siam-diff, M3.3 Selective Routing) with Pre-Registered Limitations  
 **Model Weight & Threshold Provenance**: Completely Frozen from Phase 3  
@@ -19,9 +19,9 @@
 - **Linguistic Task Router**: `artifacts/router/router_model.joblib` (SHA-256: `eaf6c5b2cd8e718980a3496ce416b69ff9793cb1584e176951a9f652941cc218`)
   - Architecture: TF-IDF n-grams + Multinomial Logistic Regression calibrated with temperature $T=0.0991$
   - Frozen Routing Operating Thresholds: $\tau_{\text{intent}}=0.65, \tau_{\text{margin}}=0.15, \tau_{\text{sel}}=1.0$
-- **Physical Compatibility Gate & Specialist Contract Enforcement**:
-  - **Stage A (Geospatial Compatibility)**: Deterministic closed-form validation module in [`satquery/utils/geospatial.py`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/satquery/utils/geospatial.py) (SHA-256: `156b76cd1ab4abc54341e6a405f9cd58f1387096f6cc92917c62ec01a11911f5`) inspecting 8 physical dimensions.
-  - **Stage B (Specialist Tensor Contract)**: Explicit neural tensor validation enforcing exact channel counts, ordering, dimensions, and data types before inference.
+- **Two-Stage Input Compatibility Architecture**:
+  - **Stage A (Geospatial Physical Gate)**: Closed-form validation in [`satquery/utils/geospatial.py`](file:///c:/Users/B%20NAVANEETH/SatQueryAI/satquery/utils/geospatial.py) (SHA-256: `156b76cd1ab4abc54341e6a405f9cd58f1387096f6cc92917c62ec01a11911f5`) inspecting 8 physical dimensions.
+  - **Stage B (Specialist Tensor & Preprocessing Contract Gate)**: Verification of exact channel count, canonical channel order, spatial dimensions, finite floating-point values, and frozen scaling/standardization provenance.
 
 ---
 
@@ -95,11 +95,14 @@ flowchart TD
   15. `Transitional woodland, shrub` ($\tau^* = 0.60$)
   16. `Urban fabric` ($\tau^* = 0.65$)
 - **Input Tensor Contract**:
-  - Optical tensor: Shape `(B, 10, 120, 120)` consisting of 10 Sentinel-2 L2A surface reflectance channels in **exact canonical order**: `[B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]`. Optical normalization: $\text{DN} / 10000.0$, standardized with frozen training statistics:
-    $$\mu_{\text{opt}} = [0.136, 0.118, 0.106, 0.128, 0.203, 0.257, 0.272, 0.273, 0.187, 0.121]$$
-    $$\sigma_{\text{opt}} = [0.082, 0.076, 0.074, 0.089, 0.098, 0.108, 0.113, 0.112, 0.095, 0.078]$$
-  - SAR tensor: Shape `(B, 2, 120, 120)` consisting of 2 Sentinel-1 GRD IW polarization channels in **exact canonical order**: `[VH, VV]` in decibels. SAR normalization: clipped to $[-35.0, +5.0]\text{ dB}$ and linearly scaled to $[0.0, 1.0]$ via $(\text{dB} + 35.0) / 40.0$.
-  - Representation constraint: Generic 1D feature vectors are strictly **unsupported** by the frozen neural specialist checkpoint and will be rejected at the Stage B validation gate.
+  - Optical tensor: Shape `(B, 10, 120, 120)` consisting of 10 Sentinel-2 L2A surface reflectance channels in **exact canonical order**: `[B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]`.
+    - Native 20m bands (`B05, B06, B07, B8A, B11, B12`) must be resampled to 10m GSD via bilinear interpolation to match the native 10m bands (`B02, B03, B04, B08`).
+    - Scaling & Standardization: $\mathbf{X}_{\text{opt,raw}} = \text{DN} / 10000.0 \in [0.0, 1.0]$, standardized using frozen statistics:
+      $$\mu_{\text{opt}} = [0.136, 0.118, 0.106, 0.128, 0.203, 0.257, 0.272, 0.273, 0.187, 0.121]$$
+      $$\sigma_{\text{opt}} = [0.082, 0.076, 0.074, 0.089, 0.098, 0.108, 0.113, 0.112, 0.095, 0.078]$$
+  - SAR tensor: Shape `(B, 2, 120, 120)` consisting of 2 Sentinel-1 GRD IW polarization channels in **exact canonical order**: `[VH, VV]` in decibels.
+    - Clipping & Scaling: clipped to $[-35.0, +5.0]\text{ dB}$ and linearly scaled to $[0.0, 1.0]$ via $(\text{dB} + 35.0) / 40.0$.
+  - Representation constraint: Generic 1D feature vectors are strictly **unsupported** by the frozen neural specialist checkpoint and are rejected at Stage B validation.
 
 ### Specialist 2: Deep Bitemporal Change Detection (`FCSiamDiff`)
 - **Model Checkpoint**: `artifacts/specialists/deep_change_detection_fc_siam_diff/best_model.pt`.
@@ -119,7 +122,7 @@ flowchart TD
 
 ---
 
-## 3. Two-Stage Input Compatibility Architecture (Stage A Physical & Stage B Specialist Tensor Contract)
+## 3. Two-Stage Input Compatibility Architecture (Stage A Physical & Stage B Specialist Preprocessing / Tensor Contract)
 
 To guarantee that a physically plausible geospatial observation does not cause runtime exceptions or tensor mismatches in the downstream neural models, SatQuery AI implements a strict **Two-Stage Validation Pipeline**:
 
@@ -128,7 +131,7 @@ flowchart TD
     Input["Input Query & Observation Payload (t, o)"] --> Router["Linguistic Task Router (TF-IDF + Calibrated LogReg)"]
     Router --> GateA["Stage A: Physical Compatibility Gate\n(Geospatial, Temporal, Sensor Integrity)"]
     GateA -.->|Fail| RejA["Reject: ERR_* (Physical Error Code)"]
-    GateA -->|Pass| GateB["Stage B: Specialist Tensor-Contract Validation Gate\n(Exact Channels, Order, Shapes, Dtypes)"]
+    GateA -->|Pass| GateB["Stage B: Specialist Tensor & Preprocessing Gate\n(Exact Channels, Order, Shapes, Dtypes, Normalization)"]
     GateB -.->|Fail| RejB["Reject: ERR_SPECIALIST_TENSOR_CONTRACT\n/ ERR_UNSUPPORTED_REPRESENTATION"]
     GateB -->|Pass| Specialist["Specialist Forward Pass (Frozen Checkpoint)"]
 ```
@@ -147,15 +150,19 @@ Implemented in [`satquery/utils/geospatial.py`](file:///c:/Users/B%20NAVANEETH/S
 | **7. Ground Sample Distance (GSD)** | Spatial resolution metadata `gsd_m` | - Sentinel-2 specialists require nominal resolution: $8.0\text{ m} \le \text{GSD} \le 12.0\text{ m}$. Rejects native Landsat ($30\text{ m}$) and native PlanetScope ($3\text{ m}$). | $\text{GSD} = 7.9\text{ m}$ (Fail: $< 8.0$)<br>$\text{GSD} = 8.0\text{ m}$ (**Equality: Pass**)<br>$\text{GSD} = 12.0\text{ m}$ (**Equality: Pass**)<br>$\text{GSD} = 12.1\text{ m}$ (Fail: $> 12.0$) | `ERR_RESOLUTION_INCOMPATIBLE` |
 | **8. Radiometric Integrity & Cloud Guard** | Raster numerical values & `cloud_fraction` | - Numerical integrity: scans for `NaN` and `Inf` floating point values.<br>- Double-scaling trap: detects float values $\le 1.05$ where raw DN $[0, 10000]$ is expected.<br>- Cloud cover threshold: rejects payloads with cloud fraction $> 0.20$ for Land Cover and $> 0.10$ for Change Detection based on metadata contract. | LC Cloud $10\%$ (Pass)<br>LC Cloud $20\%$ (**Equality: Pass**)<br>LC Cloud $20.1\%$ (Fail: $> 0.20$)<br>CD Cloud $5\%$ (Pass)<br>CD Cloud $10\%$ (**Equality: Pass**)<br>CD Cloud $10.1\%$ (Fail: $> 0.10$) | `ERR_CORRUPT_PAYLOAD` |
 
-### Stage B: Specialist Tensor-Contract Validation Gate $\mathcal{C}_{\text{tensor}}(M_k, \mathbf{X})$
-Executes immediately upon Stage A clearance and before invoking the neural forward pass of specialist $M_k$:
-1. **Land Cover Specialist Contract Enforcement (`MultimodalResNet34`)**:
-   - *Optical Tensor Specification*: Verifies tensor shape is exactly `(B, 10, 120, 120)` with `dtype == torch.float32`. Verifies that the 10 channels strictly correspond to the canonical sequence `[B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]`. Any payload providing only 4 optical bands (e.g. RGB+NIR) or scrambled channels is halted with `ERR_SPECIALIST_TENSOR_CONTRACT`.
-   - *SAR Tensor Specification*: Verifies tensor shape is exactly `(B, 2, 120, 120)` with `dtype == torch.float32`, corresponding to `[VH, VV]`.
-   - *Feature Vector Rejection*: If input payload is formatted as a 1D feature vector or summary embedding, it is rejected with `ERR_UNSUPPORTED_REPRESENTATION`. The frozen checkpoint strictly consumes raw 12-band spatial rasters.
-2. **Change Detection Specialist Contract Enforcement (`FCSiamDiff`)**:
+### Stage B: Specialist Tensor & Preprocessing Contract Gate $\mathcal{C}_{\text{tensor}}(M_k, \mathbf{X})$
+Executes immediately upon Stage A clearance and prior to passing tensors into the neural forward pass of specialist $M_k$:
+1. **Land Cover Specialist Preprocessing & Tensor Contract (`MultimodalResNet34`)**:
+   - *Optical Tensor Specification*: Shape must be exactly `(B, 10, 120, 120)` with `dtype == torch.float32`.
+   - *Canonical Channel Sequence*: Must strictly correspond to `[B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]`. Any omission (e.g. 4-band RGB+NIR) or permutation halts execution with `ERR_SPECIALIST_TENSOR_CONTRACT`.
+   - *Resampling Provenance*: Verifies that 20m bands (`B05, B06, B07, B8A, B11, B12`) were resampled to 10m GSD via the certified bilinear pipeline prior to stacking.
+   - *Scaling & Standardization Invariants*: Verifies pre-standardization optical range $\mathbf{X}_{\text{opt,raw}} \in [0.0, 1.0]$ and application of frozen channel statistics $(\mu_{\text{opt}}, \sigma_{\text{opt}})$. Finite floating-point check confirms zero `NaN` or `Inf` values.
+   - *SAR Tensor Specification*: Shape must be exactly `(B, 2, 120, 120)` with `dtype == torch.float32`, corresponding to `[VH, VV]`.
+   - *SAR Normalization Invariants*: Verifies clipping to $[-35.0, +5.0]\text{ dB}$ and linear scaling to $[0.0, 1.0]$.
+   - *Representation Constraint*: If input is formatted as a 1D feature vector or summary embedding, it is rejected with `ERR_UNSUPPORTED_REPRESENTATION`.
+2. **Change Detection Specialist Preprocessing & Tensor Contract (`FCSiamDiff`)**:
    - *Bitemporal Tensor Specification*: Verifies two tensors $(t_1, t_2)$ each of shape `(B, 3, H, W)` with $H, W \ge 100$, $H_1 = H_2, W_1 = W_2$, and `dtype == torch.float32` (RGB channels).
-   - *Channel Validation*: Non-RGB representations (e.g. single-channel, multispectral $>3$ channels without adapter) are halted with `ERR_SPECIALIST_TENSOR_CONTRACT`.
+   - *ImageNet Normalization Invariant*: Verifies standardization with ImageNet channel statistics ($\mu = [0.485, 0.456, 0.406], \sigma = [0.229, 0.224, 0.225]$) and finite floating-point values.
 
 ---
 
@@ -217,16 +224,18 @@ Executes immediately upon Stage A clearance and before invoking the neural forwa
        | `Industrial or commercial units` | *None* | Cannot be resolved from 500m MODIS Class 13 | **Quarantined / Inevaluable** |
        | `Complex cultivation patterns` | *None* | Parcel geometry cannot be resolved at 500m | **Quarantined / Inevaluable** |
        | `Permanent crops` | *None* | Orchards/vineyards not distinguished from annual crops | **Quarantined / Inevaluable** |
-     - **Consistent Primary Metric & Multi-Metric Reporting Strategy**:
-       To guarantee a mathematically consistent class denominator between in-domain and out-of-domain biomes:
+     - **Explicit Interpretation of Fixed-13 Macro $F_1$ & Absent-Class Safeguards**:
+       > [!NOTE]
+       > **Fixed-Taxonomy Interpretation**: The primary metric is Fixed-13 Macro $F_1$ ($F_{1,\text{fixed13}} = \frac{1}{13} \sum_{c=1}^{13} F_{1, c}$) evaluated with standard `zero_division=0.0`. It enforces a common class denominator across all biomes. However, because $F_{1, c} = 0.0$ whenever $N_{\text{true}, c} = 0$, an absent class with zero false alarms and an absent class with many false alarms both yield $F_{1, c} = 0.0$. Therefore:
+       > 1. $F_{1,\text{fixed13}}$ is a **fixed-taxonomy comparative benchmark**, not a pure measure of recognition quality on represented classes alone.
+       > 2. Absent-class false alarm behavior **must be evaluated jointly with $FPR_{\text{absent}}$ and per-class false-positive counts**.
+       > 3. The identical zero-division convention applies to Direct-Six ($F_{1,\text{direct6}}^{\text{fixed6}}$) and Approximate-Seven ($F_{1,\text{approx7}}^{\text{fixed7}}$).
+       
        1. **Primary Confirmatory Comparison Metric: Fixed-13 Macro $F_1$ ($F_{1,\text{fixed13}}$)**:
-          Evaluated across all 13 mapped classes using standard machine learning convention (`zero_division=0.0`):
-          $$F_{1,\text{fixed13}} = \frac{1}{13} \sum_{c=1}^{13} F_{1, c}, \quad \text{where } F_{1, c} = 0.0 \text{ if } N_{\text{true}, c} = 0$$
-          Because the denominator is strictly 13 for in-domain and all four OOD biomes, differences in $F_{1,\text{fixed13}}$ cannot be artifactually generated by varying active class subset cardinalities.
+          $$F_{1,\text{fixed13}} = \frac{1}{13} \sum_{c=1}^{13} F_{1, c}, \quad \text{where } F_{1, c} = \begin{cases} \frac{2 \text{TP}_c}{2 \text{TP}_c + \text{FP}_c + \text{FN}_c}, & \text{if } N_{\text{true}, c} \ge 1 \\ 0.0, & \text{if } N_{\text{true}, c} = 0 \end{cases}$$
        2. **Secondary Descriptive Metric: Present-Class Macro $F_1$ ($F_{1,\text{mapped13}}^{\text{present}}$)**:
           Averaged strictly over classes with ground-truth support in that biome ($C_{\text{present}, k} = \{c \in \{1,\dots,13\} \mid N_{\text{true}, c} \ge 1\}$):
           $$F_{1,\text{mapped13}}^{\text{present}} = \frac{1}{|C_{\text{present}, k}|} \sum_{c \in C_{\text{present}, k}} F_{1, c}$$
-          Reported descriptively to characterize specialist accuracy solely on represented vegetation/cover types.
        3. **Mandatory Absent-Class False Positive Metrics**:
           For all absent classes $c \in C_{\text{absent}, k} = \{c \in \{1,\dots,13\} \mid N_{\text{true}, c} = 0\}$:
           - *Absent-Class False Positive Rate ($FPR_{\text{absent}}$)*:
@@ -236,8 +245,12 @@ Executes immediately upon Stage A clearance and before invoking the neural forwa
           - *Per-Class Absent Alarms*: Tabularize $\text{FP-Count}_c$ and $\text{FPR}_c = \text{FP}_c / N_{\text{evaluable}, k}$ for each absent class.
        4. **Sub-Taxonomy Sensitivity Metrics**: Direct-Six ($F_{1,\text{direct6}}^{\text{fixed6}}$) and Approximate-Seven ($F_{1,\text{approx7}}^{\text{fixed7}}$).
        5. **Quarantined Diagnostics Table**: Model output frequencies and trigger rates for the 3 unmapped classes (`Industrial`, `Complex cultivation`, `Permanent crops`).
-     - **Conditional Spatial Cluster Scope**:
-       The in-domain BigEarthNet-14k test population comprises patches derived from **3 geographic tile clusters**: `T34TCR`, `T34TEQ`, and `T34TFN` in Serbia. All geographic transfer inferences are formally conditional on the available spatial clusters. Per-tile in-domain metrics will be reported alongside aggregate figures.
+     - **Conditional Spatial Cluster Scope & Leave-One-Tile-Out Sensitivity**:
+       > [!WARNING]
+       > **Three-Cluster In-Domain Scope**: The in-domain BigEarthNet-14k test population comprises patches derived from exactly **3 geographic tile clusters**: `T34TCR`, `T34TEQ`, and `T34TFN` in Serbia.
+       > 1. Resampling over $K_{\text{in}} = 3$ clusters provides limited representation of in-domain spatial variability ($df \le 2$). The bootstrap iteration count ($B=2,000$) ensures numerical stability of the resampling distribution but **cannot inflate the underlying spatial sample size**.
+       > 2. All geographic transfer inferences and bootstrap confidence intervals are **formally conditional on this three-tile reference population**.
+       > 3. To assess sensitivity to individual tile clusters, evaluation mandates reporting **leave-one-tile-out sensitivity analyses**: computing $\Delta F_{1, k}$ when excluding each in-domain tile in turn ($\setminus\text{T34TCR}$, $\setminus\text{T34TEQ}$, $\setminus\text{T34TFN}$) alongside per-tile metrics.
   2. *Change Detection Cohort ($N = 10$ held-out non-European scenes)*:
      - Sourced from **S2Looking** and held-out global cities outside the European/Mediterranean OSCD concentration:
        Cities: Cairo, Nairobi, Santiago, Ulaanbaatar, Perth, Brisbane, Jakarta, Johannesburg, Calgary, Tashkent.
@@ -250,7 +263,7 @@ Executes immediately upon Stage A clearance and before invoking the neural forwa
      $$H_{0, \text{Biome } k}: \Delta F_{1, \text{fixed13}, k} \ge 0 \quad \text{vs.} \quad H_{1, \text{Biome } k}: \Delta F_{1, \text{fixed13}, k} < 0$$
      where $\Delta F_{1, \text{fixed13}, k} = F_{1,\text{fixed13},\text{OOD}, k}^{(\text{MODIS})} - F_{1,\text{fixed13},\text{in-domain}}^{(\text{MODIS})}$.
      - Evaluated via two-sample null-centered spatial cluster bootstrap ($B=2,000$ resamples) with Step-Down Holm adjustment across the 4 biomes at FWER $\alpha = 0.05$.
-     - *Inference Interpretation*: Rejection ($\text{Holm } p_k < 0.05$) confirms statistically significant transfer degradation in Biome $k$. A non-significant result ($\text{Holm } p_k \ge 0.05$) represents insufficient evidence to reject the null; it must **never** be reported as evidence of "invariance" or "equivalent performance".
+     - *Inference Interpretation*: Rejection ($\text{Holm } p_k < 0.05$) confirms statistically significant transfer degradation in Biome $k$. A non-significant result ($\text{Holm } p_k \ge 0.05$) indicates insufficient evidence to reject the null under the conditional three-cluster reference; it must **never** be reported as proof of "domain invariance" or "equivalent performance".
   
   2. *Operational Performance Certification*:
      Certification assesses whether the deployed model maintains usable operational capability despite transfer loss:
@@ -261,8 +274,8 @@ Executes immediately upon Stage A clearance and before invoking the neural forwa
      - Two-Stage Gate Verification: $100\%$ precision and recall on Stage A and Stage B validation suites.
   
   3. *Certification Decision Matrix*:
-     - **Certified Robust with Documented Transfer Degradation**: Absolute performance floor met AND transfer degradation test is statistically significant ($p < 0.05$). Operational deployment authorized within documented degradation envelope.
-     - **Certified Robust without Significant Transfer Degradation**: Absolute performance floor met AND transfer test is non-significant.
+     - **Certified Operationally with Documented Transfer Degradation**: Absolute performance floor met AND transfer degradation test is statistically significant ($p < 0.05$). Operational deployment authorized within documented degradation envelope.
+     - **Certified Operationally — No Statistically Significant Degradation Detected**: Absolute performance floor met AND transfer test is non-significant ($p \ge 0.05$). Does not establish equivalence or invariance.
      - **Uncertified (Transfer Failure)**: Absolute performance floor not met in one or more biomes, regardless of hypothesis test outcome.
 
 ---
@@ -276,7 +289,7 @@ Executes immediately upon Stage A clearance and before invoking the neural forwa
     - **Minimum Geographic Separation**: Pairwise center-to-center great-circle distance $d_{\text{min}} \ge 150\text{ km}$ across all 40 scenes, spanning at least 4 distinct continents and disjoint UTM zones.
     - **Temporal Dispersion**: Acquisition timestamps separated by $\ge 30\text{ days}$ or distinct seasonal campaigns.
     - **Zero Polygon Overlap**: Pairwise bounding box intersection-over-union is strictly zero ($\text{IoU} = 0.0$).
-  - *Conditional Statistical Scope*: The binomial safety test is formally conditional on this spatial-temporal dispersion protocol. Sampling nearby or clustered footprints would introduce positive intra-cluster correlation, invalidating the independent Bernoulli trial assumption.
+  - *Conditional Statistical Scope*: The binomial safety test is formally conditional on this spatial-temporal dispersion protocol. Different scenes may still share broad platform or processing similarities; complete physical independence is an asymptotic ideal approximated by spatial separation.
   - Exactly 2 perturbed payloads are derived from each independent source scene ($2 \times 40 = 80$):
     - *Payload A (Resolution Stress)*: Native spatial resolution preserved without resampling (`gsd_m = 30.0` for Landsat, `gsd_m = 3.0` for PlanetScope) $\to$ Expected: `ERR_RESOLUTION_INCOMPATIBLE`.
     - *Payload B (Modality / Spectral Stress)*: Optical-only payload without SAR sent to Land Cover specialist (`ERR_MISSING_MODALITY`), or off-sensor band naming nomenclature lacking Sentinel-2 channel codes (`ERR_INSUFFICIENT_BANDS`).
@@ -326,31 +339,41 @@ Executes immediately upon Stage A clearance and before invoking the neural forwa
   - **Land Cover (`MultimodalResNet34`)**: Operates strictly at the frozen 16-class threshold vector $\boldsymbol{\tau}^* \in \mathbb{R}^{16}$ from `threshold_config.json`:
     $$\boldsymbol{\tau}^* = [0.70, 0.50, 0.60, 0.65, 0.55, 0.65, 0.75, 0.55, 0.60, 0.55, 0.35, 0.55, 0.60, 0.45, 0.60, 0.65]$$
   - **Change Detection (`FCSiamDiff`)**: Operates strictly at the frozen validation threshold $\tau^* = 0.25$.
-- **Exact Perturbation Operators & Execution Pipeline**:
+- **Exact Perturbation Operators, Nesting & Common Random Numbers**:
   All perturbations are implemented in the **scaled $[0, 1]$ pre-standardization input domain**:
   - *Optical domain*: Surface reflectance $\mathbf{X}_{\text{opt}} \in [0.0, 1.0]^{10 \times 120 \times 120}$ ($\text{DN} / 10000.0$).
   - *SAR domain*: Scaled backscatter $\mathbf{X}_{\text{SAR}} \in [0.0, 1.0]^{2 \times 120 \times 120}$ ($(\text{dB} + 35.0) / 40.0$).
   - *Change detection domain*: Bitemporal RGB images $\mathbf{X}_{t_1}, \mathbf{X}_{t_2} \in [0.0, 1.0]^{3 \times 256 \times 256}$.
   
-  1. **Synthetic Cloud Occlusion Operator (Optical Channels Only)**:
-     - Synthetic water-droplet clouds represent tropospheric condensation: applied **strictly to Optical channels** (Sentinel-1 C-band microwaves penetrate clouds).
+  1. **Strictly Nested Synthetic Optical Cloud Occlusion Operator (Optical Channels Only)**:
+     - > [!NOTE]
+       > **Benchmark Scope**: This operator provides a controlled synthetic optical occlusion stress test; it does not simulate full 3D atmospheric radiative transfer or cloud thermodynamics. Sentinel-1 C-band microwaves penetrate clouds and are unaffected.
      - Applied to post-event image $t_2$ in Change Detection.
-     - *Deterministic Pixel Rank Selection*: A continuous 2D Perlin noise field $N_i(x, y) \in [0, 1]$ is generated with pinned seed $\text{seed} = 42 + 100 \cdot i + \text{cond\_id}$. The binary cloud mask $\mathbf{M}_{\text{cloud}} \in \{0, 1\}^{H \times W}$ is formed by selecting **exactly $K = \lfloor f_c \times H \times W \rfloor$ pixels** having the highest Perlin noise values (descending rank ordering with stable coordinate tie-breaking).
+     - *Strictly Nested Mask Generation Protocol*:
+       1. For each patch $i$, generate a continuous 2D Perlin noise field $N_i(x, y) \in [0, 1]$ **once** using a fixed patch seed: `seed = 42 + 100 * patch_id` (independent of severity condition).
+       2. Rank-order all $H \times W$ pixels in descending order of noise magnitude (stable coordinate tie-breaking).
+       3. For each severity level $f_c \in \{0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50\}$, select the top $K(f_c) = \lfloor f_c \times H \times W \rfloor$ pixels to form binary mask $\mathbf{M}_{\text{cloud}}(f_c) \in \{0, 1\}^{H \times W}$.
+       4. *Strict Subset Guarantee*:
+          $$\mathbf{M}_{\text{cloud}}(0.05) \subset \mathbf{M}_{\text{cloud}}(0.10) \subset \mathbf{M}_{\text{cloud}}(0.15) \subset \dots \subset \mathbf{M}_{\text{cloud}}(0.50)$$
+          guaranteeing that increasing severity strictly adds newly occluded pixels while perfectly retaining all previously occluded pixels.
      - *Blending Equation*:
        $$\mathbf{X}_{\text{opt}}'(c, x, y) = \mathbf{X}_{\text{opt}}(c, x, y) \cdot (1 - \alpha \cdot \mathbf{M}_{\text{cloud}}(x, y)) + \mathbf{A}_{\text{cloud}} \cdot (\alpha \cdot \mathbf{M}_{\text{cloud}}(x, y))$$
-       where cloud opacity $\alpha = 0.90$ and cloud albedo $\mathbf{A}_{\text{cloud}} = 0.95$. Clipped to $[0.0, 1.0]$. Fractional areas: $f_c \in \{0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50\}$.
+       where cloud opacity $\alpha = 0.90$ and cloud albedo $\mathbf{A}_{\text{cloud}} = 0.95$. Clipped to $[0.0, 1.0]$.
   2. **Atmospheric Haze Scattering Operator (Optical Channels Only)**:
-     - Formulated via the physical Koschmieder atmospheric attenuation model: applied **strictly to Optical channels**.
+     - > [!NOTE]
+       > **Benchmark Scope**: Formulated via the simplified 1D Koschmieder atmospheric attenuation approximation, evaluating optical specialist sensitivity to uniform path radiance and transmission loss.
      - *Transformation Equation*:
        $$\mathbf{X}_{\text{opt}}'(c, x, y) = \mathbf{X}_{\text{opt}}(c, x, y) \cdot t + \mathbf{A}_{\text{atm}}(c) \cdot (1 - t)$$
        where atmospheric transmittance $t \in \{0.90, 0.70, 0.50, 0.30\}$, parameterized by increasing opacity $\text{Sev}_{\text{haze}} = 1 - t \in \{0.10, 0.30, 0.50, 0.70\}$ ($\text{Clean}: t=1.00 \implies \text{Sev}=0.00$), and atmospheric airlight $\mathbf{A}_{\text{atm}} = 0.85$. Clipped to $[0.0, 1.0]$.
-  3. **Scaled $[0, 1]$ Pre-Standardization Input-Domain Noise Operator (Optical and SAR Channels)**:
+  3. **Scaled $[0, 1]$ Input-Domain Noise with Common Random Numbers (Optical and SAR Channels)**:
      - > [!IMPORTANT]
        > **Scope and Interpretation**: This operator evaluates specialist sensitivity to additive numerical noise in the scaled $[0, 1]$ input domain. It does **not** assume or claim equivalent physical sensor noise across optical reflectance ($\text{DN}/10000$) and radar backscatter ($(\text{dB}+35)/40$).
-     - *Execution Sequence*:
-       1. Start with optical reflectance $\mathbf{X}_{\text{opt}} \in [0, 1]$ and scaled SAR backscatter $\mathbf{X}_{\text{SAR}} \in [0, 1]$.
-       2. Add zero-mean Gaussian noise $\epsilon(c, x, y) \sim \mathcal{N}(0, \sigma^2)$ independently per channel for $\sigma \in \{0.01, 0.02, 0.05, 0.10\}$ (pinned seed: `torch.Generator().manual_seed(42 + 100 * patch_id + cond_id)`).
-       3. Clip perturbed values strictly to $[0.0, 1.0]$.
+     - *Common Random Numbers (CRN) Protocol*:
+       1. For each patch $i$, generate a single base standard Gaussian noise tensor $\mathbf{Z}_i(c, x, y) \sim \mathcal{N}(0, 1)$ with pinned patch seed `seed = 10007 + 100 * patch_id`.
+       2. For each severity condition $\sigma \in \{0.01, 0.02, 0.05, 0.10\}$, compute scaled perturbation:
+          $$\epsilon_i(c, x, y; \sigma) = \sigma \cdot \mathbf{Z}_i(c, x, y)$$
+          ensuring perturbations across severity levels are strictly monotonic scalar magnifications of the identical spatial-spectral noise pattern.
+       3. Perturb input: $\mathbf{X}'(c, x, y) = \text{clip}\left(\mathbf{X}(c, x, y) + \epsilon_i(c, x, y; \sigma), 0.0, 1.0\right)$.
        4. Apply frozen channel-wise standardization $(\mathbf{X}' - \mu) / \sigma$.
        5. Feed standardized tensors to the unchanged specialist forward pass.
 - **Spatial Clustering & Scene-Level Resampling Structure**:
@@ -362,7 +385,7 @@ Executes immediately upon Stage A clearance and before invoking the neural forwa
     The observed test statistic is the cluster-robust Studentized $t$-statistic:
     $$t_{\text{obs}, j} = \frac{\hat{\beta}_{1, j, \text{obs}} - 0}{\widehat{\text{SE}}_{\text{cluster}}(\hat{\beta}_{1, j, \text{obs}})}$$
   - **Six Confirmatory Negative Linear Severity Trend Tests**:
-    *(Tests assess whether a statistically significant negative linear trend exists across increasing severity; a negative slope demonstrates a linear downward trend but does not assert strictly monotonic degradation at every discrete intermediate step.)*
+    *(Tests assess whether a statistically significant negative linear trend exists across increasing severity; a negative slope demonstrates a linear downward trend over the tested range, but does not assert strictly monotonic decrements between every discrete adjacent step.)*
     1. Test 4.3.1: Land Cover $\times$ Synthetic Cloud Occlusion ($\beta_{1, 1}$)
     2. Test 4.3.2: Land Cover $\times$ Atmospheric Haze Scattering ($\beta_{1, 2}$)
     3. Test 4.3.3: Land Cover $\times$ Scaled Input-Domain Noise ($\beta_{1, 3}$)
@@ -513,13 +536,22 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Land Cover Specialist Checkpoint** | `artifacts/specialists/deep_land_cover_asl/best_model_asl.pt` | `a3e2d24fc6b1b12e48960bc26f9d13eec2407fafb6a6237531da75038e65aabf` |
 | **Land Cover Threshold Config** | `artifacts/specialists/deep_land_cover_asl/threshold_config.json` | `76fa4eda7aec18d4e2df7f9434c603d76effebc2ba569764320dbad58d40ad0d` |
 | **Land Cover Class Taxonomy** | `artifacts/specialists/land_cover/classes.json` | `cdb18c8a0a9dc74f52920720340251f14de323bc5c4fb4f07436f90f3500f3e9` |
+| **Land Cover Model Architecture** | `satquery/specialists/models/multimodal_resnet.py` | `cc5468f30192947a67c51ac4431d169d0c10ee9136f13815cd7a1677cef1b137` |
+| **Land Cover Dataset & Preprocessing**| `satquery/specialists/dataset_land_cover.py` | `a73356eacfbb2ec78d115334712948369ee5613d40063089dc1d31bf073181a9` |
+| **Land Cover Specialist Wrapper** | `satquery/specialists/deep_land_cover.py` | `8ef9fbd581adb083e770faa005b0b33fdc0608fc7117704805f815b5c0105d7a` |
 | **Change Detection Specialist Checkpoint**| `artifacts/specialists/deep_change_detection_fc_siam_diff/best_model.pt` | `8e42ac5abbb907bac3b18abdbf0367748f3849dbd7dea22aaa8c219da4000df3` |
 | **Change Detection Threshold Config** | `artifacts/specialists/deep_change_detection_fc_siam_diff/threshold_config.json` | `c190999eb02f7c6ea043348e9c36b086a6e4ba2d6f2794bd0d889a757553f680` |
+| **Change Detection Dataset & Preprocessing**| `satquery/specialists/dataset_change_detection.py` | `554c544d457c9a4f1adfe0db850e57aad0a05cc888ee01b4e2579c3cfdd21c61` |
+| **Change Detection Specialist Wrapper** | `satquery/specialists/change_detection.py` | `1aaf30839ad269fa4055688c643ecf9430cc0d3fab78feabb66359c586e3459b` |
 | **Router Model Checkpoint** | `artifacts/router/router_model.joblib` | `eaf6c5b2cd8e718980a3496ce416b69ff9793cb1584e176951a9f652941cc218` |
 | **Physical Gate Implementation** | `satquery/utils/geospatial.py` | `156b76cd1ab4abc54341e6a405f9cd58f1387096f6cc92917c62ec01a11911f5` |
 | **Core Taxonomy Module** | `satquery/taxonomy.py` | `f1c424218f5144621ea5b6ae94065ada326ef3ff0d61e1ed0fe236e23c059997` |
 | **Task Router Logic Module** | `satquery/router.py` | `f3bf45452df165ef0a6fd0241fb3973050ac0d69609abf118f8c343491f175b1` |
 | **Metadata Parsing Module** | `satquery/utils/metadata.py` | `f3cbbc36ab3ad7c4f8bcad1144ba8235f013f4b84a49ad51989fa6f1aff159c8` |
+| **Dataset Orchestration Core** | `satquery/dataset.py` | `a59356dc89be0e94865a34c2538a069c5d2e6cc259857a0e0102a8bb8eb6038c` |
+| **System Orchestrator** | `satquery/orchestrator.py` | `254e24ccc508145ac0b715ba88c8cdbe729fcde9d1aec45a67374cfbccc4ac25` |
+| **Evaluation Metrics & Verification**| `satquery/evaluation.py` | `5fca3ec08664f96381101bdb2e6711acd43934085e46d50962a9d51757c644fc` |
+| **Evidence Package Exporter** | `satquery/evidence.py` | `372ddeac05a5d11dde28155437632f66f1cae206000a16d4a0eb1b5d63e7dd6b` |
 | **Environment Lockfile** | `requirements-lock.txt` | `72c893fb4425dd0c83c77a39338b26325da9cb96d473c2b511630369585b3b25` |
 
 ### Empirical Reproducibility Policy & Local Scope
@@ -569,7 +601,7 @@ Confirmatory claims are organized into **5 distinct testing families**, correspo
 
 | Testing Family | Primary Hypothesis Test | Comparison Population | Resampling / Bootstrap Unit | Multiplicity Adjustment |
 | :--- | :--- | :--- | :--- | :--- |
-| **Family 1: Geographic Transfer** (Track 4.1) | Independent two-sample difference in $F_{1,\text{fixed13}}$ against in-domain baseline | In-domain BigEarthNet test ($K_{\text{in}}=3$) vs OOD Biomes 1–4 ($K \ge 5$) | **Two-Sample Spatial Cluster Bootstrap** ($B=2,000$ replicates); scene-level reporting for CD ($N=10$) | Step-Down Holm adjustment ($\alpha = 0.05$ across 4 biomes) |
+| **Family 1: Geographic Transfer** (Track 4.1) | Independent two-sample difference in $F_{1,\text{fixed13}}$ against in-domain baseline | In-domain BigEarthNet test ($K_{\text{in}}=3$) vs OOD Biomes 1–4 ($K \ge 5$) | **Two-Sample Spatial Cluster Bootstrap** ($B=2,000$ replicates); leave-one-tile-out sensitivity; scene-level reporting for CD ($N=10$) | Step-Down Holm adjustment ($\alpha = 0.05$ across 4 biomes) |
 | **Family 2: Sensor Safety Gate** (Track 4.2) | One-sided safety non-inferiority test ($H_0: \text{IDER}_{\text{source}} \ge 0.10$) | 40 Independent source scenes vs safety threshold $\delta_{\text{tol}}=0.10$ | Exact Binomial Test ($p = 0.0148$) | Single pre-registered safety decision rule; control FRR reported separately with CI |
 | **Family 3: Degradation Trends** (Track 4.3) | Six repeated-measures severity slope tests ($H_{0, j}: \beta_{1, j} \ge 0$) at frozen thresholds | Fixed cohort evaluated across clean reference + 15 degradation levels | **Scene-Cluster Studentized Bootstrap** ($B=2,000$) preserving repeated measures | **Step-Down Holm adjustment across the 6 primary trend tests** ($\alpha = 0.05$) |
 | **Family 4: Linguistic Defense** (Track 4.4) | Fixed Operational Adversarial Benchmark (Tiered Certification: pooled $\le 10\%$, cohort cap $\le 5/25$) | 125 Adversarial queries (5 cohorts of $N=25$) vs 25 controls | Descriptive benchmark rates with Clopper-Pearson intervals | Non-inferential fixed benchmark; tiered certification reporting |
@@ -581,17 +613,17 @@ Confirmatory claims are organized into **5 distinct testing families**, correspo
 
 | Parameter / Protocol Element | Value / Specification | Preregistration Status |
 | :--- | :--- | :--- |
-| **Document Version** | `SATQUERY-P4-PROTOCOL-V1.9-DRAFT` | **PROPOSED DRAFT v1.9** |
+| **Document Version** | `SATQUERY-P4-PROTOCOL-V1.10-DRAFT` | **PROPOSED DRAFT v1.10** |
 | **Land Cover Specialist** | `MultimodalResNet34` (10 optical + 2 SAR bands, $120 \times 120$, **16 classes**) | **FROZEN** |
 | **Land Cover Inference Thresholds** | Frozen Phase 3 threshold vector $\boldsymbol{\tau}^* \in \mathbb{R}^{16}$ from `threshold_config.json` | **FROZEN** |
 | **Change Detection Specialist** | `FCSiamDiff` (Bitemporal RGB, $256 \times 256$) | **FROZEN** |
 | **Change Detection Threshold** | Frozen Phase 3 threshold $\tau^* = 0.25$ from `threshold_config.json` | **FROZEN** |
 | **Linguistic Router** | TF-IDF + Logistic Regression ($T=0.0991$, $\tau_{\text{intent}}=0.65, \tau_{\text{margin}}=0.15, \tau_{\text{sel}}=1.0$) | **FROZEN** |
-| **Two-Stage Compatibility Pipeline** | Stage A: 8 physical dimensions in `geospatial.py`<br>Stage B: Specialist tensor-contract gate (channels, shapes, dtypes) | **FROZEN** |
+| **Two-Stage Compatibility Pipeline** | Stage A: 8 physical dimensions in `geospatial.py`<br>Stage B: Exact channel sequence, shapes, dtypes, resampling provenance, and standardization | **FROZEN** |
 | **Execution Environment** | Pinned Host CPU inference (Python 3.14.3, PyTorch `2.15.0+cpu`, NumPy 2.5.3, SciPy 1.18.1, Scikit-Learn 1.9.1), pinned seed 42 | **COMMITTED** |
-| **Track 4.1 (Geographic Transfer)** | 4 Biomes ($N_{\text{initial}}=2,000$ paired patches), Dual MODIS harmonization with compound shift disclosure, **primary metric $F_{1,\text{fixed13}}$ with common 13-class denominator**, descriptive $F_{1,\text{mapped13}}^{\text{present}}$ + mandatory $FPR_{\text{absent}}$ reporting, decoupled statistical vs certification criteria | **CONFIRMATORY** |
+| **Track 4.1 (Geographic Transfer)** | 4 Biomes ($N_{\text{initial}}=2,000$ paired patches), Dual MODIS harmonization with compound shift disclosure, **primary metric $F_{1,\text{fixed13}}$ with common 13-class denominator**, descriptive $F_{1,\text{mapped13}}^{\text{present}}$ + mandatory $FPR_{\text{absent}}$ reporting, conditional 3-cluster scope with leave-one-tile-out sensitivity, decoupled statistical vs operational certification | **CONFIRMATORY** |
 | **Track 4.2 (Cross-Sensor Defense)** | $N_{\text{payloads}}=100$ from $N_{\text{scenes}}=60$ independent scenes ($d_{\text{min}} \ge 150\text{ km}$, $\ge 4$ continents, $\ge 30\text{d}$ revisit), pre-registered decision rule $\delta_{\text{tol}} = 0.10$ ($p = 0.0148$), empirical $\widehat{\text{CVDR}}_{\text{payload}}$ | **CONFIRMATORY** |
-| **Track 4.3 (Atmospheric Stress)** | $N=500$ patches, strict cohort invariance, optical-only cloud/haze (top-$K$ pixel rank) and **scaled $[0, 1]$ pre-standardization input-domain noise**, **6 clustered OLS slope tests with Studentized null-centered bootstrap ($B=2,000$)**, Step-Down Holm correction as sole confirmatory criterion; descriptive CIs | **CONFIRMATORY** |
+| **Track 4.3 (Atmospheric Stress)** | $N=500$ patches, strict cohort invariance, **strictly nested optical cloud occlusion masks** ($M_{0.05} \subset \dots \subset M_{0.50}$), **Common Random Numbers (CRN) scaled input-domain noise**, **6 clustered OLS slope tests with Studentized null-centered bootstrap ($B=2,000$)**, Step-Down Holm correction as sole confirmatory criterion; descriptive CIs | **CONFIRMATORY** |
 | **Track 4.4 (Linguistic Defense)** | Fixed Operational Adversarial Benchmark: $N=150$ queries (125 adversarial in 5 cohorts + 25 controls, mutually exclusive ground truth, tiered 3-part certification with cohort cap $\le 5/25$, descriptive Clopper-Pearson reporting) | **FIXED BENCHMARK** |
 | **Track 4.5 (Adversarial Metadata)** | $N_{\text{payloads}}=140$ from $N_{\text{source}}=50$ independent baseline observations ($d_{\text{min}} \ge 100\text{ km}$, audited $30 \times 4$ allocation matrix + 20 controls), pre-registered decision rule $\delta_{\text{tol}} = 0.10$ ($p = 0.0424$) | **CONFIRMATORY** |
 | **Reproducibility Policy** | Shell `$env:PYTHONHASHSEED="42"`, deterministic algorithms, `model.eval()`, `torch.inference_mode()`, bitwise agreement verification ($L_\infty = 0.0$) across 2 runs within pinned testbed | **COMMITTED** |
