@@ -1,11 +1,12 @@
 # SatQuery AI — Phase 4 Preregistration Protocol: Robustness, Generalization, and Adversarial Envelope Discovery
 
-**Document Identifier**: `SATQUERY-P4-PROTOCOL-V1.10-DRAFT`  
+**Document Identifier**: `SATQUERY-P4-PROTOCOL-V1.11-DRAFT`  
 **Phase**: Phase 4 — Robustness, Generalization, and Operational Envelope Discovery  
 **Date**: November 9, 2026  
-**Status**: **PROPOSED PREREGISTRATION PROTOCOL — DRAFT v1.10 (Methodological & Statistical Lock — Pending Final User Freeze)**  
+**Status**: **PROPOSED PREREGISTRATION PROTOCOL — DRAFT v1.11 (Methodological & Statistical Lock — Pending Final User Freeze)**  
 **Repository Branch**: `feature/phase4-generalization-protocol`  
-**Preceding Milestones**: Phase 3 Closed (M3.1 Multimodal ASL/CB-BCE, M3.2 FC-Siam-diff, M3.3 Selective Routing) with Pre-Registered Limitations  
+**Preceding Milestones**: Phase 3 Closed (M3.1 Multimodal ASL/CB-BCE, M3.2 FC-Siam-diff, M3.3 Selective Routing) with Pre-Registered Limitations; Supersedes `SATQUERY-P4-PROTOCOL-V1.10-DRAFT` with Sentinel-2 processing baseline reconciliation, Stage B preprocessing regression testing, isolated quarantined metrics, expanded 24-component cryptographic provenance manifest, and explicit three-cluster conditional inference scope.  
+**Confirmatory Experiment Status**: **ZERO Confirmatory Experiments Executed (Draft Protocol Specification Only)**  
 **Model Weight & Threshold Provenance**: Completely Frozen from Phase 3  
 - **Multimodal Land Cover Specialist**: `artifacts/specialists/deep_land_cover_asl/best_model_asl.pt` (SHA-256: `a3e2d24fc6b1b12e48960bc26f9d13eec2407fafb6a6237531da75038e65aabf`)
   - Architecture: `MultimodalResNet34`, 10 optical bands + 2 SAR bands, **16-class output head: `head.1.weight: torch.Size([16, 512])`**
@@ -97,9 +98,15 @@ flowchart TD
 - **Input Tensor Contract**:
   - Optical tensor: Shape `(B, 10, 120, 120)` consisting of 10 Sentinel-2 L2A surface reflectance channels in **exact canonical order**: `[B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]`.
     - Native 20m bands (`B05, B06, B07, B8A, B11, B12`) must be resampled to 10m GSD via bilinear interpolation to match the native 10m bands (`B02, B03, B04, B08`).
-    - Scaling & Standardization: $\mathbf{X}_{\text{opt,raw}} = \text{DN} / 10000.0 \in [0.0, 1.0]$, standardized using frozen statistics:
+    - Processing Baseline Reconciliation: Surface reflectance $\rho_{\lambda}$ is computed strictly accounting for Sentinel-2 Level-2A processing baselines:
+      $$\rho_{\lambda} = \frac{\text{DN} + \text{BOA\_ADD\_OFFSET}_{\lambda}}{\text{QUANTIFICATION\_VALUE}} = \begin{cases} \frac{\text{DN}}{10,000.0}, & \text{for Processing Baseline } \text{PB} < 04.00 \\ \frac{\text{DN} - 1000}{10,000.0}, & \text{for Processing Baseline } \text{PB} \ge 04.00 \end{cases}$$
+      where $\text{QUANTIFICATION\_VALUE} = 10,000.0$.
+    - Non-Clipping Physical Policy: Surface reflectance $\rho_{\lambda}$ is **not silently clipped to $[0.0, 1.0]$**. Values are verified to be finite (`not np.isfinite` halts execution) and within expected physical tolerances $[-0.05, 1.20]$ to accommodate water dark-target subtraction shadows and cloud/snow specular glint without artificial truncation.
+    - Channel Standardization: Scaled via frozen training split statistics:
+      $$X_{\text{opt}, c} = \frac{\rho_c - \mu_{\text{opt}, c}}{\sigma_{\text{opt}, c}}$$
       $$\mu_{\text{opt}} = [0.136, 0.118, 0.106, 0.128, 0.203, 0.257, 0.272, 0.273, 0.187, 0.121]$$
       $$\sigma_{\text{opt}} = [0.082, 0.076, 0.074, 0.089, 0.098, 0.108, 0.113, 0.112, 0.095, 0.078]$$
+    - Regression Test Lock: Bitwise equivalence and shift quantification are validated in `tests/test_preprocessing_compatibility.py` (SHA-256: `1a8908e3a0b9b2d2a6d9f4ed81686762c08f33f2c272b9bb47c01ff10e2442c9`).
   - SAR tensor: Shape `(B, 2, 120, 120)` consisting of 2 Sentinel-1 GRD IW polarization channels in **exact canonical order**: `[VH, VV]` in decibels.
     - Clipping & Scaling: clipped to $[-35.0, +5.0]\text{ dB}$ and linearly scaled to $[0.0, 1.0]$ via $(\text{dB} + 35.0) / 40.0$.
   - Representation constraint: Generic 1D feature vectors are strictly **unsupported** by the frozen neural specialist checkpoint and are rejected at Stage B validation.
@@ -156,13 +163,22 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
    - *Optical Tensor Specification*: Shape must be exactly `(B, 10, 120, 120)` with `dtype == torch.float32`.
    - *Canonical Channel Sequence*: Must strictly correspond to `[B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]`. Any omission (e.g. 4-band RGB+NIR) or permutation halts execution with `ERR_SPECIALIST_TENSOR_CONTRACT`.
    - *Resampling Provenance*: Verifies that 20m bands (`B05, B06, B07, B8A, B11, B12`) were resampled to 10m GSD via the certified bilinear pipeline prior to stacking.
-   - *Scaling & Standardization Invariants*: Verifies pre-standardization optical range $\mathbf{X}_{\text{opt,raw}} \in [0.0, 1.0]$ and application of frozen channel statistics $(\mu_{\text{opt}}, \sigma_{\text{opt}})$. Finite floating-point check confirms zero `NaN` or `Inf` values.
+   - *Processing Baseline Reconciliation & Reflectance Conversion*:
+     Sentinel-2 Level-2A surface reflectance conversion is governed by the product processing baseline:
+     $$\rho_{\lambda} = \frac{\text{DN} + \text{BOA\_ADD\_OFFSET}_{\lambda}}{\text{QUANTIFICATION\_VALUE}} = \begin{cases} \frac{\text{DN}}{10,000.0}, & \text{for PB } < 04.00 \\ \frac{\text{DN} - 1000}{10,000.0}, & \text{for PB } \ge 04.00 \end{cases}$$
+     > [!IMPORTANT]
+     > **Baseline Offset Defense**: The frozen BigEarthNet-14k checkpoint was trained on archival Sentinel-2 imagery acquired prior to January 25, 2022 ($\text{PB} < 04.00$, $\text{BOA\_ADD\_OFFSET} = 0$). Modern operational products ($\text{PB} \ge 04.00$) include a radiometric offset of $-1,000\text{ DN}$. Applying the archival $\text{DN}/10000$ formula to $\text{PB} \ge 04.00$ products introduces an artificial $+0.10$ reflectance shift ($+1.35\sigma$ on Band 4 Red), corrupting model inference. Stage B automatically inspects metadata `processing_baseline` and `BOA_ADD_OFFSET` to enforce exact reflectance calibration.
+   - *Non-Clipping Physical Inspection*: Surface reflectance $\rho$ is verified for finite floating-point values (`not np.isfinite` raises `ERR_NON_FINITE_TENSOR`). It is **not silently clipped to $[0.0, 1.0]$**; values within nominal physical tolerance $[-0.05, 1.20]$ are preserved to avoid distorting shadow or glint distributions. Tensors with values outside $[-0.05, 1.20]$ halt execution with `ERR_UNPHYSICAL_REFLECTANCE`.
+   - *Standardization Invariants*: Applies channel-wise standardization using frozen training split parameters:
+     $$X_{\text{opt}, c} = \frac{\rho_c - \mu_{\text{opt}, c}}{\sigma_{\text{opt}, c}}$$
+     with $\mu_{\text{opt}} = [0.136, 0.118, 0.106, 0.128, 0.203, 0.257, 0.272, 0.273, 0.187, 0.121]$ and $\sigma_{\text{opt}} = [0.082, 0.076, 0.074, 0.089, 0.098, 0.108, 0.113, 0.112, 0.095, 0.078]$.
    - *SAR Tensor Specification*: Shape must be exactly `(B, 2, 120, 120)` with `dtype == torch.float32`, corresponding to `[VH, VV]`.
-   - *SAR Normalization Invariants*: Verifies clipping to $[-35.0, +5.0]\text{ dB}$ and linear scaling to $[0.0, 1.0]$.
+   - *SAR Normalization Invariants*: Verifies clipping to $[-35.0, +5.0]\text{ dB}$ and linear scaling to $[0.0, 1.0]$ via $(\text{dB} + 35.0) / 40.0$.
    - *Representation Constraint*: If input is formatted as a 1D feature vector or summary embedding, it is rejected with `ERR_UNSUPPORTED_REPRESENTATION`.
+   - *Regression Verification*: Verified bitwise against frozen implementations in `tests/test_preprocessing_compatibility.py` (SHA-256: `1a8908e3a0b9b2d2a6d9f4ed81686762c08f33f2c272b9bb47c01ff10e2442c9`).
 2. **Change Detection Specialist Preprocessing & Tensor Contract (`FCSiamDiff`)**:
    - *Bitemporal Tensor Specification*: Verifies two tensors $(t_1, t_2)$ each of shape `(B, 3, H, W)` with $H, W \ge 100$, $H_1 = H_2, W_1 = W_2$, and `dtype == torch.float32` (RGB channels).
-   - *ImageNet Normalization Invariant*: Verifies standardization with ImageNet channel statistics ($\mu = [0.485, 0.456, 0.406], \sigma = [0.229, 0.224, 0.225]$) and finite floating-point values.
+   - *ImageNet Normalization Invariant*: Verifies standardization with ImageNet channel statistics ($\mu = [0.485, 0.456, 0.406], \sigma = [0.229, 0.224, 0.225]$), canonical `(3, H, W)` channel ordering, and finite floating-point values.
 
 ---
 
@@ -236,21 +252,31 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
        2. **Secondary Descriptive Metric: Present-Class Macro $F_1$ ($F_{1,\text{mapped13}}^{\text{present}}$)**:
           Averaged strictly over classes with ground-truth support in that biome ($C_{\text{present}, k} = \{c \in \{1,\dots,13\} \mid N_{\text{true}, c} \ge 1\}$):
           $$F_{1,\text{mapped13}}^{\text{present}} = \frac{1}{|C_{\text{present}, k}|} \sum_{c \in C_{\text{present}, k}} F_{1, c}$$
-       3. **Mandatory Absent-Class False Positive Metrics**:
-          For all absent classes $c \in C_{\text{absent}, k} = \{c \in \{1,\dots,13\} \mid N_{\text{true}, c} = 0\}$:
+       3. **Mandatory Absent-Class False Positive Metrics (Restricted to Mapped Taxonomy $\mathcal{M}$)**:
+          The 13 mapped classes define the evaluation ground-truth space $\mathcal{M} = \{1, \dots, 13\}$. The 3 quarantined classes $\mathcal{Q} = \{\text{Industrial or commercial units (6)}, \text{Complex cultivation patterns (4)}, \text{Permanent crops (14)}\}$ have zero ground truth support by construction and are **strictly excluded from the mapped absent-class set $C_{\text{absent}, k}$**.
+          For all absent mapped classes $c \in C_{\text{absent}, k} = \{c \in \mathcal{M} \mid N_{\text{true}, c} = 0\}$:
           - *Absent-Class False Positive Rate ($FPR_{\text{absent}}$)*:
             $$FPR_{\text{absent}} = \frac{\sum_{c \in C_{\text{absent}, k}} \text{FP}_c}{|C_{\text{absent}, k}| \times N_{\text{evaluable}, k}}$$
+            where $\text{FP}_c = \sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c}$ (since $y_{i, c} = 0$ for all $i$ when $c \in C_{\text{absent}, k}$).
           - *Absent-Class False Positive Share ($FPS_{\text{absent}}$)*:
-            $$FPS_{\text{absent}} = \frac{\sum_{c \in C_{\text{absent}, k}} \text{FP}_c}{\sum_{c=1}^{16} \sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c}}$$
-          - *Per-Class Absent Alarms*: Tabularize $\text{FP-Count}_c$ and $\text{FPR}_c = \text{FP}_c / N_{\text{evaluable}, k}$ for each absent class.
-       4. **Sub-Taxonomy Sensitivity Metrics**: Direct-Six ($F_{1,\text{direct6}}^{\text{fixed6}}$) and Approximate-Seven ($F_{1,\text{approx7}}^{\text{fixed7}}$).
-       5. **Quarantined Diagnostics Table**: Model output frequencies and trigger rates for the 3 unmapped classes (`Industrial`, `Complex cultivation`, `Permanent crops`).
+            $$FPS_{\text{absent}} = \frac{\sum_{c \in C_{\text{absent}, k}} \text{FP}_c}{\sum_{c \in \mathcal{M}} \sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c}} = \frac{\sum_{c \in C_{\text{absent}, k}} \text{FP}_c}{\sum_{c=1}^{13} \sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c}}$$
+            The denominator is **strictly restricted to positive predictions among the 13 mapped classes**, measuring the proportion of mapped positive predictions that fall on absent classes.
+          - *Per-Class Absent Alarms*: Tabularize $\text{FP-Count}_c$ and $\text{FPR}_c = \text{FP}_c / N_{\text{evaluable}, k}$ for each absent class in $C_{\text{absent}, k}$.
+        4. **Sub-Taxonomy Sensitivity Metrics**: Direct-Six ($F_{1,\text{direct6}}^{\text{fixed6}}$) and Approximate-Seven ($F_{1,\text{approx7}}^{\text{fixed7}}$).
+        5. **Dedicated Quarantined Outputs Diagnostic Table**:
+           The 3 unmapped model outputs are reported in an independent diagnostic table to prevent distorting mapped transfer metrics while monitoring model trigger behavior:
+           - *Quarantined Output Trigger Counts*: Tabularize $\sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c}$ for each $c \in \mathcal{Q}$.
+           - *Quarantined Trigger Rates*: $\frac{1}{N_{\text{evaluable}, k}} \sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c}$ for each $c \in \mathcal{Q}$.
+           - *Quarantined Output Share ($FPS_{\text{quarantine}}$)*:
+             $$FPS_{\text{quarantine}} = \frac{\sum_{c \in \mathcal{Q}} \sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c}}{\sum_{c=1}^{16} \sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c}}$$
+             quantifying what fraction of total 16-channel model outputs fall onto unmapped categories.
      - **Conditional Spatial Cluster Scope & Leave-One-Tile-Out Sensitivity**:
        > [!WARNING]
-       > **Three-Cluster In-Domain Scope**: The in-domain BigEarthNet-14k test population comprises patches derived from exactly **3 geographic tile clusters**: `T34TCR`, `T34TEQ`, and `T34TFN` in Serbia.
-       > 1. Resampling over $K_{\text{in}} = 3$ clusters provides limited representation of in-domain spatial variability ($df \le 2$). The bootstrap iteration count ($B=2,000$) ensures numerical stability of the resampling distribution but **cannot inflate the underlying spatial sample size**.
-       > 2. All geographic transfer inferences and bootstrap confidence intervals are **formally conditional on this three-tile reference population**.
-       > 3. To assess sensitivity to individual tile clusters, evaluation mandates reporting **leave-one-tile-out sensitivity analyses**: computing $\Delta F_{1, k}$ when excluding each in-domain tile in turn ($\setminus\text{T34TCR}$, $\setminus\text{T34TEQ}$, $\setminus\text{T34TFN}$) alongside per-tile metrics.
+       > **Three-Cluster In-Domain Scope & Statistical Degrees of Freedom**: The in-domain BigEarthNet-14k test population comprises patches derived from exactly **3 geographic tile clusters**: `T34TCR`, `T34TEQ`, and `T34TFN` in Serbia.
+       > 1. Resampling over $K_{\text{in}} = 3$ clusters provides strictly limited representation of in-domain spatial variability ($df \le 2$). The bootstrap iteration count ($B=2,000$) provides numerical resampling stability ($p_{\min} = 1/(B+1) = 1/2001 \approx 0.000500$) but **cannot expand the underlying spatial degrees of freedom**.
+       > 2. All geographic transfer inferences, p-values, and bootstrap confidence intervals are **formally conditional on this three-tile reference population**.
+       > 3. A non-significant hypothesis test ($\text{Holm } p \ge 0.05$) indicates **insufficient evidence to detect degradation relative to this conditional 3-tile reference**; it must **never** be reported as proof of global geographic generalization, domain invariance, or equivalence.
+       > 4. To evaluate sensitivity to individual tile clusters, evaluation mandates reporting **leave-one-tile-out sensitivity analyses**: computing $\Delta F_{1, k}^{(\setminus\text{tile})}$ when excluding each in-domain tile in turn ($\setminus\text{T34TCR}$, $\setminus\text{T34TEQ}$, $\setminus\text{T34TFN}$) alongside per-tile metrics. These are strictly categorized as descriptive sensitivity analyses.
   2. *Change Detection Cohort ($N = 10$ held-out non-European scenes)*:
      - Sourced from **S2Looking** and held-out global cities outside the European/Mediterranean OSCD concentration:
        Cities: Cairo, Nairobi, Santiago, Ulaanbaatar, Perth, Brisbane, Jakarta, Johannesburg, Calgary, Tashkent.
@@ -341,7 +367,7 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
   - **Change Detection (`FCSiamDiff`)**: Operates strictly at the frozen validation threshold $\tau^* = 0.25$.
 - **Exact Perturbation Operators, Nesting & Common Random Numbers**:
   All perturbations are implemented in the **scaled $[0, 1]$ pre-standardization input domain**:
-  - *Optical domain*: Surface reflectance $\mathbf{X}_{\text{opt}} \in [0.0, 1.0]^{10 \times 120 \times 120}$ ($\text{DN} / 10000.0$).
+  - *Optical domain*: Surface reflectance $\mathbf{X}_{\text{opt}} \in [0.0, 1.0]^{10 \times 120 \times 120}$ obtained via baseline-aware conversion $\rho = (\text{DN} + \text{offset}) / 10000.0$.
   - *SAR domain*: Scaled backscatter $\mathbf{X}_{\text{SAR}} \in [0.0, 1.0]^{2 \times 120 \times 120}$ ($(\text{dB} + 35.0) / 40.0$).
   - *Change detection domain*: Bitemporal RGB images $\mathbf{X}_{t_1}, \mathbf{X}_{t_2} \in [0.0, 1.0]^{3 \times 256 \times 256}$.
   
@@ -352,10 +378,12 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
      - *Strictly Nested Mask Generation Protocol*:
        1. For each patch $i$, generate a continuous 2D Perlin noise field $N_i(x, y) \in [0, 1]$ **once** using a fixed patch seed: `seed = 42 + 100 * patch_id` (independent of severity condition).
        2. Rank-order all $H \times W$ pixels in descending order of noise magnitude (stable coordinate tie-breaking).
-       3. For each severity level $f_c \in \{0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50\}$, select the top $K(f_c) = \lfloor f_c \times H \times W \rfloor$ pixels to form binary mask $\mathbf{M}_{\text{cloud}}(f_c) \in \{0, 1\}^{H \times W}$.
-       4. *Strict Subset Guarantee*:
+       3. For each severity level $f_c \in \{0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50\}$, select the top $K(f_c) = \lfloor f_c \times 120 \times 120 \rfloor$ pixels to form binary mask $\mathbf{M}_{\text{cloud}}(f_c) \in \{0, 1\}^{120 \times 120}$.
+          The pixel counts are strictly increasing integers:
+          $$K(0.05) = 720 < K(0.10) = 1440 < K(0.15) = 2160 < K(0.20) = 2880 < K(0.30) = 4320 < K(0.40) = 5760 < K(0.50) = 7200$$
+       4. *Strict Proper Subset Guarantee*:
           $$\mathbf{M}_{\text{cloud}}(0.05) \subset \mathbf{M}_{\text{cloud}}(0.10) \subset \mathbf{M}_{\text{cloud}}(0.15) \subset \dots \subset \mathbf{M}_{\text{cloud}}(0.50)$$
-          guaranteeing that increasing severity strictly adds newly occluded pixels while perfectly retaining all previously occluded pixels.
+          Because pixel counts are strictly increasing and selection follows a single fixed rank ordering, increasing severity strictly adds newly occluded pixels while perfectly retaining all previously occluded pixels.
      - *Blending Equation*:
        $$\mathbf{X}_{\text{opt}}'(c, x, y) = \mathbf{X}_{\text{opt}}(c, x, y) \cdot (1 - \alpha \cdot \mathbf{M}_{\text{cloud}}(x, y)) + \mathbf{A}_{\text{cloud}} \cdot (\alpha \cdot \mathbf{M}_{\text{cloud}}(x, y))$$
        where cloud opacity $\alpha = 0.90$ and cloud albedo $\mathbf{A}_{\text{cloud}} = 0.95$. Clipped to $[0.0, 1.0]$.
@@ -367,7 +395,7 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
        where atmospheric transmittance $t \in \{0.90, 0.70, 0.50, 0.30\}$, parameterized by increasing opacity $\text{Sev}_{\text{haze}} = 1 - t \in \{0.10, 0.30, 0.50, 0.70\}$ ($\text{Clean}: t=1.00 \implies \text{Sev}=0.00$), and atmospheric airlight $\mathbf{A}_{\text{atm}} = 0.85$. Clipped to $[0.0, 1.0]$.
   3. **Scaled $[0, 1]$ Input-Domain Noise with Common Random Numbers (Optical and SAR Channels)**:
      - > [!IMPORTANT]
-       > **Scope and Interpretation**: This operator evaluates specialist sensitivity to additive numerical noise in the scaled $[0, 1]$ input domain. It does **not** assume or claim equivalent physical sensor noise across optical reflectance ($\text{DN}/10000$) and radar backscatter ($(\text{dB}+35)/40$).
+       > **Scope and Interpretation**: This operator evaluates specialist sensitivity to additive numerical perturbations in the scaled $[0, 1]$ input domain (normalized-tensor sensitivity). It does **not** simulate physical sensor noise, photon shot noise, or radar speckle, and makes no claim of physical noise equivalence between optical reflectance and radar backscatter.
      - *Common Random Numbers (CRN) Protocol*:
        1. For each patch $i$, generate a single base standard Gaussian noise tensor $\mathbf{Z}_i(c, x, y) \sim \mathcal{N}(0, 1)$ with pinned patch seed `seed = 10007 + 100 * patch_id`.
        2. For each severity condition $\sigma \in \{0.01, 0.02, 0.05, 0.10\}$, compute scaled perturbation:
@@ -544,7 +572,9 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Change Detection Dataset & Preprocessing**| `satquery/specialists/dataset_change_detection.py` | `554c544d457c9a4f1adfe0db850e57aad0a05cc888ee01b4e2579c3cfdd21c61` |
 | **Change Detection Specialist Wrapper** | `satquery/specialists/change_detection.py` | `1aaf30839ad269fa4055688c643ecf9430cc0d3fab78feabb66359c586e3459b` |
 | **Router Model Checkpoint** | `artifacts/router/router_model.joblib` | `eaf6c5b2cd8e718980a3496ce416b69ff9793cb1584e176951a9f652941cc218` |
+| **Router Hyperparameter Config** | `configs/router_config.json` | `1160e4e4f5c6008c995d2d0cdb63fde55b53d85b329a819ea3e02748c7f04ef9` |
 | **Physical Gate Implementation** | `satquery/utils/geospatial.py` | `156b76cd1ab4abc54341e6a405f9cd58f1387096f6cc92917c62ec01a11911f5` |
+| **Temporal Gate Implementation** | `satquery/utils/temporal.py` | `2126aaa91280e18f19d440fe8ea54c10fb5438cc34afc57bcc76c6ee47c4db79` |
 | **Core Taxonomy Module** | `satquery/taxonomy.py` | `f1c424218f5144621ea5b6ae94065ada326ef3ff0d61e1ed0fe236e23c059997` |
 | **Task Router Logic Module** | `satquery/router.py` | `f3bf45452df165ef0a6fd0241fb3973050ac0d69609abf118f8c343491f175b1` |
 | **Metadata Parsing Module** | `satquery/utils/metadata.py` | `f3cbbc36ab3ad7c4f8bcad1144ba8235f013f4b84a49ad51989fa6f1aff159c8` |
@@ -552,6 +582,8 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **System Orchestrator** | `satquery/orchestrator.py` | `254e24ccc508145ac0b715ba88c8cdbe729fcde9d1aec45a67374cfbccc4ac25` |
 | **Evaluation Metrics & Verification**| `satquery/evaluation.py` | `5fca3ec08664f96381101bdb2e6711acd43934085e46d50962a9d51757c644fc` |
 | **Evidence Package Exporter** | `satquery/evidence.py` | `372ddeac05a5d11dde28155437632f66f1cae206000a16d4a0eb1b5d63e7dd6b` |
+| **OSCD Change Detection Catalog** | `data/oscd/manifest.json` | `2ce5800100bf9ee2a004ef6d7cde9d5425357aa0bf66c0539c9762f52ccef7ec` |
+| **Stage B Preprocessing Test Suite** | `tests/test_preprocessing_compatibility.py` | `1a8908e3a0b9b2d2a6d9f4ed81686762c08f33f2c272b9bb47c01ff10e2442c9` |
 | **Environment Lockfile** | `requirements-lock.txt` | `72c893fb4425dd0c83c77a39338b26325da9cb96d473c2b511630369585b3b25` |
 
 ### Empirical Reproducibility Policy & Local Scope
@@ -613,7 +645,7 @@ Confirmatory claims are organized into **5 distinct testing families**, correspo
 
 | Parameter / Protocol Element | Value / Specification | Preregistration Status |
 | :--- | :--- | :--- |
-| **Document Version** | `SATQUERY-P4-PROTOCOL-V1.10-DRAFT` | **PROPOSED DRAFT v1.10** |
+| **Document Version** | `SATQUERY-P4-PROTOCOL-V1.11-DRAFT` | **PROPOSED DRAFT v1.11** |
 | **Land Cover Specialist** | `MultimodalResNet34` (10 optical + 2 SAR bands, $120 \times 120$, **16 classes**) | **FROZEN** |
 | **Land Cover Inference Thresholds** | Frozen Phase 3 threshold vector $\boldsymbol{\tau}^* \in \mathbb{R}^{16}$ from `threshold_config.json` | **FROZEN** |
 | **Change Detection Specialist** | `FCSiamDiff` (Bitemporal RGB, $256 \times 256$) | **FROZEN** |
