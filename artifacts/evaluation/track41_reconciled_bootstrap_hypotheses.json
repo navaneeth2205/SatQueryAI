@@ -1,0 +1,70 @@
+{
+  "Biome_1_Arid": {
+    "delta_observed": -0.1926,
+    "ci_95": [
+      -0.2431,
+      -0.0879
+    ],
+    "ci_includes_zero": false,
+    "bootstrap_se": 0.0366,
+    "count_boot_ge_0": 0,
+    "raw_p_value": 0.0005,
+    "raw_p_value_display": "<= 0.0005",
+    "at_mc_resolution_limit": true,
+    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 Serbian tile clusters; at most 27 ordered resamples)",
+    "holm_adjusted_p_value": 0.001999,
+    "holm_adjusted_p_display": "<= 0.0020",
+    "statistically_significant_degradation": true
+  },
+  "Biome_2_Tropical_Rainforest": {
+    "delta_observed": -0.1616,
+    "ci_95": [
+      -0.2011,
+      -0.056
+    ],
+    "ci_includes_zero": false,
+    "bootstrap_se": 0.0307,
+    "count_boot_ge_0": 0,
+    "raw_p_value": 0.0005,
+    "raw_p_value_display": "<= 0.0005",
+    "at_mc_resolution_limit": true,
+    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 Serbian tile clusters; at most 27 ordered resamples)",
+    "holm_adjusted_p_value": 0.001999,
+    "holm_adjusted_p_display": "<= 0.0020",
+    "statistically_significant_degradation": true
+  },
+  "Biome_3_Boreal_Forest": {
+    "delta_observed": -0.0795,
+    "ci_95": [
+      -0.1201,
+      0.0283
+    ],
+    "ci_includes_zero": true,
+    "bootstrap_se": 0.0318,
+    "count_boot_ge_0": 82,
+    "raw_p_value": 0.041479,
+    "raw_p_value_display": "0.0415",
+    "at_mc_resolution_limit": false,
+    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 Serbian tile clusters; at most 27 ordered resamples)",
+    "holm_adjusted_p_value": 0.063968,
+    "holm_adjusted_p_display": "0.0640",
+    "statistically_significant_degradation": false
+  },
+  "Biome_4_Humid_Subtropical_Cropland": {
+    "delta_observed": -0.0992,
+    "ci_95": [
+      -0.1426,
+      0.0084
+    ],
+    "ci_includes_zero": true,
+    "bootstrap_se": 0.0329,
+    "count_boot_ge_0": 63,
+    "raw_p_value": 0.031984,
+    "raw_p_value_display": "0.0320",
+    "at_mc_resolution_limit": false,
+    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 Serbian tile clusters; at most 27 ordered resamples)",
+    "holm_adjusted_p_value": 0.063968,
+    "holm_adjusted_p_display": "0.0640",
+    "statistically_significant_degradation": false
+  }
+}

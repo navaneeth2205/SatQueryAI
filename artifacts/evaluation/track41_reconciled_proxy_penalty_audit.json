@@ -1,0 +1,116 @@
+{
+  "native_corine_fixed13_macro_f1": 0.4757,
+  "modis_proxy_fixed13_macro_f1": 0.3357,
+  "true_in_domain_proxy_penalty": 0.1399,
+  "per_patch_jaccard_mean": 0.7749,
+  "per_patch_exact_match_rate": 0.5179,
+  "total_corine_positive_labels": 7699,
+  "total_modis_positive_labels": 5267,
+  "filtered_trace_positive_labels": 2432,
+  "class_wise_comparison": {
+    "Arable land": {
+      "class_index_0based": 0,
+      "corine_true_count": 2009,
+      "modis_true_count": 1838,
+      "corine_f1": 0.9392,
+      "modis_f1": 0.9068,
+      "delta_f1": -0.0324
+    },
+    "Beaches, dunes, sands": {
+      "class_index_0based": 1,
+      "corine_true_count": 0,
+      "modis_true_count": 0,
+      "corine_f1": 0.0,
+      "modis_f1": 0.0,
+      "delta_f1": 0.0
+    },
+    "Broad-leaved forest": {
+      "class_index_0based": 2,
+      "corine_true_count": 1665,
+      "modis_true_count": 1434,
+      "corine_f1": 0.8948,
+      "modis_f1": 0.8276,
+      "delta_f1": -0.0672
+    },
+    "Coniferous forest": {
+      "class_index_0based": 4,
+      "corine_true_count": 41,
+      "modis_true_count": 13,
+      "corine_f1": 0.2078,
+      "modis_f1": 0.0816,
+      "delta_f1": -0.1262
+    },
+    "Inland waters": {
+      "class_index_0based": 6,
+      "corine_true_count": 361,
+      "modis_true_count": 143,
+      "corine_f1": 0.8187,
+      "modis_f1": 0.451,
+      "delta_f1": -0.3677
+    },
+    "Inland wetlands": {
+      "class_index_0based": 7,
+      "corine_true_count": 125,
+      "modis_true_count": 52,
+      "corine_f1": 0.3651,
+      "modis_f1": 0.1837,
+      "delta_f1": -0.1814
+    },
+    "Land principally occupied by agriculture, with significant areas of natural vegetation": {
+      "class_index_0based": 8,
+      "corine_true_count": 999,
+      "modis_true_count": 808,
+      "corine_f1": 0.7157,
+      "modis_f1": 0.6276,
+      "delta_f1": -0.0881
+    },
+    "Mixed forest": {
+      "class_index_0based": 9,
+      "corine_true_count": 75,
+      "modis_true_count": 29,
+      "corine_f1": 0.0863,
+      "modis_f1": 0.043,
+      "delta_f1": -0.0433
+    },
+    "Moors, heathland and sclerophyllous vegetation": {
+      "class_index_0based": 10,
+      "corine_true_count": 0,
+      "modis_true_count": 0,
+      "corine_f1": 0.0,
+      "modis_f1": 0.0,
+      "delta_f1": 0.0
+    },
+    "Natural grassland and sparsely vegetated areas": {
+      "class_index_0based": 11,
+      "corine_true_count": 256,
+      "modis_true_count": 89,
+      "corine_f1": 0.4339,
+      "modis_f1": 0.2397,
+      "delta_f1": -0.1941
+    },
+    "Pastures": {
+      "class_index_0based": 12,
+      "corine_true_count": 454,
+      "modis_true_count": 181,
+      "corine_f1": 0.3071,
+      "modis_f1": 0.197,
+      "delta_f1": -0.1101
+    },
+    "Transitional woodland, shrub": {
+      "class_index_0based": 14,
+      "corine_true_count": 1197,
+      "modis_true_count": 470,
+      "corine_f1": 0.6777,
+      "modis_f1": 0.3487,
+      "delta_f1": -0.329
+    },
+    "Urban fabric": {
+      "class_index_0based": 15,
+      "corine_true_count": 517,
+      "modis_true_count": 210,
+      "corine_f1": 0.7374,
+      "modis_f1": 0.4578,
+      "delta_f1": -0.2796
+    }
+  }
+}

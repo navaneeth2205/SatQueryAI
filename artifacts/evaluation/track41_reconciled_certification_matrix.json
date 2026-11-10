@@ -1,0 +1,70 @@
+{
+  "Biome_1_Arid": {
+    "operational_floors": {
+      "fixed13_floor": 0.2,
+      "present_floor": 0.25,
+      "fpr_floor": 0.15
+    },
+    "achieved_metrics": {
+      "fixed13_macro_f1": 0.2831,
+      "present_macro_f1": 0.4089,
+      "fpr_absent": 0.018041
+    },
+    "floors_satisfied": true,
+    "transfer_degradation_detected": true,
+    "ci_includes_zero": false,
+    "holm_adjusted_p": "<= 0.0020",
+    "certification_status": "Certified Operationally with Documented Transfer Degradation"
+  },
+  "Biome_2_Tropical_Rainforest": {
+    "operational_floors": {
+      "fixed13_floor": 0.12,
+      "present_floor": 0.15,
+      "fpr_floor": 0.15
+    },
+    "achieved_metrics": {
+      "fixed13_macro_f1": 0.314,
+      "present_macro_f1": 0.4082,
+      "fpr_absent": 0.018779
+    },
+    "floors_satisfied": true,
+    "transfer_degradation_detected": true,
+    "ci_includes_zero": false,
+    "holm_adjusted_p": "<= 0.0020",
+    "certification_status": "Certified Operationally with Documented Transfer Degradation"
+  },
+  "Biome_3_Boreal_Forest": {
+    "operational_floors": {
+      "fixed13_floor": 0.12,
+      "present_floor": 0.15,
+      "fpr_floor": 0.15
+    },
+    "achieved_metrics": {
+      "fixed13_macro_f1": 0.3961,
+      "present_macro_f1": 0.4291,
+      "fpr_absent": 0.012136
+    },
+    "floors_satisfied": true,
+    "transfer_degradation_detected": false,
+    "ci_includes_zero": true,
+    "holm_adjusted_p": "0.0640",
+    "certification_status": "Certified Operationally \u2014 No Statistically Significant Degradation Detected (Conditional Reference)"
+  },
+  "Biome_4_Humid_Subtropical_Cropland": {
+    "operational_floors": {
+      "fixed13_floor": 0.2,
+      "present_floor": 0.25,
+      "fpr_floor": 0.15
+    },
+    "achieved_metrics": {
+      "fixed13_macro_f1": 0.3765,
+      "present_macro_f1": 0.4894,
+      "fpr_absent": 0.008488
+    },
+    "floors_satisfied": true,
+    "transfer_degradation_detected": false,
+    "ci_includes_zero": true,
+    "holm_adjusted_p": "0.0640",
+    "certification_status": "Certified Operationally \u2014 No Statistically Significant Degradation Detected (Conditional Reference)"
+  }
+}
