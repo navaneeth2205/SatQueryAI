@@ -62,5 +62,12 @@
     "channel_sharing": "independent_per_channel_and_timepoint",
     "common_random_numbers": "strict_scalar_multiplication_across_sigmas",
     "interpretation": "normalized_tensor_numerical_sensitivity"
+  },
+  "track43_cohort_optical_reflectance_policy": {
+    "clean_baseline_domain": [0.0, 1.0],
+    "excursion_handling": "pre_evaluation_cohort_screening_exclusion",
+    "screening_exclusion_code": "N_excluded_excursion",
+    "silent_clipping_of_clean_inputs": false,
+    "rationale": "Clean baseline inputs with valid excursions in [-0.05, 0.0) or (1.0, 1.20] are excluded at cohort selection rather than silently clipped, ensuring clean baseline inputs undergo zero clipping (L_infty = 0.0) and preserving identical preprocessing between baseline and perturbed conditions."
   }
 }

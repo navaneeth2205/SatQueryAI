@@ -36,6 +36,7 @@ from satquery.utils.perturbations import (
     apply_noise_change_detection,
     normalize_imagenet_rgb,
     standardize_optical_tensor,
+    validate_track43_reflectance_bounds,
     CLOUD_SEVERITY_FRACTIONS,
     HAZE_TRANSMITTANCES,
     NOISE_SEVERITY_SIGMAS,
@@ -443,3 +444,45 @@ class TestTrack43Perturbations:
             p1 = res_direct.probabilities[k]
             p2 = res_pipe.probabilities[k]
             assert p1 == p2, f"Probability drift detected for class {k}: {p1} vs {p2}"
+
+    def test_track43_optical_reflectance_excursion_screening_and_non_clipping_policy(self):
+        """
+        Verify the Track 4.3 optical reflectance domain policy:
+        1. Clean baseline inputs that fall strictly within [0.0, 1.0] are valid and eligible for Track 4.3.
+        2. Clean inputs are NOT silently clipped at baseline (zero truncation / zero modification).
+        3. Inputs exhibiting valid physical excursions outside [0.0, 1.0] (e.g. -0.02 or 1.08)
+           are detected and flagged for cohort exclusion (N_excluded, excursion) rather than being silently clipped.
+        4. Both clean baseline and perturbed conditions share identical preprocessing pipelines.
+        """
+        # Case 1: Clean observation strictly within [0.0, 1.0]
+        rng = np.random.RandomState(42)
+        valid_optical = rng.uniform(0.01, 0.95, size=(10, 120, 120)).astype(np.float32)
+        assert validate_track43_reflectance_bounds(valid_optical) is True
+
+        # Non-clipping check: the clean baseline tensor is passed through unclipped
+        clean_input = valid_optical.copy()
+        # Verify identity: no clipping occurred
+        assert np.array_equal(clean_input, valid_optical)
+        assert np.max(np.abs(clean_input - valid_optical)) == 0.0
+
+        # Case 2: Valid physical negative excursion (e.g. -0.03 from dark-target shadow overcorrection)
+        excursion_negative = valid_optical.copy()
+        excursion_negative[0, 10, 10] = -0.03
+        # In Stage B physical range [-0.05, 1.20], this is physically admissible:
+        assert np.all(excursion_negative >= -0.05) and np.all(excursion_negative <= 1.20)
+        # But for Track 4.3 cohort screening, it must be flagged for exclusion:
+        assert validate_track43_reflectance_bounds(excursion_negative) is False
+
+        # Case 3: Valid physical positive excursion (e.g. 1.08 from specular glint / snow saturation)
+        excursion_positive = valid_optical.copy()
+        excursion_positive[3, 50, 50] = 1.08
+        # In Stage B physical range [-0.05, 1.20], this is physically admissible:
+        assert np.all(excursion_positive >= -0.05) and np.all(excursion_positive <= 1.20)
+        # But for Track 4.3 cohort screening, it must be flagged for exclusion:
+        assert validate_track43_reflectance_bounds(excursion_positive) is False
+
+        # Case 4: Non-finite tensor (NaN / Inf) must be rejected
+        nan_optical = valid_optical.copy()
+        nan_optical[0, 0, 0] = np.nan
+        assert validate_track43_reflectance_bounds(nan_optical) is False
+

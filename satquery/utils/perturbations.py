@@ -349,3 +349,22 @@ def standardize_optical_tensor(optical_in_01: np.ndarray) -> np.ndarray:
 def normalize_imagenet_rgb(rgb_in_01: np.ndarray) -> np.ndarray:
     """Normalize RGB tensor in [0, 1] using standard ImageNet mean and std."""
     return (rgb_in_01.astype(np.float32) - IMAGENET_MEAN) / IMAGENET_STD
+
+
+def validate_track43_reflectance_bounds(optical_tensor: np.ndarray) -> bool:
+    """
+    Validate whether an optical reflectance tensor falls strictly within the unit interval [0.0, 1.0]
+    required for the Track 4.3 robustness cohort.
+
+    Under the Stage B non-clipping physical contract, clean satellite observations may exhibit
+    valid physical excursions within [-0.05, 1.20] (e.g. shadow overcorrection or specular glint).
+    Rather than silently clipping clean baseline inputs to [0.0, 1.0], Track 4.3 cohort selection
+    screens candidates using this function:
+    - Returns True if all pixels fall within [0.0, 1.0] (patch eligible for Track 4.3).
+    - Returns False if excursions in [-0.05, 0.0) or (1.0, 1.20] exist, flagging the patch
+      for cohort exclusion (N_excluded, excursion) to preserve clean baseline fidelity without silent clipping.
+    """
+    if not np.all(np.isfinite(optical_tensor)):
+        return False
+    return bool(np.all(optical_tensor >= 0.0) and np.all(optical_tensor <= 1.0))
+

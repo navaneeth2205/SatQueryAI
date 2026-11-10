@@ -111,9 +111,9 @@ flowchart TD
 - **Input Tensor Contract**:
   - Optical tensor: Shape `(B, 10, 120, 120)` consisting of 10 Sentinel-2 L2A surface reflectance channels in **exact canonical order**: `[B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]`.
     - Native 20m bands (`B05, B06, B07, B8A, B11, B12`) must be resampled to 10m GSD via bilinear interpolation to match the native 10m bands (`B02, B03, B04, B08`).
-    - Processing Baseline Reconciliation: Surface reflectance $\rho_{\lambda}$ is computed strictly accounting for Sentinel-2 Level-2A processing baselines:
-      $$\rho_{\lambda} = \frac{\text{DN} + \text{BOA\_ADD\_OFFSET}_{\lambda}}{\text{QUANTIFICATION\_VALUE}} = \begin{cases} \frac{\text{DN}}{10,000.0}, & \text{for Processing Baseline } \text{PB} < 04.00 \\ \frac{\text{DN} - 1000}{10,000.0}, & \text{for Processing Baseline } \text{PB} \ge 04.00 \end{cases}$$
-      where $\text{QUANTIFICATION\_VALUE} = 10,000.0$.
+    - Processing Baseline Reconciliation & Dynamic Metadata Ingestion: Surface reflectance $\rho_{\lambda}$ is computed strictly using dynamic, per-band metadata ingestion:
+      $$\rho_{\lambda} = \frac{\text{DN}_{\lambda} + \text{BOA\_ADD\_OFFSET}_{\lambda}}{\text{QUANTIFICATION\_VALUE}}$$
+      where $\text{QUANTIFICATION\_VALUE} = 10,000.0$, and $\text{BOA\_ADD\_OFFSET}_{\lambda}$ is ingested directly from product metadata ($0.0$ for archival products $\text{PB} < 04.00$; nominally $-1000.0$ for modern products $\text{PB} \ge 04.00$ when reported by Copernicus SAFE XML/JSON manifests, but ingested dynamically per band rather than assumed as an immutable universal constant).
     - Non-Clipping Physical Policy: Surface reflectance $\rho_{\lambda}$ is **not silently clipped to $[0.0, 1.0]$**. Values are verified to be finite (`not np.isfinite` halts execution) and within expected physical tolerances $[-0.05, 1.20]$ to accommodate water dark-target subtraction shadows and cloud/snow specular glint without artificial truncation.
     - Channel Standardization: Scaled via frozen training split statistics:
       $$X_{\text{opt}, c} = \frac{\rho_c - \mu_{\text{opt}, c}}{\sigma_{\text{opt}, c}}$$
@@ -219,13 +219,19 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
        Before evaluation execution, all candidates are cataloged and cryptographically locked in `data/manifests/phase4_ood_manifest.csv`. The manifest specifies:
        `patch_id, scene_id, biome_id, cluster_id, subregion_id, center_lat, center_lon, epsg, s2_granule_id, s2_acq_date, s1_scene_id, s1_acq_date, modis_product_year, modis_qc_valid_ratio`.
        Each biome contains at least 5 distinct geographic subregions ($K_{\text{OOD}, k} \ge 5$).
-     - **Strict Pre-Evaluation Exclusion & Evaluable Sample Accounting**:
-       Initial sample counts are gross acquisition counts and **will not be presented as the final evaluation denominator**. Evaluable sample sizes are derived after applying deterministic screening:
-       1. *QC Exclusion*: Patches with valid MODIS coverage $A_{\text{valid}, i} / \text{Area}(\mathcal{P}_i) < 0.80$ are excluded ($N_{\text{excluded, QC}}$).
-       2. *Temporal Exclusion*: Patches where nearest product year $|Y^* - Y_{\text{acq}}| > 1$ are excluded ($N_{\text{excluded, temporal}}$).
-       3. *Quarantine Exclusion*: Patches where no mapped BigEarthNet class reaches $\ge 20\%$ coverage are quarantined ($N_{\text{quarantined}}$).
-       4. *Evaluable Cohort*: $N_{\text{evaluable}} = N_{\text{initial}} - N_{\text{excluded, QC}} - N_{\text{excluded, temporal}} - N_{\text{quarantined}}$.
-       The evaluation report will publish complete sample accounting tables disclosing initial, excluded, quarantined, and evaluable sample counts per biome and per in-domain tile cluster, along with exact positive ground-truth support per class ($N_{\text{true}, c}$).
+     - **Strict Pre-Evaluation Exclusion & Sequential Mutually Exclusive Accounting**:
+       Initial sample counts ($N_{\text{initial}}$) represent gross candidate acquisitions and **will not be presented as the final evaluation denominator**. To eliminate ambiguity and guarantee that overlapping screening criteria cannot double-subtract candidates, evaluable sample sizes are derived through a strict **sequential screening pipeline** where each exclusion count represents candidates newly excluded at that specific stage:
+       1. *Step 1 — QC Screening*: Evaluate valid MODIS raster coverage on gross candidates. Patches failing coverage ($A_{\text{valid}, i} / \text{Area}(\mathcal{P}_i) < 0.80$) are excluded:
+          $$N_{\text{excluded, QC}} = \sum_{i=1}^{N_{\text{initial}}} \mathbb{I}\left(\frac{A_{\text{valid}, i}}{\text{Area}(\mathcal{P}_i)} < 0.80\right)$$
+          Surviving QC-pass candidate subset: $\mathcal{S}_{\text{QC}} = \{i \mid \text{QC-pass}\}$, with count $N_{\text{pass, QC}} = N_{\text{initial}} - N_{\text{excluded, QC}}$.
+       2. *Step 2 — Temporal Screening (Evaluated Strictly Among $\mathcal{S}_{\text{QC}}$)*: Screen surviving patches for acquisition-to-product temporal alignment. Patches with $|Y^* - Y_{\text{acq}}| > 1$ are newly excluded:
+          $$N_{\text{excluded, temporal}} = \sum_{i \in \mathcal{S}_{\text{QC}}} \mathbb{I}\left(|Y_i^* - Y_{\text{acq}, i}| > 1\right)$$
+          Surviving temporally aligned candidate subset: $\mathcal{S}_{\text{QC} \land \text{temporal}} = \{i \in \mathcal{S}_{\text{QC}} \mid |Y_i^* - Y_{\text{acq}, i}| \le 1\}$, with count $N_{\text{pass, temporal}} = N_{\text{pass, QC}} - N_{\text{excluded, temporal}}$.
+       3. *Step 3 — MODIS Label Quarantine (Evaluated Strictly Among $\mathcal{S}_{\text{QC} \land \text{temporal}}$)*: Screen surviving patches for mapped class coverage. Patches where no mapped BigEarthNet class reaches $\ge 20\%$ are quarantined:
+          $$N_{\text{quarantined}} = \sum_{i \in \mathcal{S}_{\text{QC} \land \text{temporal}}} \mathbb{I}\left(\max_{k \in \{1, \dots, 13\}} w_i(k) < 0.20\right)$$
+       4. *Step 4 — Final Evaluable Cohort*:
+          $$N_{\text{evaluable}} = N_{\text{initial}} - N_{\text{excluded, QC}} - N_{\text{excluded, temporal}} - N_{\text{quarantined}} = N_{\text{pass, temporal}} - N_{\text{quarantined}}$$
+          Because steps 1–3 are evaluated sequentially on surviving subsets, $\{N_{\text{excluded, QC}}, N_{\text{excluded, temporal}}, N_{\text{quarantined}}\}$ form a mutually exclusive partition of the excluded population, mathematically preventing double-subtraction. The evaluation report will publish complete sample accounting tables disclosing initial, step-1 excluded, step-2 excluded, step-3 quarantined, and evaluable sample counts per biome and per in-domain tile cluster, along with exact positive ground-truth support per class ($N_{\text{true}, c}$).
      - **Simplified MODIS MCD12Q1 Area-Weighted Construction & Absolute Quarantine Rule**:
        1. *Footprint Polygon Construction*: Construct footprint polygon $\mathcal{P}_i$ from affine GeoTransform and reproject to MODIS Sinusoidal projection.
        2. *Area Fractional Weighting*: For valid pixels, compute fractional coverage $w_i(C)$ across all 17 IGBP classes:
@@ -385,7 +391,16 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
   - **Change Detection (`FCSiamDiff`)**: Operates strictly at the frozen validation threshold $\tau^* = 0.25$.
 - **Exact Perturbation Operators, Nesting & Common Random Numbers**:
   All perturbations are implemented in the **scaled $[0, 1]$ pre-standardization input domain**:
-  - *Optical domain*: Surface reflectance $\mathbf{X}_{\text{opt}} \in [0.0, 1.0]^{10 \times 120 \times 120}$ obtained via baseline-aware conversion $\rho = (\text{DN} + \text{offset}) / 10000.0$.
+  - *Optical Reflectance Domain Reconciliation & Cohort Screening Policy*:
+    Under Stage B non-clipping physical policy, clean satellite observations may exhibit valid physical excursions within $[-0.05, 1.20]$ (e.g. shadow overcorrection or specular glint). To prevent silent clipping of clean inputs while ensuring mathematical consistency with perturbation operators:
+    1. *Cohort Pre-Screening*: The Track 4.3 evaluation cohort ($N=250$) is strictly restricted to candidate patches whose clean baseline optical reflectance falls entirely within the unit interval $[0.0, 1.0]$ across all 10 channels:
+       $$\min_{c, x, y} \rho(c, x, y) \ge 0.0 \quad \text{and} \quad \max_{c, x, y} \rho(c, x, y) \le 1.0$$
+       Patches exhibiting valid physical excursions outside $[0.0, 1.0]$ are flagged during cohort construction and excluded under screening code $N_{\text{excluded, excursion}}$ rather than being silently clipped.
+    2. *Zero-Clipping Clean Baseline Guarantee*: For all patches in the Track 4.3 cohort, clean baseline inputs require **no clipping whatsoever** ($\mathbf{X}_{\text{clean}} = \rho \in [0.0, 1.0]$).
+    3. *Synthetic Operator Excursion Bounding*: Clipping to $[0.0, 1.0]$ is applied **only to post-perturbation excursions** induced by the synthetic operators themselves (e.g., haze atmospheric airlight addition, cloud albedo blending, or positive additive Gaussian noise exceeding $1.0$).
+    4. *Pipeline Symmetry*: Clean baseline ($d=0$) and perturbed conditions ($d>0$) follow an identical preprocessing pipeline:
+       $$\mathbf{X}_{\text{eval}} = \mathcal{P}_d(\mathbf{X}_{\text{clean}}) \implies X_{\text{std}} = \frac{\mathbf{X}_{\text{eval}} - \mu_{\text{opt}}}{\sigma_{\text{opt}}} \implies \text{Forward Pass}$$
+       where $\mathcal{P}_{d=0}(\mathbf{X}) = \mathbf{X}$ is the exact unperturbed identity pass-through. Verified by `satquery.utils.perturbations.validate_track43_reflectance_bounds` and tested in `tests/test_track43_perturbations.py::test_track43_optical_reflectance_excursion_screening_and_non_clipping_policy`.
   - *SAR domain*: Scaled backscatter $\mathbf{X}_{\text{SAR}} \in [0.0, 1.0]^{2 \times 120 \times 120}$ ($(\text{dB} + 35.0) / 40.0$).
   - *Change detection domain*: Bitemporal RGB images $\mathbf{X}_{t_1}, \mathbf{X}_{t_2} \in [0.0, 1.0]^{3 \times 256 \times 256}$.
   
@@ -621,8 +636,8 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Change Detection Specialist Wrapper** | `satquery/specialists/change_detection.py` | `1aaf30839ad269fa4055688c643ecf9430cc0d3fab78feabb66359c586e3459b` | Specialist Wrapper |
 | **Router Model Checkpoint** | `artifacts/router/router_model.joblib` | `eaf6c5b2cd8e718980a3496ce416b69ff9793cb1584e176951a9f652941cc218` | Model Weights |
 | **Router Hyperparameter Config** | `configs/router_config.json` | `1160e4e4f5c6008c995d2d0cdb63fde55b53d85b329a819ea3e02748c7f04ef9` | Configuration |
-| **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `ad01b63a879b19147ac4cbb8d69dfdaae63ebf3b98319451e8a4565dc8363de1` | Configuration |
-| **Perturbation Operators Module** | `satquery/utils/perturbations.py` | `c59946e05dfff0c38a337236db843595dd13aa65f321164fa2ca0dc9ac72f61f` | Source Code |
+| **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `ff7fbdc502b9c287bf54e05ff9dc3083ac38406003f9c4c2ffdffb6dc06ed035` | Configuration |
+| **Perturbation Operators Module** | `satquery/utils/perturbations.py` | `c77a396f9bdc53bfebac1ec9befa94d5c4a1054d9d61168f0067a7aa5e4cbe57` | Source Code |
 | **MODIS Harmonization Configuration** | `configs/modis_harmonization_config.json` | `0fd6209bea3b8b4fb9f13b2add07ea7d1bf1f8b6a764a202ff3726e6e4832c65` | Configuration |
 | **S2 Preprocessing Baseline Config** | `configs/s2_preprocessing_config.json` | `020f8e117b67d3da53fcb6e5ebd7c576ca45fe69d19e2223a576e282b4004933` | Configuration |
 | **OOD Candidate Manifest Spec** | `configs/ood_candidate_manifest_spec.json` | `3ed8fba913ac557a479c8f6d3428d9dc427910f8bd0f9d600334ce15fdda55ac` | Configuration |
@@ -646,7 +661,7 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Stage B Preprocessing Test Suite** | `tests/test_preprocessing_compatibility.py` | `1a8908e3a0b9b2d2a6d9f4ed81686762c08f33f2c272b9bb47c01ff10e2442c9` | Test Suite |
 | **S2 Metadata Integration Test Suite**| `tests/test_s2_metadata_integration.py` | `141bed10699d3b6ed716435c1f3cb5503151f87a194043ae4cc4342c079b1e4c` | Test Suite |
 | **Taxonomy & Metric Test Suite** | `tests/test_taxonomy_and_metrics.py` | `9053d95365f68a58c7b1a9757d3ac88f34115efbf8e8a2c9582565ce729d08cd` | Test Suite |
-| **Track 4.3 Perturbation Test Suite**| `tests/test_track43_perturbations.py` | `c2f81c890e43919211b974db9e60ab68eb2464cc132c36fb7d2867f415153a31` | Test Suite |
+| **Track 4.3 Perturbation Test Suite**| `tests/test_track43_perturbations.py` | `51be9185768b16b23e707341305acdad5887c471f668d5ae92ac782fb6f03e7b` | Test Suite |
 | **Environment Lockfile** | `requirements-lock.txt` | `72c893fb4425dd0c83c77a39338b26325da9cb96d473c2b511630369585b3b25` | Environment |
 
 ### Empirical Reproducibility Policy & Local Scope
