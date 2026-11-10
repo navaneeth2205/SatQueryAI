@@ -1,9 +1,12 @@
 {
-  "audit_version": "v1.12.1-track41-final-reconciliation-v3",
+  "audit_version": "v1.12.1-track41-final-closure",
   "frozen_commit": "29b3a12",
   "frozen_tag": "v1.12.1-phase4-protocol-freeze",
   "protocol_sha256": "7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5",
+  "scientific_interpretation": "Geographic transfer evaluation under a harmonized mapped label space and resolution-filtered in-domain reference proxy, with residual cross-taxonomy and label-construction differences.",
   "modis_lineage_and_proxy_penalty_audit": {
+    "scientific_interpretation": "Geographic transfer evaluation under a harmonized mapped label space and resolution-filtered in-domain reference proxy, with residual cross-taxonomy and label-construction differences.",
+    "taxonomic_equivalence_caveat": "Applying the 20% area-fraction threshold to in-domain CORINE annotations simulates spatial resolution aggregation under 500m MODIS, but does NOT establish taxonomic equivalence with raw MODIS MCD12Q1 IGBP classifications. Evaluation reflects a compound geographic/taxonomic comparison.",
     "modis_product_lineage": {
       "product_id": "MCD12Q1",
       "version": "061",
@@ -216,105 +219,105 @@
       "Arable land": {
         "class_index_0based": 0,
         "corine_true_count": 2009,
-        "modis_true_count": 1838,
+        "modis_proxy_true_count": 1838,
         "corine_f1": 0.9392,
-        "modis_f1": 0.9068,
+        "modis_proxy_f1": 0.9068,
         "delta_f1": -0.0324
       },
       "Beaches, dunes, sands": {
         "class_index_0based": 1,
         "corine_true_count": 0,
-        "modis_true_count": 0,
+        "modis_proxy_true_count": 0,
         "corine_f1": 0.0,
-        "modis_f1": 0.0,
+        "modis_proxy_f1": 0.0,
         "delta_f1": 0.0
       },
       "Broad-leaved forest": {
         "class_index_0based": 2,
         "corine_true_count": 1665,
-        "modis_true_count": 1434,
+        "modis_proxy_true_count": 1434,
         "corine_f1": 0.8948,
-        "modis_f1": 0.8276,
+        "modis_proxy_f1": 0.8276,
         "delta_f1": -0.0672
       },
       "Coniferous forest": {
         "class_index_0based": 4,
         "corine_true_count": 41,
-        "modis_true_count": 13,
+        "modis_proxy_true_count": 13,
         "corine_f1": 0.2078,
-        "modis_f1": 0.0816,
+        "modis_proxy_f1": 0.0816,
         "delta_f1": -0.1262
       },
       "Inland waters": {
         "class_index_0based": 6,
         "corine_true_count": 361,
-        "modis_true_count": 143,
+        "modis_proxy_true_count": 143,
         "corine_f1": 0.8187,
-        "modis_f1": 0.451,
+        "modis_proxy_f1": 0.451,
         "delta_f1": -0.3677
       },
       "Inland wetlands": {
         "class_index_0based": 7,
         "corine_true_count": 125,
-        "modis_true_count": 52,
+        "modis_proxy_true_count": 52,
         "corine_f1": 0.3651,
-        "modis_f1": 0.1837,
+        "modis_proxy_f1": 0.1837,
         "delta_f1": -0.1814
       },
       "Land principally occupied by agriculture, with significant areas of natural vegetation": {
         "class_index_0based": 8,
         "corine_true_count": 999,
-        "modis_true_count": 808,
+        "modis_proxy_true_count": 808,
         "corine_f1": 0.7157,
-        "modis_f1": 0.6276,
+        "modis_proxy_f1": 0.6276,
         "delta_f1": -0.0881
       },
       "Mixed forest": {
         "class_index_0based": 9,
         "corine_true_count": 75,
-        "modis_true_count": 29,
+        "modis_proxy_true_count": 29,
         "corine_f1": 0.0863,
-        "modis_f1": 0.043,
+        "modis_proxy_f1": 0.043,
         "delta_f1": -0.0433
       },
       "Moors, heathland and sclerophyllous vegetation": {
         "class_index_0based": 10,
         "corine_true_count": 0,
-        "modis_true_count": 0,
+        "modis_proxy_true_count": 0,
         "corine_f1": 0.0,
-        "modis_f1": 0.0,
+        "modis_proxy_f1": 0.0,
         "delta_f1": 0.0
       },
       "Natural grassland and sparsely vegetated areas": {
         "class_index_0based": 11,
         "corine_true_count": 256,
-        "modis_true_count": 89,
+        "modis_proxy_true_count": 89,
         "corine_f1": 0.4339,
-        "modis_f1": 0.2397,
+        "modis_proxy_f1": 0.2397,
         "delta_f1": -0.1941
       },
       "Pastures": {
         "class_index_0based": 12,
         "corine_true_count": 454,
-        "modis_true_count": 181,
+        "modis_proxy_true_count": 181,
         "corine_f1": 0.3071,
-        "modis_f1": 0.197,
+        "modis_proxy_f1": 0.197,
         "delta_f1": -0.1101
       },
       "Transitional woodland, shrub": {
         "class_index_0based": 14,
         "corine_true_count": 1197,
-        "modis_true_count": 470,
+        "modis_proxy_true_count": 470,
         "corine_f1": 0.6777,
-        "modis_f1": 0.3487,
+        "modis_proxy_f1": 0.3487,
         "delta_f1": -0.329
       },
       "Urban fabric": {
         "class_index_0based": 15,
         "corine_true_count": 517,
-        "modis_true_count": 210,
+        "modis_proxy_true_count": 210,
         "corine_f1": 0.7374,
-        "modis_f1": 0.4578,
+        "modis_proxy_f1": 0.4578,
         "delta_f1": -0.2796
       }
     }
@@ -805,8 +808,9 @@
       "p_sign_ge_0": 0.0835,
       "raw_p_null": 0.006997,
       "raw_p_null_display": "0.0070",
+      "count_boot_null_extreme": 13,
       "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
-      "methodological_caveat": "High-precision confirmatory inference is fundamentally constrained by the coarse 3-cluster in-domain design. Results are reported as conditional on the Serbian reference tiles.",
+      "methodological_caveat": "Three geographic clusters provide limited independent geographic replication. The 2,000 bootstrap iterations represent numerical integration of this 10-multiset space, not 2,000 independent geographic replicates. Statistical conclusions are exploratory/descriptive and strictly conditional on the Serbian reference tiles.",
       "holm_adjusted_p_value": 0.027986,
       "holm_adjusted_p_display": "0.0280",
       "statistically_significant_degradation": true
@@ -824,8 +828,9 @@
       "p_sign_ge_0": 0.2649,
       "raw_p_null": 0.038981,
       "raw_p_null_display": "0.0390",
+      "count_boot_null_extreme": 77,
       "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
-      "methodological_caveat": "High-precision confirmatory inference is fundamentally constrained by the coarse 3-cluster in-domain design. Results are reported as conditional on the Serbian reference tiles.",
+      "methodological_caveat": "Three geographic clusters provide limited independent geographic replication. The 2,000 bootstrap iterations represent numerical integration of this 10-multiset space, not 2,000 independent geographic replicates. Statistical conclusions are exploratory/descriptive and strictly conditional on the Serbian reference tiles.",
       "holm_adjusted_p_value": 0.116942,
       "holm_adjusted_p_display": "0.1169",
       "statistically_significant_degradation": false
@@ -841,10 +846,11 @@
       "ci_includes_zero": false,
       "bootstrap_se": 0.0227,
       "p_sign_ge_0": 1.0,
-      "raw_p_null": 1.0,
-      "raw_p_null_display": "1.0000",
+      "raw_p_null": 0.951024,
+      "raw_p_null_display": "0.9510",
+      "count_boot_null_extreme": 1902,
       "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
-      "methodological_caveat": "High-precision confirmatory inference is fundamentally constrained by the coarse 3-cluster in-domain design. Results are reported as conditional on the Serbian reference tiles.",
+      "methodological_caveat": "Three geographic clusters provide limited independent geographic replication. The 2,000 bootstrap iterations represent numerical integration of this 10-multiset space, not 2,000 independent geographic replicates. Statistical conclusions are exploratory/descriptive and strictly conditional on the Serbian reference tiles.",
       "holm_adjusted_p_value": 1.0,
       "holm_adjusted_p_display": "1.0000",
       "statistically_significant_degradation": false
@@ -860,10 +866,11 @@
       "ci_includes_zero": false,
       "bootstrap_se": 0.0243,
       "p_sign_ge_0": 0.9985,
-      "raw_p_null": 1.0,
-      "raw_p_null_display": "1.0000",
+      "raw_p_null": 0.891554,
+      "raw_p_null_display": "0.8916",
+      "count_boot_null_extreme": 1783,
       "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
-      "methodological_caveat": "High-precision confirmatory inference is fundamentally constrained by the coarse 3-cluster in-domain design. Results are reported as conditional on the Serbian reference tiles.",
+      "methodological_caveat": "Three geographic clusters provide limited independent geographic replication. The 2,000 bootstrap iterations represent numerical integration of this 10-multiset space, not 2,000 independent geographic replicates. Statistical conclusions are exploratory/descriptive and strictly conditional on the Serbian reference tiles.",
       "holm_adjusted_p_value": 1.0,
       "holm_adjusted_p_display": "1.0000",
       "statistically_significant_degradation": false

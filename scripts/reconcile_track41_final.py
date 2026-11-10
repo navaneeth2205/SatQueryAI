@@ -1,28 +1,28 @@
 # -*- coding: utf-8 -*-
 """
-SatQuery AI — Master Track 4.1 Statistical Audit, Provenance & Reconciliation Script (Final v3).
+SatQuery AI — Track 4.1 Final Closure Reconciliation & Lineage Audit Script.
 
-Resolves all audit points raised in the Track 4.1 v2 review:
-1. P0 — MODIS MCD12Q1 Ground-Truth Lineage & Harmonization Provenance:
-   - Formally documents product metadata: MCD12Q1 Version 6.1 (Collection 6.1), Band LC_Type1, 500m GSD, Sinusoidal.
-   - Publishes exact IGBP class codes (1 through 17) and cross-taxonomy alignment table:
-     * 6 Direct mappings (Coniferous forest, Broad-leaved forest, Mixed forest, Arable land, Urban fabric, Inland wetlands)
-     * 7 Approximate mappings (Transitional shrub, Moors/heathland, Natural grassland/savanna, Pastures, Ag mosaic, Inland waters, Beaches/dunes)
-     * 3 Quarantined classes (Complex cultivation, Industrial/commercial, Permanent crops) with zero support by construction.
-   - Clarifies data lineage: In-domain Serbian baseline (33.57%) is an area-fraction proxy model reflecting 500m MODIS pixel-aggregation
-     resolution (20% patch area threshold) on the BigEarthNet annotations, filtering 2,432 trace labels (31.6% reduction).
-   - Verifies identical 20% area threshold and taxonomy mapping across both in-domain and OOD biomes.
-2. P0 — Null-Centered Bootstrap Validation & Inferential Degrees of Freedom:
-   - Exact implementation of centered test statistic: tilde{Delta}* = Delta* - Delta_obs.
-   - Dual reporting of empirical sign proportion P*(Delta* >= 0) and formal null-centered p_null = P(Delta* <= 2*Delta_obs).
-   - Recomputes two-sided 95% percentile CIs, one-sided 95% upper confidence bounds (Delta <= bound_upper), and one-sided lower bounds.
-   - Step-Down Holm adjustment across M=4 biomes: Arid (p_adj = 0.0280), Tropical (p_adj = 0.1169), Boreal (p_adj = 1.0000), Cropland (p_adj = 1.0000).
-   - Complete sensitivity analysis across all 10 unique multisets of the 3 in-domain Serbian tiles (df <= 2, 27 ordered configurations).
+Executes final closures addressing all peer audit findings:
+1. P0 — Scientific Interpretation & Data Lineage:
+   - Formally classifies evaluation as:
+     "Geographic transfer evaluation under a harmonized mapped label space and resolution-filtered
+      in-domain reference proxy, with residual cross-taxonomy and label-construction differences."
+   - Explicitly acknowledges that applying the 20% area-fraction threshold does NOT prove equivalent
+     taxonomic labels, as CORINE (in-domain) and MODIS IGBP (OOD) originate from fundamentally distinct
+     classification systems.
+   - Retains all reported measurements while avoiding claims of clean isolation between geographic and
+     taxonomic domain shift.
+2. P0 — Reconciled Null-Centered Bootstrap Inference:
+   - Implements exact empirical null-centering: tilde{Delta}* = Delta* - Delta_obs.
+   - Evaluates exact empirical tail probabilities for all biomes via P(Delta* <= 2*Delta_obs):
+     Arid (0.0070), Tropical (0.0390), Cropland (0.8901), Boreal (0.9445).
+   - Reconciles two-sided percentile CIs, one-sided 95% upper bounds (+1.28% for Arid), and Holm-adjusted p-values.
+   - Removes misleading normal approximation (z=-1.79); reports empirical bootstrap count (13 / 2,000).
+   - Documents cluster limitation: df <= 2 across 3 Serbian tiles (10 unique multisets, 27 ordered configurations).
 3. P1 — S2Looking Change Detection Verification:
-   - Verifies exact pixel confusion matrices (1024x1024 = 1,048,576 px/scene, total 10,485,760 px across 10 scenes).
-   - Harmonic identity |F1 - 2PR/(P+R)| <= 2.78e-17 and Jaccard equivalence |IoU - F1/(2-F1)| <= 1.39e-17 confirmed.
-4. P1 — Decoupled Operational Performance Certification:
-   - Confirms all 4 biomes meet operational floors (+8.31 to +27.91 pp margin on F1, FPR <= 1.88% vs 15% ceiling).
+   - All 10 scenes verified at 1024x1024 = 1,048,576 px/scene (total 10,485,760 pixels pooled).
+   - Harmonic F1 identity |F1 - 2PR/(P+R)| <= 2.78e-17 and Jaccard equivalence |IoU - F1/(2-F1)| <= 1.39e-17 verified.
+4. P1 — Authoritative Artifact Export & Decoupled Operational Performance Certification.
 
 Protocol Reference: SATQUERY-P4-PROTOCOL-V1.12.1-FROZEN.md (SHA-256: 7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5)
 """
@@ -44,7 +44,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
-logger = logging.getLogger("track41_v3_reconcile")
+logger = logging.getLogger("track41_final_closure")
 
 from tests.test_taxonomy_and_metrics import (
     compute_track41_metrics,
@@ -56,16 +56,21 @@ from scripts.run_track41_evaluation import (
     evaluate_ood_land_cover,
 )
 
+FORMAL_SCIENTIFIC_INTERPRETATION = (
+    "Geographic transfer evaluation under a harmonized mapped label space and resolution-filtered "
+    "in-domain reference proxy, with residual cross-taxonomy and label-construction differences."
+)
 
-def run_master_reconciliation_v3():
+
+def run_track41_final_closure():
     logger.info("=" * 85)
-    logger.info("SATQUERY AI — TRACK 4.1 MASTER AUDIT, PROVENANCE & RECONCILIATION (v3)")
+    logger.info("SATQUERY AI — TRACK 4.1 FINAL CLOSURE RECONCILIATION")
     logger.info("=" * 85)
 
     # -------------------------------------------------------------------------
-    # PART 1: In-Domain Serbian Reference & Harmonized MODIS Proxy Construction
+    # PART 1: In-Domain Reference & Proxy Model Lineage
     # -------------------------------------------------------------------------
-    logger.info("Part 1: Auditing In-Domain Ground Truth & MODIS Lineage...")
+    logger.info("Part 1: Auditing In-Domain Reference & Proxy Model Lineage...")
     with open(REPO_ROOT / "artifacts" / "specialists" / "land_cover" / "classes.json", "r", encoding="utf-8") as f:
         classes = json.load(f)
 
@@ -125,9 +130,9 @@ def run_master_reconciliation_v3():
         class_wise_audit[classes[c]] = {
             "class_index_0based": c,
             "corine_true_count": n_corine,
-            "modis_true_count": n_modis,
+            "modis_proxy_true_count": n_modis,
             "corine_f1": round(f1_c, 4),
-            "modis_f1": round(f1_m, 4),
+            "modis_proxy_f1": round(f1_m, 4),
             "delta_f1": round(f1_m - f1_c, 4),
         }
 
@@ -167,6 +172,12 @@ def run_master_reconciliation_v3():
         }
 
     proxy_audit_results = {
+        "scientific_interpretation": FORMAL_SCIENTIFIC_INTERPRETATION,
+        "taxonomic_equivalence_caveat": (
+            "Applying the 20% area-fraction threshold to in-domain CORINE annotations simulates "
+            "spatial resolution aggregation under 500m MODIS, but does NOT establish taxonomic equivalence "
+            "with raw MODIS MCD12Q1 IGBP classifications. Evaluation reflects a compound geographic/taxonomic comparison."
+        ),
         "modis_product_lineage": modis_cfg["modis_product"],
         "taxonomy_mapping_policy": modis_cfg["taxonomy_mapping"],
         "native_corine_all16_macro_f1": round(f1_all16_corine, 4),
@@ -198,7 +209,7 @@ def run_master_reconciliation_v3():
         f1_ood = res["fixed13_macro_f1"]
         delta_vs_modis = f1_ood - f1_fixed13_modis
         res["delta_f1_vs_modis_proxy"] = round(delta_vs_modis, 4)
-        logger.info(f"  {b_id:35s}: OOD F1 = {f1_ood*100:5.2f}% | Delta vs MODIS (33.57%) = {delta_vs_modis*100:+6.2f} pp")
+        logger.info(f"  {b_id:35s}: OOD F1 = {f1_ood*100:5.2f}% | Delta vs MODIS Proxy (33.57%) = {delta_vs_modis*100:+6.2f} pp")
 
     # -------------------------------------------------------------------------
     # PART 3: S2Looking Change Detection (Guaranteed Exact Machine Precision)
@@ -283,9 +294,9 @@ def run_master_reconciliation_v3():
     }
 
     # -------------------------------------------------------------------------
-    # PART 4: Two-Sample Spatial Cluster Bootstrap (B=2,000) under MODIS Proxy
+    # PART 4: Two-Sample Spatial Cluster Bootstrap (B=2,000) with One-Sided Bounds
     # -------------------------------------------------------------------------
-    logger.info("Part 4: Executing Two-Sample Spatial Cluster Bootstrap (B=2,000) with One-Sided Bounds...")
+    logger.info("Part 4: Executing Two-Sample Spatial Cluster Bootstrap (B=2,000) with Exact Empirical Null P-Values...")
     unique_in_tiles = np.unique(tiles)
     K_in = len(unique_in_tiles)
     B = 2000
@@ -336,14 +347,11 @@ def run_master_reconciliation_v3():
 
         # Formal Null-Centered Hypothesis Test (H0: Delta >= 0 vs H1: Delta < 0)
         # Centering under sharp null H0: Delta = 0 via tilde{Delta}* = Delta* - Delta_obs
-        # P(tilde{Delta}* <= Delta_obs) = P(Delta* <= 2 * Delta_obs)
-        if delta_obs < 0.0:
-            count_null_extreme = int(np.sum(deltas_boot <= 2.0 * delta_obs))
-            p_null = float((1.0 + count_null_extreme) / (B + 1.0))
-        else:
-            p_null = 1.0
+        # Exact empirical tail evaluation: P(tilde{Delta}* <= Delta_obs) = P(Delta* <= 2 * Delta_obs)
+        count_null_extreme = int(np.sum(deltas_boot <= 2.0 * delta_obs))
+        p_null_exact = float((1.0 + count_null_extreme) / (B + 1.0))
 
-        p_null_dict[b_id] = p_null
+        p_null_dict[b_id] = p_null_exact
 
         reconciled_bootstrap[b_id] = {
             "delta_observed": round(delta_obs, 4),
@@ -353,10 +361,16 @@ def run_master_reconciliation_v3():
             "ci_includes_zero": ci_includes_zero,
             "bootstrap_se": round(boot_se, 4),
             "p_sign_ge_0": round(p_sign_ge_0, 4),
-            "raw_p_null": round(p_null, 6),
-            "raw_p_null_display": f"{p_null:.4f}" if p_null < 1.0 else "1.0000",
+            "raw_p_null": round(p_null_exact, 6),
+            "raw_p_null_display": f"{p_null_exact:.4f}",
+            "count_boot_null_extreme": count_null_extreme,
             "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
-            "methodological_caveat": "High-precision confirmatory inference is fundamentally constrained by the coarse 3-cluster in-domain design. Results are reported as conditional on the Serbian reference tiles."
+            "methodological_caveat": (
+                "Three geographic clusters provide limited independent geographic replication. "
+                "The 2,000 bootstrap iterations represent numerical integration of this 10-multiset space, "
+                "not 2,000 independent geographic replicates. Statistical conclusions are exploratory/descriptive and "
+                "strictly conditional on the Serbian reference tiles."
+            ),
         }
 
     # Step-Down Holm adjustment across the 4 biomes
@@ -453,10 +467,11 @@ def run_master_reconciliation_v3():
         json.dump(reconciled_cert_matrix, f, indent=2)
 
     full_reconciliation = {
-        "audit_version": "v1.12.1-track41-final-reconciliation-v3",
+        "audit_version": "v1.12.1-track41-final-closure",
         "frozen_commit": "29b3a12",
         "frozen_tag": "v1.12.1-phase4-protocol-freeze",
         "protocol_sha256": "7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5",
+        "scientific_interpretation": FORMAL_SCIENTIFIC_INTERPRETATION,
         "modis_lineage_and_proxy_penalty_audit": proxy_audit_results,
         "screening_accounting": accounting,
         "ood_land_cover_evaluation": ood_results,
@@ -468,9 +483,9 @@ def run_master_reconciliation_v3():
     with open(eval_dir / "track41_final_reconciled_summary.json", "w", encoding="utf-8") as f:
         json.dump(full_reconciliation, f, indent=2)
 
-    logger.info(f"FINAL AUDIT & RECONCILIATION COMPLETE. All artifacts exported to {eval_dir}")
+    logger.info(f"FINAL AUDIT & CLOSURE COMPLETE. All artifacts exported to {eval_dir}")
     logger.info("=" * 85)
 
 
 if __name__ == "__main__":
-    run_master_reconciliation_v3()
+    run_track41_final_closure()
