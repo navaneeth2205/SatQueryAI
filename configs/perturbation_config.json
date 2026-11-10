@@ -68,6 +68,17 @@
     "excursion_handling": "pre_evaluation_cohort_screening_exclusion",
     "screening_exclusion_code": "N_excluded_excursion",
     "silent_clipping_of_clean_inputs": false,
-    "rationale": "Clean baseline inputs with valid excursions in [-0.05, 0.0) or (1.0, 1.20] are excluded at cohort selection rather than silently clipped, ensuring clean baseline inputs undergo zero clipping (L_infty = 0.0) and preserving identical preprocessing between baseline and perturbed conditions."
+    "target_evaluable_cohort_size": 250,
+    "clusters_count": 10,
+    "per_cluster_quota": 25,
+    "screening_order": "cluster_stratified_deterministic_sequential_quota",
+    "seed_stream": "54321 + 100 * cluster_id",
+    "accounting_metrics": [
+      "N_candidate_drawn",
+      "N_excluded_excursion",
+      "N_evaluable",
+      "empirical_excursion_rate"
+    ],
+    "rationale": "Clean baseline inputs with valid excursions in [-0.05, 0.0) or (1.0, 1.20] are excluded at cohort selection rather than silently clipped, ensuring clean baseline inputs undergo zero clipping (L_infty = 0.0) and preserving identical preprocessing between baseline and perturbed conditions. Replacements are drawn sequentially within the identical cluster to prevent selection bias."
   }
 }

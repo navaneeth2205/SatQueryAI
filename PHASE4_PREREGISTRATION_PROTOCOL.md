@@ -393,9 +393,9 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
   All perturbations are implemented in the **scaled $[0, 1]$ pre-standardization input domain**:
   - *Optical Reflectance Domain Reconciliation & Cohort Screening Policy*:
     Under Stage B non-clipping physical policy, clean satellite observations may exhibit valid physical excursions within $[-0.05, 1.20]$ (e.g. shadow overcorrection or specular glint). To prevent silent clipping of clean inputs while ensuring mathematical consistency with perturbation operators:
-    1. *Cohort Pre-Screening*: The Track 4.3 evaluation cohort ($N=250$) is strictly restricted to candidate patches whose clean baseline optical reflectance falls entirely within the unit interval $[0.0, 1.0]$ across all 10 channels:
+    1. *Cohort Pre-Screening & Post-Screening Target*: The Track 4.3 evaluation cohort ($N_{\text{evaluable}} = 250$) is strictly restricted to candidate patches whose clean baseline optical reflectance falls entirely within the unit interval $[0.0, 1.0]$ across all 10 channels:
        $$\min_{c, x, y} \rho(c, x, y) \ge 0.0 \quad \text{and} \quad \max_{c, x, y} \rho(c, x, y) \le 1.0$$
-       Patches exhibiting valid physical excursions outside $[0.0, 1.0]$ are flagged during cohort construction and excluded under screening code $N_{\text{excluded, excursion}}$ rather than being silently clipped.
+       Patches exhibiting valid physical excursions outside $[0.0, 1.0]$ are excluded under screening code $N_{\text{excluded, excursion}}$ and replaced via the deterministic cluster-stratified sequential quota procedure until exactly $N_{\text{evaluable}} = 250$ patches ($25$ per cluster across $M=10$ clusters) are accrued.
     2. *Zero-Clipping Clean Baseline Guarantee*: For all patches in the Track 4.3 cohort, clean baseline inputs require **no clipping whatsoever** ($\mathbf{X}_{\text{clean}} = \rho \in [0.0, 1.0]$).
     3. *Synthetic Operator Excursion Bounding*: Clipping to $[0.0, 1.0]$ is applied **only to post-perturbation excursions** induced by the synthetic operators themselves (e.g., haze atmospheric airlight addition, cloud albedo blending, or positive additive Gaussian noise exceeding $1.0$).
     4. *Pipeline Symmetry*: Clean baseline ($d=0$) and perturbed conditions ($d>0$) follow an identical preprocessing pipeline:
@@ -466,8 +466,25 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
        3. Perturb input: $\mathbf{X}'(c, x, y) = \text{clip}\left(\mathbf{X}(c, x, y) + \epsilon_i(c, x, y; \sigma), 0.0, 1.0\right)$.
        4. Apply frozen channel-wise standardization $(\mathbf{X}' - \mu) / \sigma$ (for LC optical) or ImageNet normalization (for CD RGB).
        5. Feed normalized tensors to the unchanged specialist forward pass.
+- **Target Population, Cluster-Stratified Sequential Sampling & Excursion Accounting**:
+  - *Post-Screening Evaluable Cohort Size*: $N = 250$ patches per specialist ($i=1,\dots,250$) represents the **final evaluable cohort size after screening** ($N_{\text{evaluable}} = 250$).
+  - *Cluster Stratification & Equal Quotas*: To preserve spatial representation and prevent geographic distortion, the 250 evaluable patches are stratified evenly across $M = 10$ distinct geographic scene clusters (tiles), establishing an exact quota of $n_m = 25$ evaluable patches per scene cluster ($m \in \{1, \dots, 10\}$).
+  - *Deterministic Sequential Selection (Zero Selection Bias Guarantee)*:
+    1. Within each scene cluster $m$, all candidate patches are indexed in a deterministic pseudo-random order using a pre-registered seed:
+       $$\text{Order}_m = \text{Permute}(\text{Candidates}_m, \text{seed} = 54321 + 100 \cdot m)$$
+    2. Candidate patches are screened sequentially in strict pre-registered order:
+       - If optical reflectance satisfies $\rho(c, x, y) \in [0.0, 1.0]$ across all 10 channels, the patch is admitted into cluster $m$'s evaluable cohort.
+       - If any pixel falls outside $[0.0, 1.0]$ (excursion $\rho < 0.0$ or $\rho > 1.0$), the patch is excluded and counted under $N_{\text{excluded, excursion}, m}$.
+       - The sequential selector immediately screens the next candidate in $\text{Order}_m$ until the cluster quota $n_m = 25$ is satisfied.
+    3. *Protection Against Selection Bias*:
+       - Replacement patches are drawn strictly from within the identical scene cluster, preventing spatial or environmental domain shift.
+       - Candidate screening order is cryptographically locked prior to inspection; no human intervention, model prediction, or label distribution influences the selection.
+       - The exclusion criterion is strictly physical and deterministic ($\rho \in [0.0, 1.0]$).
+  - *Mandatory Excursion Accounting Disclosure*:
+    The Phase 4 evaluation report will publish a complete Track 4.3 sample accounting table disclosing per-cluster and pooled totals:
+    $$N_{\text{candidate, drawn}}, \quad N_{\text{excluded, excursion}}, \quad N_{\text{evaluable}} = 250, \quad \hat{r}_{\text{excursion}} = \frac{N_{\text{excluded, excursion}}}{N_{\text{candidate, drawn}}}$$
 - **Spatial Clustering & Scene-Level Resampling Structure**:
-  The evaluation cohort consists of $N=250$ patches per specialist ($i=1,\dots,250$) sampled across $M \ge 10$ distinct geographic scene clusters (tiles). Bootstrap resampling is conducted strictly at the **scene-cluster level** ($M$ clusters resampled with replacement). When a cluster is drawn multiple times in a bootstrap replicate, each duplicate occurrence is assigned a unique compound identifier $c' = (c, k)$ to preserve independent covariance structure.
+  The final evaluable cohort consists of $N_{\text{evaluable}} = 250$ patches per specialist ($i=1,\dots,250$) sampled across the $M = 10$ distinct geographic scene clusters (tiles). Bootstrap resampling is conducted strictly at the **scene-cluster level** ($M$ clusters resampled with replacement). When a cluster is drawn multiple times in a bootstrap replicate, each duplicate occurrence is assigned a unique compound identifier $c' = (c, k)$ to preserve independent covariance structure.
 - **Statistical Model & Confirmatory Step-Down Holm Test**:
   - Regression Model: Clustered Ordinary Least Squares (OLS) with Liang-Zeger cluster-robust variance estimation clustered by scene $c \in \{1, \dots, M\}$:
     $$\Delta F_{1, c, i}(d) = \beta_0 + \beta_1 \cdot \text{Severity}_d + \epsilon_{c, i, d}$$
@@ -636,7 +653,7 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Change Detection Specialist Wrapper** | `satquery/specialists/change_detection.py` | `1aaf30839ad269fa4055688c643ecf9430cc0d3fab78feabb66359c586e3459b` | Specialist Wrapper |
 | **Router Model Checkpoint** | `artifacts/router/router_model.joblib` | `eaf6c5b2cd8e718980a3496ce416b69ff9793cb1584e176951a9f652941cc218` | Model Weights |
 | **Router Hyperparameter Config** | `configs/router_config.json` | `1160e4e4f5c6008c995d2d0cdb63fde55b53d85b329a819ea3e02748c7f04ef9` | Configuration |
-| **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `ff7fbdc502b9c287bf54e05ff9dc3083ac38406003f9c4c2ffdffb6dc06ed035` | Configuration |
+| **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `514f8ad91aabe481f4884598b790ca3c6c5ef7a46605905d00d470ac70bc9e28` | Configuration |
 | **Perturbation Operators Module** | `satquery/utils/perturbations.py` | `c77a396f9bdc53bfebac1ec9befa94d5c4a1054d9d61168f0067a7aa5e4cbe57` | Source Code |
 | **MODIS Harmonization Configuration** | `configs/modis_harmonization_config.json` | `0fd6209bea3b8b4fb9f13b2add07ea7d1bf1f8b6a764a202ff3726e6e4832c65` | Configuration |
 | **S2 Preprocessing Baseline Config** | `configs/s2_preprocessing_config.json` | `020f8e117b67d3da53fcb6e5ebd7c576ca45fe69d19e2223a576e282b4004933` | Configuration |
