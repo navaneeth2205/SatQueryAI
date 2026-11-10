@@ -52,7 +52,7 @@ flowchart TD
     subgraph Specialists["Frozen Specialist Perception Models"]
         subgraph M31["M3.1 Land Cover: MultimodalResNet34"]
             direction TB
-            OptBranch["Optical Branch: ResNet-34\nInput: (B, 10, 120, 120)\nExact Channels: B02-B08, B8A, B11, B12\nDN / 10,000 + Standardized"]
+            OptBranch["Optical Branch: ResNet-34\nInput: (B, 10, 120, 120)\nExact Channels: B02-B08, B8A, B11, B12\n(DN + BOA_ADD_OFFSET) / QUANT\n+ Frozen Standardization"]
             SARBranch["SAR Branch: ResNet-34\nInput: (B, 2, 120, 120)\nExact Channels: VH, VV (dB)\nClipped [-35, +5] dB -> [0, 1]"]
             Fusion["Cross-Attention Fusion (512-dim)"]
             HeadLC["Multi-Label Head (16 Classes)\nLinear(512 -> 16)\nLoss: Asymmetric Loss (ASL)\nFrozen Thresholds: tau* (per-class)"]
@@ -297,7 +297,7 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
      - **Conditional Spatial Cluster Scope & Leave-One-Tile-Out Sensitivity**:
        > [!WARNING]
        > **Three-Cluster In-Domain Scope & Statistical Degrees of Freedom**: The in-domain BigEarthNet-14k test population comprises patches derived from exactly **3 geographic tile clusters**: `T34TCR`, `T34TEQ`, and `T34TFN` in Serbia.
-       > 1. Resampling over $K_{\text{in}} = 3$ clusters provides strictly limited representation of in-domain spatial variability ($df \le 2$). The $B=2,000$ spatial cluster bootstrap replicates resample from the available clusters; **they do not generate new independent geographic clusters** ($p_{\min} = 1/(B+1) = 1/2001 \approx 0.000500$). In-domain baseline estimates and comparative transfer conclusions remain conditional on these 3 Serbian tile clusters; leave-one-tile-out sensitivity analyses are preserved; and all claims of global geographic generalization are strictly avoided.
+       > 1. **Limited Inferential Support vs. Monte Carlo Reporting Resolution**: Resampling over $K_{\text{in}} = 3$ clusters provides strictly limited empirical support for in-domain spatial variability ($df \le 2$). A cluster-level bootstrap sample of 3 clusters with replacement admits at most $3^3 = 27$ distinct ordered configurations ($\binom{3+3-1}{3} = 10$ distinct unordered multiset compositions). Executing $B=2,000$ bootstrap replicates provides only a **Monte Carlo numerical reporting grid** ($p_{\min} = 1/(B+1) = 1/2001 \approx 0.000500$), **not** 2,000 independent geographic observations, high inferential resolution, or additional statistical power. The empirical p-value reporting resolution must be strictly distinguished from the coarse underlying inferential support governed entirely by the 3 original Serbian scenes. In-domain baseline estimates, standard errors, and comparative transfer conclusions remain formally conditional on these 3 specific tile clusters; leave-one-tile-out sensitivity analyses are mandatory; and all claims of unconditioned global geographic generalization are strictly prohibited.
        > 2. All geographic transfer inferences, p-values, and bootstrap confidence intervals are **formally conditional on this three-tile reference population**.
        > 3. A non-significant hypothesis test ($\text{Holm } p \ge 0.05$) indicates **insufficient evidence to detect degradation relative to this conditional 3-tile reference**; it must **never** be reported as proof of global geographic generalization, domain invariance, or equivalence.
        > 4. To evaluate sensitivity to individual tile clusters, evaluation mandates reporting **leave-one-tile-out sensitivity analyses**: computing $\Delta F_{1, k}^{(\setminus\text{tile})}$ when excluding each in-domain tile in turn ($\setminus\text{T34TCR}$, $\setminus\text{T34TEQ}$, $\setminus\text{T34TFN}$) alongside per-tile metrics. These are strictly categorized as descriptive sensitivity analyses.
@@ -469,17 +469,18 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
 - **Target Population, Cluster-Stratified Sequential Sampling & Excursion Accounting**:
   - *Post-Screening Evaluable Cohort Size*: $N = 250$ patches per specialist ($i=1,\dots,250$) represents the **final evaluable cohort size after screening** ($N_{\text{evaluable}} = 250$).
   - *Cluster Stratification & Equal Quotas*: To preserve spatial representation and prevent geographic distortion, the 250 evaluable patches are stratified evenly across $M = 10$ distinct geographic scene clusters (tiles), establishing an exact quota of $n_m = 25$ evaluable patches per scene cluster ($m \in \{1, \dots, 10\}$).
-  - *Deterministic Sequential Selection (Zero Selection Bias Guarantee)*:
+  - *Deterministic, Label-Independent Quota Selection (Conditional Cohort Interpretation)*:
     1. Within each scene cluster $m$, all candidate patches are indexed in a deterministic pseudo-random order using a pre-registered seed:
        $$\text{Order}_m = \text{Permute}(\text{Candidates}_m, \text{seed} = 54321 + 100 \cdot m)$$
     2. Candidate patches are screened sequentially in strict pre-registered order:
        - If optical reflectance satisfies $\rho(c, x, y) \in [0.0, 1.0]$ across all 10 channels, the patch is admitted into cluster $m$'s evaluable cohort.
        - If any pixel falls outside $[0.0, 1.0]$ (excursion $\rho < 0.0$ or $\rho > 1.0$), the patch is excluded and counted under $N_{\text{excluded, excursion}, m}$.
        - The sequential selector immediately screens the next candidate in $\text{Order}_m$ until the cluster quota $n_m = 25$ is satisfied.
-    3. *Protection Against Selection Bias*:
-       - Replacement patches are drawn strictly from within the identical scene cluster, preventing spatial or environmental domain shift.
-       - Candidate screening order is cryptographically locked prior to inspection; no human intervention, model prediction, or label distribution influences the selection.
-       - The exclusion criterion is strictly physical and deterministic ($\rho \in [0.0, 1.0]$).
+    3. *Conditional Inference Scope & Characterization of Selection Effects*:
+       - Selection is deterministic and label-independent: candidate screening order is cryptographically locked prior to inspection, and admission depends solely on physical surface reflectance bounds ($\rho \in [0.0, 1.0]$), without reference to ground-truth labels, model predictions, or feature representations.
+       - **Conditional Cohort Limitation**: Because reflectance excursions may correlate with specific physical surface types or environmental regimes (e.g., deep topographic shadows, water atmospheric overcorrections, or snow/ice specular glint), **this screening does NOT produce an unconditional unbiased sample of all satellite observations**.
+       - **Generalization Scope**: Experimental results, robustness envelopes, and trend statistics generalize **only to the eligible $[0.0, 1.0]$ reflectance cohort**.
+       - Mandatory reporting of per-cluster and pooled excursion counts ($N_{\text{excluded, excursion}}$) and excursion rates ($\hat{r}_{\text{excursion}}$) is required to explicitly characterize potential selection effects.
   - *Mandatory Excursion Accounting Disclosure*:
     The Phase 4 evaluation report will publish a complete Track 4.3 sample accounting table disclosing per-cluster and pooled totals:
     $$N_{\text{candidate, drawn}}, \quad N_{\text{excluded, excursion}}, \quad N_{\text{evaluable}} = 250, \quad \hat{r}_{\text{excursion}} = \frac{N_{\text{excluded, excursion}}}{N_{\text{candidate, drawn}}}$$
@@ -653,7 +654,7 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Change Detection Specialist Wrapper** | `satquery/specialists/change_detection.py` | `1aaf30839ad269fa4055688c643ecf9430cc0d3fab78feabb66359c586e3459b` | Specialist Wrapper |
 | **Router Model Checkpoint** | `artifacts/router/router_model.joblib` | `eaf6c5b2cd8e718980a3496ce416b69ff9793cb1584e176951a9f652941cc218` | Model Weights |
 | **Router Hyperparameter Config** | `configs/router_config.json` | `1160e4e4f5c6008c995d2d0cdb63fde55b53d85b329a819ea3e02748c7f04ef9` | Configuration |
-| **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `514f8ad91aabe481f4884598b790ca3c6c5ef7a46605905d00d470ac70bc9e28` | Configuration |
+| **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `efe597b29bd878aa7cb0ae5623b9a7eed7262464d0114e210c42c39ba18e7c56` | Configuration |
 | **Perturbation Operators Module** | `satquery/utils/perturbations.py` | `c77a396f9bdc53bfebac1ec9befa94d5c4a1054d9d61168f0067a7aa5e4cbe57` | Source Code |
 | **MODIS Harmonization Configuration** | `configs/modis_harmonization_config.json` | `0fd6209bea3b8b4fb9f13b2add07ea7d1bf1f8b6a764a202ff3726e6e4832c65` | Configuration |
 | **S2 Preprocessing Baseline Config** | `configs/s2_preprocessing_config.json` | `020f8e117b67d3da53fcb6e5ebd7c576ca45fe69d19e2223a576e282b4004933` | Configuration |

@@ -79,6 +79,6 @@
       "N_evaluable",
       "empirical_excursion_rate"
     ],
-    "rationale": "Clean baseline inputs with valid excursions in [-0.05, 0.0) or (1.0, 1.20] are excluded at cohort selection rather than silently clipped, ensuring clean baseline inputs undergo zero clipping (L_infty = 0.0) and preserving identical preprocessing between baseline and perturbed conditions. Replacements are drawn sequentially within the identical cluster to prevent selection bias."
+    "rationale": "Clean baseline inputs with valid excursions in [-0.05, 0.0) or (1.0, 1.20] are excluded at cohort selection rather than silently clipped, ensuring clean baseline inputs undergo zero clipping (L_infty = 0.0) and preserving identical preprocessing between baseline and perturbed conditions. Selection is deterministic, label-independent, and conditional on the unit-interval reflectance criterion; results generalize strictly to the eligible cohort, with exclusion rates reported to characterize potential selection effects."
   }
 }
