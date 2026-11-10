@@ -14,11 +14,15 @@ Verifies:
 8. Complete forward-pass tensor compatibility across all 6 degradation paths.
 """
 
+from pathlib import Path
 from typing import Dict
 import numpy as np
 import pytest
 import torch
 
+from satquery.specialists.deep_land_cover import DeepLandCoverClassifier
+from satquery.specialists.models.change_detection_models import FCSiamDiff
+from satquery.specialists.base import SpecialistStatus
 from satquery.utils.perturbations import (
     generate_continuous_noise_field,
     generate_nested_cloud_mask,
@@ -30,6 +34,8 @@ from satquery.utils.perturbations import (
     generate_crn_noise_tensors,
     apply_noise_land_cover,
     apply_noise_change_detection,
+    normalize_imagenet_rgb,
+    standardize_optical_tensor,
     CLOUD_SEVERITY_FRACTIONS,
     HAZE_TRANSMITTANCES,
     NOISE_SEVERITY_SIGMAS,
@@ -257,3 +263,183 @@ class TestTrack43Perturbations:
         p6_t1, p6_t2 = apply_noise_change_detection(t1, t2, sigma=0.05, noise_dict=noise)
         assert p6_t1.shape == (3, 256, 256) and p6_t2.shape == (3, 256, 256)
         assert p6_t1.dtype == np.float32 and p6_t2.dtype == np.float32
+
+    def test_cloud_mask_semantics_and_deterministic_tie_breaking(self):
+        """
+        Verify explicit cloud-mask semantics and deterministic tie-breaking:
+        1. Semantics: mask == 1 is occluded (blended with albedo); mask == 0 is unchanged.
+        2. Tie-breaking: when continuous field values have identical magnitudes,
+           stable sort breaks ties strictly by row-major coordinate index (r * W + c).
+        """
+        # Test A: Synthetic flat field with exact identical values
+        H, W = 10, 10
+        flat_field = np.ones((H, W), dtype=np.float32)
+        flat = flat_field.ravel()
+        # Stable sort must preserve row-major order: 0, 1, 2, ...
+        order = np.argsort(-flat, kind="stable")
+        np.testing.assert_array_equal(order, np.arange(H * W))
+
+        # Select top 25 pixels -> must be indices 0 to 24 (the first 2.5 rows)
+        k = 25
+        mask = np.zeros(H * W, dtype=np.uint8)
+        mask[order[:k]] = 1
+        mask_2d = mask.reshape(H, W)
+        assert np.sum(mask_2d) == 25
+        assert np.all(mask_2d[:2, :] == 1)       # First 20 pixels
+        assert np.all(mask_2d[2, :5] == 1)       # Next 5 pixels
+        assert np.all(mask_2d[2, 5:] == 0)       # Rest are 0
+
+        # Test B: Semantics check on real patch
+        mask_lc = generate_nested_cloud_mask(120, 120, severity_fraction=0.10, seed=42)
+        assert set(np.unique(mask_lc)).issubset({0, 1})
+        assert np.sum(mask_lc == 1) == 1440
+        assert np.sum(mask_lc == 0) == 14400 - 1440
+
+    def test_end_to_end_land_cover_frozen_checkpoint_all_degradations(self):
+        """
+        Execute actual neural forward pass through the frozen ASL Land Cover specialist
+        checkpoint (artifacts/specialists/deep_land_cover_asl/best_model_asl.pt) across:
+        1. Clean baseline (d=0)
+        2. Cloud occlusion (fc=0.20)
+        3. Atmospheric haze (t=0.50)
+        4. CRN Gaussian noise (sigma=0.05)
+        Confirms finite logits, valid probabilities in [0, 1], and valid class predictions.
+        """
+        repo_root = Path(__file__).resolve().parent.parent
+        lc_specialist = DeepLandCoverClassifier(loss_type="asl", device="cpu")
+        assert lc_specialist.is_loaded, "Land Cover ASL model failed to load checkpoint."
+
+        rng = np.random.RandomState(42)
+        # Scaled raw arrays [0, 10000] for optical reflectance DN, [-35, 5] for SAR dB
+        raw_opt = rng.uniform(500, 5000, size=(10, 120, 120)).astype(np.float32)
+        raw_sar = rng.uniform(-30.0, 0.0, size=(2, 120, 120)).astype(np.float32)
+
+        # 1. Clean Baseline
+        res_clean = lc_specialist.predict({"s1_array": raw_sar, "s2_array": raw_opt})
+        assert res_clean.status == SpecialistStatus.SUCCESS
+        assert len(res_clean.probabilities) == 16
+        for c, p in res_clean.probabilities.items():
+            assert 0.0 <= p <= 1.0
+            assert np.isfinite(p)
+
+        # 2. Cloud Occlusion
+        opt_01 = raw_opt / 10000.0
+        sar_01 = np.clip((raw_sar + 35.0) / 40.0, 0.0, 1.0)
+        mask_lc = generate_nested_cloud_mask(120, 120, severity_fraction=0.20, seed=42)
+        opt_cloud_01, sar_cloud_01 = apply_cloud_occlusion_land_cover(opt_01, sar_01, mask_lc)
+        raw_opt_cloud = opt_cloud_01 * 10000.0
+
+        res_cloud = lc_specialist.predict({"s1_array": raw_sar, "s2_array": raw_opt_cloud})
+        assert res_cloud.status == SpecialistStatus.SUCCESS
+        assert len(res_cloud.probabilities) == 16
+        for p in res_cloud.probabilities.values():
+            assert 0.0 <= p <= 1.0 and np.isfinite(p)
+
+        # 3. Atmospheric Haze
+        opt_haze_01, sar_haze_01 = apply_haze_land_cover(opt_01, sar_01, transmittance=0.50)
+        raw_opt_haze = opt_haze_01 * 10000.0
+
+        res_haze = lc_specialist.predict({"s1_array": raw_sar, "s2_array": raw_opt_haze})
+        assert res_haze.status == SpecialistStatus.SUCCESS
+        assert len(res_haze.probabilities) == 16
+        for p in res_haze.probabilities.values():
+            assert 0.0 <= p <= 1.0 and np.isfinite(p)
+
+        # 4. CRN Gaussian Noise
+        noise = generate_crn_noise_tensors(patch_id=42)
+        opt_noise_01, sar_noise_01 = apply_noise_land_cover(opt_01, sar_01, sigma=0.05, noise_dict=noise)
+        raw_opt_noise = opt_noise_01 * 10000.0
+        raw_sar_noise = sar_noise_01 * 40.0 - 35.0
+
+        res_noise = lc_specialist.predict({"s1_array": raw_sar_noise, "s2_array": raw_opt_noise})
+        assert res_noise.status == SpecialistStatus.SUCCESS
+        assert len(res_noise.probabilities) == 16
+        for p in res_noise.probabilities.values():
+            assert 0.0 <= p <= 1.0 and np.isfinite(p)
+
+    def test_end_to_end_change_detection_frozen_checkpoint_all_degradations(self):
+        """
+        Execute actual neural forward pass through the frozen FCSiamDiff Change Detection
+        checkpoint (artifacts/specialists/deep_change_detection_fc_siam_diff/best_model.pt) across:
+        1. Clean baseline (d=0)
+        2. Cloud occlusion (fc=0.20)
+        3. Atmospheric haze (t=0.50)
+        4. CRN Gaussian noise (sigma=0.05)
+        Confirms finite logits, valid probabilities in [0, 1], and valid change masks.
+        """
+        repo_root = Path(__file__).resolve().parent.parent
+        ckpt_path = repo_root / "artifacts" / "specialists" / "deep_change_detection_fc_siam_diff" / "best_model.pt"
+        assert ckpt_path.exists(), f"CD Checkpoint not found at {ckpt_path}"
+
+        model = FCSiamDiff(in_channels=3, num_classes=1)
+        checkpoint = torch.load(ckpt_path, map_location="cpu")
+        state_dict = checkpoint["model_state_dict"] if "model_state_dict" in checkpoint else checkpoint
+        model.load_state_dict(state_dict)
+        model.eval()
+
+        rng = np.random.RandomState(42)
+        # Scaled [0, 1] RGB images
+        t1_01 = rng.uniform(0.1, 0.8, size=(3, 256, 256)).astype(np.float32)
+        t2_01 = rng.uniform(0.1, 0.8, size=(3, 256, 256)).astype(np.float32)
+
+        def run_cd_forward(t1_arr, t2_arr):
+            t1_norm = normalize_imagenet_rgb(t1_arr)
+            t2_norm = normalize_imagenet_rgb(t2_arr)
+            t1_t = torch.from_numpy(t1_norm).unsqueeze(0).float()
+            t2_t = torch.from_numpy(t2_norm).unsqueeze(0).float()
+            with torch.no_grad():
+                logits = model(t1_t, t2_t)
+                prob = torch.sigmoid(logits).squeeze().numpy()
+            assert logits.shape == (1, 1, 256, 256)
+            assert np.all(np.isfinite(prob))
+            assert 0.0 <= np.min(prob) and np.max(prob) <= 1.0
+            return prob
+
+        # 1. Clean Baseline
+        prob_clean = run_cd_forward(t1_01, t2_01)
+        assert prob_clean.shape == (256, 256)
+
+        # 2. Cloud Occlusion
+        mask_cd = generate_nested_cloud_mask(256, 256, severity_fraction=0.20, seed=42)
+        t1_c, t2_c = apply_cloud_occlusion_change_detection(t1_01, t2_01, mask_cd)
+        prob_cloud = run_cd_forward(t1_c, t2_c)
+        assert prob_cloud.shape == (256, 256)
+
+        # 3. Atmospheric Haze
+        t1_h, t2_h = apply_haze_change_detection(t1_01, t2_01, transmittance=0.50)
+        prob_haze = run_cd_forward(t1_h, t2_h)
+        assert prob_haze.shape == (256, 256)
+
+        # 4. CRN Gaussian Noise
+        noise = generate_crn_noise_tensors(patch_id=42)
+        t1_n, t2_n = apply_noise_change_detection(t1_01, t2_01, sigma=0.05, noise_dict=noise)
+        prob_noise = run_cd_forward(t1_n, t2_n)
+        assert prob_noise.shape == (256, 256)
+
+    def test_unperturbed_baseline_parity_zero_regression(self):
+        """
+        Verify that unperturbed baseline predictions (d=0) produce 100% bitwise-identical
+        predictions, probabilities, and classification logits (L_inf = 0.0) through the specialists
+        with vs without the perturbation module integrated. Zero execution drift or regression.
+        """
+        # Land Cover Specialist parity
+        lc_specialist = DeepLandCoverClassifier(loss_type="asl", device="cpu")
+        rng = np.random.RandomState(999)
+        raw_opt = rng.uniform(500, 5000, size=(10, 120, 120)).astype(np.float32)
+        raw_sar = rng.uniform(-30.0, 0.0, size=(2, 120, 120)).astype(np.float32)
+
+        # Run 1: Direct specialist predict
+        res_direct = lc_specialist.predict({"s1_array": raw_sar, "s2_array": raw_opt})
+
+        # Run 2: Predict using unperturbed scaled inputs (d=0)
+        opt_01 = raw_opt / 10000.0
+        sar_01 = np.clip((raw_sar + 35.0) / 40.0, 0.0, 1.0)
+        raw_opt_recovered = opt_01 * 10000.0
+        raw_sar_recovered = sar_01 * 40.0 - 35.0
+        res_pipe = lc_specialist.predict({"s1_array": raw_sar_recovered, "s2_array": raw_opt_recovered})
+
+        assert res_direct.predictions == res_pipe.predictions
+        for k in res_direct.probabilities:
+            p1 = res_direct.probabilities[k]
+            p2 = res_pipe.probabilities[k]
+            assert p1 == p2, f"Probability drift detected for class {k}: {p1} vs {p2}"

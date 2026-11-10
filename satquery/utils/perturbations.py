@@ -5,18 +5,27 @@ Implements resolution-aware, strictly nested, and Common Random Number (CRN) per
 1. Strictly nested cloud occlusion:
    - Evaluated at specialist native resolutions: (120, 120) for Land Cover, (256, 256) for Change Detection.
    - Exact pixel count: K(f_c, H, W) = floor(f_c * H * W).
-   - Generated from a single continuous 2D noise field per patch and resolution.
+   - Binary mask semantics:
+     * 1 = occluded (blended with cloud albedo A_cloud=0.95 and opacity alpha=0.90).
+     * 0 = unchanged (unobstructed surface observation).
+   - Deterministic tie-breaking:
+     When continuous field values are identical at the cutoff, ties are broken stably by
+     row-major spatial coordinate index: (row * width + col), via stable sort on C-flattened array.
    - For Land Cover: applied identically across all 10 optical channels; SAR channels untouched.
    - For Change Detection: applied across all 3 RGB channels of post-event t2; pre-event t1 untouched.
 2. Koschmieder atmospheric haze scattering:
    - Applied to optical channels with transmittance t in {0.90, 0.70, 0.50, 0.30}.
    - SAR channels and pre-event t1 remain untouched.
 3. Common Random Numbers (CRN) Gaussian noise:
-   - Generated in scaled [0, 1] pre-standardization domain.
+   - Injected strictly in the scaled [0, 1] pre-standardization / pre-normalization domain:
+     * LC optical: injected into scaled [0, 1] reflectance PRIOR to channel standardization.
+     * LC SAR: injected into scaled [0, 1] backscatter PRIOR to neural forward pass.
+     * CD RGB: injected into scaled [0, 1] RGB PRIOR to ImageNet normalization.
    - Explicit tensor shapes: (10, 120, 120) for LC optical, (2, 120, 120) for LC SAR,
      (3, 256, 256) for CD t1, (3, 256, 256) for CD t2.
-   - Noise drawn independently across channels and timepoints.
+   - Noise drawn independently across channels and timepoints using pinned seed streams.
    - Scaled strictly by sigma in {0.01, 0.02, 0.05, 0.10} from identical base noise realizations.
+   - Strictly evaluated as normalized-tensor numerical sensitivity rather than raw analog instrument noise.
 """
 
 from typing import Dict, List, Optional, Tuple, Union
@@ -34,6 +43,21 @@ CLOUD_SEVERITY_FRACTIONS: List[float] = [0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.5
 HAZE_TRANSMITTANCES: List[float] = [0.90, 0.70, 0.50, 0.30]
 HAZE_SEVERITY_OPACITIES: List[float] = [0.10, 0.30, 0.50, 0.70]
 NOISE_SEVERITY_SIGMAS: List[float] = [0.01, 0.02, 0.05, 0.10]
+
+# Frozen standardization constants for Land Cover optical (Phase 3 BigEarthNet-14k)
+OPTICAL_MEAN: np.ndarray = np.array(
+    [0.136, 0.118, 0.106, 0.128, 0.203, 0.257, 0.272, 0.273, 0.187, 0.121],
+    dtype=np.float32
+).reshape(10, 1, 1)
+
+OPTICAL_STD: np.ndarray = np.array(
+    [0.082, 0.076, 0.074, 0.089, 0.098, 0.108, 0.113, 0.112, 0.095, 0.078],
+    dtype=np.float32
+).reshape(10, 1, 1)
+
+# Frozen ImageNet RGB normalization parameters for Change Detection
+IMAGENET_MEAN: np.ndarray = np.array([0.485, 0.456, 0.406], dtype=np.float32).reshape(3, 1, 1)
+IMAGENET_STD: np.ndarray = np.array([0.229, 0.224, 0.225], dtype=np.float32).reshape(3, 1, 1)
 
 
 def generate_continuous_noise_field(
@@ -79,12 +103,20 @@ def generate_nested_cloud_mask(
 ) -> np.ndarray:
     """
     Generate a binary cloud mask M in {0, 1}^(H, W) for a single severity fraction.
-    Exact pixel count K(f_c, H, W) = floor(f_c * H * W).
+    Exact pixel count: K(f_c, H, W) = floor(f_c * H * W).
+
+    Semantics:
+    - 1 = occluded (blended with cloud albedo A_cloud=0.95 and opacity alpha=0.90)
+    - 0 = unchanged (unobstructed surface observation)
+
+    Deterministic Tie-Breaking Rule:
+    - Pixels are ordered descending by continuous field magnitude.
+    - Equal-value ties are resolved stably by row-major coordinate index: (row * width + col).
     """
     k = int(np.floor(severity_fraction * height * width))
     field = generate_continuous_noise_field(height, width, seed)
-    flat = field.ravel()
-    order = np.argsort(-flat, kind="stable")
+    flat = field.ravel()  # C-contiguous row-major flattening
+    order = np.argsort(-flat, kind="stable")  # Stable sort preserves row-major order on ties
     mask = np.zeros(height * width, dtype=np.uint8)
     mask[order[:k]] = 1
     return mask.reshape(height, width)
@@ -100,7 +132,8 @@ def generate_nested_cloud_mask_suite(
     Generate a dictionary of strictly nested cloud masks {f_c: M(f_c)}.
     Guarantees:
     1. Exact pixel count: sum(M(f_c)) == floor(f_c * H * W).
-    2. Strict nesting: M(f_1) <= M(f_2) everywhere for f_1 < f_2.
+    2. Strict nesting: M(f_1) <= M(f_2) everywhere for f_1 < f_2 (proper subsets).
+    3. Reproducible tie-breaking: stable row-major spatial coordinate resolution.
     """
     field = generate_continuous_noise_field(height, width, seed)
     flat = field.ravel()
@@ -255,15 +288,17 @@ def generate_crn_noise_tensors(
 
 
 def apply_noise_land_cover(
-    optical_tensor: np.ndarray,      # Shape (10, 120, 120) in [0, 1]
-    sar_tensor: np.ndarray,          # Shape (2, 120, 120) in [0, 1]
+    optical_tensor: np.ndarray,      # Shape (10, 120, 120) in [0, 1] reflectance
+    sar_tensor: np.ndarray,          # Shape (2, 120, 120) in [0, 1] backscatter
     sigma: float,
     noise_dict: Dict[str, np.ndarray]
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
     Apply scaled CRN Gaussian noise to Land Cover specialist optical and SAR inputs.
-    Perturbations are strictly monotonic scalar magnifications of the base noise tensors:
-    X' = clip(X + sigma * Z, 0.0, 1.0).
+    Noise injection stage:
+    - Injected strictly in the scaled [0, 1] domain PRIOR to channel-wise standardization.
+    - Perturbations are strictly monotonic scalar magnifications of the base noise tensors:
+      X' = clip(X + sigma * Z, 0.0, 1.0).
     """
     if optical_tensor.shape != (10, 120, 120):
         raise ValueError(f"Expected optical tensor shape (10, 120, 120), got {optical_tensor.shape}.")
@@ -280,15 +315,17 @@ def apply_noise_land_cover(
 
 
 def apply_noise_change_detection(
-    t1_rgb: np.ndarray,              # Shape (3, 256, 256) in [0, 1]
-    t2_rgb: np.ndarray,              # Shape (3, 256, 256) in [0, 1]
+    t1_rgb: np.ndarray,              # Shape (3, 256, 256) in [0, 1] RGB
+    t2_rgb: np.ndarray,              # Shape (3, 256, 256) in [0, 1] RGB
     sigma: float,
     noise_dict: Dict[str, np.ndarray]
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
     Apply scaled CRN Gaussian noise to Change Detection specialist bitemporal inputs.
-    Perturbations are strictly monotonic scalar magnifications of the base noise tensors:
-    X' = clip(X + sigma * Z, 0.0, 1.0).
+    Noise injection stage:
+    - Injected strictly in the scaled [0, 1] domain PRIOR to ImageNet normalization.
+    - Perturbations are strictly monotonic scalar magnifications of the base noise tensors:
+      X' = clip(X + sigma * Z, 0.0, 1.0).
     """
     if t1_rgb.shape != (3, 256, 256):
         raise ValueError(f"Expected t1 RGB tensor shape (3, 256, 256), got {t1_rgb.shape}.")
@@ -302,3 +339,13 @@ def apply_noise_change_detection(
     perturbed_t2 = np.clip(t2_rgb + sigma * z_t2, 0.0, 1.0)
 
     return perturbed_t1, perturbed_t2
+
+
+def standardize_optical_tensor(optical_in_01: np.ndarray) -> np.ndarray:
+    """Standardize optical reflectance in [0, 1] using frozen training statistics."""
+    return (optical_in_01.astype(np.float32) - OPTICAL_MEAN) / OPTICAL_STD
+
+
+def normalize_imagenet_rgb(rgb_in_01: np.ndarray) -> np.ndarray:
+    """Normalize RGB tensor in [0, 1] using standard ImageNet mean and std."""
+    return (rgb_in_01.astype(np.float32) - IMAGENET_MEAN) / IMAGENET_STD

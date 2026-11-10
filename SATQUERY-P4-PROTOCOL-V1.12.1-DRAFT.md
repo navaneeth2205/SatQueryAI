@@ -405,9 +405,12 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
          Exact pixel counts across the 7 severity fractions:
          $$K(0.05)=3276, \ K(0.10)=6553, \ K(0.15)=9830, \ K(0.20)=13107, \ K(0.30)=19660, \ K(0.40)=26214, \ K(0.50)=32768$$
          *Temporal Application Rule*: Applied across all 3 RGB channels of post-event image $t_2$ only; pre-event image $t_1$ remains completely untouched ($\mathbf{X}'_{t_1} = \mathbf{X}_{t_1}$, difference $= 0.0$).
+     - *Mask Binary Semantics & Deterministic Tie-Breaking*:
+       - Binary mask values: $\mathbf{M}(x, y) = 1$ denotes an occluded pixel (blended with cloud albedo $\mathbf{A}_{\text{cloud}} = 0.95$ and opacity $\alpha = 0.90$); $\mathbf{M}(x, y) = 0$ denotes an unobstructed pixel (unmodified surface observation).
+       - Deterministic Tie-Breaking: When continuous noise field values are identical at the cutoff magnitude, ties are resolved deterministically by row-major spatial coordinate index $(r \cdot W + c)$ via stable sort on the C-contiguous flattened array (`np.argsort(-flat, kind="stable")`).
      - *Strictly Nested Mask Construction*:
        1. For each patch $i$ and resolution $(H, W)$, generate a continuous 2D Perlin/fractal noise field $N_i(x, y) \in [0, 1]$ **once** using a fixed patch seed: `seed = 42 + 100 * patch_id` (independent of severity condition).
-       2. Rank-order all $H \times W$ pixels in descending order of noise magnitude with stable coordinate tie-breaking.
+       2. Rank-order all $H \times W$ pixels in descending order of noise magnitude with stable row-major coordinate tie-breaking.
        3. Select the top $K(f_c, H, W)$ pixels to form binary mask $\mathbf{M}(f_c) \in \{0, 1\}^{H \times W}$.
        4. *Strict Proper Subset Guarantee*:
           $$\mathbf{M}(0.05) \subset \mathbf{M}(0.10) \subset \mathbf{M}(0.15) \subset \dots \subset \mathbf{M}(0.50)$$
@@ -434,14 +437,20 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
        - **LC SAR**: Shape $(2, 120, 120)$, seed stream `20011 + 100 * patch_id`, drawn independently across the 2 polarizations (VH, VV).
        - **CD Pre-Event $t_1$**: Shape $(3, 256, 256)$, seed stream `30013 + 100 * patch_id`, drawn independently across the 3 RGB channels.
        - **CD Post-Event $t_2$**: Shape $(3, 256, 256)$, seed stream `40009 + 100 * patch_id`, drawn independently across the 3 RGB channels and independent of $t_1$.
+     - *Explicit Preprocessing Injection Stage & Numerical Sensitivity Interpretation*:
+       Noise is injected strictly in the scaled $[0.0, 1.0]$ pre-standardization / pre-normalization domain:
+       - **LC Optical**: Injected into scaled $[0, 1]$ surface reflectance $\rho$ PRIOR to channel-wise standardization $(\rho - \mu_{\text{opt}}) / \sigma_{\text{opt}}$.
+       - **LC SAR**: Injected into scaled $[0, 1]$ backscatter PRIOR to neural forward pass.
+       - **CD RGB**: Injected into scaled $[0, 1]$ RGB ($t_1$ and $t_2$) PRIOR to ImageNet normalization $(X - \mu_{\text{ImageNet}}) / \sigma_{\text{ImageNet}}$.
+       *Operational Scope*: This evaluates normalized-tensor numerical sensitivity and gradient stability, NOT physical sensor noise or radar speckle.
      - *Common Random Numbers (CRN) Protocol*:
        1. For each patch $i$, the base noise tensors are generated **once** per modality and timepoint.
        2. For each severity condition $\sigma \in \{0.01, 0.02, 0.05, 0.10\}$, compute scaled perturbation:
           $$\epsilon_i(c, x, y; \sigma) = \sigma \cdot \mathbf{Z}_i(c, x, y)$$
           ensuring perturbations across severity levels are strictly monotonic scalar magnifications of the identical spatial-spectral noise realization.
        3. Perturb input: $\mathbf{X}'(c, x, y) = \text{clip}\left(\mathbf{X}(c, x, y) + \epsilon_i(c, x, y; \sigma), 0.0, 1.0\right)$.
-       4. Apply frozen channel-wise standardization $(\mathbf{X}' - \mu) / \sigma$.
-       5. Feed standardized tensors to the unchanged specialist forward pass.
+       4. Apply frozen channel-wise standardization $(\mathbf{X}' - \mu) / \sigma$ (for LC optical) or ImageNet normalization (for CD RGB).
+       5. Feed normalized tensors to the unchanged specialist forward pass.
 - **Spatial Clustering & Scene-Level Resampling Structure**:
   The evaluation cohort consists of $N=250$ patches per specialist ($i=1,\dots,250$) sampled across $M \ge 10$ distinct geographic scene clusters (tiles). Bootstrap resampling is conducted strictly at the **scene-cluster level** ($M$ clusters resampled with replacement). When a cluster is drawn multiple times in a bootstrap replicate, each duplicate occurrence is assigned a unique compound identifier $c' = (c, k)$ to preserve independent covariance structure.
 - **Statistical Model & Confirmatory Step-Down Holm Test**:
@@ -612,8 +621,8 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Change Detection Specialist Wrapper** | `satquery/specialists/change_detection.py` | `1aaf30839ad269fa4055688c643ecf9430cc0d3fab78feabb66359c586e3459b` | Specialist Wrapper |
 | **Router Model Checkpoint** | `artifacts/router/router_model.joblib` | `eaf6c5b2cd8e718980a3496ce416b69ff9793cb1584e176951a9f652941cc218` | Model Weights |
 | **Router Hyperparameter Config** | `configs/router_config.json` | `1160e4e4f5c6008c995d2d0cdb63fde55b53d85b329a819ea3e02748c7f04ef9` | Configuration |
-| **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `02190115f14467ec19c3c83729476334527397b35c0d0e0dfc77978097d25d9c` | Configuration |
-| **Perturbation Operators Module** | `satquery/utils/perturbations.py` | `a7a1003f9828347df437b6df8bdf8b7a596313380bb6132be760c22da86614df` | Source Code |
+| **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `ad01b63a879b19147ac4cbb8d69dfdaae63ebf3b98319451e8a4565dc8363de1` | Configuration |
+| **Perturbation Operators Module** | `satquery/utils/perturbations.py` | `c59946e05dfff0c38a337236db843595dd13aa65f321164fa2ca0dc9ac72f61f` | Source Code |
 | **MODIS Harmonization Configuration** | `configs/modis_harmonization_config.json` | `0fd6209bea3b8b4fb9f13b2add07ea7d1bf1f8b6a764a202ff3726e6e4832c65` | Configuration |
 | **S2 Preprocessing Baseline Config** | `configs/s2_preprocessing_config.json` | `020f8e117b67d3da53fcb6e5ebd7c576ca45fe69d19e2223a576e282b4004933` | Configuration |
 | **OOD Candidate Manifest Spec** | `configs/ood_candidate_manifest_spec.json` | `3ed8fba913ac557a479c8f6d3428d9dc427910f8bd0f9d600334ce15fdda55ac` | Configuration |
@@ -637,7 +646,7 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Stage B Preprocessing Test Suite** | `tests/test_preprocessing_compatibility.py` | `1a8908e3a0b9b2d2a6d9f4ed81686762c08f33f2c272b9bb47c01ff10e2442c9` | Test Suite |
 | **S2 Metadata Integration Test Suite**| `tests/test_s2_metadata_integration.py` | `141bed10699d3b6ed716435c1f3cb5503151f87a194043ae4cc4342c079b1e4c` | Test Suite |
 | **Taxonomy & Metric Test Suite** | `tests/test_taxonomy_and_metrics.py` | `9053d95365f68a58c7b1a9757d3ac88f34115efbf8e8a2c9582565ce729d08cd` | Test Suite |
-| **Track 4.3 Perturbation Test Suite**| `tests/test_track43_perturbations.py` | `d1ab64d8769f3a3119b664ccc4a76d89f1928e7b277ef7ef1093b359aafa6789` | Test Suite |
+| **Track 4.3 Perturbation Test Suite**| `tests/test_track43_perturbations.py` | `c2f81c890e43919211b974db9e60ab68eb2464cc132c36fb7d2867f415153a31` | Test Suite |
 | **Environment Lockfile** | `requirements-lock.txt` | `72c893fb4425dd0c83c77a39338b26325da9cb96d473c2b511630369585b3b25` | Environment |
 
 ### Empirical Reproducibility Policy & Local Scope
