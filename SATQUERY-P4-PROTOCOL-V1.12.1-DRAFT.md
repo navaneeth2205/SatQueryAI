@@ -1,12 +1,13 @@
-# SatQuery AI — Phase 4 Preregistration Protocol: Robustness, Generalization, and Adversarial Envelope Discovery
+# SatQuery AI — Phase 4 Preregistration Protocol: Robustness, Generalization, and Adversarial Envelope Discovery (Frozen v1.12.1)
 
-**Document Identifier**: `SATQUERY-P4-PROTOCOL-V1.12.1-DRAFT`  
+**Document Identifier**: `SATQUERY-P4-PROTOCOL-V1.12.1-FROZEN`  
 **Phase**: Phase 4 — Robustness, Generalization, and Operational Envelope Discovery  
 **Date**: November 10, 2026  
-**Status**: **PROPOSED PREREGISTRATION PROTOCOL — DRAFT v1.12.1 (P0 Cloud-Mask Native Resolution, Sentinel-2 Ingested Offset, CRN Noise Tensor Shape, and Source Independence Audit Lock — Pending Final User Freeze)**  
+**Status**: **FROZEN PREREGISTRATION PROTOCOL v1.12.1 (Formally Authorized and Locked for Confirmatory Phase 4 Evaluation)**  
 **Repository Branch**: `feature/phase4-generalization-protocol`  
-**Preceding Milestones**: Phase 3 Closed (M3.1 Multimodal ASL/CB-BCE, M3.2 FC-Siam-diff, M3.3 Selective Routing) with Pre-Registered Limitations; Supersedes `SATQUERY-P4-PROTOCOL-V1.12-DRAFT` with resolution-aware nested cloud masks ($120 \times 120$ for LC, $256 \times 256$ for CD), dynamic metadata-ingested Sentinel-2 reflectance offsets, explicit CRN noise tensor shapes and channel independence specifications, conditional in-domain reference scope disclosures, Track 4.5 source independence modeling qualifications, and expanded 39-component cryptographic provenance manifest.  
-**Confirmatory Experiment Status**: **ZERO Confirmatory Experiments Executed (Draft Protocol Specification Only)**  
+**Freeze Tag**: `v1.12.1-phase4-protocol-freeze`  
+**Preceding Milestones**: Phase 3 Closed (M3.1 Multimodal ASL/CB-BCE, M3.2 FC-Siam-diff, M3.3 Selective Routing) with Pre-Registered Limitations; Supersedes all prior drafts with resolution-aware nested cloud masks ($120 \times 120$ for LC, $256 \times 256$ for CD), dynamic metadata-ingested Sentinel-2 reflectance offsets, explicit CRN noise tensor shapes and channel independence specifications, conditional in-domain reference scope disclosures, Track 4.5 source independence modeling qualifications, exact Clopper–Pearson confidence upper bounds ($7.22\%$), and expanded 39-component cryptographic provenance manifest.  
+**Confirmatory Experiment Status**: **LOCKED PRE-EXECUTION (Zero Confirmatory Experiments Executed Prior to Freeze)**
 **Model Weight & Threshold Provenance**: Completely Frozen from Phase 3  
 - **Multimodal Land Cover Specialist**: `artifacts/specialists/deep_land_cover_asl/best_model_asl.pt` (SHA-256: `a3e2d24fc6b1b12e48960bc26f9d13eec2407fafb6a6237531da75038e65aabf`)
   - Architecture: `MultimodalResNet34`, 10 optical bands + 2 SAR bands, **16-class output head: `head.1.weight: torch.Size([16, 512])`**
