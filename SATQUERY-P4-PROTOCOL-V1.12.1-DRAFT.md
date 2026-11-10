@@ -363,7 +363,7 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
     - For 0 errors in 40 independent trials:
       - Two-sided 95% Clopper-Pearson exact bound: $[0.00\%, \mathbf{8.81\%}]$
       - Two-sided 95% Wilson score bound: $[0.00\%, \mathbf{8.76\%}]$
-      - One-sided 95% Clopper-Pearson upper bound: $\mathbf{7.23\%} < 10.0\%$
+      - One-sided 95% Clopper-Pearson upper bound: $\mathbf{7.22\%} < 10.0\%$ (exact: $1 - 0.05^{1/40} = 0.0721575 \approx 7.22\%$)
   - **Descriptive Engineering Metrics**:
     - Observed Incompatible Dispatch Rate: $\widehat{\text{IDER}}_{\text{payload}} = N_{\text{dispatched payloads}} / 80$.
     - **Empirical Correct Violation Detection Rate ($\widehat{\text{CVDR}}_{\text{payload}}$)**:
