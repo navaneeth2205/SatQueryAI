@@ -16,6 +16,21 @@ from satquery.utils.s2_metadata import (
     harmonize_modis_patch_labels,
     CANONICAL_S2_BANDS
 )
+from satquery.utils.perturbations import (
+    generate_continuous_noise_field,
+    generate_nested_cloud_mask,
+    generate_nested_cloud_mask_suite,
+    apply_cloud_occlusion_land_cover,
+    apply_cloud_occlusion_change_detection,
+    apply_haze_land_cover,
+    apply_haze_change_detection,
+    generate_crn_noise_tensors,
+    apply_noise_land_cover,
+    apply_noise_change_detection,
+    CLOUD_SEVERITY_FRACTIONS,
+    HAZE_TRANSMITTANCES,
+    NOISE_SEVERITY_SIGMAS,
+)
 
 __all__ = [
     "validate_temporal_pair",
@@ -28,5 +43,18 @@ __all__ = [
     "convert_dn_to_reflectance",
     "resample_s2_20m_to_10m",
     "harmonize_modis_patch_labels",
-    "CANONICAL_S2_BANDS"
+    "CANONICAL_S2_BANDS",
+    "generate_continuous_noise_field",
+    "generate_nested_cloud_mask",
+    "generate_nested_cloud_mask_suite",
+    "apply_cloud_occlusion_land_cover",
+    "apply_cloud_occlusion_change_detection",
+    "apply_haze_land_cover",
+    "apply_haze_change_detection",
+    "generate_crn_noise_tensors",
+    "apply_noise_land_cover",
+    "apply_noise_change_detection",
+    "CLOUD_SEVERITY_FRACTIONS",
+    "HAZE_TRANSMITTANCES",
+    "NOISE_SEVERITY_SIGMAS",
 ]

@@ -1,11 +1,11 @@
 # SatQuery AI — Phase 4 Preregistration Protocol: Robustness, Generalization, and Adversarial Envelope Discovery
 
-**Document Identifier**: `SATQUERY-P4-PROTOCOL-V1.12-DRAFT`  
+**Document Identifier**: `SATQUERY-P4-PROTOCOL-V1.12.1-DRAFT`  
 **Phase**: Phase 4 — Robustness, Generalization, and Operational Envelope Discovery  
-**Date**: November 9, 2026  
-**Status**: **PROPOSED PREREGISTRATION PROTOCOL — DRAFT v1.12 (Final Verification Lock — Pending Final User Freeze)**  
+**Date**: November 10, 2026  
+**Status**: **PROPOSED PREREGISTRATION PROTOCOL — DRAFT v1.12.1 (P0 Cloud-Mask Native Resolution, Sentinel-2 Ingested Offset, CRN Noise Tensor Shape, and Source Independence Audit Lock — Pending Final User Freeze)**  
 **Repository Branch**: `feature/phase4-generalization-protocol`  
-**Preceding Milestones**: Phase 3 Closed (M3.1 Multimodal ASL/CB-BCE, M3.2 FC-Siam-diff, M3.3 Selective Routing) with Pre-Registered Limitations; Supersedes `SATQUERY-P4-PROTOCOL-V1.11-DRAFT` with Sentinel-2 product XML/JSON metadata ingestion, bilinear resampling provenance verification, explicit 0-based vs 1-based taxonomy index documentation, metric edge-case resolution ($FPS_{\text{absent}} \to \text{NA}$), and comprehensive 37-component cryptographic provenance manifest.  
+**Preceding Milestones**: Phase 3 Closed (M3.1 Multimodal ASL/CB-BCE, M3.2 FC-Siam-diff, M3.3 Selective Routing) with Pre-Registered Limitations; Supersedes `SATQUERY-P4-PROTOCOL-V1.12-DRAFT` with resolution-aware nested cloud masks ($120 \times 120$ for LC, $256 \times 256$ for CD), dynamic metadata-ingested Sentinel-2 reflectance offsets, explicit CRN noise tensor shapes and channel independence specifications, conditional in-domain reference scope disclosures, Track 4.5 source independence modeling qualifications, and expanded 39-component cryptographic provenance manifest.  
 **Confirmatory Experiment Status**: **ZERO Confirmatory Experiments Executed (Draft Protocol Specification Only)**  
 **Model Weight & Threshold Provenance**: Completely Frozen from Phase 3  
 - **Multimodal Land Cover Specialist**: `artifacts/specialists/deep_land_cover_asl/best_model_asl.pt` (SHA-256: `a3e2d24fc6b1b12e48960bc26f9d13eec2407fafb6a6237531da75038e65aabf`)
@@ -178,9 +178,10 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
    - *Resampling Provenance & Pipeline*: Verifies that 20m bands (`B05, B06, B07, B8A, B11, B12`) were resampled from native 20m GSD (60x60) to 10m GSD (120x120) via bilinear interpolation (`torch.nn.functional.interpolate` with `mode='bilinear', align_corners=False`), matching native 10m bands (`B02, B03, B04, B08`). Verified by `satquery.utils.s2_metadata.resample_s2_20m_to_10m` which returns structured provenance metadata `{"resampling_method": "bilinear", "align_corners": False, "channel_order": CANONICAL_S2_BANDS}`.
      - *Training Pipeline Parity & Pass-Through Verification*: During Phase 2/3 model training, BigEarthNet-14k patches were loaded from pre-resampled 10-band GeoTIFFs (`BEN_14k/BigEarthNet-S2`) already at $120 \times 120$ spatial resolution with `ModelPixelScaleTag: (10.0, 10.0, 0.0)`. Empirical verification on actual satellite GeoTIFF patches confirms: (1) `resample_s2_20m_to_10m` acts as an exact bitwise identity pass-through ($L_\infty = 0.0$) on pre-resampled patches; (2) when native 20m bands ($60 \times 60$) are upsampled, PyTorch `align_corners=False` exhibits bitwise/numerical identity ($L_\infty = 0.0$, max diff $< 10^{-6}$) with standard PIL bilinear interpolation (`Image.Resampling.BILINEAR`), reconstructing original pre-resampled bands with spatial correlation $r > 0.979$. Verified in `tests/test_taxonomy_and_metrics.py::test_resampling_parity_actual_bigearthnet_patch`.
    - *Processing Baseline Reconciliation & Metadata Ingestion*:
-     Sentinel-2 Level-2A surface reflectance conversion is governed by the product processing baseline:
-     $$\rho_{\lambda} = \frac{\text{DN} + \text{BOA\_ADD\_OFFSET}_{\lambda}}{\text{QUANTIFICATION\_VALUE}} = \begin{cases} \frac{\text{DN}}{10,000.0}, & \text{for PB } < 04.00 \\ \frac{\text{DN} - 1000}{10,000.0}, & \text{for PB } \ge 04.00 \end{cases}$$
+     Sentinel-2 Level-2A surface reflectance conversion is governed by the product processing baseline and ingested metadata offsets:
+     $$\rho_{\lambda} = \frac{\text{DN}_\lambda + \text{BOA\_ADD\_OFFSET}_\lambda}{\text{QUANTIFICATION\_VALUE}}$$
      where $\text{QUANTIFICATION\_VALUE} = 10,000.0$.
+     - *Dynamic Per-Band Offset Ingestion*: The offset $\text{BOA\_ADD\_OFFSET}_\lambda$ is ingested directly from product metadata. For archival products ($\text{PB} < 04.00$), $\text{BOA\_ADD\_OFFSET}_\lambda = 0.0$ for all bands. For modern products ($\text{PB} \ge 04.00$), per-band offsets are extracted dynamically from product metadata (nominally $-1000.0$ when reported by Copernicus SAFE XML/JSON manifests, but ingested dynamically per band rather than assumed as an immutable universal constant).
      - *Automated Metadata Parsing*: Implemented in `satquery.utils.s2_metadata.parse_s2_metadata`, which extracts processing baseline and per-band offsets directly from Copernicus XML metadata (`MTD_MSIL2A.xml`, `MTD_TL.xml`), JSON/dictionary manifests, or SAFE product naming conventions (`_N0400_`, `_N0205_`).
      - *Safe Error Handling*: Payloads missing processing baseline metadata or presenting contradictory declarations (e.g., PB $\ge$ 04.00 with zero offset) are rejected with `ERR_METADATA_INCOMPLETE` / `ValueError` before inference.
      - *Baseline Offset Defense*: Applying the archival $\text{DN}/10000$ formula to $\text{PB} \ge 04.00$ products introduces an artificial $+0.10$ reflectance shift ($+1.35\sigma$ on Band 4 Red). Stage B guarantees complete radiometric alignment across archival and modern products.
@@ -290,7 +291,7 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
      - **Conditional Spatial Cluster Scope & Leave-One-Tile-Out Sensitivity**:
        > [!WARNING]
        > **Three-Cluster In-Domain Scope & Statistical Degrees of Freedom**: The in-domain BigEarthNet-14k test population comprises patches derived from exactly **3 geographic tile clusters**: `T34TCR`, `T34TEQ`, and `T34TFN` in Serbia.
-       > 1. Resampling over $K_{\text{in}} = 3$ clusters provides strictly limited representation of in-domain spatial variability ($df \le 2$). The bootstrap iteration count ($B=2,000$) provides numerical resampling stability ($p_{\min} = 1/(B+1) = 1/2001 \approx 0.000500$) but **cannot expand the underlying spatial degrees of freedom**.
+       > 1. Resampling over $K_{\text{in}} = 3$ clusters provides strictly limited representation of in-domain spatial variability ($df \le 2$). The $B=2,000$ spatial cluster bootstrap replicates resample from the available clusters; **they do not generate new independent geographic clusters** ($p_{\min} = 1/(B+1) = 1/2001 \approx 0.000500$). In-domain baseline estimates and comparative transfer conclusions remain conditional on these 3 Serbian tile clusters; leave-one-tile-out sensitivity analyses are preserved; and all claims of global geographic generalization are strictly avoided.
        > 2. All geographic transfer inferences, p-values, and bootstrap confidence intervals are **formally conditional on this three-tile reference population**.
        > 3. A non-significant hypothesis test ($\text{Holm } p \ge 0.05$) indicates **insufficient evidence to detect degradation relative to this conditional 3-tile reference**; it must **never** be reported as proof of global geographic generalization, domain invariance, or equivalence.
        > 4. To evaluate sensitivity to individual tile clusters, evaluation mandates reporting **leave-one-tile-out sensitivity analyses**: computing $\Delta F_{1, k}^{(\setminus\text{tile})}$ when excluding each in-domain tile in turn ($\setminus\text{T34TCR}$, $\setminus\text{T34TEQ}$, $\setminus\text{T34TFN}$) alongside per-tile metrics. These are strictly categorized as descriptive sensitivity analyses.
@@ -388,36 +389,56 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
   - *SAR domain*: Scaled backscatter $\mathbf{X}_{\text{SAR}} \in [0.0, 1.0]^{2 \times 120 \times 120}$ ($(\text{dB} + 35.0) / 40.0$).
   - *Change detection domain*: Bitemporal RGB images $\mathbf{X}_{t_1}, \mathbf{X}_{t_2} \in [0.0, 1.0]^{3 \times 256 \times 256}$.
   
-  1. **Strictly Nested Synthetic Optical Cloud Occlusion Operator (Optical Channels Only)**:
+  1. **Strictly Nested Synthetic Optical Cloud Occlusion Operator (Native Specialist Resolutions)**:
      - > [!NOTE]
-       > **Benchmark Scope**: This operator provides a controlled synthetic optical occlusion stress test; it does not simulate full 3D atmospheric radiative transfer or cloud thermodynamics. Sentinel-1 C-band microwaves penetrate clouds and are unaffected.
-     - Applied to post-event image $t_2$ in Change Detection.
-     - *Strictly Nested Mask Generation Protocol*:
-       1. For each patch $i$, generate a continuous 2D Perlin noise field $N_i(x, y) \in [0, 1]$ **once** using a fixed patch seed: `seed = 42 + 100 * patch_id` (independent of severity condition).
-       2. Rank-order all $H \times W$ pixels in descending order of noise magnitude (stable coordinate tie-breaking).
-       3. For each severity level $f_c \in \{0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50\}$, select the top $K(f_c) = \lfloor f_c \times 120 \times 120 \rfloor$ pixels to form binary mask $\mathbf{M}_{\text{cloud}}(f_c) \in \{0, 1\}^{120 \times 120}$.
-          The pixel counts are strictly increasing integers:
-          $$K(0.05) = 720 < K(0.10) = 1440 < K(0.15) = 2160 < K(0.20) = 2880 < K(0.30) = 4320 < K(0.40) = 5760 < K(0.50) = 7200$$
+       > **Benchmark Scope**: This operator provides a controlled synthetic optical occlusion stress test; it does not simulate full 3D atmospheric radiative transfer or cloud thermodynamics. Sentinel-1 C-band microwaves penetrate non-precipitating clouds and are unaffected.
+     - *Native Resolution Mask Generation Protocol*:
+       Masks are defined and generated independently at the target specialist's native evaluation resolution:
+       $$K(f_c, H, W) = \lfloor f_c \times H \times W \rfloor$$
+       - **Land Cover Specialist ($H=120, W=120$)**:
+         $$M_{\text{LC}}(f_c) \in \{0, 1\}^{120 \times 120}, \quad K_{\text{LC}}(f_c) = \lfloor f_c \times 14,400 \rfloor$$
+         Exact pixel counts across the 7 severity fractions:
+         $$K(0.05)=720, \ K(0.10)=1440, \ K(0.15)=2160, \ K(0.20)=2880, \ K(0.30)=4320, \ K(0.40)=5760, \ K(0.50)=7200$$
+         *Channel Application Rule*: Applied identically across all 10 optical channels ($c \in \{0, \dots, 9\}$); the 2 SAR channels (VH, VV) remain completely untouched ($\mathbf{X}'_{\text{SAR}} = \mathbf{X}_{\text{SAR}}$, difference $= 0.0$).
+       - **Change Detection Specialist ($H=256, W=256$)**:
+         $$M_{\text{CD}}(f_c) \in \{0, 1\}^{256 \times 256}, \quad K_{\text{CD}}(f_c) = \lfloor f_c \times 65,536 \rfloor$$
+         Exact pixel counts across the 7 severity fractions:
+         $$K(0.05)=3276, \ K(0.10)=6553, \ K(0.15)=9830, \ K(0.20)=13107, \ K(0.30)=19660, \ K(0.40)=26214, \ K(0.50)=32768$$
+         *Temporal Application Rule*: Applied across all 3 RGB channels of post-event image $t_2$ only; pre-event image $t_1$ remains completely untouched ($\mathbf{X}'_{t_1} = \mathbf{X}_{t_1}$, difference $= 0.0$).
+     - *Strictly Nested Mask Construction*:
+       1. For each patch $i$ and resolution $(H, W)$, generate a continuous 2D Perlin/fractal noise field $N_i(x, y) \in [0, 1]$ **once** using a fixed patch seed: `seed = 42 + 100 * patch_id` (independent of severity condition).
+       2. Rank-order all $H \times W$ pixels in descending order of noise magnitude with stable coordinate tie-breaking.
+       3. Select the top $K(f_c, H, W)$ pixels to form binary mask $\mathbf{M}(f_c) \in \{0, 1\}^{H \times W}$.
        4. *Strict Proper Subset Guarantee*:
-          $$\mathbf{M}_{\text{cloud}}(0.05) \subset \mathbf{M}_{\text{cloud}}(0.10) \subset \mathbf{M}_{\text{cloud}}(0.15) \subset \dots \subset \mathbf{M}_{\text{cloud}}(0.50)$$
-          Because pixel counts are strictly increasing and selection follows a single fixed rank ordering, increasing severity strictly adds newly occluded pixels while perfectly retaining all previously occluded pixels.
+          $$\mathbf{M}(0.05) \subset \mathbf{M}(0.10) \subset \mathbf{M}(0.15) \subset \dots \subset \mathbf{M}(0.50)$$
+          Because selection follows a single fixed rank ordering, increasing severity strictly adds newly occluded pixels while retaining 100% of previously occluded pixels ($M(f_{c, 1}) \le M(f_{c, 2})$ everywhere).
      - *Blending Equation*:
-       $$\mathbf{X}_{\text{opt}}'(c, x, y) = \mathbf{X}_{\text{opt}}(c, x, y) \cdot (1 - \alpha \cdot \mathbf{M}_{\text{cloud}}(x, y)) + \mathbf{A}_{\text{cloud}} \cdot (\alpha \cdot \mathbf{M}_{\text{cloud}}(x, y))$$
+       $$\mathbf{X}'(c, x, y) = \mathbf{X}(c, x, y) \cdot (1 - \alpha \cdot \mathbf{M}(x, y)) + \mathbf{A}_{\text{cloud}} \cdot (\alpha \cdot \mathbf{M}(x, y))$$
        where cloud opacity $\alpha = 0.90$ and cloud albedo $\mathbf{A}_{\text{cloud}} = 0.95$. Clipped to $[0.0, 1.0]$.
   2. **Atmospheric Haze Scattering Operator (Optical Channels Only)**:
      - > [!NOTE]
        > **Benchmark Scope**: Formulated via the simplified 1D Koschmieder atmospheric attenuation approximation, evaluating optical specialist sensitivity to uniform path radiance and transmission loss.
-     - *Transformation Equation*:
-       $$\mathbf{X}_{\text{opt}}'(c, x, y) = \mathbf{X}_{\text{opt}}(c, x, y) \cdot t + \mathbf{A}_{\text{atm}}(c) \cdot (1 - t)$$
-       where atmospheric transmittance $t \in \{0.90, 0.70, 0.50, 0.30\}$, parameterized by increasing opacity $\text{Sev}_{\text{haze}} = 1 - t \in \{0.10, 0.30, 0.50, 0.70\}$ ($\text{Clean}: t=1.00 \implies \text{Sev}=0.00$), and atmospheric airlight $\mathbf{A}_{\text{atm}} = 0.85$. Clipped to $[0.0, 1.0]$.
-  3. **Scaled $[0, 1]$ Input-Domain Noise with Common Random Numbers (Optical and SAR Channels)**:
+     - *Land Cover Application*: Applied to all 10 optical channels:
+       $$\mathbf{X}'_{\text{opt}}(c, x, y) = \text{clip}\left(\mathbf{X}_{\text{opt}}(c, x, y) \cdot t + \mathbf{A}_{\text{atm}} \cdot (1 - t), 0.0, 1.0\right)$$
+       SAR channels remain completely untouched ($\mathbf{X}'_{\text{SAR}} = \mathbf{X}_{\text{SAR}}$).
+     - *Change Detection Application*: Applied across all 3 RGB channels of post-event image $t_2$:
+       $$\mathbf{X}'_{t_2}(c, x, y) = \text{clip}\left(\mathbf{X}_{t_2}(c, x, y) \cdot t + \mathbf{A}_{\text{atm}} \cdot (1 - t), 0.0, 1.0\right)$$
+       Pre-event image $t_1$ remains completely untouched ($\mathbf{X}'_{t_1} = \mathbf{X}_{t_1}$).
+     - Transmittance $t \in \{0.90, 0.70, 0.50, 0.30\}$, parameterized by increasing opacity $\text{Sev}_{\text{haze}} = 1 - t \in \{0.10, 0.30, 0.50, 0.70\}$ ($\text{Clean}: t=1.00 \implies \text{Sev}=0.00$), and atmospheric airlight $\mathbf{A}_{\text{atm}} = 0.85$.
+  3. **Scaled $[0, 1]$ Input-Domain Noise with Common Random Numbers (CRN)**:
      - > [!IMPORTANT]
        > **Scope and Interpretation**: This operator evaluates specialist sensitivity to additive numerical perturbations in the scaled $[0, 1]$ input domain (normalized-tensor sensitivity). It does **not** simulate physical sensor noise, photon shot noise, or radar speckle, and makes no claim of physical noise equivalence between optical reflectance and radar backscatter.
+     - *Explicit Noise Tensor Shapes & Channel Independence*:
+       Base standard Gaussian noise tensors $\mathbf{Z} \sim \mathcal{N}(0, 1)$ are generated using dedicated independent pseudo-random streams:
+       - **LC Optical**: Shape $(10, 120, 120)$, seed stream `10007 + 100 * patch_id`, drawn independently across all 10 channels.
+       - **LC SAR**: Shape $(2, 120, 120)$, seed stream `20011 + 100 * patch_id`, drawn independently across the 2 polarizations (VH, VV).
+       - **CD Pre-Event $t_1$**: Shape $(3, 256, 256)$, seed stream `30013 + 100 * patch_id`, drawn independently across the 3 RGB channels.
+       - **CD Post-Event $t_2$**: Shape $(3, 256, 256)$, seed stream `40009 + 100 * patch_id`, drawn independently across the 3 RGB channels and independent of $t_1$.
      - *Common Random Numbers (CRN) Protocol*:
-       1. For each patch $i$, generate a single base standard Gaussian noise tensor $\mathbf{Z}_i(c, x, y) \sim \mathcal{N}(0, 1)$ with pinned patch seed `seed = 10007 + 100 * patch_id`.
+       1. For each patch $i$, the base noise tensors are generated **once** per modality and timepoint.
        2. For each severity condition $\sigma \in \{0.01, 0.02, 0.05, 0.10\}$, compute scaled perturbation:
           $$\epsilon_i(c, x, y; \sigma) = \sigma \cdot \mathbf{Z}_i(c, x, y)$$
-          ensuring perturbations across severity levels are strictly monotonic scalar magnifications of the identical spatial-spectral noise pattern.
+          ensuring perturbations across severity levels are strictly monotonic scalar magnifications of the identical spatial-spectral noise realization.
        3. Perturb input: $\mathbf{X}'(c, x, y) = \text{clip}\left(\mathbf{X}(c, x, y) + \epsilon_i(c, x, y; \sigma), 0.0, 1.0\right)$.
        4. Apply frozen channel-wise standardization $(\mathbf{X}' - \mu) / \sigma$.
        5. Feed standardized tensors to the unchanged specialist forward pass.
@@ -508,6 +529,7 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
 - **Source-Level Sampling & Independence Protocol**:
   - The 120 perturbed payloads are derived from **$N_{\text{source}} = 30$ independent baseline observations** (15 distinct LC scenes, 15 distinct CD scenes).
   - *Spatial Dispersion Guarantee*: Pairwise center-to-center distance $d_{\text{min}} \ge 100\text{ km}$ across all 30 scenes, ensuring disjoint acquisition footprints ($\text{IoU} = 0.0$).
+  - *Conditional Statistical Scope & Independence Assumption*: As in Track 4.2, source-level trial independence is an operational modeling assumption supported by geographic and temporal dispersion ($d_{\text{min}} \ge 100\text{ km}$, distinct acquisition orbits and sensor passes), rather than a mathematically proven theorem. Exact binomial tests and one-sided Clopper-Pearson bounds ($p = 0.0424$, upper bound $\le 9.50\%$) are conditional on this source-sampling independence assumption, rather than an unconditional guarantee of zero-error safety across arbitrary future observation regimes.
   - Primary statistical unit of analysis is defined at the **independent source baseline level**:
     $$\text{Fail}_{\text{source}, i} = \max_{j \in \{1, 2, 3, 4\}} \mathbb{I}(\text{Perturbation}_{i, j} \text{ dispatched to specialist})$$
 - **Confirmatory Safety Hypothesis & Pre-Registered Decision Rule**:
@@ -590,7 +612,8 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Change Detection Specialist Wrapper** | `satquery/specialists/change_detection.py` | `1aaf30839ad269fa4055688c643ecf9430cc0d3fab78feabb66359c586e3459b` | Specialist Wrapper |
 | **Router Model Checkpoint** | `artifacts/router/router_model.joblib` | `eaf6c5b2cd8e718980a3496ce416b69ff9793cb1584e176951a9f652941cc218` | Model Weights |
 | **Router Hyperparameter Config** | `configs/router_config.json` | `1160e4e4f5c6008c995d2d0cdb63fde55b53d85b329a819ea3e02748c7f04ef9` | Configuration |
-| **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `d260def052003959312d3cd1050a8a26b3e1c96d6ab07d1fc6afb009dc91245e` | Configuration |
+| **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `02190115f14467ec19c3c83729476334527397b35c0d0e0dfc77978097d25d9c` | Configuration |
+| **Perturbation Operators Module** | `satquery/utils/perturbations.py` | `a7a1003f9828347df437b6df8bdf8b7a596313380bb6132be760c22da86614df` | Source Code |
 | **MODIS Harmonization Configuration** | `configs/modis_harmonization_config.json` | `0fd6209bea3b8b4fb9f13b2add07ea7d1bf1f8b6a764a202ff3726e6e4832c65` | Configuration |
 | **S2 Preprocessing Baseline Config** | `configs/s2_preprocessing_config.json` | `020f8e117b67d3da53fcb6e5ebd7c576ca45fe69d19e2223a576e282b4004933` | Configuration |
 | **OOD Candidate Manifest Spec** | `configs/ood_candidate_manifest_spec.json` | `3ed8fba913ac557a479c8f6d3428d9dc427910f8bd0f9d600334ce15fdda55ac` | Configuration |
@@ -614,6 +637,7 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Stage B Preprocessing Test Suite** | `tests/test_preprocessing_compatibility.py` | `1a8908e3a0b9b2d2a6d9f4ed81686762c08f33f2c272b9bb47c01ff10e2442c9` | Test Suite |
 | **S2 Metadata Integration Test Suite**| `tests/test_s2_metadata_integration.py` | `141bed10699d3b6ed716435c1f3cb5503151f87a194043ae4cc4342c079b1e4c` | Test Suite |
 | **Taxonomy & Metric Test Suite** | `tests/test_taxonomy_and_metrics.py` | `9053d95365f68a58c7b1a9757d3ac88f34115efbf8e8a2c9582565ce729d08cd` | Test Suite |
+| **Track 4.3 Perturbation Test Suite**| `tests/test_track43_perturbations.py` | `d1ab64d8769f3a3119b664ccc4a76d89f1928e7b277ef7ef1093b359aafa6789` | Test Suite |
 | **Environment Lockfile** | `requirements-lock.txt` | `72c893fb4425dd0c83c77a39338b26325da9cb96d473c2b511630369585b3b25` | Environment |
 
 ### Empirical Reproducibility Policy & Local Scope
@@ -675,7 +699,7 @@ Confirmatory claims are organized into **5 distinct testing families**, correspo
 
 | Parameter / Protocol Element | Value / Specification | Preregistration Status |
 | :--- | :--- | :--- |
-| **Document Version** | `SATQUERY-P4-PROTOCOL-V1.12-DRAFT` | **PROPOSED DRAFT v1.12** |
+| **Document Version** | `SATQUERY-P4-PROTOCOL-V1.12.1-DRAFT` | **PROPOSED DRAFT v1.12.1** |
 | **Land Cover Specialist** | `MultimodalResNet34` (10 optical + 2 SAR bands, $120 \times 120$, **16 classes**) | **FROZEN** |
 | **Land Cover Inference Thresholds** | Frozen Phase 3 threshold vector $\boldsymbol{\tau}^* \in \mathbb{R}^{16}$ from `threshold_config.json` | **FROZEN** |
 | **Change Detection Specialist** | `FCSiamDiff` (Bitemporal RGB, $256 \times 256$) | **FROZEN** |
