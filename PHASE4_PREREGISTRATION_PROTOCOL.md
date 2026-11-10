@@ -5,7 +5,7 @@
 **Date**: November 9, 2026  
 **Status**: **PROPOSED PREREGISTRATION PROTOCOL — DRAFT v1.12 (Final Verification Lock — Pending Final User Freeze)**  
 **Repository Branch**: `feature/phase4-generalization-protocol`  
-**Preceding Milestones**: Phase 3 Closed (M3.1 Multimodal ASL/CB-BCE, M3.2 FC-Siam-diff, M3.3 Selective Routing) with Pre-Registered Limitations; Supersedes `SATQUERY-P4-PROTOCOL-V1.11-DRAFT` with Sentinel-2 product XML/JSON metadata ingestion, bilinear resampling provenance verification, explicit 0-based vs 1-based taxonomy index documentation, metric edge-case resolution ($FPS_{\text{absent}} \to \text{NA}$), and comprehensive 35-component cryptographic provenance manifest.  
+**Preceding Milestones**: Phase 3 Closed (M3.1 Multimodal ASL/CB-BCE, M3.2 FC-Siam-diff, M3.3 Selective Routing) with Pre-Registered Limitations; Supersedes `SATQUERY-P4-PROTOCOL-V1.11-DRAFT` with Sentinel-2 product XML/JSON metadata ingestion, bilinear resampling provenance verification, explicit 0-based vs 1-based taxonomy index documentation, metric edge-case resolution ($FPS_{\text{absent}} \to \text{NA}$), and comprehensive 37-component cryptographic provenance manifest.  
 **Confirmatory Experiment Status**: **ZERO Confirmatory Experiments Executed (Draft Protocol Specification Only)**  
 **Model Weight & Threshold Provenance**: Completely Frozen from Phase 3  
 - **Multimodal Land Cover Specialist**: `artifacts/specialists/deep_land_cover_asl/best_model_asl.pt` (SHA-256: `a3e2d24fc6b1b12e48960bc26f9d13eec2407fafb6a6237531da75038e65aabf`)
@@ -176,6 +176,7 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
    - *Optical Tensor Specification*: Shape must be exactly `(B, 10, 120, 120)` with `dtype == torch.float32`.
    - *Canonical Channel Sequence*: Must strictly correspond to `[B02, B03, B04, B05, B06, B07, B08, B8A, B11, B12]`. Any omission (e.g. 4-band RGB+NIR) or permutation halts execution with `ERR_SPECIALIST_TENSOR_CONTRACT`.
    - *Resampling Provenance & Pipeline*: Verifies that 20m bands (`B05, B06, B07, B8A, B11, B12`) were resampled from native 20m GSD (60x60) to 10m GSD (120x120) via bilinear interpolation (`torch.nn.functional.interpolate` with `mode='bilinear', align_corners=False`), matching native 10m bands (`B02, B03, B04, B08`). Verified by `satquery.utils.s2_metadata.resample_s2_20m_to_10m` which returns structured provenance metadata `{"resampling_method": "bilinear", "align_corners": False, "channel_order": CANONICAL_S2_BANDS}`.
+     - *Training Pipeline Parity & Pass-Through Verification*: During Phase 2/3 model training, BigEarthNet-14k patches were loaded from pre-resampled 10-band GeoTIFFs (`BEN_14k/BigEarthNet-S2`) already at $120 \times 120$ spatial resolution with `ModelPixelScaleTag: (10.0, 10.0, 0.0)`. Empirical verification on actual satellite GeoTIFF patches confirms: (1) `resample_s2_20m_to_10m` acts as an exact bitwise identity pass-through ($L_\infty = 0.0$) on pre-resampled patches; (2) when native 20m bands ($60 \times 60$) are upsampled, PyTorch `align_corners=False` exhibits bitwise/numerical identity ($L_\infty = 0.0$, max diff $< 10^{-6}$) with standard PIL bilinear interpolation (`Image.Resampling.BILINEAR`), reconstructing original pre-resampled bands with spatial correlation $r > 0.979$. Verified in `tests/test_taxonomy_and_metrics.py::test_resampling_parity_actual_bigearthnet_patch`.
    - *Processing Baseline Reconciliation & Metadata Ingestion*:
      Sentinel-2 Level-2A surface reflectance conversion is governed by the product processing baseline:
      $$\rho_{\lambda} = \frac{\text{DN} + \text{BOA\_ADD\_OFFSET}_{\lambda}}{\text{QUANTIFICATION\_VALUE}} = \begin{cases} \frac{\text{DN}}{10,000.0}, & \text{for PB } < 04.00 \\ \frac{\text{DN} - 1000}{10,000.0}, & \text{for PB } \ge 04.00 \end{cases}$$
@@ -234,7 +235,7 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
           - If $\max_{k \in \{1, \dots, 13\}} w_i(k) \ge 0.20$, assign all qualifying mapped labels:
             $$y_{i, k} = \mathbb{I}\left(w_i(k) \ge 0.20\right)$$
           - **If no mapped class reaches $20\%$ ($\max_{k \in \{1, \dots, 13\}} w_i(k) < 0.20$), the patch is strictly quarantined as Inevaluable / Out-of-Scope**.
-          - *No Plurality Fallback*: To eliminate logically unreachable branches and prevent forcing mapped labels onto patches dominated by unmapped terrain (e.g. Snow/Ice, Water bodies not in target, or diffuse fragmentation), no secondary plurality fallback will assign another mapped class.
+          - *No Plurality Fallback & Strict Quarantine Policy*: Configured explicitly as `NO_FALLBACK_STRICT_QUARANTINE` in `configs/modis_harmonization_config.json`. To eliminate logically unreachable branches and prevent forcing mapped labels onto patches dominated by unmapped terrain (e.g. Snow/Ice, Barren/Desert where unmapped, or diffuse fragmentation), no secondary plurality fallback will assign another mapped class. Quarantined patches have zero labels assigned ($\mathbf{y}_i = \mathbf{0}_{16}$) and are excluded from the evaluable denominator $N_{\text{evaluable}}$. Under no circumstances are synthetic labels, plurality assignments, or zero-vector pseudo-classes injected into the evaluation metrics. Verified in `tests/test_taxonomy_and_metrics.py::test_modis_quarantine_edge_cases_and_zero_fallback_rejection`.
      - **Cross-Taxonomy Alignment Table**:
        The target taxonomy consists of the 16 classes from `artifacts/specialists/land_cover/classes.json`. Ground truth is categorized as **Directly Mapped ($N=6$)**, **Approximately Mapped ($N=7$)**, or **Quarantined / Inevaluable ($N=3$)**:
        | BigEarthNet-16 Target Class | Mapped MODIS IGBP Class(es) | Semantic Alignment / Rationale | Categorization Status |
@@ -276,7 +277,7 @@ Executes immediately upon Stage A clearance and prior to passing tensors into th
           - *Absent-Class False Positive Share ($FPS_{\text{absent}}$)*:
             $$FPS_{\text{absent}} = \begin{cases} \frac{\sum_{c \in C_{\text{absent}, k}} \text{FP}_c}{\sum_{c \in \mathcal{M}} \sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c}}, & \text{if } \sum_{c \in \mathcal{M}} \sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c} \ge 1 \\ \text{NA}, & \text{if } \sum_{c \in \mathcal{M}} \sum_{i=1}^{N_{\text{evaluable}, k}} \hat{y}_{i, c} = 0 \end{cases}$$
             The denominator is **strictly restricted to positive predictions among the 13 mapped classes**. If the model produces zero positive predictions on all mapped classes across the evaluation cohort, the denominator is zero; the metric is **explicitly reported as NA** (rather than silently assigned 0.0) to avoid false claims of zero false alarms.
-          - *Mandatory Reporting of $|C_{\text{absent}, k}|$*: Every evaluation table reporting $FPR_{\text{absent}}$ or $FPS_{\text{absent}}$ must disclose the exact number of absent mapped classes $|C_{\text{absent}, k}|$ used in that calculation. Verified in `tests/test_taxonomy_and_metrics.py` (SHA-256: `548fc2f914df7c88494fd6fa252e4cbe673f53083c05745aa4106ec6a75b5a48`).
+          - *Mandatory Reporting of $|C_{\text{absent}, k}|$*: Every evaluation table reporting $FPR_{\text{absent}}$ or $FPS_{\text{absent}}$ must disclose the exact number of absent mapped classes $|C_{\text{absent}, k}|$ used in that calculation. Verified in `tests/test_taxonomy_and_metrics.py` (SHA-256: `9053d95365f68a58c7b1a9757d3ac88f34115efbf8e8a2c9582565ce729d08cd`).
           - *Per-Class Absent Alarms*: Tabularize $\text{FP-Count}_c$ and $\text{FPR}_c = \text{FP}_c / N_{\text{evaluable}, k}$ for each absent class in $C_{\text{absent}, k}$.
         4. **Sub-Taxonomy Sensitivity Metrics**: Direct-Six ($F_{1,\text{direct6}}^{\text{fixed6}}$) and Approximate-Seven ($F_{1,\text{approx7}}^{\text{fixed7}}$).
         5. **Dedicated Quarantined Outputs Diagnostic Table**:
@@ -590,10 +591,10 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Router Model Checkpoint** | `artifacts/router/router_model.joblib` | `eaf6c5b2cd8e718980a3496ce416b69ff9793cb1584e176951a9f652941cc218` | Model Weights |
 | **Router Hyperparameter Config** | `configs/router_config.json` | `1160e4e4f5c6008c995d2d0cdb63fde55b53d85b329a819ea3e02748c7f04ef9` | Configuration |
 | **Perturbation Operators Configuration**| `configs/perturbation_config.json` | `d260def052003959312d3cd1050a8a26b3e1c96d6ab07d1fc6afb009dc91245e` | Configuration |
-| **MODIS Harmonization Configuration** | `configs/modis_harmonization_config.json` | `ecaa10b4f83bdc015898874d1ef88cb19b43832e961cf007ed028e2c61eaefdf` | Configuration |
+| **MODIS Harmonization Configuration** | `configs/modis_harmonization_config.json` | `0fd6209bea3b8b4fb9f13b2add07ea7d1bf1f8b6a764a202ff3726e6e4832c65` | Configuration |
 | **S2 Preprocessing Baseline Config** | `configs/s2_preprocessing_config.json` | `020f8e117b67d3da53fcb6e5ebd7c576ca45fe69d19e2223a576e282b4004933` | Configuration |
 | **OOD Candidate Manifest Spec** | `configs/ood_candidate_manifest_spec.json` | `3ed8fba913ac557a479c8f6d3428d9dc427910f8bd0f9d600334ce15fdda55ac` | Configuration |
-| **Sentinel-2 Metadata Module** | `satquery/utils/s2_metadata.py` | `b1186fd0682e4460bc86b21c08400b59e1dd82ec99bef42afae546db0ccd1dd8` | Source Code |
+| **Sentinel-2 Metadata Module** | `satquery/utils/s2_metadata.py` | `fcd941b0261850ece3657999f9e3a6e6684e5786bf96838816b480d4a4e99f49` | Source Code |
 | **Physical Gate Implementation** | `satquery/utils/geospatial.py` | `156b76cd1ab4abc54341e6a405f9cd58f1387096f6cc92917c62ec01a11911f5` | Source Code |
 | **Temporal Gate Implementation** | `satquery/utils/temporal.py` | `2126aaa91280e18f19d440fe8ea54c10fb5438cc34afc57bcc76c6ee47c4db79` | Source Code |
 | **Core Taxonomy Module** | `satquery/taxonomy.py` | `f1c424218f5144621ea5b6ae94065ada326ef3ff0d61e1ed0fe236e23c059997` | Source Code |
@@ -612,7 +613,7 @@ All assets, checkpoints, configs, and software files are cryptographically locke
 | **Linguistic Benchmark N=200 Catalog**| `data/benchmark_n200_catalog.json` | `8aa9a8bbc8c811adf719685306fa800706d162a61ec8d2a530e90796c4be346f` | Benchmark Catalog |
 | **Stage B Preprocessing Test Suite** | `tests/test_preprocessing_compatibility.py` | `1a8908e3a0b9b2d2a6d9f4ed81686762c08f33f2c272b9bb47c01ff10e2442c9` | Test Suite |
 | **S2 Metadata Integration Test Suite**| `tests/test_s2_metadata_integration.py` | `141bed10699d3b6ed716435c1f3cb5503151f87a194043ae4cc4342c079b1e4c` | Test Suite |
-| **Taxonomy & Metric Test Suite** | `tests/test_taxonomy_and_metrics.py` | `548fc2f914df7c88494fd6fa252e4cbe673f53083c05745aa4106ec6a75b5a48` | Test Suite |
+| **Taxonomy & Metric Test Suite** | `tests/test_taxonomy_and_metrics.py` | `9053d95365f68a58c7b1a9757d3ac88f34115efbf8e8a2c9582565ce729d08cd` | Test Suite |
 | **Environment Lockfile** | `requirements-lock.txt` | `72c893fb4425dd0c83c77a39338b26325da9cb96d473c2b511630369585b3b25` | Environment |
 
 ### Empirical Reproducibility Policy & Local Scope

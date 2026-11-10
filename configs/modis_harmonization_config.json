@@ -10,8 +10,10 @@
   },
   "decision_thresholds": {
     "area_fraction_threshold": 0.20,
-    "quarantine_rule": "patches where no mapped class reaches >= 0.20 fractional coverage are strictly quarantined",
-    "plurality_fallback": "none (strictly prohibited)"
+    "quarantine_rule": "When max_{c in M} w_i(c) < 0.20 across all 13 mapped classes, the patch is strictly quarantined as Inevaluable and excluded from the evaluable cohort N_evaluable.",
+    "fallback_policy": "NO_FALLBACK_STRICT_QUARANTINE",
+    "plurality_fallback_permitted": false,
+    "zero_ground_truth_policy": "Samples where no mapped class reaches >= 0.20 are quarantined and NEVER assigned an artificial, zero, or fallback mapped label."
   },
   "taxonomy_mapping": {
     "directly_mapped_count": 6,

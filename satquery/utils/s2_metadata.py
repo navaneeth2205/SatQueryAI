@@ -383,3 +383,56 @@ def resample_s2_20m_to_10m(
     }
 
     return stacked_array, provenance
+
+
+def harmonize_modis_patch_labels(
+    mapped_coverages: Dict[str, float],
+    threshold: float = 0.20
+) -> Dict[str, Any]:
+    """
+    Deterministic MODIS MCD12Q1 label harmonization and absolute quarantine enforcement.
+
+    Implements the preregistered Track 4.1 decision rule:
+    1. If max_{c in M} w_i(c) >= threshold (0.20):
+       Assign all qualifying mapped classes where w_i(c) >= threshold.
+       is_quarantined = False, evaluable = True.
+    2. If max_{c in M} w_i(c) < threshold (0.20):
+       Strictly quarantine the patch as Inevaluable / Out-of-Scope.
+       is_quarantined = True, evaluable = False, assigned_labels = {}.
+       NO fallback class assignment (plurality fallback is strictly prohibited).
+       Zero ground-truth labels are never artificially assigned to unrepresented classes.
+    """
+    if not mapped_coverages:
+        return {
+            "is_quarantined": True,
+            "evaluable": False,
+            "assigned_labels": {},
+            "max_coverage": 0.0,
+            "quarantine_reason": "No mapped class coverages supplied."
+        }
+
+    max_cov = max(mapped_coverages.values())
+
+    if max_cov < threshold:
+        # STRICT QUARANTINE: no fallback class assignment, excluded from evaluable cohort
+        return {
+            "is_quarantined": True,
+            "evaluable": False,
+            "assigned_labels": {},
+            "max_coverage": float(max_cov),
+            "quarantine_reason": f"Max mapped coverage {max_cov:.4f} < {threshold:.2f} threshold."
+        }
+
+    # Qualifying mapped labels
+    assigned = {
+        c: 1 for c, cov in mapped_coverages.items() if cov >= threshold
+    }
+
+    return {
+        "is_quarantined": False,
+        "evaluable": True,
+        "assigned_labels": assigned,
+        "max_coverage": float(max_cov),
+        "quarantine_reason": None
+    }
+

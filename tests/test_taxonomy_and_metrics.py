@@ -17,6 +17,15 @@ import json
 import numpy as np
 import pytest
 import torch
+from PIL import Image
+
+from satquery.utils.s2_metadata import (
+    resample_s2_20m_to_10m,
+    harmonize_modis_patch_labels,
+    CANONICAL_S2_BANDS,
+    NATIVE_10M_BANDS,
+    NATIVE_20M_BANDS,
+)
 
 
 # ==============================================================================
@@ -256,3 +265,135 @@ class TestTaxonomyAndMetrics:
         assert metrics["fps_absent_display"] == "0.2000"
         # FPR_absent = 20 / (12 * 100) = 20 / 1200 = 0.01667
         assert np.isclose(metrics["fpr_absent"], 20.0 / 1200.0, atol=1e-5)
+
+    def test_resampling_parity_actual_bigearthnet_patch(self):
+        """
+        Verify Stage B resampling parity against original Phase 2/3 training data:
+        1. Bitwise pass-through: If 10-band arrays are already 120x120 (e.g. pre-resampled
+           BigEarthNet patches loaded during training), resample_s2_20m_to_10m preserves them bitwise.
+        2. Bilinear parity: When 20m bands (60x60) are upsampled to 10m (120x120), PyTorch
+           F.interpolate(mode='bilinear', align_corners=False) achieves exact bitwise/numerical
+           parity (< 1e-5 max absolute difference) with standard PIL Image.Resampling.BILINEAR.
+        3. Real satellite patch verification: If archive.zip is present, test on an actual
+           BigEarthNet-S2 GeoTIFF patch from the dataset.
+        """
+        repo_root = Path(__file__).resolve().parent.parent
+        archive_path = repo_root / "initial_trails" / "Dataset" / "archive.zip"
+
+        if archive_path.exists():
+            import zipfile
+            import io
+            import tifffile
+            with zipfile.ZipFile(archive_path) as z:
+                # Find an S2 patch
+                s2_files = [f for f in z.namelist() if "BigEarthNet-S2" in f and f.endswith(".tif")]
+                assert len(s2_files) > 0, "No BigEarthNet-S2 GeoTIFFs found in archive.zip"
+                sample_file = s2_files[0]
+                raw_bytes = z.read(sample_file)
+                arr = tifffile.imread(io.BytesIO(raw_bytes))  # (10, 120, 120) uint16
+
+            bands_dict = {b: arr[i].astype(np.float32) for i, b in enumerate(CANONICAL_S2_BANDS)}
+
+            # 1. Bitwise pass-through check
+            stacked_pass, prov_pass = resample_s2_20m_to_10m(bands_dict, target_shape=(120, 120))
+            np.testing.assert_array_equal(stacked_pass, arr.astype(np.float32))
+
+            # 2. Resampling parity check on actual band (B05)
+            b05_orig = arr[3].astype(np.float32)
+            b05_60 = b05_orig[::2, ::2]  # Subsample to 20m GSD (60x60)
+            bands_dict["B05"] = b05_60
+            stacked_resamp, prov_resamp = resample_s2_20m_to_10m(bands_dict, target_shape=(120, 120))
+
+            pil_resamp = np.array(
+                Image.fromarray(b05_60).resize((120, 120), resample=Image.Resampling.BILINEAR)
+            )
+            # Max diff PyTorch vs PIL bilinear is 0.0 or within float32 precision
+            max_diff = float(np.max(np.abs(stacked_resamp[3] - pil_resamp)))
+            assert max_diff < 1e-5, f"PyTorch vs PIL bilinear discrepancy: {max_diff}"
+
+            # Spatial correlation between bilinearly reconstructed and original pre-resampled raster
+            corr = np.corrcoef(stacked_resamp[3].ravel(), b05_orig.ravel())[0, 1]
+            assert corr > 0.95, f"Reconstructed correlation {corr:.4f} is too low"
+        else:
+            # Fallback synthetic verification if archive.zip is absent
+            rng = np.random.RandomState(42)
+            bands_dict = {}
+            for b in NATIVE_10M_BANDS:
+                bands_dict[b] = rng.uniform(500, 3000, size=(120, 120)).astype(np.float32)
+            for b in NATIVE_20M_BANDS:
+                bands_dict[b] = rng.uniform(500, 3000, size=(60, 60)).astype(np.float32)
+
+            stacked, prov = resample_s2_20m_to_10m(bands_dict, target_shape=(120, 120))
+            for i, b in enumerate(CANONICAL_S2_BANDS):
+                if b in NATIVE_20M_BANDS:
+                    pil_resamp = np.array(
+                        Image.fromarray(bands_dict[b]).resize((120, 120), resample=Image.Resampling.BILINEAR)
+                    )
+                    max_diff = float(np.max(np.abs(stacked[i] - pil_resamp)))
+                    assert max_diff < 1e-5
+
+    def test_modis_quarantine_edge_cases_and_zero_fallback_rejection(self):
+        """
+        Verify strict MODIS harmonization decision rule and rejection of plurality fallback:
+        1. Sub-threshold rejection (w_max = 0.199): patch is quarantined as Inevaluable,
+           excluded from N_evaluable, and assigned 0 ground-truth labels.
+        2. Boundary acceptance (w_max = 0.200): patch is evaluable with corresponding mapped label.
+        3. Dominant unmapped class rejection: when an unmapped class dominates (e.g. 60%)
+           and no mapped class reaches 0.20 (e.g. w_max = 0.12), the patch is strictly quarantined;
+           NO fallback to the plurality mapped class is permitted.
+        4. Multi-label qualifying assignment: multiple mapped classes >= 0.20 are assigned.
+        5. Empty coverage dictionary: strictly quarantined.
+        """
+        # Case 1: Sub-threshold w_max = 0.199
+        cov_sub = {
+            "Broad-leaved forest": 0.199,
+            "Coniferous forest": 0.150,
+            "Water bodies": 0.050,
+        }
+        res_sub = harmonize_modis_patch_labels(cov_sub, threshold=0.20)
+        assert res_sub["is_quarantined"] is True
+        assert res_sub["evaluable"] is False
+        assert res_sub["assigned_labels"] == {}
+        assert "quarantine_reason" in res_sub and res_sub["quarantine_reason"] is not None
+
+        # Case 2: Boundary acceptance w_max = 0.200
+        cov_boundary = {
+            "Broad-leaved forest": 0.200,
+            "Coniferous forest": 0.150,
+        }
+        res_boundary = harmonize_modis_patch_labels(cov_boundary, threshold=0.20)
+        assert res_boundary["is_quarantined"] is False
+        assert res_boundary["evaluable"] is True
+        assert res_boundary["assigned_labels"] == {"Broad-leaved forest": 1}
+
+        # Case 3: Dominant unmapped class rejection (strict zero fallback)
+        cov_dominant_unmapped = {
+            "Broad-leaved forest": 0.120,
+            "Moors and heathland": 0.080,
+        }
+        res_unmapped = harmonize_modis_patch_labels(cov_dominant_unmapped, threshold=0.20)
+        assert res_unmapped["is_quarantined"] is True
+        assert res_unmapped["evaluable"] is False
+        assert res_unmapped["assigned_labels"] == {}
+        assert "Broad-leaved forest" not in res_unmapped["assigned_labels"]
+
+        # Case 4: Multi-label co-occurrence
+        cov_multi = {
+            "Broad-leaved forest": 0.450,
+            "Coniferous forest": 0.350,
+            "Water bodies": 0.100,
+        }
+        res_multi = harmonize_modis_patch_labels(cov_multi, threshold=0.20)
+        assert res_multi["is_quarantined"] is False
+        assert res_multi["evaluable"] is True
+        assert res_multi["assigned_labels"] == {
+            "Broad-leaved forest": 1,
+            "Coniferous forest": 1,
+        }
+        assert "Water bodies" not in res_multi["assigned_labels"]
+
+        # Case 5: Empty coverages
+        res_empty = harmonize_modis_patch_labels({}, threshold=0.20)
+        assert res_empty["is_quarantined"] is True
+        assert res_empty["evaluable"] is False
+        assert res_empty["assigned_labels"] == {}
