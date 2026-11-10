@@ -1,0 +1,208 @@
+{
+  "Biome_1_Arid": {
+    "N_evaluable": 388,
+    "fixed13_macro_f1": 0.2831,
+    "delta_f1_vs_in_domain": -0.1926,
+    "present_macro_f1": 0.4089,
+    "direct6_macro_f1": 0.1006,
+    "approx7_macro_f1": 0.4395,
+    "num_absent_classes": 4,
+    "fpr_absent": 0.018041,
+    "fps_absent": 0.049645,
+    "fps_absent_display": "0.0496",
+    "absent_alarms_table": {
+      "Broad-leaved forest": {
+        "class_index_0based": 2,
+        "class_index_1based": 3,
+        "fp_count": 9,
+        "fpr": 0.023196
+      },
+      "Coniferous forest": {
+        "class_index_0based": 4,
+        "class_index_1based": 5,
+        "fp_count": 9,
+        "fpr": 0.023196
+      },
+      "Inland wetlands": {
+        "class_index_0based": 7,
+        "class_index_1based": 8,
+        "fp_count": 6,
+        "fpr": 0.015464
+      },
+      "Mixed forest": {
+        "class_index_0based": 9,
+        "class_index_1based": 10,
+        "fp_count": 4,
+        "fpr": 0.010309
+      }
+    },
+    "quarantined_diagnostic": {
+      "fps_quarantine": 0.0739,
+      "quarantined_counts": {
+        "Complex cultivation patterns": 15,
+        "Industrial or commercial units": 12,
+        "Permanent crops": 18
+      },
+      "quarantined_rates": {
+        "Complex cultivation patterns": 0.0387,
+        "Industrial or commercial units": 0.0309,
+        "Permanent crops": 0.0464
+      }
+    },
+    "subregion_cluster_f1s": {
+      "Rub_al_Khali_North": 0.1442,
+      "Rub_al_Khali_South": 0.145,
+      "Sahara_East": 0.1505,
+      "Sahara_West": 0.1796,
+      "Sinai_North": 0.1483,
+      "Sinai_South": 0.1454
+    }
+  },
+  "Biome_2_Tropical_Rainforest": {
+    "N_evaluable": 426,
+    "fixed13_macro_f1": 0.314,
+    "delta_f1_vs_in_domain": -0.1617,
+    "present_macro_f1": 0.4082,
+    "direct6_macro_f1": 0.3917,
+    "approx7_macro_f1": 0.2475,
+    "num_absent_classes": 3,
+    "fpr_absent": 0.018779,
+    "fps_absent": 0.038278,
+    "fps_absent_display": "0.0383",
+    "absent_alarms_table": {
+      "Beaches, dunes, sands": {
+        "class_index_0based": 1,
+        "class_index_1based": 2,
+        "fp_count": 1,
+        "fpr": 0.002347
+      },
+      "Coniferous forest": {
+        "class_index_0based": 4,
+        "class_index_1based": 5,
+        "fp_count": 17,
+        "fpr": 0.039906
+      },
+      "Moors, heathland and sclerophyllous vegetation": {
+        "class_index_0based": 10,
+        "class_index_1based": 11,
+        "fp_count": 6,
+        "fpr": 0.014085
+      }
+    },
+    "quarantined_diagnostic": {
+      "fps_quarantine": 0.0739,
+      "quarantined_counts": {
+        "Complex cultivation patterns": 20,
+        "Industrial or commercial units": 16,
+        "Permanent crops": 14
+      },
+      "quarantined_rates": {
+        "Complex cultivation patterns": 0.0469,
+        "Industrial or commercial units": 0.0376,
+        "Permanent crops": 0.0329
+      }
+    },
+    "subregion_cluster_f1s": {
+      "Amazon_Acre": 0.1423,
+      "Amazon_Manaus": 0.1436,
+      "Amazon_Santarem": 0.1458,
+      "Congo_Brazzaville": 0.1426,
+      "Congo_Kinshasa": 0.1416,
+      "Congo_Kisangani": 0.1436
+    }
+  },
+  "Biome_3_Boreal_Forest": {
+    "N_evaluable": 412,
+    "fixed13_macro_f1": 0.3961,
+    "delta_f1_vs_in_domain": -0.0796,
+    "present_macro_f1": 0.4291,
+    "direct6_macro_f1": 0.409,
+    "approx7_macro_f1": 0.3851,
+    "num_absent_classes": 1,
+    "fpr_absent": 0.012136,
+    "fps_absent": 0.006477,
+    "fps_absent_display": "0.0065",
+    "absent_alarms_table": {
+      "Beaches, dunes, sands": {
+        "class_index_0based": 1,
+        "class_index_1based": 2,
+        "fp_count": 5,
+        "fpr": 0.012136
+      }
+    },
+    "quarantined_diagnostic": {
+      "fps_quarantine": 0.0766,
+      "quarantined_counts": {
+        "Complex cultivation patterns": 24,
+        "Industrial or commercial units": 20,
+        "Permanent crops": 20
+      },
+      "quarantined_rates": {
+        "Complex cultivation patterns": 0.0583,
+        "Industrial or commercial units": 0.0485,
+        "Permanent crops": 0.0485
+      }
+    },
+    "subregion_cluster_f1s": {
+      "Alaska_Fairbanks": 0.2306,
+      "Alaska_Tanana": 0.2405,
+      "Alaska_Yukon": 0.2382,
+      "Fennoscandia_Karelia": 0.2417,
+      "Fennoscandia_Lapland": 0.2346,
+      "Fennoscandia_Vasterbotten": 0.235
+    }
+  },
+  "Biome_4_Humid_Subtropical_Cropland": {
+    "N_evaluable": 432,
+    "fixed13_macro_f1": 0.3765,
+    "delta_f1_vs_in_domain": -0.0992,
+    "present_macro_f1": 0.4894,
+    "direct6_macro_f1": 0.3682,
+    "approx7_macro_f1": 0.3835,
+    "num_absent_classes": 3,
+    "fpr_absent": 0.008488,
+    "fps_absent": 0.013415,
+    "fps_absent_display": "0.0134",
+    "absent_alarms_table": {
+      "Beaches, dunes, sands": {
+        "class_index_0based": 1,
+        "class_index_1based": 2,
+        "fp_count": 6,
+        "fpr": 0.013889
+      },
+      "Coniferous forest": {
+        "class_index_0based": 4,
+        "class_index_1based": 5,
+        "fp_count": 3,
+        "fpr": 0.006944
+      },
+      "Moors, heathland and sclerophyllous vegetation": {
+        "class_index_0based": 10,
+        "class_index_1based": 11,
+        "fp_count": 2,
+        "fpr": 0.00463
+      }
+    },
+    "quarantined_diagnostic": {
+      "fps_quarantine": 0.0661,
+      "quarantined_counts": {
+        "Complex cultivation patterns": 23,
+        "Industrial or commercial units": 21,
+        "Permanent crops": 14
+      },
+      "quarantined_rates": {
+        "Complex cultivation patterns": 0.0532,
+        "Industrial or commercial units": 0.0486,
+        "Permanent crops": 0.0324
+      }
+    },
+    "subregion_cluster_f1s": {
+      "IndoGangetic_Bihar": 0.3773,
+      "IndoGangetic_Punjab": 0.3698,
+      "IndoGangetic_UttarPradesh": 0.3733,
+      "Mekong_AnGiang": 0.3801,
+      "Mekong_CanTho": 0.3669,
+      "Mekong_SocTrang": 0.3801
+    }
+  }
+}
