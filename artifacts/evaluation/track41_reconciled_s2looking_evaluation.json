@@ -14,7 +14,8 @@
       "recall": 0.1805,
       "f1_score": 0.1825,
       "iou": 0.1004,
-      "harmonic_check_diff": 0.0
+      "harmonic_check_diff": 0.0,
+      "iou_check_diff": 0.0
     },
     "S2L_02_NAIROBI": {
       "city": "Nairobi",
@@ -30,7 +31,8 @@
       "recall": 0.165,
       "f1_score": 0.1588,
       "iou": 0.0863,
-      "harmonic_check_diff": 0.0
+      "harmonic_check_diff": 0.0,
+      "iou_check_diff": 1.3877787807814457e-17
     },
     "S2L_03_SANTIAGO": {
       "city": "Santiago",
@@ -46,7 +48,8 @@
       "recall": 0.1866,
       "f1_score": 0.1924,
       "iou": 0.1064,
-      "harmonic_check_diff": 0.0
+      "harmonic_check_diff": 0.0,
+      "iou_check_diff": 0.0
     },
     "S2L_04_ULAANBAATAR": {
       "city": "Ulaanbaatar",
@@ -62,7 +65,8 @@
       "recall": 0.1511,
       "f1_score": 0.144,
       "iou": 0.0776,
-      "harmonic_check_diff": 0.0
+      "harmonic_check_diff": 0.0,
+      "iou_check_diff": 0.0
     },
     "S2L_05_PERTH": {
       "city": "Perth",
@@ -78,7 +82,8 @@
       "recall": 0.2185,
       "f1_score": 0.2248,
       "iou": 0.1266,
-      "harmonic_check_diff": 0.0
+      "harmonic_check_diff": 0.0,
+      "iou_check_diff": 0.0
     },
     "S2L_06_BRISBANE": {
       "city": "Brisbane",
@@ -94,7 +99,8 @@
       "recall": 0.2127,
       "f1_score": 0.2158,
       "iou": 0.1209,
-      "harmonic_check_diff": 0.0
+      "harmonic_check_diff": 0.0,
+      "iou_check_diff": 0.0
     },
     "S2L_07_JAKARTA": {
       "city": "Jakarta",
@@ -110,7 +116,8 @@
       "recall": 0.176,
       "f1_score": 0.176,
       "iou": 0.0965,
-      "harmonic_check_diff": 0.0
+      "harmonic_check_diff": 0.0,
+      "iou_check_diff": 0.0
     },
     "S2L_08_JOHANNESBURG": {
       "city": "Johannesburg",
@@ -126,7 +133,8 @@
       "recall": 0.1801,
       "f1_score": 0.1852,
       "iou": 0.1021,
-      "harmonic_check_diff": 0.0
+      "harmonic_check_diff": 0.0,
+      "iou_check_diff": 0.0
     },
     "S2L_09_CALGARY": {
       "city": "Calgary",
@@ -142,7 +150,8 @@
       "recall": 0.1991,
       "f1_score": 0.2048,
       "iou": 0.1141,
-      "harmonic_check_diff": 2.7755575615628914e-17
+      "harmonic_check_diff": 2.7755575615628914e-17,
+      "iou_check_diff": 0.0
     },
     "S2L_10_TASHKENT": {
       "city": "Tashkent",
@@ -158,12 +167,15 @@
       "recall": 0.1648,
       "f1_score": 0.1631,
       "iou": 0.0888,
-      "harmonic_check_diff": 2.7755575615628914e-17
+      "harmonic_check_diff": 2.7755575615628914e-17,
+      "iou_check_diff": 0.0
     }
   },
   "summary_statistics": {
     "aggregation_method": "Scene-level pixel-pooled confusion matrix over full 1024x1024 rasters (N=1,048,576 px/scene)",
     "harmonic_identity_guaranteed": true,
+    "max_harmonic_discrepancy": 2.7755575615628914e-17,
+    "max_iou_discrepancy": 1.3877787807814457e-17,
     "mean_f1": 0.1847,
     "standard_error": 0.0081,
     "median_f1": 0.1839,

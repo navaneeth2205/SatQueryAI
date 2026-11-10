@@ -11,9 +11,14 @@
       "fpr_absent": 0.018041
     },
     "floors_satisfied": true,
-    "transfer_degradation_detected": true,
-    "ci_includes_zero": false,
-    "holm_adjusted_p": "<= 0.0020",
+    "delta_observed": -0.0527,
+    "ci_95": [
+      -0.0944,
+      0.0248
+    ],
+    "ci_includes_zero": true,
+    "holm_adjusted_p": "0.0280",
+    "statistically_significant_degradation": true,
     "certification_status": "Certified Operationally with Documented Transfer Degradation"
   },
   "Biome_2_Tropical_Rainforest": {
@@ -28,10 +33,15 @@
       "fpr_absent": 0.018779
     },
     "floors_satisfied": true,
-    "transfer_degradation_detected": true,
-    "ci_includes_zero": false,
-    "holm_adjusted_p": "<= 0.0020",
-    "certification_status": "Certified Operationally with Documented Transfer Degradation"
+    "delta_observed": -0.0217,
+    "ci_95": [
+      -0.0464,
+      0.0518
+    ],
+    "ci_includes_zero": true,
+    "holm_adjusted_p": "0.1169",
+    "statistically_significant_degradation": false,
+    "certification_status": "Certified Operationally \u2014 No Significant Degradation (Conditional Reference)"
   },
   "Biome_3_Boreal_Forest": {
     "operational_floors": {
@@ -45,10 +55,15 @@
       "fpr_absent": 0.012136
     },
     "floors_satisfied": true,
-    "transfer_degradation_detected": false,
-    "ci_includes_zero": true,
-    "holm_adjusted_p": "0.0640",
-    "certification_status": "Certified Operationally \u2014 No Statistically Significant Degradation Detected (Conditional Reference)"
+    "delta_observed": 0.0604,
+    "ci_95": [
+      0.0343,
+      0.1335
+    ],
+    "ci_includes_zero": false,
+    "holm_adjusted_p": "1.0000",
+    "statistically_significant_degradation": false,
+    "certification_status": "Certified Operationally \u2014 Domain Transfer Gain Observed"
   },
   "Biome_4_Humid_Subtropical_Cropland": {
     "operational_floors": {
@@ -62,9 +77,14 @@
       "fpr_absent": 0.008488
     },
     "floors_satisfied": true,
-    "transfer_degradation_detected": false,
-    "ci_includes_zero": true,
-    "holm_adjusted_p": "0.0640",
-    "certification_status": "Certified Operationally \u2014 No Statistically Significant Degradation Detected (Conditional Reference)"
+    "delta_observed": 0.0407,
+    "ci_95": [
+      0.0153,
+      0.1143
+    ],
+    "ci_includes_zero": false,
+    "holm_adjusted_p": "1.0000",
+    "statistically_significant_degradation": false,
+    "certification_status": "Certified Operationally \u2014 Domain Transfer Gain Observed"
   }
 }

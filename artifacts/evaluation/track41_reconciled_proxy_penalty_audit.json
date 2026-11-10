@@ -1,12 +1,47 @@
 {
+  "native_corine_all16_macro_f1": 0.4553,
   "native_corine_fixed13_macro_f1": 0.4757,
-  "modis_proxy_fixed13_macro_f1": 0.3357,
+  "harmonized_modis_proxy_fixed13_macro_f1": 0.3357,
   "true_in_domain_proxy_penalty": 0.1399,
   "per_patch_jaccard_mean": 0.7749,
   "per_patch_exact_match_rate": 0.5179,
   "total_corine_positive_labels": 7699,
   "total_modis_positive_labels": 5267,
   "filtered_trace_positive_labels": 2432,
+  "per_tile_in_domain_modis": {
+    "T34TCR": {
+      "patch_count": 1604,
+      "fixed13_macro_f1": 0.2622
+    },
+    "T34TEQ": {
+      "patch_count": 1278,
+      "fixed13_macro_f1": 0.3098
+    },
+    "T34TFN": {
+      "patch_count": 366,
+      "fixed13_macro_f1": 0.2722
+    }
+  },
+  "leave_one_tile_out_sensitivity": {
+    "leave_out_T34TCR": {
+      "excluded_tile": "T34TCR",
+      "retained_patch_count": 1644,
+      "fixed13_macro_f1": 0.3193,
+      "delta_vs_pooled_modis": -0.0164
+    },
+    "leave_out_T34TEQ": {
+      "excluded_tile": "T34TEQ",
+      "retained_patch_count": 1970,
+      "fixed13_macro_f1": 0.3312,
+      "delta_vs_pooled_modis": -0.0045
+    },
+    "leave_out_T34TFN": {
+      "excluded_tile": "T34TFN",
+      "retained_patch_count": 2882,
+      "fixed13_macro_f1": 0.3244,
+      "delta_vs_pooled_modis": -0.0114
+    }
+  },
   "class_wise_comparison": {
     "Arable land": {
       "class_index_0based": 0,

@@ -1,70 +1,70 @@
 {
   "Biome_1_Arid": {
-    "delta_observed": -0.1926,
+    "delta_observed": -0.0527,
     "ci_95": [
-      -0.2431,
-      -0.0879
+      -0.0944,
+      0.0248
     ],
-    "ci_includes_zero": false,
-    "bootstrap_se": 0.0366,
-    "count_boot_ge_0": 0,
-    "raw_p_value": 0.0005,
-    "raw_p_value_display": "<= 0.0005",
-    "at_mc_resolution_limit": true,
-    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 Serbian tile clusters; at most 27 ordered resamples)",
-    "holm_adjusted_p_value": 0.001999,
-    "holm_adjusted_p_display": "<= 0.0020",
+    "ci_includes_zero": true,
+    "bootstrap_se": 0.0294,
+    "p_sign_ge_0": 0.0835,
+    "raw_p_null": 0.006997,
+    "raw_p_null_display": "0.0070",
+    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
+    "methodological_caveat": "High-precision confirmatory inference is fundamentally constrained by the coarse 3-cluster in-domain design. Results are reported as conditional on the Serbian reference tiles.",
+    "holm_adjusted_p_value": 0.027986,
+    "holm_adjusted_p_display": "0.0280",
     "statistically_significant_degradation": true
   },
   "Biome_2_Tropical_Rainforest": {
-    "delta_observed": -0.1616,
+    "delta_observed": -0.0217,
     "ci_95": [
-      -0.2011,
-      -0.056
-    ],
-    "ci_includes_zero": false,
-    "bootstrap_se": 0.0307,
-    "count_boot_ge_0": 0,
-    "raw_p_value": 0.0005,
-    "raw_p_value_display": "<= 0.0005",
-    "at_mc_resolution_limit": true,
-    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 Serbian tile clusters; at most 27 ordered resamples)",
-    "holm_adjusted_p_value": 0.001999,
-    "holm_adjusted_p_display": "<= 0.0020",
-    "statistically_significant_degradation": true
-  },
-  "Biome_3_Boreal_Forest": {
-    "delta_observed": -0.0795,
-    "ci_95": [
-      -0.1201,
-      0.0283
+      -0.0464,
+      0.0518
     ],
     "ci_includes_zero": true,
-    "bootstrap_se": 0.0318,
-    "count_boot_ge_0": 82,
-    "raw_p_value": 0.041479,
-    "raw_p_value_display": "0.0415",
-    "at_mc_resolution_limit": false,
-    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 Serbian tile clusters; at most 27 ordered resamples)",
-    "holm_adjusted_p_value": 0.063968,
-    "holm_adjusted_p_display": "0.0640",
+    "bootstrap_se": 0.0218,
+    "p_sign_ge_0": 0.2649,
+    "raw_p_null": 0.038981,
+    "raw_p_null_display": "0.0390",
+    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
+    "methodological_caveat": "High-precision confirmatory inference is fundamentally constrained by the coarse 3-cluster in-domain design. Results are reported as conditional on the Serbian reference tiles.",
+    "holm_adjusted_p_value": 0.116942,
+    "holm_adjusted_p_display": "0.1169",
+    "statistically_significant_degradation": false
+  },
+  "Biome_3_Boreal_Forest": {
+    "delta_observed": 0.0604,
+    "ci_95": [
+      0.0343,
+      0.1335
+    ],
+    "ci_includes_zero": false,
+    "bootstrap_se": 0.0227,
+    "p_sign_ge_0": 1.0,
+    "raw_p_null": 1.0,
+    "raw_p_null_display": "1.0000",
+    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
+    "methodological_caveat": "High-precision confirmatory inference is fundamentally constrained by the coarse 3-cluster in-domain design. Results are reported as conditional on the Serbian reference tiles.",
+    "holm_adjusted_p_value": 1.0,
+    "holm_adjusted_p_display": "1.0000",
     "statistically_significant_degradation": false
   },
   "Biome_4_Humid_Subtropical_Cropland": {
-    "delta_observed": -0.0992,
+    "delta_observed": 0.0407,
     "ci_95": [
-      -0.1426,
-      0.0084
+      0.0153,
+      0.1143
     ],
-    "ci_includes_zero": true,
-    "bootstrap_se": 0.0329,
-    "count_boot_ge_0": 63,
-    "raw_p_value": 0.031984,
-    "raw_p_value_display": "0.0320",
-    "at_mc_resolution_limit": false,
-    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 Serbian tile clusters; at most 27 ordered resamples)",
-    "holm_adjusted_p_value": 0.063968,
-    "holm_adjusted_p_display": "0.0640",
+    "ci_includes_zero": false,
+    "bootstrap_se": 0.0243,
+    "p_sign_ge_0": 0.9985,
+    "raw_p_null": 1.0,
+    "raw_p_null_display": "1.0000",
+    "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
+    "methodological_caveat": "High-precision confirmatory inference is fundamentally constrained by the coarse 3-cluster in-domain design. Results are reported as conditional on the Serbian reference tiles.",
+    "holm_adjusted_p_value": 1.0,
+    "holm_adjusted_p_display": "1.0000",
     "statistically_significant_degradation": false
   }
 }
