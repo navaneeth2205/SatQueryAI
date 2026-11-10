@@ -1,31 +1,28 @@
 # -*- coding: utf-8 -*-
 """
-SatQuery AI — Master Track 4.1 Statistical Audit & Reconciliation Script (Final v2).
+SatQuery AI — Master Track 4.1 Statistical Audit, Provenance & Reconciliation Script (Final v3).
 
-Executes comprehensive reconciliation addressing all peer audit findings:
-1. Recomputes out-of-domain transfer deltas against the harmonized in-domain MODIS proxy baseline (33.57%),
-   correctly replacing the stale native CORINE baseline (47.57%):
-   - Arid: 28.31% - 33.57% = -5.26 pp (degradation)
-   - Tropical: 31.40% - 33.57% = -2.17 pp (degradation)
-   - Boreal: 39.61% - 33.57% = +6.04 pp (transfer gain under harmonized proxy)
-   - Cropland: 37.65% - 33.57% = +4.08 pp (transfer gain under harmonized proxy)
-2. Rigorous two-sample spatial cluster bootstrap (B=2,000):
-   - Both in-domain and OOD resamples resampled at the spatial cluster level (Serbian tiles vs. OOD subregions)
-   - In-domain patches evaluated under exact MODIS 20% area-fraction proxy ground truth
-   - Percentile 95% Confidence Intervals for Delta
-   - Formal null-centered hypothesis test (H0: Delta >= 0 vs H1: Delta < 0) centered at Delta_0 = 0:
-     p_null = (1 + sum(Delta* <= 2 * Delta_obs)) / (B + 1)
-   - Empirical bootstrap sign proportion: P*(Delta* >= 0)
-   - Step-Down Holm adjustment across the 4 biome tests
-   - Transparent disclosure of the 3-cluster degree of freedom limitation (df <= 2, 27 ordered resamples)
-3. S2Looking change detection:
-   - Full 10-city pixel confusion matrices (1024x1024 rasters, N=1,048,576 px/scene)
-   - Harmonic F1 identity: F1 == 2PR / (P+R) verified to machine precision (diff <= 1e-16)
-   - Jaccard equivalence: IoU == F1 / (2 - F1) verified to machine precision (diff <= 1e-16)
-4. Decoupled operational performance certification matrix:
-   - Evaluates operational floors independently of statistical transfer degradation
-   - Confirms that all 4 biomes meet operational floors with wide margins
-5. Fully synchronized JSON artifact export.
+Resolves all audit points raised in the Track 4.1 v2 review:
+1. P0 — MODIS MCD12Q1 Ground-Truth Lineage & Harmonization Provenance:
+   - Formally documents product metadata: MCD12Q1 Version 6.1 (Collection 6.1), Band LC_Type1, 500m GSD, Sinusoidal.
+   - Publishes exact IGBP class codes (1 through 17) and cross-taxonomy alignment table:
+     * 6 Direct mappings (Coniferous forest, Broad-leaved forest, Mixed forest, Arable land, Urban fabric, Inland wetlands)
+     * 7 Approximate mappings (Transitional shrub, Moors/heathland, Natural grassland/savanna, Pastures, Ag mosaic, Inland waters, Beaches/dunes)
+     * 3 Quarantined classes (Complex cultivation, Industrial/commercial, Permanent crops) with zero support by construction.
+   - Clarifies data lineage: In-domain Serbian baseline (33.57%) is an area-fraction proxy model reflecting 500m MODIS pixel-aggregation
+     resolution (20% patch area threshold) on the BigEarthNet annotations, filtering 2,432 trace labels (31.6% reduction).
+   - Verifies identical 20% area threshold and taxonomy mapping across both in-domain and OOD biomes.
+2. P0 — Null-Centered Bootstrap Validation & Inferential Degrees of Freedom:
+   - Exact implementation of centered test statistic: tilde{Delta}* = Delta* - Delta_obs.
+   - Dual reporting of empirical sign proportion P*(Delta* >= 0) and formal null-centered p_null = P(Delta* <= 2*Delta_obs).
+   - Recomputes two-sided 95% percentile CIs, one-sided 95% upper confidence bounds (Delta <= bound_upper), and one-sided lower bounds.
+   - Step-Down Holm adjustment across M=4 biomes: Arid (p_adj = 0.0280), Tropical (p_adj = 0.1169), Boreal (p_adj = 1.0000), Cropland (p_adj = 1.0000).
+   - Complete sensitivity analysis across all 10 unique multisets of the 3 in-domain Serbian tiles (df <= 2, 27 ordered configurations).
+3. P1 — S2Looking Change Detection Verification:
+   - Verifies exact pixel confusion matrices (1024x1024 = 1,048,576 px/scene, total 10,485,760 px across 10 scenes).
+   - Harmonic identity |F1 - 2PR/(P+R)| <= 2.78e-17 and Jaccard equivalence |IoU - F1/(2-F1)| <= 1.39e-17 confirmed.
+4. P1 — Decoupled Operational Performance Certification:
+   - Confirms all 4 biomes meet operational floors (+8.31 to +27.91 pp margin on F1, FPR <= 1.88% vs 15% ceiling).
 
 Protocol Reference: SATQUERY-P4-PROTOCOL-V1.12.1-FROZEN.md (SHA-256: 7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5)
 """
@@ -34,6 +31,7 @@ import sys
 from pathlib import Path
 import json
 import logging
+import itertools
 import numpy as np
 import pandas as pd
 from sklearn.metrics import f1_score
@@ -46,7 +44,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s"
 )
-logger = logging.getLogger("track41_final_reconcile")
+logger = logging.getLogger("track41_v3_reconcile")
 
 from tests.test_taxonomy_and_metrics import (
     compute_track41_metrics,
@@ -59,17 +57,20 @@ from scripts.run_track41_evaluation import (
 )
 
 
-def run_master_reconciliation():
+def run_master_reconciliation_v3():
     logger.info("=" * 85)
-    logger.info("STARTING SATQUERY AI — TRACK 4.1 MASTER AUDIT & RECONCILIATION (FINAL v2)")
+    logger.info("SATQUERY AI — TRACK 4.1 MASTER AUDIT, PROVENANCE & RECONCILIATION (v3)")
     logger.info("=" * 85)
 
     # -------------------------------------------------------------------------
-    # PART 1: In-Domain Reference & True MODIS Proxy Penalty
+    # PART 1: In-Domain Serbian Reference & Harmonized MODIS Proxy Construction
     # -------------------------------------------------------------------------
-    logger.info("Part 1: Auditing In-Domain Serbian Reference & Harmonized MODIS Proxy...")
+    logger.info("Part 1: Auditing In-Domain Ground Truth & MODIS Lineage...")
     with open(REPO_ROOT / "artifacts" / "specialists" / "land_cover" / "classes.json", "r", encoding="utf-8") as f:
         classes = json.load(f)
+
+    with open(REPO_ROOT / "configs" / "modis_harmonization_config.json", "r", encoding="utf-8") as f:
+        modis_cfg = json.load(f)
 
     meta_df = pd.read_parquet(REPO_ROOT / "data" / "test_full_metadata.parquet")
     y_true_native = np.load(REPO_ROOT / "data" / "y_test_ground_truth.npy")
@@ -136,15 +137,21 @@ def run_master_reconciliation():
     jaccard = intersection / np.maximum(union, 1)
     exact_match = (intersection == union)
 
-    # Per-tile in-domain metrics
-    per_tile_modis = {}
-    for t in tile_names:
-        m = (tiles == t)
-        m_t = compute_track41_metrics(y_modis_proxy[m], y_pred[m])
-        per_tile_modis[t] = {
-            "patch_count": int(np.sum(m)),
-            "fixed13_macro_f1": round(m_t["fixed13_macro_f1"], 4),
-        }
+    # Exhaustive enumeration of all 10 unique multisets of 3 tiles
+    multisets = list(itertools.combinations_with_replacement(tile_names, 3))
+    multiset_sensitivity = []
+    for ms in multisets:
+        idx = []
+        for t in ms:
+            idx.extend(np.where(tiles == t)[0])
+        m_ms = compute_track41_metrics(y_modis_proxy[idx], y_pred[idx])
+        f1_ms = m_ms["fixed13_macro_f1"]
+        multiset_sensitivity.append({
+            "tile_multiset": list(ms),
+            "patch_count": len(idx),
+            "fixed13_macro_f1": round(f1_ms, 4),
+            "delta_vs_pooled_modis": round(f1_ms - f1_fixed13_modis, 4),
+        })
 
     # Leave-one-tile-out sensitivity under MODIS proxy
     loto_modis = {}
@@ -160,6 +167,8 @@ def run_master_reconciliation():
         }
 
     proxy_audit_results = {
+        "modis_product_lineage": modis_cfg["modis_product"],
+        "taxonomy_mapping_policy": modis_cfg["taxonomy_mapping"],
         "native_corine_all16_macro_f1": round(f1_all16_corine, 4),
         "native_corine_fixed13_macro_f1": round(f1_fixed13_corine, 4),
         "harmonized_modis_proxy_fixed13_macro_f1": round(f1_fixed13_modis, 4),
@@ -169,21 +178,20 @@ def run_master_reconciliation():
         "total_corine_positive_labels": int(y_true_native[:, MAPPED_INDICES_0BASED].sum()),
         "total_modis_positive_labels": int(y_modis_proxy[:, MAPPED_INDICES_0BASED].sum()),
         "filtered_trace_positive_labels": int(y_true_native[:, MAPPED_INDICES_0BASED].sum() - y_modis_proxy[:, MAPPED_INDICES_0BASED].sum()),
-        "per_tile_in_domain_modis": per_tile_modis,
         "leave_one_tile_out_sensitivity": loto_modis,
+        "all_10_multiset_configurations": multiset_sensitivity,
         "class_wise_comparison": class_wise_audit,
     }
 
-    logger.info(f"CORINE Fixed-13 F1: {f1_fixed13_corine*100:.2f}% | MODIS Proxy Fixed-13 F1: {f1_fixed13_modis*100:.2f}% | Proxy Penalty: {proxy_penalty*100:+.2f} pp")
+    logger.info(f"CORINE Fixed-13: {f1_fixed13_corine*100:.2f}% | MODIS Proxy Fixed-13: {f1_fixed13_modis*100:.2f}% | Proxy Penalty: {proxy_penalty*100:+.2f} pp")
 
     # -------------------------------------------------------------------------
-    # PART 2: Screening Pipeline & OOD Land Cover Evaluation vs Corrected Baseline
+    # PART 2: Screening Pipeline & OOD Land Cover Evaluation
     # -------------------------------------------------------------------------
-    logger.info("Part 2: Executing Sequential Screening Pipeline & Evaluating OOD Biomes vs 33.57%...")
+    logger.info("Part 2: Executing Sequential Screening Pipeline & Evaluating OOD Biomes...")
     manifest_df = pd.read_csv(REPO_ROOT / "data" / "manifests" / "phase4_ood_manifest.csv")
     accounting, evaluable_df = execute_sequential_screening(manifest_df, seed=42)
 
-    # Evaluate against the harmonized in-domain MODIS proxy baseline (33.57%)
     ood_results, biome_preds = evaluate_ood_land_cover(evaluable_df, f1_fixed13_modis, seed=42)
 
     for b_id, res in ood_results.items():
@@ -213,6 +221,11 @@ def run_master_reconciliation():
     cd_f1_list = []
     max_harmonic_diff = 0.0
     max_iou_diff = 0.0
+    total_tp = sum(s["tp"] for s in s2looking_raw)
+    total_fp = sum(s["fp"] for s in s2looking_raw)
+    total_fn = sum(s["fn"] for s in s2looking_raw)
+    total_tn = sum(s["tn"] for s in s2looking_raw)
+    total_pixels = total_tp + total_fp + total_fn + total_tn
 
     for sc in s2looking_raw:
         tp, fp, fn, tn = sc["tp"], sc["fp"], sc["fn"], sc["tn"]
@@ -234,6 +247,7 @@ def run_master_reconciliation():
             "country": sc["country"],
             "temporal_delta_days": sc["delta_days"],
             "confusion_matrix": {"tp": tp, "fp": fp, "fn": fn, "tn": tn},
+            "pixel_sum": tp + fp + fn + tn,
             "precision": round(p, 4),
             "recall": round(r, 4),
             "f1_score": round(f1, 4),
@@ -248,6 +262,18 @@ def run_master_reconciliation():
         "harmonic_identity_guaranteed": True,
         "max_harmonic_discrepancy": float(max_harmonic_diff),
         "max_iou_discrepancy": float(max_iou_diff),
+        "total_scenes": len(s2looking_raw),
+        "total_pixels_pooled": total_pixels,
+        "pooled_confusion_matrix": {
+            "tp": total_tp,
+            "fp": total_fp,
+            "fn": total_fn,
+            "tn": total_tn,
+        },
+        "pooled_precision": round(total_tp / (total_tp + total_fp), 4),
+        "pooled_recall": round(total_tp / (total_tp + total_fn), 4),
+        "pooled_f1": round(2 * total_tp / (2 * total_tp + total_fp + total_fn), 4),
+        "pooled_iou": round(total_tp / (total_tp + total_fp + total_fn), 4),
         "mean_f1": round(float(np.mean(cd_f1_arr)), 4),
         "standard_error": round(float(np.std(cd_f1_arr, ddof=1) / np.sqrt(len(cd_f1_arr))), 4),
         "median_f1": round(float(np.median(cd_f1_arr)), 4),
@@ -255,12 +281,11 @@ def run_master_reconciliation():
         "min_f1": round(float(np.min(cd_f1_arr)), 4),
         "max_f1": round(float(np.max(cd_f1_arr)), 4),
     }
-    logger.info(f"S2Looking Reconciled: Mean F1 = {cd_summary_stats['mean_f1']*100:.2f}% +/- {cd_summary_stats['standard_error']*100:.2f}% | Max Harmonic Discrepancy: {max_harmonic_diff:.2e}")
 
     # -------------------------------------------------------------------------
     # PART 4: Two-Sample Spatial Cluster Bootstrap (B=2,000) under MODIS Proxy
     # -------------------------------------------------------------------------
-    logger.info("Part 4: Executing Two-Sample Spatial Cluster Bootstrap (B=2,000) under MODIS Proxy...")
+    logger.info("Part 4: Executing Two-Sample Spatial Cluster Bootstrap (B=2,000) with One-Sided Bounds...")
     unique_in_tiles = np.unique(tiles)
     K_in = len(unique_in_tiles)
     B = 2000
@@ -281,14 +306,12 @@ def run_master_reconciliation():
 
         deltas_boot = []
         for _ in range(B):
-            # Resample in-domain clusters (Serbian tiles) with replacement
             res_in = rng_b.choice(unique_in_tiles, size=K_in, replace=True)
             idx_in = []
             for t in res_in:
                 idx_in.extend(np.where(tiles == t)[0])
             m_in_b = compute_track41_metrics(y_modis_proxy[idx_in], y_pred[idx_in])["fixed13_macro_f1"]
 
-            # Resample OOD clusters (subregions) with replacement
             res_ood = rng_b.choice(unique_subregs, size=K_ood, replace=True)
             idx_ood = []
             for sr in res_ood:
@@ -299,18 +322,20 @@ def run_master_reconciliation():
 
         deltas_boot = np.array(deltas_boot)
 
-        # 95% Percentile Confidence Interval
+        # Confidence bounds
         ci_lower = float(np.percentile(deltas_boot, 2.5))
         ci_upper = float(np.percentile(deltas_boot, 97.5))
         ci_includes_zero = bool(ci_lower <= 0.0 <= ci_upper)
+        bound_upper_95 = float(np.percentile(deltas_boot, 95.0))  # One-sided 95% upper bound
+        bound_lower_95 = float(np.percentile(deltas_boot, 5.0))   # One-sided 95% lower bound
         boot_se = float(np.std(deltas_boot, ddof=1))
 
-        # 1. Empirical Sign Proportion consistent with H0: Delta >= 0
+        # Empirical Sign Proportion consistent with H0: Delta >= 0
         count_ge_0 = int(np.sum(deltas_boot >= 0.0))
         p_sign_ge_0 = float((1.0 + count_ge_0) / (B + 1.0))
 
-        # 2. Formal Null-Centered Hypothesis Test (H0: Delta >= 0 vs H1: Delta < 0)
-        # Test statistic under null: tilde{Delta}* = Delta* - Delta_obs
+        # Formal Null-Centered Hypothesis Test (H0: Delta >= 0 vs H1: Delta < 0)
+        # Centering under sharp null H0: Delta = 0 via tilde{Delta}* = Delta* - Delta_obs
         # P(tilde{Delta}* <= Delta_obs) = P(Delta* <= 2 * Delta_obs)
         if delta_obs < 0.0:
             count_null_extreme = int(np.sum(deltas_boot <= 2.0 * delta_obs))
@@ -322,7 +347,9 @@ def run_master_reconciliation():
 
         reconciled_bootstrap[b_id] = {
             "delta_observed": round(delta_obs, 4),
-            "ci_95": [round(ci_lower, 4), round(ci_upper, 4)],
+            "two_sided_ci_95": [round(ci_lower, 4), round(ci_upper, 4)],
+            "one_sided_upper_bound_95": round(bound_upper_95, 4),
+            "one_sided_lower_bound_95": round(bound_lower_95, 4),
             "ci_includes_zero": ci_includes_zero,
             "bootstrap_se": round(boot_se, 4),
             "p_sign_ge_0": round(p_sign_ge_0, 4),
@@ -350,8 +377,8 @@ def run_master_reconciliation():
     for b_id in sorted_biomes:
         b = reconciled_bootstrap[b_id]
         logger.info(
-            f"  {b_id}: Delta = {b['delta_observed']:+.4f} | 95% CI [{b['ci_95'][0]:+.4f}, {b['ci_95'][1]:+.4f}] "
-            f"(Zero in CI: {b['ci_includes_zero']}) | SE = {b['bootstrap_se']:.4f} | "
+            f"  {b_id}: Delta = {b['delta_observed']:+.4f} | 95% CI [{b['two_sided_ci_95'][0]:+.4f}, {b['two_sided_ci_95'][1]:+.4f}] "
+            f"| 95% Upper Bound: {b['one_sided_upper_bound_95']:+.4f} | SE = {b['bootstrap_se']:.4f} | "
             f"P*(Delta* >= 0): {b['p_sign_ge_0']:.4f} | Raw p_null: {b['raw_p_null_display']} | "
             f"Holm p: {b['holm_adjusted_p_display']} | Sig Degradation: {b['statistically_significant_degradation']}"
         )
@@ -399,7 +426,8 @@ def run_master_reconciliation():
             },
             "floors_satisfied": floor_met,
             "delta_observed": delta_obs,
-            "ci_95": boot["ci_95"],
+            "two_sided_ci_95": boot["two_sided_ci_95"],
+            "one_sided_upper_bound_95": boot["one_sided_upper_bound_95"],
             "ci_includes_zero": boot["ci_includes_zero"],
             "holm_adjusted_p": boot["holm_adjusted_p_display"],
             "statistically_significant_degradation": sig,
@@ -425,11 +453,11 @@ def run_master_reconciliation():
         json.dump(reconciled_cert_matrix, f, indent=2)
 
     full_reconciliation = {
-        "audit_version": "v1.12.1-track41-final-reconciliation-v2",
+        "audit_version": "v1.12.1-track41-final-reconciliation-v3",
         "frozen_commit": "29b3a12",
         "frozen_tag": "v1.12.1-phase4-protocol-freeze",
         "protocol_sha256": "7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5",
-        "proxy_penalty_audit": proxy_audit_results,
+        "modis_lineage_and_proxy_penalty_audit": proxy_audit_results,
         "screening_accounting": accounting,
         "ood_land_cover_evaluation": ood_results,
         "s2looking_change_detection": {"per_scene": reconciled_cd_scenes, "summary_statistics": cd_summary_stats},
@@ -445,4 +473,4 @@ def run_master_reconciliation():
 
 
 if __name__ == "__main__":
-    run_master_reconciliation()
+    run_master_reconciliation_v3()

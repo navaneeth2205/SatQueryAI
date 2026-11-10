@@ -10,6 +10,7 @@
         "fn": 87200,
         "tn": 857376
       },
+      "pixel_sum": 1048576,
       "precision": 0.1846,
       "recall": 0.1805,
       "f1_score": 0.1825,
@@ -27,6 +28,7 @@
         "fn": 75150,
         "tn": 876426
       },
+      "pixel_sum": 1048576,
       "precision": 0.1531,
       "recall": 0.165,
       "f1_score": 0.1588,
@@ -44,6 +46,7 @@
         "fn": 88250,
         "tn": 858326
       },
+      "pixel_sum": 1048576,
       "precision": 0.1985,
       "recall": 0.1866,
       "f1_score": 0.1924,
@@ -61,6 +64,7 @@
         "fn": 77250,
         "tn": 871326
       },
+      "pixel_sum": 1048576,
       "precision": 0.1375,
       "recall": 0.1511,
       "f1_score": 0.144,
@@ -78,6 +82,7 @@
         "fn": 84400,
         "tn": 862176
       },
+      "pixel_sum": 1048576,
       "precision": 0.2314,
       "recall": 0.2185,
       "f1_score": 0.2248,
@@ -95,6 +100,7 @@
         "fn": 83450,
         "tn": 862126
       },
+      "pixel_sum": 1048576,
       "precision": 0.2189,
       "recall": 0.2127,
       "f1_score": 0.2158,
@@ -112,6 +118,7 @@
         "fn": 84050,
         "tn": 862526
       },
+      "pixel_sum": 1048576,
       "precision": 0.176,
       "recall": 0.176,
       "f1_score": 0.176,
@@ -129,6 +136,7 @@
         "fn": 88550,
         "tn": 858026
       },
+      "pixel_sum": 1048576,
       "precision": 0.1907,
       "recall": 0.1801,
       "f1_score": 0.1852,
@@ -146,6 +154,7 @@
         "fn": 86500,
         "tn": 860076
       },
+      "pixel_sum": 1048576,
       "precision": 0.2108,
       "recall": 0.1991,
       "f1_score": 0.2048,
@@ -163,6 +172,7 @@
         "fn": 81850,
         "tn": 866726
       },
+      "pixel_sum": 1048576,
       "precision": 0.1615,
       "recall": 0.1648,
       "f1_score": 0.1631,
@@ -176,6 +186,18 @@
     "harmonic_identity_guaranteed": true,
     "max_harmonic_discrepancy": 2.7755575615628914e-17,
     "max_iou_discrepancy": 1.3877787807814457e-17,
+    "total_scenes": 10,
+    "total_pixels_pooled": 10485760,
+    "pooled_confusion_matrix": {
+      "tp": 189250,
+      "fp": 824750,
+      "fn": 836650,
+      "tn": 8635110
+    },
+    "pooled_precision": 0.1866,
+    "pooled_recall": 0.1845,
+    "pooled_f1": 0.1855,
+    "pooled_iou": 0.1023,
     "mean_f1": 0.1847,
     "standard_error": 0.0081,
     "median_f1": 0.1839,

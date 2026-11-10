@@ -12,10 +12,11 @@
     },
     "floors_satisfied": true,
     "delta_observed": -0.0527,
-    "ci_95": [
+    "two_sided_ci_95": [
       -0.0944,
       0.0248
     ],
+    "one_sided_upper_bound_95": 0.0128,
     "ci_includes_zero": true,
     "holm_adjusted_p": "0.0280",
     "statistically_significant_degradation": true,
@@ -34,10 +35,11 @@
     },
     "floors_satisfied": true,
     "delta_observed": -0.0217,
-    "ci_95": [
+    "two_sided_ci_95": [
       -0.0464,
       0.0518
     ],
+    "one_sided_upper_bound_95": 0.0398,
     "ci_includes_zero": true,
     "holm_adjusted_p": "0.1169",
     "statistically_significant_degradation": false,
@@ -56,10 +58,11 @@
     },
     "floors_satisfied": true,
     "delta_observed": 0.0604,
-    "ci_95": [
+    "two_sided_ci_95": [
       0.0343,
       0.1335
     ],
+    "one_sided_upper_bound_95": 0.1203,
     "ci_includes_zero": false,
     "holm_adjusted_p": "1.0000",
     "statistically_significant_degradation": false,
@@ -78,10 +81,11 @@
     },
     "floors_satisfied": true,
     "delta_observed": 0.0407,
-    "ci_95": [
+    "two_sided_ci_95": [
       0.0153,
       0.1143
     ],
+    "one_sided_upper_bound_95": 0.1022,
     "ci_includes_zero": false,
     "holm_adjusted_p": "1.0000",
     "statistically_significant_degradation": false,

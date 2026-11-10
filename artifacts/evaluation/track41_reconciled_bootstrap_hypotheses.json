@@ -1,10 +1,12 @@
 {
   "Biome_1_Arid": {
     "delta_observed": -0.0527,
-    "ci_95": [
+    "two_sided_ci_95": [
       -0.0944,
       0.0248
     ],
+    "one_sided_upper_bound_95": 0.0128,
+    "one_sided_lower_bound_95": -0.0864,
     "ci_includes_zero": true,
     "bootstrap_se": 0.0294,
     "p_sign_ge_0": 0.0835,
@@ -18,10 +20,12 @@
   },
   "Biome_2_Tropical_Rainforest": {
     "delta_observed": -0.0217,
-    "ci_95": [
+    "two_sided_ci_95": [
       -0.0464,
       0.0518
     ],
+    "one_sided_upper_bound_95": 0.0398,
+    "one_sided_lower_bound_95": -0.0402,
     "ci_includes_zero": true,
     "bootstrap_se": 0.0218,
     "p_sign_ge_0": 0.2649,
@@ -35,10 +39,12 @@
   },
   "Biome_3_Boreal_Forest": {
     "delta_observed": 0.0604,
-    "ci_95": [
+    "two_sided_ci_95": [
       0.0343,
       0.1335
     ],
+    "one_sided_upper_bound_95": 0.1203,
+    "one_sided_lower_bound_95": 0.0394,
     "ci_includes_zero": false,
     "bootstrap_se": 0.0227,
     "p_sign_ge_0": 1.0,
@@ -52,10 +58,12 @@
   },
   "Biome_4_Humid_Subtropical_Cropland": {
     "delta_observed": 0.0407,
-    "ci_95": [
+    "two_sided_ci_95": [
       0.0153,
       0.1143
     ],
+    "one_sided_upper_bound_95": 0.1022,
+    "one_sided_lower_bound_95": 0.0183,
     "ci_includes_zero": false,
     "bootstrap_se": 0.0243,
     "p_sign_ge_0": 0.9985,
