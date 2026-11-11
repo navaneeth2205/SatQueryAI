@@ -1,0 +1,4881 @@
+{
+  "metadata": {
+    "protocol_reference": "SATQUERY-P4-PROTOCOL-V1.12.1-FROZEN.md",
+    "protocol_hash": "7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5",
+    "track": "Track 4.5: Adversarial Physical Metadata and Coordinate Perturbations",
+    "n_source_observations": 30,
+    "n_control_observations": 20,
+    "total_independent_scenes": 50,
+    "n_perturbed_payloads": 120,
+    "n_control_payloads": 20,
+    "total_evaluation_payloads": 140,
+    "dimension_breakdown": {
+      "Dim_1": 20,
+      "Dim_2": 15,
+      "Dim_3": 10,
+      "Dim_4": 10,
+      "Dim_5": 10,
+      "Dim_6": 20,
+      "Dim_7": 10,
+      "Dim_8": 25
+    },
+    "spatial_dispersion": {
+      "n_scenes": 50,
+      "min_distance_km": 152.80689525370983,
+      "closest_pair": [
+        "SRC_16",
+        "CTRL_CD_02",
+        "Stuttgart",
+        "Frankfurt",
+        152.80689525370983
+      ],
+      "distance_guarantee_passed": true,
+      "max_pairwise_iou": 0.0,
+      "zero_iou_guarantee_passed": true
+    }
+  },
+  "source_scenes": [
+    {
+      "scene_id": "SRC_01",
+      "name": "Bordeaux",
+      "country": "France",
+      "continent": "Europe",
+      "lat": 44.8378,
+      "lon": -0.5792,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 30,
+      "epsg": "EPSG:32630",
+      "bbox_lonlat": [
+        -0.6292,
+        44.7878,
+        -0.5292,
+        44.8878
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_02",
+      "name": "Valencia",
+      "country": "Spain",
+      "continent": "Europe",
+      "lat": 39.4699,
+      "lon": -0.3763,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 30,
+      "epsg": "EPSG:32630",
+      "bbox_lonlat": [
+        -0.4263,
+        39.4199,
+        -0.3263,
+        39.5199
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_03",
+      "name": "Bologna",
+      "country": "Italy",
+      "continent": "Europe",
+      "lat": 44.4949,
+      "lon": 11.3426,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 32,
+      "epsg": "EPSG:32632",
+      "bbox_lonlat": [
+        11.2926,
+        44.4449,
+        11.3926,
+        44.5449
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_04",
+      "name": "Krakow",
+      "country": "Poland",
+      "continent": "Europe",
+      "lat": 50.0647,
+      "lon": 19.945,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 34,
+      "epsg": "EPSG:32634",
+      "bbox_lonlat": [
+        19.895,
+        50.0147,
+        19.995,
+        50.1147
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_05",
+      "name": "Cluj-Napoca",
+      "country": "Romania",
+      "continent": "Europe",
+      "lat": 46.7712,
+      "lon": 23.6236,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 34,
+      "epsg": "EPSG:32634",
+      "bbox_lonlat": [
+        23.5736,
+        46.7212,
+        23.6736,
+        46.8212
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_06",
+      "name": "Minneapolis",
+      "country": "USA",
+      "continent": "North America",
+      "lat": 44.9778,
+      "lon": -93.265,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 15,
+      "epsg": "EPSG:32615",
+      "bbox_lonlat": [
+        -93.315,
+        44.9278,
+        -93.215,
+        45.0278
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_07",
+      "name": "Kansas City",
+      "country": "USA",
+      "continent": "North America",
+      "lat": 39.0997,
+      "lon": -94.5786,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 15,
+      "epsg": "EPSG:32615",
+      "bbox_lonlat": [
+        -94.6286,
+        39.0497,
+        -94.5286,
+        39.1497
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_08",
+      "name": "Memphis",
+      "country": "USA",
+      "continent": "North America",
+      "lat": 35.1495,
+      "lon": -90.049,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 15,
+      "epsg": "EPSG:32615",
+      "bbox_lonlat": [
+        -90.099,
+        35.0995,
+        -89.999,
+        35.1995
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_09",
+      "name": "Calgary",
+      "country": "Canada",
+      "continent": "North America",
+      "lat": 51.0447,
+      "lon": -114.0719,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 11,
+      "epsg": "EPSG:32611",
+      "bbox_lonlat": [
+        -114.1219,
+        50.9947,
+        -114.0219,
+        51.0947
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_10",
+      "name": "Guadalajara",
+      "country": "Mexico",
+      "continent": "North America",
+      "lat": 20.6597,
+      "lon": -103.3496,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 13,
+      "epsg": "EPSG:32613",
+      "bbox_lonlat": [
+        -103.3996,
+        20.6097,
+        -103.2996,
+        20.7097
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_11",
+      "name": "Campinas",
+      "country": "Brazil",
+      "continent": "South America",
+      "lat": -22.9056,
+      "lon": -47.0608,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 23,
+      "epsg": "EPSG:32723",
+      "bbox_lonlat": [
+        -47.1108,
+        -22.9556,
+        -47.0108,
+        -22.8556
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_12",
+      "name": "Cordoba",
+      "country": "Argentina",
+      "continent": "South America",
+      "lat": -31.4201,
+      "lon": -64.1888,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 20,
+      "epsg": "EPSG:32720",
+      "bbox_lonlat": [
+        -64.2388,
+        -31.4701,
+        -64.1388,
+        -31.3701
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_13",
+      "name": "Kumasi",
+      "country": "Ghana",
+      "continent": "Africa",
+      "lat": 6.6885,
+      "lon": -1.6244,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 30,
+      "epsg": "EPSG:32630",
+      "bbox_lonlat": [
+        -1.6744,
+        6.6385,
+        -1.5744,
+        6.7385
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_14",
+      "name": "Nagpur",
+      "country": "India",
+      "continent": "Asia",
+      "lat": 21.1458,
+      "lon": 79.0882,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 44,
+      "epsg": "EPSG:32644",
+      "bbox_lonlat": [
+        79.0382,
+        21.0958,
+        79.1382,
+        21.1958
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_15",
+      "name": "Adelaide",
+      "country": "Australia",
+      "continent": "Oceania",
+      "lat": -34.9285,
+      "lon": 138.6007,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 54,
+      "epsg": "EPSG:32754",
+      "bbox_lonlat": [
+        138.5507,
+        -34.9785,
+        138.6507,
+        -34.8785
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_16",
+      "name": "Stuttgart",
+      "country": "Germany",
+      "continent": "Europe",
+      "lat": 48.7758,
+      "lon": 9.1829,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 32,
+      "epsg": "EPSG:32632",
+      "bbox_lonlat": [
+        9.1329,
+        48.7258,
+        9.2329,
+        48.8258
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_17",
+      "name": "Innsbruck",
+      "country": "Austria",
+      "continent": "Europe",
+      "lat": 47.2692,
+      "lon": 11.4041,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 32,
+      "epsg": "EPSG:32632",
+      "bbox_lonlat": [
+        11.3541,
+        47.2192,
+        11.4541,
+        47.3192
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_18",
+      "name": "Zaragoza",
+      "country": "Spain",
+      "continent": "Europe",
+      "lat": 41.6488,
+      "lon": -0.8891,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 30,
+      "epsg": "EPSG:32630",
+      "bbox_lonlat": [
+        -0.9391,
+        41.5988,
+        -0.8391,
+        41.6988
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_19",
+      "name": "Gothenburg",
+      "country": "Sweden",
+      "continent": "Europe",
+      "lat": 57.7089,
+      "lon": 11.9746,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 32,
+      "epsg": "EPSG:32632",
+      "bbox_lonlat": [
+        11.9246,
+        57.6589,
+        12.0246,
+        57.7589
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_20",
+      "name": "Thessaloniki",
+      "country": "Greece",
+      "continent": "Europe",
+      "lat": 40.6401,
+      "lon": 22.9444,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 34,
+      "epsg": "EPSG:32634",
+      "bbox_lonlat": [
+        22.8944,
+        40.5901,
+        22.9944,
+        40.6901
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_21",
+      "name": "Salt Lake City",
+      "country": "USA",
+      "continent": "North America",
+      "lat": 40.7608,
+      "lon": -111.891,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 12,
+      "epsg": "EPSG:32612",
+      "bbox_lonlat": [
+        -111.941,
+        40.7108,
+        -111.841,
+        40.8108
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_22",
+      "name": "Albuquerque",
+      "country": "USA",
+      "continent": "North America",
+      "lat": 35.0844,
+      "lon": -106.6504,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 13,
+      "epsg": "EPSG:32613",
+      "bbox_lonlat": [
+        -106.7004,
+        35.0344,
+        -106.6004,
+        35.1344
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_23",
+      "name": "Monterrey",
+      "country": "Mexico",
+      "continent": "North America",
+      "lat": 25.6866,
+      "lon": -100.3161,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 14,
+      "epsg": "EPSG:32614",
+      "bbox_lonlat": [
+        -100.3661,
+        25.6366,
+        -100.2661,
+        25.7366
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_24",
+      "name": "Medellin",
+      "country": "Colombia",
+      "continent": "South America",
+      "lat": 6.2442,
+      "lon": -75.5812,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 18,
+      "epsg": "EPSG:32618",
+      "bbox_lonlat": [
+        -75.6312,
+        6.1942,
+        -75.5312,
+        6.2942
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_25",
+      "name": "Curitiba",
+      "country": "Brazil",
+      "continent": "South America",
+      "lat": -25.4284,
+      "lon": -49.2733,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 22,
+      "epsg": "EPSG:32722",
+      "bbox_lonlat": [
+        -49.3233,
+        -25.4784,
+        -49.2233,
+        -25.3784
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_26",
+      "name": "Rabat",
+      "country": "Morocco",
+      "continent": "Africa",
+      "lat": 34.0209,
+      "lon": -6.8416,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 29,
+      "epsg": "EPSG:32629",
+      "bbox_lonlat": [
+        -6.8916,
+        33.9709,
+        -6.7916,
+        34.0709
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_27",
+      "name": "Kisumu",
+      "country": "Kenya",
+      "continent": "Africa",
+      "lat": -0.0917,
+      "lon": 34.768,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 36,
+      "epsg": "EPSG:32736",
+      "bbox_lonlat": [
+        34.718,
+        -0.1417,
+        34.818,
+        -0.0417
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_28",
+      "name": "Jaipur",
+      "country": "India",
+      "continent": "Asia",
+      "lat": 26.9124,
+      "lon": 75.7873,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 43,
+      "epsg": "EPSG:32643",
+      "bbox_lonlat": [
+        75.7373,
+        26.8624,
+        75.8373,
+        26.9624
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_29",
+      "name": "Kyoto",
+      "country": "Japan",
+      "continent": "Asia",
+      "lat": 35.0116,
+      "lon": 135.7681,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 53,
+      "epsg": "EPSG:32653",
+      "bbox_lonlat": [
+        135.7181,
+        34.9616,
+        135.8181,
+        35.0616
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "SRC_30",
+      "name": "Perth",
+      "country": "Australia",
+      "continent": "Oceania",
+      "lat": -31.9505,
+      "lon": 115.8605,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 50,
+      "epsg": "EPSG:32750",
+      "bbox_lonlat": [
+        115.8105,
+        -32.0005,
+        115.9105,
+        -31.9005
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_LC_01",
+      "name": "Seville",
+      "country": "Spain",
+      "continent": "Europe",
+      "lat": 37.3891,
+      "lon": -5.9845,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 30,
+      "epsg": "EPSG:32630",
+      "bbox_lonlat": [
+        -6.0345,
+        37.3391,
+        -5.9345,
+        37.4391
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_LC_02",
+      "name": "Turin",
+      "country": "Italy",
+      "continent": "Europe",
+      "lat": 45.0703,
+      "lon": 7.6869,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 32,
+      "epsg": "EPSG:32632",
+      "bbox_lonlat": [
+        7.6369,
+        45.0203,
+        7.7369,
+        45.1203
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_LC_03",
+      "name": "Wroclaw",
+      "country": "Poland",
+      "continent": "Europe",
+      "lat": 51.1079,
+      "lon": 17.0385,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 33,
+      "epsg": "EPSG:32633",
+      "bbox_lonlat": [
+        16.9885,
+        51.0579,
+        17.0885,
+        51.1579
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_LC_04",
+      "name": "Austin",
+      "country": "USA",
+      "continent": "North America",
+      "lat": 30.2672,
+      "lon": -97.7431,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 14,
+      "epsg": "EPSG:32614",
+      "bbox_lonlat": [
+        -97.7931,
+        30.2172,
+        -97.6931,
+        30.3172
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_LC_05",
+      "name": "Edmonton",
+      "country": "Canada",
+      "continent": "North America",
+      "lat": 53.5461,
+      "lon": -113.4938,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 12,
+      "epsg": "EPSG:32612",
+      "bbox_lonlat": [
+        -113.5438,
+        53.4961,
+        -113.4438,
+        53.5961
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_LC_06",
+      "name": "Puebla",
+      "country": "Mexico",
+      "continent": "North America",
+      "lat": 19.0414,
+      "lon": -98.2063,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 14,
+      "epsg": "EPSG:32614",
+      "bbox_lonlat": [
+        -98.2563,
+        18.9914,
+        -98.1563,
+        19.0914
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_LC_07",
+      "name": "Porto Alegre",
+      "country": "Brazil",
+      "continent": "South America",
+      "lat": -30.0346,
+      "lon": -51.2177,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 22,
+      "epsg": "EPSG:32722",
+      "bbox_lonlat": [
+        -51.2677,
+        -30.0846,
+        -51.1677,
+        -29.9846
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_LC_08",
+      "name": "Mombasa",
+      "country": "Kenya",
+      "continent": "Africa",
+      "lat": -4.0435,
+      "lon": 39.6682,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 37,
+      "epsg": "EPSG:32737",
+      "bbox_lonlat": [
+        39.6182,
+        -4.0935,
+        39.7182,
+        -3.9935
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_LC_09",
+      "name": "Ahmedabad",
+      "country": "India",
+      "continent": "Asia",
+      "lat": 23.0225,
+      "lon": 72.5714,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 43,
+      "epsg": "EPSG:32643",
+      "bbox_lonlat": [
+        72.5214,
+        22.9725,
+        72.6214,
+        23.0725
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_LC_10",
+      "name": "Brisbane",
+      "country": "Australia",
+      "continent": "Oceania",
+      "lat": -27.4698,
+      "lon": 153.0251,
+      "primary_domain": "LAND_COVER_CLASSIFICATION",
+      "utm_zone": 56,
+      "epsg": "EPSG:32756",
+      "bbox_lonlat": [
+        152.9751,
+        -27.5198,
+        153.0751,
+        -27.4198
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_CD_01",
+      "name": "Nantes",
+      "country": "France",
+      "continent": "Europe",
+      "lat": 47.2184,
+      "lon": -1.5536,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 30,
+      "epsg": "EPSG:32630",
+      "bbox_lonlat": [
+        -1.6036,
+        47.1684,
+        -1.5036,
+        47.2684
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_CD_02",
+      "name": "Frankfurt",
+      "country": "Germany",
+      "continent": "Europe",
+      "lat": 50.1109,
+      "lon": 8.6821,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 32,
+      "epsg": "EPSG:32632",
+      "bbox_lonlat": [
+        8.6321,
+        50.0609,
+        8.7321,
+        50.1609
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_CD_03",
+      "name": "Bilbao",
+      "country": "Spain",
+      "continent": "Europe",
+      "lat": 43.263,
+      "lon": -2.935,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 30,
+      "epsg": "EPSG:32630",
+      "bbox_lonlat": [
+        -2.985,
+        43.213,
+        -2.885,
+        43.313
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_CD_04",
+      "name": "Charlotte",
+      "country": "USA",
+      "continent": "North America",
+      "lat": 35.2271,
+      "lon": -80.8431,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 17,
+      "epsg": "EPSG:32617",
+      "bbox_lonlat": [
+        -80.8931,
+        35.1771,
+        -80.7931,
+        35.2771
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_CD_05",
+      "name": "Ottawa",
+      "country": "Canada",
+      "continent": "North America",
+      "lat": 45.4215,
+      "lon": -75.6972,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 18,
+      "epsg": "EPSG:32618",
+      "bbox_lonlat": [
+        -75.7472,
+        45.3715,
+        -75.6472,
+        45.4715
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_CD_06",
+      "name": "Leon",
+      "country": "Mexico",
+      "continent": "North America",
+      "lat": 21.1221,
+      "lon": -101.682,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 14,
+      "epsg": "EPSG:32614",
+      "bbox_lonlat": [
+        -101.732,
+        21.0721,
+        -101.632,
+        21.1721
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_CD_07",
+      "name": "Rosario",
+      "country": "Argentina",
+      "continent": "South America",
+      "lat": -32.9468,
+      "lon": -60.6393,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 20,
+      "epsg": "EPSG:32720",
+      "bbox_lonlat": [
+        -60.6893,
+        -32.9968,
+        -60.5893,
+        -32.8968
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_CD_08",
+      "name": "Dakar",
+      "country": "Senegal",
+      "continent": "Africa",
+      "lat": 14.7167,
+      "lon": -17.4677,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 28,
+      "epsg": "EPSG:32628",
+      "bbox_lonlat": [
+        -17.5177,
+        14.6667,
+        -17.4177,
+        14.7667
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_CD_09",
+      "name": "Fukuoka",
+      "country": "Japan",
+      "continent": "Asia",
+      "lat": 33.5902,
+      "lon": 130.4017,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 52,
+      "epsg": "EPSG:32652",
+      "bbox_lonlat": [
+        130.3517,
+        33.5402,
+        130.4517,
+        33.6402
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    },
+    {
+      "scene_id": "CTRL_CD_10",
+      "name": "Auckland",
+      "country": "New Zealand",
+      "continent": "Oceania",
+      "lat": -36.8485,
+      "lon": 174.7633,
+      "primary_domain": "CHANGE_DETECTION",
+      "utm_zone": 60,
+      "epsg": "EPSG:32760",
+      "bbox_lonlat": [
+        174.7133,
+        -36.8985,
+        174.8133,
+        -36.7985
+      ],
+      "gt_canonical": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ]
+    }
+  ],
+  "evaluation_payloads": [
+    {
+      "payload_id": "SRC_01_P1",
+      "source_scene_id": "SRC_01",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "optical_only_missing_sar",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "optical_only_dict",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_01_P2",
+      "source_scene_id": "SRC_01",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b08_nir",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": false,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_01_P3",
+      "source_scene_id": "SRC_01",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "undersized_spatial_grid_119x120",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        119,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_01_P4",
+      "source_scene_id": "SRC_01",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.201",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.201,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_02_P1",
+      "source_scene_id": "SRC_02",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "optical_only_missing_sar",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "optical_only_dict",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_02_P2",
+      "source_scene_id": "SRC_02",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b08_nir",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": false,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_02_P3",
+      "source_scene_id": "SRC_02",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "undersized_spatial_grid_119x120",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        119,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_02_P4",
+      "source_scene_id": "SRC_02",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.201",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.201,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_03_P1",
+      "source_scene_id": "SRC_03",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "optical_only_missing_sar",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "optical_only_dict",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_03_P2",
+      "source_scene_id": "SRC_03",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b08_nir",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": false,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_03_P3",
+      "source_scene_id": "SRC_03",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "undersized_spatial_grid_119x120",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        119,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_03_P4",
+      "source_scene_id": "SRC_03",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.201",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.201,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_04_P1",
+      "source_scene_id": "SRC_04",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "optical_only_missing_sar",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "optical_only_dict",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_04_P2",
+      "source_scene_id": "SRC_04",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b08_nir",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": false,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_04_P3",
+      "source_scene_id": "SRC_04",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "undersized_spatial_grid_119x120",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        119,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_04_P4",
+      "source_scene_id": "SRC_04",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.201",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.201,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_05_P1",
+      "source_scene_id": "SRC_05",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "optical_only_missing_sar",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "optical_only_dict",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_05_P2",
+      "source_scene_id": "SRC_05",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b08_nir",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": false,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_05_P3",
+      "source_scene_id": "SRC_05",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "undersized_spatial_grid_119x120",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        119,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_05_P4",
+      "source_scene_id": "SRC_05",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.201",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.201,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_06_P1",
+      "source_scene_id": "SRC_06",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "bitemporal_pair_sent_to_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "temporal_pair_dict",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_06_P2",
+      "source_scene_id": "SRC_06",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b04_red",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_06_P3",
+      "source_scene_id": "SRC_06",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_lower_boundary_violation_7.9m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 7.9,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_06_P4",
+      "source_scene_id": "SRC_06",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "double_scaling_float_trap_s2_l2a",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "product_type": "s2_l2a",
+      "is_double_scaling_trap": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_07_P1",
+      "source_scene_id": "SRC_07",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "bitemporal_pair_sent_to_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "temporal_pair_dict",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_07_P2",
+      "source_scene_id": "SRC_07",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b04_red",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_07_P3",
+      "source_scene_id": "SRC_07",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_lower_boundary_violation_7.9m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 7.9,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_07_P4",
+      "source_scene_id": "SRC_07",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "double_scaling_float_trap_s2_l2a",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "product_type": "s2_l2a",
+      "is_double_scaling_trap": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_08_P1",
+      "source_scene_id": "SRC_08",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "bitemporal_pair_sent_to_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "temporal_pair_dict",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_08_P2",
+      "source_scene_id": "SRC_08",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b04_red",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_08_P3",
+      "source_scene_id": "SRC_08",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_lower_boundary_violation_7.9m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 7.9,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_08_P4",
+      "source_scene_id": "SRC_08",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "double_scaling_float_trap_s2_l2a",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "product_type": "s2_l2a",
+      "is_double_scaling_trap": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_09_P1",
+      "source_scene_id": "SRC_09",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "bitemporal_pair_sent_to_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "temporal_pair_dict",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_09_P2",
+      "source_scene_id": "SRC_09",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b04_red",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_09_P3",
+      "source_scene_id": "SRC_09",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_lower_boundary_violation_7.9m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 7.9,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_09_P4",
+      "source_scene_id": "SRC_09",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "double_scaling_float_trap_s2_l2a",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "product_type": "s2_l2a",
+      "is_double_scaling_trap": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_10_P1",
+      "source_scene_id": "SRC_10",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "bitemporal_pair_sent_to_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "temporal_pair_dict",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_10_P2",
+      "source_scene_id": "SRC_10",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b04_red",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_10_P3",
+      "source_scene_id": "SRC_10",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_lower_boundary_violation_7.9m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 7.9,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_10_P4",
+      "source_scene_id": "SRC_10",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "double_scaling_float_trap_s2_l2a",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "product_type": "s2_l2a",
+      "is_double_scaling_trap": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_11_P1",
+      "source_scene_id": "SRC_11",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "1d_feature_vector_sent_to_deep_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "1d_feature_vector",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_11_P2",
+      "source_scene_id": "SRC_11",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_upper_boundary_violation_12.1m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 12.1,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_11_P3",
+      "source_scene_id": "SRC_11",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "non_finite_floating_nan_inf",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "has_nan_inf": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_11_P4",
+      "source_scene_id": "SRC_11",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_extreme_violation_0.30",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.3,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_12_P1",
+      "source_scene_id": "SRC_12",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "1d_feature_vector_sent_to_deep_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "1d_feature_vector",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_12_P2",
+      "source_scene_id": "SRC_12",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_upper_boundary_violation_12.1m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 12.1,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_12_P3",
+      "source_scene_id": "SRC_12",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "non_finite_floating_nan_inf",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "has_nan_inf": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_12_P4",
+      "source_scene_id": "SRC_12",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_extreme_violation_0.30",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.3,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_13_P1",
+      "source_scene_id": "SRC_13",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "1d_feature_vector_sent_to_deep_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "1d_feature_vector",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_13_P2",
+      "source_scene_id": "SRC_13",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_upper_boundary_violation_12.1m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 12.1,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_13_P3",
+      "source_scene_id": "SRC_13",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "non_finite_floating_nan_inf",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "has_nan_inf": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_13_P4",
+      "source_scene_id": "SRC_13",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_extreme_violation_0.30",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.3,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_14_P1",
+      "source_scene_id": "SRC_14",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "1d_feature_vector_sent_to_deep_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "1d_feature_vector",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_14_P2",
+      "source_scene_id": "SRC_14",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_upper_boundary_violation_12.1m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 12.1,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_14_P3",
+      "source_scene_id": "SRC_14",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "non_finite_floating_nan_inf",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "has_nan_inf": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_14_P4",
+      "source_scene_id": "SRC_14",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_extreme_violation_0.30",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.3,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_15_P1",
+      "source_scene_id": "SRC_15",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "1d_feature_vector_sent_to_deep_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "1d_feature_vector",
+      "target_specialist": "deep_multimodal",
+      "require_multimodal_raster": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_15_P2",
+      "source_scene_id": "SRC_15",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_upper_boundary_violation_12.1m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 12.1,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_15_P3",
+      "source_scene_id": "SRC_15",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "non_finite_floating_nan_inf",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "has_nan_inf": true,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_15_P4",
+      "source_scene_id": "SRC_15",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_extreme_violation_0.30",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "target_specialist": "deep_multimodal",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.3,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_16_P1",
+      "source_scene_id": "SRC_16",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "single_image_sent_to_cd",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "single_image_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_16_P2",
+      "source_scene_id": "SRC_16",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_lower_boundary_4.9d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 4.9,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_16_P3",
+      "source_scene_id": "SRC_16",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_projected_vs_geographic",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:4326",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_16_P4",
+      "source_scene_id": "SRC_16",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "unregistered_grid_displacement_0.051px",
+      "expected_failure_code": "ERR_UNREGISTERED_GRID",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.51,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:32632",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_17_P1",
+      "source_scene_id": "SRC_17",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "single_image_sent_to_cd",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "single_image_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_17_P2",
+      "source_scene_id": "SRC_17",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_lower_boundary_4.9d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 4.9,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_17_P3",
+      "source_scene_id": "SRC_17",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_projected_vs_geographic",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:4326",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_17_P4",
+      "source_scene_id": "SRC_17",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "unregistered_grid_displacement_0.051px",
+      "expected_failure_code": "ERR_UNREGISTERED_GRID",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.51,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:32632",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_18_P1",
+      "source_scene_id": "SRC_18",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "single_image_sent_to_cd",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "single_image_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_18_P2",
+      "source_scene_id": "SRC_18",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_lower_boundary_4.9d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 4.9,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_18_P3",
+      "source_scene_id": "SRC_18",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_projected_vs_geographic",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32630",
+      "crs2": "EPSG:4326",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_18_P4",
+      "source_scene_id": "SRC_18",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "unregistered_grid_displacement_0.051px",
+      "expected_failure_code": "ERR_UNREGISTERED_GRID",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.51,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32630",
+      "crs2": "EPSG:32630",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_19_P1",
+      "source_scene_id": "SRC_19",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "single_image_sent_to_cd",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "single_image_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_19_P2",
+      "source_scene_id": "SRC_19",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_lower_boundary_4.9d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 4.9,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_19_P3",
+      "source_scene_id": "SRC_19",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_projected_vs_geographic",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:4326",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_19_P4",
+      "source_scene_id": "SRC_19",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "unregistered_grid_displacement_0.051px",
+      "expected_failure_code": "ERR_UNREGISTERED_GRID",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.51,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:32632",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_20_P1",
+      "source_scene_id": "SRC_20",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "single_image_sent_to_cd",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "payload_structure": "single_image_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_20_P2",
+      "source_scene_id": "SRC_20",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_lower_boundary_4.9d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 4.9,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_20_P3",
+      "source_scene_id": "SRC_20",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_projected_vs_geographic",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32634",
+      "crs2": "EPSG:4326",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_20_P4",
+      "source_scene_id": "SRC_20",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "unregistered_grid_displacement_0.051px",
+      "expected_failure_code": "ERR_UNREGISTERED_GRID",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.51,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32634",
+      "crs2": "EPSG:32634",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_21_P1",
+      "source_scene_id": "SRC_21",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_upper_boundary_730.1d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 730.1,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_21_P2",
+      "source_scene_id": "SRC_21",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "undersized_spatial_grid_99x100",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "spatial_shape": [
+        99,
+        100
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_21_P3",
+      "source_scene_id": "SRC_21",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_adjacent_utm_zones",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:32633",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_21_P4",
+      "source_scene_id": "SRC_21",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "anisotropic_shear_kappa_1.011",
+      "expected_failure_code": "ERR_ANISOTROPIC_SHEAR",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.055,
+        0.055,
+        5000000.0,
+        0.0,
+        -9.945300845350571
+      ],
+      "crs1": "EPSG:32612",
+      "crs2": "EPSG:32612",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_22_P1",
+      "source_scene_id": "SRC_22",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_upper_boundary_730.1d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 730.1,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_22_P2",
+      "source_scene_id": "SRC_22",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "undersized_spatial_grid_99x100",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "spatial_shape": [
+        99,
+        100
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_22_P3",
+      "source_scene_id": "SRC_22",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_adjacent_utm_zones",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:32633",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_22_P4",
+      "source_scene_id": "SRC_22",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "anisotropic_shear_kappa_1.011",
+      "expected_failure_code": "ERR_ANISOTROPIC_SHEAR",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.055,
+        0.055,
+        5000000.0,
+        0.0,
+        -9.945300845350571
+      ],
+      "crs1": "EPSG:32613",
+      "crs2": "EPSG:32613",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_23_P1",
+      "source_scene_id": "SRC_23",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_upper_boundary_730.1d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 730.1,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_23_P2",
+      "source_scene_id": "SRC_23",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "undersized_spatial_grid_99x100",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "spatial_shape": [
+        99,
+        100
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_23_P3",
+      "source_scene_id": "SRC_23",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_adjacent_utm_zones",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:32633",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_23_P4",
+      "source_scene_id": "SRC_23",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "anisotropic_shear_kappa_1.011",
+      "expected_failure_code": "ERR_ANISOTROPIC_SHEAR",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.055,
+        0.055,
+        5000000.0,
+        0.0,
+        -9.945300845350571
+      ],
+      "crs1": "EPSG:32614",
+      "crs2": "EPSG:32614",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_24_P1",
+      "source_scene_id": "SRC_24",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_upper_boundary_730.1d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 730.1,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_24_P2",
+      "source_scene_id": "SRC_24",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "undersized_spatial_grid_99x100",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "spatial_shape": [
+        99,
+        100
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_24_P3",
+      "source_scene_id": "SRC_24",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_adjacent_utm_zones",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:32633",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_24_P4",
+      "source_scene_id": "SRC_24",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "anisotropic_shear_kappa_1.011",
+      "expected_failure_code": "ERR_ANISOTROPIC_SHEAR",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.055,
+        0.055,
+        5000000.0,
+        0.0,
+        -9.945300845350571
+      ],
+      "crs1": "EPSG:32618",
+      "crs2": "EPSG:32618",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_25_P1",
+      "source_scene_id": "SRC_25",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_upper_boundary_730.1d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 730.1,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_25_P2",
+      "source_scene_id": "SRC_25",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "undersized_spatial_grid_99x100",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "spatial_shape": [
+        99,
+        100
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_25_P3",
+      "source_scene_id": "SRC_25",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_adjacent_utm_zones",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:32633",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_25_P4",
+      "source_scene_id": "SRC_25",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "anisotropic_shear_kappa_1.011",
+      "expected_failure_code": "ERR_ANISOTROPIC_SHEAR",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.055,
+        0.055,
+        5000000.0,
+        0.0,
+        -9.945300845350571
+      ],
+      "crs1": "EPSG:32722",
+      "crs2": "EPSG:32722",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_26_P1",
+      "source_scene_id": "SRC_26",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "extreme_temporal_drift_1200d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 1200.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_26_P2",
+      "source_scene_id": "SRC_26",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "axis_reflection_inversion_det_neg",
+      "expected_failure_code": "ERR_INVERTED_AXIS",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        10.0
+      ],
+      "crs1": "EPSG:32629",
+      "crs2": "EPSG:32629",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_26_P3",
+      "source_scene_id": "SRC_26",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "scale_distortion_det_0.979",
+      "expected_failure_code": "ERR_SCALE_DISTORTION",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        9.894442884771228,
+        0.0,
+        5000000.0,
+        0.0,
+        -9.894442884771228
+      ],
+      "crs1": "EPSG:32629",
+      "crs2": "EPSG:32629",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_26_P4",
+      "source_scene_id": "SRC_26",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.101",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.101,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_27_P1",
+      "source_scene_id": "SRC_27",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "extreme_temporal_drift_1200d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 1200.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_27_P2",
+      "source_scene_id": "SRC_27",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "axis_reflection_inversion_det_neg",
+      "expected_failure_code": "ERR_INVERTED_AXIS",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        10.0
+      ],
+      "crs1": "EPSG:32736",
+      "crs2": "EPSG:32736",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_27_P3",
+      "source_scene_id": "SRC_27",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "scale_distortion_det_0.979",
+      "expected_failure_code": "ERR_SCALE_DISTORTION",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        9.894442884771228,
+        0.0,
+        5000000.0,
+        0.0,
+        -9.894442884771228
+      ],
+      "crs1": "EPSG:32736",
+      "crs2": "EPSG:32736",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_27_P4",
+      "source_scene_id": "SRC_27",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.101",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.101,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_28_P1",
+      "source_scene_id": "SRC_28",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "extreme_temporal_drift_1200d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 1200.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_28_P2",
+      "source_scene_id": "SRC_28",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "axis_reflection_inversion_det_neg",
+      "expected_failure_code": "ERR_INVERTED_AXIS",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        10.0
+      ],
+      "crs1": "EPSG:32643",
+      "crs2": "EPSG:32643",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_28_P3",
+      "source_scene_id": "SRC_28",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "scale_distortion_det_0.979",
+      "expected_failure_code": "ERR_SCALE_DISTORTION",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        9.894442884771228,
+        0.0,
+        5000000.0,
+        0.0,
+        -9.894442884771228
+      ],
+      "crs1": "EPSG:32643",
+      "crs2": "EPSG:32643",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_28_P4",
+      "source_scene_id": "SRC_28",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.101",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.101,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_29_P1",
+      "source_scene_id": "SRC_29",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "extreme_temporal_drift_1200d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 1200.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_29_P2",
+      "source_scene_id": "SRC_29",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "axis_reflection_inversion_det_neg",
+      "expected_failure_code": "ERR_INVERTED_AXIS",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        10.0
+      ],
+      "crs1": "EPSG:32653",
+      "crs2": "EPSG:32653",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_29_P3",
+      "source_scene_id": "SRC_29",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "scale_distortion_det_0.979",
+      "expected_failure_code": "ERR_SCALE_DISTORTION",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        9.894442884771228,
+        0.0,
+        5000000.0,
+        0.0,
+        -9.894442884771228
+      ],
+      "crs1": "EPSG:32653",
+      "crs2": "EPSG:32653",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_29_P4",
+      "source_scene_id": "SRC_29",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.101",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.101,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_30_P1",
+      "source_scene_id": "SRC_30",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "extreme_temporal_drift_1200d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 1200.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_30_P2",
+      "source_scene_id": "SRC_30",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "axis_reflection_inversion_det_neg",
+      "expected_failure_code": "ERR_INVERTED_AXIS",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        10.0
+      ],
+      "crs1": "EPSG:32750",
+      "crs2": "EPSG:32750",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_30_P3",
+      "source_scene_id": "SRC_30",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "scale_distortion_det_0.979",
+      "expected_failure_code": "ERR_SCALE_DISTORTION",
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        9.894442884771228,
+        0.0,
+        5000000.0,
+        0.0,
+        -9.894442884771228
+      ],
+      "crs1": "EPSG:32750",
+      "crs2": "EPSG:32750",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.05,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "SRC_30_P4",
+      "source_scene_id": "SRC_30",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.101",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 30.0,
+      "cloud_fraction": 0.101,
+      "is_valid_payload": false
+    },
+    {
+      "payload_id": "CTRL_LC_01_VALID",
+      "source_scene_id": "CTRL_LC_01",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "target_specialist": "deep_multimodal",
+      "payload_structure": "multimodal_optical_sar",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.04,
+      "crs": "EPSG:32630",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_LC_02_VALID",
+      "source_scene_id": "CTRL_LC_02",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "target_specialist": "deep_multimodal",
+      "payload_structure": "multimodal_optical_sar",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.04,
+      "crs": "EPSG:32632",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_LC_03_VALID",
+      "source_scene_id": "CTRL_LC_03",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "target_specialist": "deep_multimodal",
+      "payload_structure": "multimodal_optical_sar",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.04,
+      "crs": "EPSG:32633",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_LC_04_VALID",
+      "source_scene_id": "CTRL_LC_04",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "target_specialist": "deep_multimodal",
+      "payload_structure": "multimodal_optical_sar",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.04,
+      "crs": "EPSG:32614",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_LC_05_VALID",
+      "source_scene_id": "CTRL_LC_05",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "target_specialist": "deep_multimodal",
+      "payload_structure": "multimodal_optical_sar",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.04,
+      "crs": "EPSG:32612",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_LC_06_VALID",
+      "source_scene_id": "CTRL_LC_06",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "target_specialist": "deep_multimodal",
+      "payload_structure": "multimodal_optical_sar",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.04,
+      "crs": "EPSG:32614",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_LC_07_VALID",
+      "source_scene_id": "CTRL_LC_07",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "target_specialist": "deep_multimodal",
+      "payload_structure": "multimodal_optical_sar",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.04,
+      "crs": "EPSG:32722",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_LC_08_VALID",
+      "source_scene_id": "CTRL_LC_08",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "target_specialist": "deep_multimodal",
+      "payload_structure": "multimodal_optical_sar",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.04,
+      "crs": "EPSG:32737",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_LC_09_VALID",
+      "source_scene_id": "CTRL_LC_09",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "target_specialist": "deep_multimodal",
+      "payload_structure": "multimodal_optical_sar",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.04,
+      "crs": "EPSG:32643",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_LC_10_VALID",
+      "source_scene_id": "CTRL_LC_10",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "target_specialist": "deep_multimodal",
+      "payload_structure": "multimodal_optical_sar",
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B08"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "gsd_m": 10.0,
+      "cloud_fraction": 0.04,
+      "crs": "EPSG:32756",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_CD_01_VALID",
+      "source_scene_id": "CTRL_CD_01",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "payload_structure": "bitemporal_pair_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 25.0,
+      "cloud_fraction": 0.03,
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32630",
+      "crs2": "EPSG:32630",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_CD_02_VALID",
+      "source_scene_id": "CTRL_CD_02",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "payload_structure": "bitemporal_pair_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 25.0,
+      "cloud_fraction": 0.03,
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32632",
+      "crs2": "EPSG:32632",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_CD_03_VALID",
+      "source_scene_id": "CTRL_CD_03",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "payload_structure": "bitemporal_pair_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 25.0,
+      "cloud_fraction": 0.03,
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32630",
+      "crs2": "EPSG:32630",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_CD_04_VALID",
+      "source_scene_id": "CTRL_CD_04",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "payload_structure": "bitemporal_pair_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 25.0,
+      "cloud_fraction": 0.03,
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32617",
+      "crs2": "EPSG:32617",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_CD_05_VALID",
+      "source_scene_id": "CTRL_CD_05",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "payload_structure": "bitemporal_pair_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 25.0,
+      "cloud_fraction": 0.03,
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32618",
+      "crs2": "EPSG:32618",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_CD_06_VALID",
+      "source_scene_id": "CTRL_CD_06",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "payload_structure": "bitemporal_pair_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 25.0,
+      "cloud_fraction": 0.03,
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32614",
+      "crs2": "EPSG:32614",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_CD_07_VALID",
+      "source_scene_id": "CTRL_CD_07",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "payload_structure": "bitemporal_pair_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 25.0,
+      "cloud_fraction": 0.03,
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32720",
+      "crs2": "EPSG:32720",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_CD_08_VALID",
+      "source_scene_id": "CTRL_CD_08",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "payload_structure": "bitemporal_pair_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 25.0,
+      "cloud_fraction": 0.03,
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32628",
+      "crs2": "EPSG:32628",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_CD_09_VALID",
+      "source_scene_id": "CTRL_CD_09",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "payload_structure": "bitemporal_pair_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 25.0,
+      "cloud_fraction": 0.03,
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32652",
+      "crs2": "EPSG:32652",
+      "is_valid_payload": true
+    },
+    {
+      "payload_id": "CTRL_CD_10_VALID",
+      "source_scene_id": "CTRL_CD_10",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "payload_structure": "bitemporal_pair_array",
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "gsd_m": 10.0,
+      "temporal_gap_days": 25.0,
+      "cloud_fraction": 0.03,
+      "gt1": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "gt2": [
+        500000.0,
+        10.0,
+        0.0,
+        5000000.0,
+        0.0,
+        -10.0
+      ],
+      "crs1": "EPSG:32760",
+      "crs2": "EPSG:32760",
+      "is_valid_payload": true
+    }
+  ]
+}

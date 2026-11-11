@@ -1,0 +1,3111 @@
+{
+  "source_level_records": [
+    {
+      "source_scene_id": "SRC_01",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_02",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_03",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_04",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_05",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_06",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_07",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_08",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_09",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_10",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_11",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_12",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_13",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_14",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_15",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_16",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_17",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_18",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_19",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_20",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_21",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_22",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_23",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_24",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_25",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_26",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_27",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_28",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_29",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    },
+    {
+      "source_scene_id": "SRC_30",
+      "n_perturbations": 4,
+      "dispatched_perturbations": 0,
+      "source_failed": false,
+      "intercepted_all": true
+    }
+  ],
+  "payload_eval_records": [
+    {
+      "payload_id": "SRC_01_P1",
+      "source_scene_id": "SRC_01",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "optical_only_missing_sar",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Multimodal Land Cover requires optical + SAR observations"
+      ]
+    },
+    {
+      "payload_id": "SRC_01_P2",
+      "source_scene_id": "SRC_01",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b08_nir",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "failure_reasons": [
+        "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B08'}"
+      ]
+    },
+    {
+      "payload_id": "SRC_01_P3",
+      "source_scene_id": "SRC_01",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "undersized_spatial_grid_119x120",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_DIMENSION_TOO_SMALL"
+      ],
+      "failure_reasons": [
+        "ERR_DIMENSION_TOO_SMALL: Dimension (119, 120) below minimum (120, 120)"
+      ]
+    },
+    {
+      "payload_id": "SRC_01_P4",
+      "source_scene_id": "SRC_01",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.201",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 20.1% exceeds 20.0% operational limit for land cover"
+      ]
+    },
+    {
+      "payload_id": "SRC_02_P1",
+      "source_scene_id": "SRC_02",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "optical_only_missing_sar",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Multimodal Land Cover requires optical + SAR observations"
+      ]
+    },
+    {
+      "payload_id": "SRC_02_P2",
+      "source_scene_id": "SRC_02",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b08_nir",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "failure_reasons": [
+        "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B08'}"
+      ]
+    },
+    {
+      "payload_id": "SRC_02_P3",
+      "source_scene_id": "SRC_02",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "undersized_spatial_grid_119x120",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_DIMENSION_TOO_SMALL"
+      ],
+      "failure_reasons": [
+        "ERR_DIMENSION_TOO_SMALL: Dimension (119, 120) below minimum (120, 120)"
+      ]
+    },
+    {
+      "payload_id": "SRC_02_P4",
+      "source_scene_id": "SRC_02",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.201",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 20.1% exceeds 20.0% operational limit for land cover"
+      ]
+    },
+    {
+      "payload_id": "SRC_03_P1",
+      "source_scene_id": "SRC_03",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "optical_only_missing_sar",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Multimodal Land Cover requires optical + SAR observations"
+      ]
+    },
+    {
+      "payload_id": "SRC_03_P2",
+      "source_scene_id": "SRC_03",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b08_nir",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "failure_reasons": [
+        "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B08'}"
+      ]
+    },
+    {
+      "payload_id": "SRC_03_P3",
+      "source_scene_id": "SRC_03",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "undersized_spatial_grid_119x120",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_DIMENSION_TOO_SMALL"
+      ],
+      "failure_reasons": [
+        "ERR_DIMENSION_TOO_SMALL: Dimension (119, 120) below minimum (120, 120)"
+      ]
+    },
+    {
+      "payload_id": "SRC_03_P4",
+      "source_scene_id": "SRC_03",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.201",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 20.1% exceeds 20.0% operational limit for land cover"
+      ]
+    },
+    {
+      "payload_id": "SRC_04_P1",
+      "source_scene_id": "SRC_04",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "optical_only_missing_sar",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Multimodal Land Cover requires optical + SAR observations"
+      ]
+    },
+    {
+      "payload_id": "SRC_04_P2",
+      "source_scene_id": "SRC_04",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b08_nir",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "failure_reasons": [
+        "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B08'}"
+      ]
+    },
+    {
+      "payload_id": "SRC_04_P3",
+      "source_scene_id": "SRC_04",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "undersized_spatial_grid_119x120",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_DIMENSION_TOO_SMALL"
+      ],
+      "failure_reasons": [
+        "ERR_DIMENSION_TOO_SMALL: Dimension (119, 120) below minimum (120, 120)"
+      ]
+    },
+    {
+      "payload_id": "SRC_04_P4",
+      "source_scene_id": "SRC_04",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.201",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 20.1% exceeds 20.0% operational limit for land cover"
+      ]
+    },
+    {
+      "payload_id": "SRC_05_P1",
+      "source_scene_id": "SRC_05",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "optical_only_missing_sar",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Multimodal Land Cover requires optical + SAR observations"
+      ]
+    },
+    {
+      "payload_id": "SRC_05_P2",
+      "source_scene_id": "SRC_05",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b08_nir",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "failure_reasons": [
+        "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B08'}"
+      ]
+    },
+    {
+      "payload_id": "SRC_05_P3",
+      "source_scene_id": "SRC_05",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "undersized_spatial_grid_119x120",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_DIMENSION_TOO_SMALL"
+      ],
+      "failure_reasons": [
+        "ERR_DIMENSION_TOO_SMALL: Dimension (119, 120) below minimum (120, 120)"
+      ]
+    },
+    {
+      "payload_id": "SRC_05_P4",
+      "source_scene_id": "SRC_05",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.201",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 20.1% exceeds 20.0% operational limit for land cover"
+      ]
+    },
+    {
+      "payload_id": "SRC_06_P1",
+      "source_scene_id": "SRC_06",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "bitemporal_pair_sent_to_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Land Cover requires single scene / feature vector, not temporal pair"
+      ]
+    },
+    {
+      "payload_id": "SRC_06_P2",
+      "source_scene_id": "SRC_06",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b04_red",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "failure_reasons": [
+        "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B04'}"
+      ]
+    },
+    {
+      "payload_id": "SRC_06_P3",
+      "source_scene_id": "SRC_06",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_lower_boundary_violation_7.9m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "failure_reasons": [
+        "ERR_RESOLUTION_INCOMPATIBLE: GSD 7.9m outside operational window [8.0m, 12.0m]"
+      ]
+    },
+    {
+      "payload_id": "SRC_06_P4",
+      "source_scene_id": "SRC_06",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "double_scaling_float_trap_s2_l2a",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Sentinel-2 L2A product expects raw DN [0, 10000], got normalized float [0.0, 1.0] (double scaling trap)"
+      ]
+    },
+    {
+      "payload_id": "SRC_07_P1",
+      "source_scene_id": "SRC_07",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "bitemporal_pair_sent_to_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Land Cover requires single scene / feature vector, not temporal pair"
+      ]
+    },
+    {
+      "payload_id": "SRC_07_P2",
+      "source_scene_id": "SRC_07",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b04_red",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "failure_reasons": [
+        "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B04'}"
+      ]
+    },
+    {
+      "payload_id": "SRC_07_P3",
+      "source_scene_id": "SRC_07",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_lower_boundary_violation_7.9m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "failure_reasons": [
+        "ERR_RESOLUTION_INCOMPATIBLE: GSD 7.9m outside operational window [8.0m, 12.0m]"
+      ]
+    },
+    {
+      "payload_id": "SRC_07_P4",
+      "source_scene_id": "SRC_07",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "double_scaling_float_trap_s2_l2a",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Sentinel-2 L2A product expects raw DN [0, 10000], got normalized float [0.0, 1.0] (double scaling trap)"
+      ]
+    },
+    {
+      "payload_id": "SRC_08_P1",
+      "source_scene_id": "SRC_08",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "bitemporal_pair_sent_to_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Land Cover requires single scene / feature vector, not temporal pair"
+      ]
+    },
+    {
+      "payload_id": "SRC_08_P2",
+      "source_scene_id": "SRC_08",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b04_red",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "failure_reasons": [
+        "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B04'}"
+      ]
+    },
+    {
+      "payload_id": "SRC_08_P3",
+      "source_scene_id": "SRC_08",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_lower_boundary_violation_7.9m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "failure_reasons": [
+        "ERR_RESOLUTION_INCOMPATIBLE: GSD 7.9m outside operational window [8.0m, 12.0m]"
+      ]
+    },
+    {
+      "payload_id": "SRC_08_P4",
+      "source_scene_id": "SRC_08",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "double_scaling_float_trap_s2_l2a",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Sentinel-2 L2A product expects raw DN [0, 10000], got normalized float [0.0, 1.0] (double scaling trap)"
+      ]
+    },
+    {
+      "payload_id": "SRC_09_P1",
+      "source_scene_id": "SRC_09",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "bitemporal_pair_sent_to_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Land Cover requires single scene / feature vector, not temporal pair"
+      ]
+    },
+    {
+      "payload_id": "SRC_09_P2",
+      "source_scene_id": "SRC_09",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b04_red",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "failure_reasons": [
+        "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B04'}"
+      ]
+    },
+    {
+      "payload_id": "SRC_09_P3",
+      "source_scene_id": "SRC_09",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_lower_boundary_violation_7.9m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "failure_reasons": [
+        "ERR_RESOLUTION_INCOMPATIBLE: GSD 7.9m outside operational window [8.0m, 12.0m]"
+      ]
+    },
+    {
+      "payload_id": "SRC_09_P4",
+      "source_scene_id": "SRC_09",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "double_scaling_float_trap_s2_l2a",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Sentinel-2 L2A product expects raw DN [0, 10000], got normalized float [0.0, 1.0] (double scaling trap)"
+      ]
+    },
+    {
+      "payload_id": "SRC_10_P1",
+      "source_scene_id": "SRC_10",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "bitemporal_pair_sent_to_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Land Cover requires single scene / feature vector, not temporal pair"
+      ]
+    },
+    {
+      "payload_id": "SRC_10_P2",
+      "source_scene_id": "SRC_10",
+      "dimension": 3,
+      "dimension_name": "Spectral Band Adequacy",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "omission_of_b04_red",
+      "expected_failure_code": "ERR_INSUFFICIENT_BANDS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "failure_reasons": [
+        "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B04'}"
+      ]
+    },
+    {
+      "payload_id": "SRC_10_P3",
+      "source_scene_id": "SRC_10",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_lower_boundary_violation_7.9m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "failure_reasons": [
+        "ERR_RESOLUTION_INCOMPATIBLE: GSD 7.9m outside operational window [8.0m, 12.0m]"
+      ]
+    },
+    {
+      "payload_id": "SRC_10_P4",
+      "source_scene_id": "SRC_10",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "double_scaling_float_trap_s2_l2a",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Sentinel-2 L2A product expects raw DN [0, 10000], got normalized float [0.0, 1.0] (double scaling trap)"
+      ]
+    },
+    {
+      "payload_id": "SRC_11_P1",
+      "source_scene_id": "SRC_11",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "1d_feature_vector_sent_to_deep_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Multimodal ResNet34 requires optical + SAR rasters, got 1D feature vector"
+      ]
+    },
+    {
+      "payload_id": "SRC_11_P2",
+      "source_scene_id": "SRC_11",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_upper_boundary_violation_12.1m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "failure_reasons": [
+        "ERR_RESOLUTION_INCOMPATIBLE: GSD 12.1m outside operational window [8.0m, 12.0m]"
+      ]
+    },
+    {
+      "payload_id": "SRC_11_P3",
+      "source_scene_id": "SRC_11",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "non_finite_floating_nan_inf",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Optical/SAR array contains NaN or Inf values"
+      ]
+    },
+    {
+      "payload_id": "SRC_11_P4",
+      "source_scene_id": "SRC_11",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_extreme_violation_0.30",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 30.0% exceeds 20.0% operational limit for land cover"
+      ]
+    },
+    {
+      "payload_id": "SRC_12_P1",
+      "source_scene_id": "SRC_12",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "1d_feature_vector_sent_to_deep_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Multimodal ResNet34 requires optical + SAR rasters, got 1D feature vector"
+      ]
+    },
+    {
+      "payload_id": "SRC_12_P2",
+      "source_scene_id": "SRC_12",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_upper_boundary_violation_12.1m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "failure_reasons": [
+        "ERR_RESOLUTION_INCOMPATIBLE: GSD 12.1m outside operational window [8.0m, 12.0m]"
+      ]
+    },
+    {
+      "payload_id": "SRC_12_P3",
+      "source_scene_id": "SRC_12",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "non_finite_floating_nan_inf",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Optical/SAR array contains NaN or Inf values"
+      ]
+    },
+    {
+      "payload_id": "SRC_12_P4",
+      "source_scene_id": "SRC_12",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_extreme_violation_0.30",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 30.0% exceeds 20.0% operational limit for land cover"
+      ]
+    },
+    {
+      "payload_id": "SRC_13_P1",
+      "source_scene_id": "SRC_13",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "1d_feature_vector_sent_to_deep_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Multimodal ResNet34 requires optical + SAR rasters, got 1D feature vector"
+      ]
+    },
+    {
+      "payload_id": "SRC_13_P2",
+      "source_scene_id": "SRC_13",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_upper_boundary_violation_12.1m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "failure_reasons": [
+        "ERR_RESOLUTION_INCOMPATIBLE: GSD 12.1m outside operational window [8.0m, 12.0m]"
+      ]
+    },
+    {
+      "payload_id": "SRC_13_P3",
+      "source_scene_id": "SRC_13",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "non_finite_floating_nan_inf",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Optical/SAR array contains NaN or Inf values"
+      ]
+    },
+    {
+      "payload_id": "SRC_13_P4",
+      "source_scene_id": "SRC_13",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_extreme_violation_0.30",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 30.0% exceeds 20.0% operational limit for land cover"
+      ]
+    },
+    {
+      "payload_id": "SRC_14_P1",
+      "source_scene_id": "SRC_14",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "1d_feature_vector_sent_to_deep_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Multimodal ResNet34 requires optical + SAR rasters, got 1D feature vector"
+      ]
+    },
+    {
+      "payload_id": "SRC_14_P2",
+      "source_scene_id": "SRC_14",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_upper_boundary_violation_12.1m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "failure_reasons": [
+        "ERR_RESOLUTION_INCOMPATIBLE: GSD 12.1m outside operational window [8.0m, 12.0m]"
+      ]
+    },
+    {
+      "payload_id": "SRC_14_P3",
+      "source_scene_id": "SRC_14",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "non_finite_floating_nan_inf",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Optical/SAR array contains NaN or Inf values"
+      ]
+    },
+    {
+      "payload_id": "SRC_14_P4",
+      "source_scene_id": "SRC_14",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_extreme_violation_0.30",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 30.0% exceeds 20.0% operational limit for land cover"
+      ]
+    },
+    {
+      "payload_id": "SRC_15_P1",
+      "source_scene_id": "SRC_15",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "1d_feature_vector_sent_to_deep_lc",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Multimodal ResNet34 requires optical + SAR rasters, got 1D feature vector"
+      ]
+    },
+    {
+      "payload_id": "SRC_15_P2",
+      "source_scene_id": "SRC_15",
+      "dimension": 7,
+      "dimension_name": "Ground Sample Distance (GSD)",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "gsd_upper_boundary_violation_12.1m",
+      "expected_failure_code": "ERR_RESOLUTION_INCOMPATIBLE",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "failure_reasons": [
+        "ERR_RESOLUTION_INCOMPATIBLE: GSD 12.1m outside operational window [8.0m, 12.0m]"
+      ]
+    },
+    {
+      "payload_id": "SRC_15_P3",
+      "source_scene_id": "SRC_15",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "non_finite_floating_nan_inf",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Optical/SAR array contains NaN or Inf values"
+      ]
+    },
+    {
+      "payload_id": "SRC_15_P4",
+      "source_scene_id": "SRC_15",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "cloud_cover_extreme_violation_0.30",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 30.0% exceeds 20.0% operational limit for land cover"
+      ]
+    },
+    {
+      "payload_id": "SRC_16_P1",
+      "source_scene_id": "SRC_16",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "single_image_sent_to_cd",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Change detection requires bitemporal image pair (N=2), got single image"
+      ]
+    },
+    {
+      "payload_id": "SRC_16_P2",
+      "source_scene_id": "SRC_16",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_lower_boundary_4.9d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 4.9d < 5d Sentinel-2 minimum revisit"
+      ]
+    },
+    {
+      "payload_id": "SRC_16_P3",
+      "source_scene_id": "SRC_16",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_projected_vs_geographic",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CRS_MISMATCH"
+      ],
+      "failure_reasons": [
+        "ERR_CRS_MISMATCH: Reference CRS 'EPSG:32632' != target CRS 'EPSG:4326'"
+      ]
+    },
+    {
+      "payload_id": "SRC_16_P4",
+      "source_scene_id": "SRC_16",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "unregistered_grid_displacement_0.051px",
+      "expected_failure_code": "ERR_UNREGISTERED_GRID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 0.0510 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_17_P1",
+      "source_scene_id": "SRC_17",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "single_image_sent_to_cd",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Change detection requires bitemporal image pair (N=2), got single image"
+      ]
+    },
+    {
+      "payload_id": "SRC_17_P2",
+      "source_scene_id": "SRC_17",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_lower_boundary_4.9d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 4.9d < 5d Sentinel-2 minimum revisit"
+      ]
+    },
+    {
+      "payload_id": "SRC_17_P3",
+      "source_scene_id": "SRC_17",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_projected_vs_geographic",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CRS_MISMATCH"
+      ],
+      "failure_reasons": [
+        "ERR_CRS_MISMATCH: Reference CRS 'EPSG:32632' != target CRS 'EPSG:4326'"
+      ]
+    },
+    {
+      "payload_id": "SRC_17_P4",
+      "source_scene_id": "SRC_17",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "unregistered_grid_displacement_0.051px",
+      "expected_failure_code": "ERR_UNREGISTERED_GRID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 0.0510 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_18_P1",
+      "source_scene_id": "SRC_18",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "single_image_sent_to_cd",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Change detection requires bitemporal image pair (N=2), got single image"
+      ]
+    },
+    {
+      "payload_id": "SRC_18_P2",
+      "source_scene_id": "SRC_18",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_lower_boundary_4.9d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 4.9d < 5d Sentinel-2 minimum revisit"
+      ]
+    },
+    {
+      "payload_id": "SRC_18_P3",
+      "source_scene_id": "SRC_18",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_projected_vs_geographic",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CRS_MISMATCH"
+      ],
+      "failure_reasons": [
+        "ERR_CRS_MISMATCH: Reference CRS 'EPSG:32630' != target CRS 'EPSG:4326'"
+      ]
+    },
+    {
+      "payload_id": "SRC_18_P4",
+      "source_scene_id": "SRC_18",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "unregistered_grid_displacement_0.051px",
+      "expected_failure_code": "ERR_UNREGISTERED_GRID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 0.0510 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_19_P1",
+      "source_scene_id": "SRC_19",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "single_image_sent_to_cd",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Change detection requires bitemporal image pair (N=2), got single image"
+      ]
+    },
+    {
+      "payload_id": "SRC_19_P2",
+      "source_scene_id": "SRC_19",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_lower_boundary_4.9d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 4.9d < 5d Sentinel-2 minimum revisit"
+      ]
+    },
+    {
+      "payload_id": "SRC_19_P3",
+      "source_scene_id": "SRC_19",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_projected_vs_geographic",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CRS_MISMATCH"
+      ],
+      "failure_reasons": [
+        "ERR_CRS_MISMATCH: Reference CRS 'EPSG:32632' != target CRS 'EPSG:4326'"
+      ]
+    },
+    {
+      "payload_id": "SRC_19_P4",
+      "source_scene_id": "SRC_19",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "unregistered_grid_displacement_0.051px",
+      "expected_failure_code": "ERR_UNREGISTERED_GRID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 0.0510 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_20_P1",
+      "source_scene_id": "SRC_20",
+      "dimension": 1,
+      "dimension_name": "Sensor Modality & Structure",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "single_image_sent_to_cd",
+      "expected_failure_code": "ERR_MISSING_MODALITY",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_MISSING_MODALITY"
+      ],
+      "failure_reasons": [
+        "ERR_MISSING_MODALITY: Change detection requires bitemporal image pair (N=2), got single image"
+      ]
+    },
+    {
+      "payload_id": "SRC_20_P2",
+      "source_scene_id": "SRC_20",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_lower_boundary_4.9d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 4.9d < 5d Sentinel-2 minimum revisit"
+      ]
+    },
+    {
+      "payload_id": "SRC_20_P3",
+      "source_scene_id": "SRC_20",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_projected_vs_geographic",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CRS_MISMATCH"
+      ],
+      "failure_reasons": [
+        "ERR_CRS_MISMATCH: Reference CRS 'EPSG:32634' != target CRS 'EPSG:4326'"
+      ]
+    },
+    {
+      "payload_id": "SRC_20_P4",
+      "source_scene_id": "SRC_20",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "unregistered_grid_displacement_0.051px",
+      "expected_failure_code": "ERR_UNREGISTERED_GRID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 0.0510 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_21_P1",
+      "source_scene_id": "SRC_21",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_upper_boundary_730.1d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 730.1d > 730d (2 years) baseline drift limit"
+      ]
+    },
+    {
+      "payload_id": "SRC_21_P2",
+      "source_scene_id": "SRC_21",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "undersized_spatial_grid_99x100",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_DIMENSION_TOO_SMALL"
+      ],
+      "failure_reasons": [
+        "ERR_DIMENSION_TOO_SMALL: Dimension (99, 100) below minimum (100, 100)"
+      ]
+    },
+    {
+      "payload_id": "SRC_21_P3",
+      "source_scene_id": "SRC_21",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_adjacent_utm_zones",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CRS_MISMATCH"
+      ],
+      "failure_reasons": [
+        "ERR_CRS_MISMATCH: Reference CRS 'EPSG:32632' != target CRS 'EPSG:32633'"
+      ]
+    },
+    {
+      "payload_id": "SRC_21_P4",
+      "source_scene_id": "SRC_21",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "anisotropic_shear_kappa_1.011",
+      "expected_failure_code": "ERR_ANISOTROPIC_SHEAR",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_ANISOTROPIC_SHEAR",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_ANISOTROPIC_SHEAR: Condition number 1.0123 exceeds 1.01",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 1.4742 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_22_P1",
+      "source_scene_id": "SRC_22",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_upper_boundary_730.1d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 730.1d > 730d (2 years) baseline drift limit"
+      ]
+    },
+    {
+      "payload_id": "SRC_22_P2",
+      "source_scene_id": "SRC_22",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "undersized_spatial_grid_99x100",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_DIMENSION_TOO_SMALL"
+      ],
+      "failure_reasons": [
+        "ERR_DIMENSION_TOO_SMALL: Dimension (99, 100) below minimum (100, 100)"
+      ]
+    },
+    {
+      "payload_id": "SRC_22_P3",
+      "source_scene_id": "SRC_22",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_adjacent_utm_zones",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CRS_MISMATCH"
+      ],
+      "failure_reasons": [
+        "ERR_CRS_MISMATCH: Reference CRS 'EPSG:32632' != target CRS 'EPSG:32633'"
+      ]
+    },
+    {
+      "payload_id": "SRC_22_P4",
+      "source_scene_id": "SRC_22",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "anisotropic_shear_kappa_1.011",
+      "expected_failure_code": "ERR_ANISOTROPIC_SHEAR",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_ANISOTROPIC_SHEAR",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_ANISOTROPIC_SHEAR: Condition number 1.0123 exceeds 1.01",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 1.4742 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_23_P1",
+      "source_scene_id": "SRC_23",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_upper_boundary_730.1d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 730.1d > 730d (2 years) baseline drift limit"
+      ]
+    },
+    {
+      "payload_id": "SRC_23_P2",
+      "source_scene_id": "SRC_23",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "undersized_spatial_grid_99x100",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_DIMENSION_TOO_SMALL"
+      ],
+      "failure_reasons": [
+        "ERR_DIMENSION_TOO_SMALL: Dimension (99, 100) below minimum (100, 100)"
+      ]
+    },
+    {
+      "payload_id": "SRC_23_P3",
+      "source_scene_id": "SRC_23",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_adjacent_utm_zones",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CRS_MISMATCH"
+      ],
+      "failure_reasons": [
+        "ERR_CRS_MISMATCH: Reference CRS 'EPSG:32632' != target CRS 'EPSG:32633'"
+      ]
+    },
+    {
+      "payload_id": "SRC_23_P4",
+      "source_scene_id": "SRC_23",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "anisotropic_shear_kappa_1.011",
+      "expected_failure_code": "ERR_ANISOTROPIC_SHEAR",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_ANISOTROPIC_SHEAR",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_ANISOTROPIC_SHEAR: Condition number 1.0123 exceeds 1.01",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 1.4742 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_24_P1",
+      "source_scene_id": "SRC_24",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_upper_boundary_730.1d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 730.1d > 730d (2 years) baseline drift limit"
+      ]
+    },
+    {
+      "payload_id": "SRC_24_P2",
+      "source_scene_id": "SRC_24",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "undersized_spatial_grid_99x100",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_DIMENSION_TOO_SMALL"
+      ],
+      "failure_reasons": [
+        "ERR_DIMENSION_TOO_SMALL: Dimension (99, 100) below minimum (100, 100)"
+      ]
+    },
+    {
+      "payload_id": "SRC_24_P3",
+      "source_scene_id": "SRC_24",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_adjacent_utm_zones",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CRS_MISMATCH"
+      ],
+      "failure_reasons": [
+        "ERR_CRS_MISMATCH: Reference CRS 'EPSG:32632' != target CRS 'EPSG:32633'"
+      ]
+    },
+    {
+      "payload_id": "SRC_24_P4",
+      "source_scene_id": "SRC_24",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "anisotropic_shear_kappa_1.011",
+      "expected_failure_code": "ERR_ANISOTROPIC_SHEAR",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_ANISOTROPIC_SHEAR",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_ANISOTROPIC_SHEAR: Condition number 1.0123 exceeds 1.01",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 1.4742 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_25_P1",
+      "source_scene_id": "SRC_25",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "temporal_revisit_upper_boundary_730.1d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 730.1d > 730d (2 years) baseline drift limit"
+      ]
+    },
+    {
+      "payload_id": "SRC_25_P2",
+      "source_scene_id": "SRC_25",
+      "dimension": 4,
+      "dimension_name": "Spatial Dimensions",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "undersized_spatial_grid_99x100",
+      "expected_failure_code": "ERR_DIMENSION_TOO_SMALL",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_DIMENSION_TOO_SMALL"
+      ],
+      "failure_reasons": [
+        "ERR_DIMENSION_TOO_SMALL: Dimension (99, 100) below minimum (100, 100)"
+      ]
+    },
+    {
+      "payload_id": "SRC_25_P3",
+      "source_scene_id": "SRC_25",
+      "dimension": 5,
+      "dimension_name": "Geospatial CRS Consistency",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "crs_mismatch_adjacent_utm_zones",
+      "expected_failure_code": "ERR_CRS_MISMATCH",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CRS_MISMATCH"
+      ],
+      "failure_reasons": [
+        "ERR_CRS_MISMATCH: Reference CRS 'EPSG:32632' != target CRS 'EPSG:32633'"
+      ]
+    },
+    {
+      "payload_id": "SRC_25_P4",
+      "source_scene_id": "SRC_25",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "anisotropic_shear_kappa_1.011",
+      "expected_failure_code": "ERR_ANISOTROPIC_SHEAR",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_ANISOTROPIC_SHEAR",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_ANISOTROPIC_SHEAR: Condition number 1.0123 exceeds 1.01",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 1.4742 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_26_P1",
+      "source_scene_id": "SRC_26",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "extreme_temporal_drift_1200d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 1200.0d > 730d (2 years) baseline drift limit"
+      ]
+    },
+    {
+      "payload_id": "SRC_26_P2",
+      "source_scene_id": "SRC_26",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "axis_reflection_inversion_det_neg",
+      "expected_failure_code": "ERR_INVERTED_AXIS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INVERTED_AXIS",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_INVERTED_AXIS: Negative determinant indicates handedness inversion/reflection",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 240.0000 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_26_P3",
+      "source_scene_id": "SRC_26",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "scale_distortion_det_0.979",
+      "expected_failure_code": "ERR_SCALE_DISTORTION",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_SCALE_DISTORTION",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_SCALE_DISTORTION: Determinant 0.9790 deviates >2% from unity",
+        "ERR_SCALE_DISTORTION: Singular values (0.9894, 0.9894) deviate >1%",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 1.7914 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_26_P4",
+      "source_scene_id": "SRC_26",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.101",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 10.1% exceeds 10.0% operational limit for change detection"
+      ]
+    },
+    {
+      "payload_id": "SRC_27_P1",
+      "source_scene_id": "SRC_27",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "extreme_temporal_drift_1200d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 1200.0d > 730d (2 years) baseline drift limit"
+      ]
+    },
+    {
+      "payload_id": "SRC_27_P2",
+      "source_scene_id": "SRC_27",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "axis_reflection_inversion_det_neg",
+      "expected_failure_code": "ERR_INVERTED_AXIS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INVERTED_AXIS",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_INVERTED_AXIS: Negative determinant indicates handedness inversion/reflection",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 240.0000 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_27_P3",
+      "source_scene_id": "SRC_27",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "scale_distortion_det_0.979",
+      "expected_failure_code": "ERR_SCALE_DISTORTION",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_SCALE_DISTORTION",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_SCALE_DISTORTION: Determinant 0.9790 deviates >2% from unity",
+        "ERR_SCALE_DISTORTION: Singular values (0.9894, 0.9894) deviate >1%",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 1.7914 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_27_P4",
+      "source_scene_id": "SRC_27",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.101",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 10.1% exceeds 10.0% operational limit for change detection"
+      ]
+    },
+    {
+      "payload_id": "SRC_28_P1",
+      "source_scene_id": "SRC_28",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "extreme_temporal_drift_1200d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 1200.0d > 730d (2 years) baseline drift limit"
+      ]
+    },
+    {
+      "payload_id": "SRC_28_P2",
+      "source_scene_id": "SRC_28",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "axis_reflection_inversion_det_neg",
+      "expected_failure_code": "ERR_INVERTED_AXIS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INVERTED_AXIS",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_INVERTED_AXIS: Negative determinant indicates handedness inversion/reflection",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 240.0000 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_28_P3",
+      "source_scene_id": "SRC_28",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "scale_distortion_det_0.979",
+      "expected_failure_code": "ERR_SCALE_DISTORTION",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_SCALE_DISTORTION",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_SCALE_DISTORTION: Determinant 0.9790 deviates >2% from unity",
+        "ERR_SCALE_DISTORTION: Singular values (0.9894, 0.9894) deviate >1%",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 1.7914 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_28_P4",
+      "source_scene_id": "SRC_28",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.101",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 10.1% exceeds 10.0% operational limit for change detection"
+      ]
+    },
+    {
+      "payload_id": "SRC_29_P1",
+      "source_scene_id": "SRC_29",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "extreme_temporal_drift_1200d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 1200.0d > 730d (2 years) baseline drift limit"
+      ]
+    },
+    {
+      "payload_id": "SRC_29_P2",
+      "source_scene_id": "SRC_29",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "axis_reflection_inversion_det_neg",
+      "expected_failure_code": "ERR_INVERTED_AXIS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INVERTED_AXIS",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_INVERTED_AXIS: Negative determinant indicates handedness inversion/reflection",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 240.0000 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_29_P3",
+      "source_scene_id": "SRC_29",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "scale_distortion_det_0.979",
+      "expected_failure_code": "ERR_SCALE_DISTORTION",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_SCALE_DISTORTION",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_SCALE_DISTORTION: Determinant 0.9790 deviates >2% from unity",
+        "ERR_SCALE_DISTORTION: Singular values (0.9894, 0.9894) deviate >1%",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 1.7914 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_29_P4",
+      "source_scene_id": "SRC_29",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.101",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 10.1% exceeds 10.0% operational limit for change detection"
+      ]
+    },
+    {
+      "payload_id": "SRC_30_P1",
+      "source_scene_id": "SRC_30",
+      "dimension": 2,
+      "dimension_name": "Temporal Revisit Window",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "extreme_temporal_drift_1200d",
+      "expected_failure_code": "ERR_TEMPORAL_INVALID",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_TEMPORAL_INVALID"
+      ],
+      "failure_reasons": [
+        "ERR_TEMPORAL_INVALID: Revisit interval 1200.0d > 730d (2 years) baseline drift limit"
+      ]
+    },
+    {
+      "payload_id": "SRC_30_P2",
+      "source_scene_id": "SRC_30",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "axis_reflection_inversion_det_neg",
+      "expected_failure_code": "ERR_INVERTED_AXIS",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_INVERTED_AXIS",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_INVERTED_AXIS: Negative determinant indicates handedness inversion/reflection",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 240.0000 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_30_P3",
+      "source_scene_id": "SRC_30",
+      "dimension": 6,
+      "dimension_name": "Affine Alignment & Coregistration",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "scale_distortion_det_0.979",
+      "expected_failure_code": "ERR_SCALE_DISTORTION",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_SCALE_DISTORTION",
+        "ERR_UNREGISTERED_GRID"
+      ],
+      "failure_reasons": [
+        "ERR_SCALE_DISTORTION: Determinant 0.9790 deviates >2% from unity",
+        "ERR_SCALE_DISTORTION: Singular values (0.9894, 0.9894) deviate >1%",
+        "ERR_UNREGISTERED_GRID: Maximum footprint displacement 1.7914 px exceeds engineering limit 0.05 px"
+      ]
+    },
+    {
+      "payload_id": "SRC_30_P4",
+      "source_scene_id": "SRC_30",
+      "dimension": 8,
+      "dimension_name": "Radiometric & Cloud Guard",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "cloud_cover_boundary_violation_0.101",
+      "expected_failure_code": "ERR_CORRUPT_PAYLOAD",
+      "is_valid_payload": false,
+      "gate_passed": false,
+      "dispatched_to_specialist": false,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [
+        "ERR_CORRUPT_PAYLOAD"
+      ],
+      "failure_reasons": [
+        "ERR_CORRUPT_PAYLOAD: Cloud cover 10.1% exceeds 10.0% operational limit for change detection"
+      ]
+    },
+    {
+      "payload_id": "CTRL_LC_01_VALID",
+      "source_scene_id": "CTRL_LC_01",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_LC_02_VALID",
+      "source_scene_id": "CTRL_LC_02",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_LC_03_VALID",
+      "source_scene_id": "CTRL_LC_03",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_LC_04_VALID",
+      "source_scene_id": "CTRL_LC_04",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_LC_05_VALID",
+      "source_scene_id": "CTRL_LC_05",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_LC_06_VALID",
+      "source_scene_id": "CTRL_LC_06",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_LC_07_VALID",
+      "source_scene_id": "CTRL_LC_07",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_LC_08_VALID",
+      "source_scene_id": "CTRL_LC_08",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_LC_09_VALID",
+      "source_scene_id": "CTRL_LC_09",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_LC_10_VALID",
+      "source_scene_id": "CTRL_LC_10",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "perturbation_type": "valid_multimodal_s1_s2_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_CD_01_VALID",
+      "source_scene_id": "CTRL_CD_01",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_CD_02_VALID",
+      "source_scene_id": "CTRL_CD_02",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_CD_03_VALID",
+      "source_scene_id": "CTRL_CD_03",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_CD_04_VALID",
+      "source_scene_id": "CTRL_CD_04",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_CD_05_VALID",
+      "source_scene_id": "CTRL_CD_05",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_CD_06_VALID",
+      "source_scene_id": "CTRL_CD_06",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_CD_07_VALID",
+      "source_scene_id": "CTRL_CD_07",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_CD_08_VALID",
+      "source_scene_id": "CTRL_CD_08",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_CD_09_VALID",
+      "source_scene_id": "CTRL_CD_09",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    },
+    {
+      "payload_id": "CTRL_CD_10_VALID",
+      "source_scene_id": "CTRL_CD_10",
+      "dimension": 0,
+      "dimension_name": "Valid In-Domain Control",
+      "target_task": "CHANGE_DETECTION",
+      "perturbation_type": "valid_bitemporal_s2_pair_control",
+      "expected_failure_code": null,
+      "is_valid_payload": true,
+      "gate_passed": true,
+      "dispatched_to_specialist": true,
+      "is_false_dispatch": false,
+      "is_false_rejection": false,
+      "correct_decision": true,
+      "failure_codes": [],
+      "failure_reasons": []
+    }
+  ]
+}

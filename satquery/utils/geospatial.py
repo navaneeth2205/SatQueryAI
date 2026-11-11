@@ -226,10 +226,23 @@ def evaluate_physical_compatibility_gate(
                 if np.isnan(feats).any() or np.isinf(feats).any():
                     failure_codes.append("ERR_CORRUPT_PAYLOAD")
                     failure_reasons.append("ERR_CORRUPT_PAYLOAD: Feature vector contains NaN or Inf values")
+                if meta.get("require_multimodal_raster", False) or meta.get("target_specialist") == "deep_multimodal":
+                    failure_codes.append("ERR_MISSING_MODALITY")
+                    failure_reasons.append("ERR_MISSING_MODALITY: Multimodal ResNet34 requires optical + SAR rasters, got 1D feature vector")
             elif "s1_path" in payload or "s2_path" in payload:
                 if not ("s1_path" in payload and "s2_path" in payload):
                     failure_codes.append("ERR_MISSING_MODALITY")
                     failure_reasons.append("ERR_MISSING_MODALITY: Multimodal Land Cover requires optical + SAR observations")
+            elif "optical" in payload or "sar" in payload:
+                if not ("optical" in payload and "sar" in payload):
+                    failure_codes.append("ERR_MISSING_MODALITY")
+                    failure_reasons.append("ERR_MISSING_MODALITY: Multimodal Land Cover requires optical + SAR observations")
+                else:
+                    opt = np.asarray(payload["optical"])
+                    sar = np.asarray(payload["sar"])
+                    if np.isnan(opt).any() or np.isinf(opt).any() or np.isnan(sar).any() or np.isinf(sar).any():
+                        failure_codes.append("ERR_CORRUPT_PAYLOAD")
+                        failure_reasons.append("ERR_CORRUPT_PAYLOAD: Optical/SAR array contains NaN or Inf values")
             elif "t1" in payload and "t2" in payload:
                 # Temporal pair attached to Land Cover -> Incompatible modality!
                 failure_codes.append("ERR_MISSING_MODALITY")
@@ -239,6 +252,9 @@ def evaluate_physical_compatibility_gate(
                 if np.isnan(payload).any() or np.isinf(payload).any():
                     failure_codes.append("ERR_CORRUPT_PAYLOAD")
                     failure_reasons.append("ERR_CORRUPT_PAYLOAD: Feature vector contains NaN or Inf values")
+                if meta.get("require_multimodal_raster", False) or meta.get("target_specialist") == "deep_multimodal":
+                    failure_codes.append("ERR_MISSING_MODALITY")
+                    failure_reasons.append("ERR_MISSING_MODALITY: Multimodal ResNet34 requires optical + SAR rasters, got 1D feature vector")
             elif payload.ndim in (2, 3):
                 # Raw single image lacks SAR or feature preprocessing
                 failure_codes.append("ERR_MISSING_MODALITY")
@@ -246,6 +262,23 @@ def evaluate_physical_compatibility_gate(
         elif isinstance(payload, (tuple, list)) and len(payload) == 2:
             failure_codes.append("ERR_MISSING_MODALITY")
             failure_reasons.append("ERR_MISSING_MODALITY: Temporal pair attached to Land Cover classification")
+
+        # Double-scaling trap for Land Cover
+        if meta.get("product_type") == "s2_l2a":
+            if isinstance(payload, np.ndarray) and payload.dtype == np.float32 and np.max(payload) <= 1.05:
+                if "ERR_CORRUPT_PAYLOAD" not in failure_codes:
+                    failure_codes.append("ERR_CORRUPT_PAYLOAD")
+                    failure_reasons.append("ERR_CORRUPT_PAYLOAD: Sentinel-2 L2A product expects raw DN [0, 10000], got normalized float [0.0, 1.0] (double scaling trap)")
+            elif isinstance(payload, dict) and "optical" in payload:
+                opt = np.asarray(payload["optical"])
+                if opt.dtype == np.float32 and np.max(opt) <= 1.05:
+                    if "ERR_CORRUPT_PAYLOAD" not in failure_codes:
+                        failure_codes.append("ERR_CORRUPT_PAYLOAD")
+                        failure_reasons.append("ERR_CORRUPT_PAYLOAD: Sentinel-2 L2A product expects raw DN [0, 10000], got normalized float [0.0, 1.0] (double scaling trap)")
+            elif meta.get("is_double_scaling_trap", False):
+                if "ERR_CORRUPT_PAYLOAD" not in failure_codes:
+                    failure_codes.append("ERR_CORRUPT_PAYLOAD")
+                    failure_reasons.append("ERR_CORRUPT_PAYLOAD: Sentinel-2 L2A product expects raw DN [0, 10000], got normalized float [0.0, 1.0] (double scaling trap)")
 
     elif task in ("CHANGE_DETECTION", "CHANGE_VQA"):
         # Requires valid temporal pair
@@ -371,6 +404,11 @@ def evaluate_physical_compatibility_gate(
             if np.max(payload) > 1.05 and np.max(payload) < 255.0:
                 failure_codes.append("ERR_CORRUPT_PAYLOAD")
                 failure_reasons.append("ERR_CORRUPT_PAYLOAD: Float values not normalized to [0.0, 1.0]")
+
+    if meta.get("has_nan_inf", False):
+        if "ERR_CORRUPT_PAYLOAD" not in failure_codes:
+            failure_codes.append("ERR_CORRUPT_PAYLOAD")
+            failure_reasons.append("ERR_CORRUPT_PAYLOAD: Payload contains non-finite NaN or Inf values")
 
     is_compat = len(failure_reasons) == 0
     return CompatibilityGateResult(
