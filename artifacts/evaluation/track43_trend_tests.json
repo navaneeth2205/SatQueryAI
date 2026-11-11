@@ -1,0 +1,203 @@
+{
+  "tests": [
+    {
+      "test_id": "Test_4.3.1",
+      "name": "Land Cover x Synthetic Cloud Occlusion",
+      "domain": "Land Cover",
+      "operator": "Synthetic Cloud Occlusion",
+      "beta_1_slope": -0.0082,
+      "se_cluster": 0.0042,
+      "t_statistic": -1.9531,
+      "raw_p_null": 0.02099,
+      "one_sided_95_upper_bound": -0.0017,
+      "baseline_f1": 0.1161,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.05,
+          0.1,
+          0.15,
+          0.2,
+          0.3,
+          0.4,
+          0.5
+        ],
+        "mean_f1": [
+          0.1161,
+          0.1096,
+          0.1083,
+          0.1085,
+          0.1085,
+          0.1085,
+          0.1085,
+          0.1085
+        ]
+      },
+      "holm_adjusted_p_value": 0.04498,
+      "decision": "REJECT_H0",
+      "trend_significance": "SIGNIFICANT_NEGATIVE_TREND"
+    },
+    {
+      "test_id": "Test_4.3.2",
+      "name": "Land Cover x Atmospheric Haze Scattering",
+      "domain": "Land Cover",
+      "operator": "Atmospheric Haze Scattering",
+      "beta_1_slope": -0.0086,
+      "se_cluster": 0.0041,
+      "t_statistic": -2.1134,
+      "raw_p_null": 0.01499,
+      "one_sided_95_upper_bound": -0.0024,
+      "baseline_f1": 0.1161,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.1,
+          0.3,
+          0.5,
+          0.7
+        ],
+        "mean_f1": [
+          0.1161,
+          0.1103,
+          0.1085,
+          0.1085,
+          0.1085
+        ]
+      },
+      "holm_adjusted_p_value": 0.04498,
+      "decision": "REJECT_H0",
+      "trend_significance": "SIGNIFICANT_NEGATIVE_TREND"
+    },
+    {
+      "test_id": "Test_4.3.3",
+      "name": "Land Cover x Scaled Input-Domain Noise",
+      "domain": "Land Cover",
+      "operator": "Scaled Input-Domain Gaussian Noise",
+      "beta_1_slope": -0.044,
+      "se_cluster": 0.0412,
+      "t_statistic": -1.0696,
+      "raw_p_null": 0.17491,
+      "one_sided_95_upper_bound": 0.0293,
+      "baseline_f1": 0.1161,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.01,
+          0.02,
+          0.05,
+          0.1
+        ],
+        "mean_f1": [
+          0.1161,
+          0.1161,
+          0.1149,
+          0.1125,
+          0.1121
+        ]
+      },
+      "holm_adjusted_p_value": 0.17491,
+      "decision": "RETAIN_H0",
+      "trend_significance": "NOT_SIGNIFICANT"
+    },
+    {
+      "test_id": "Test_4.3.4",
+      "name": "Change Detection x Synthetic Cloud Occlusion",
+      "domain": "Change Detection",
+      "operator": "Synthetic Cloud Occlusion",
+      "beta_1_slope": -0.077,
+      "se_cluster": 0.0082,
+      "t_statistic": -9.4445,
+      "raw_p_null": 0.0005,
+      "one_sided_95_upper_bound": -0.0653,
+      "baseline_f1": 0.1382,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.05,
+          0.1,
+          0.15,
+          0.2,
+          0.3,
+          0.4,
+          0.5
+        ],
+        "mean_f1": [
+          0.1382,
+          0.0453,
+          0.0521,
+          0.0553,
+          0.0569,
+          0.0563,
+          0.0546,
+          0.0526
+        ]
+      },
+      "holm_adjusted_p_value": 0.003,
+      "decision": "REJECT_H0",
+      "trend_significance": "SIGNIFICANT_NEGATIVE_TREND"
+    },
+    {
+      "test_id": "Test_4.3.5",
+      "name": "Change Detection x Atmospheric Haze Scattering",
+      "domain": "Change Detection",
+      "operator": "Atmospheric Haze Scattering",
+      "beta_1_slope": -0.101,
+      "se_cluster": 0.0077,
+      "t_statistic": -13.051,
+      "raw_p_null": 0.0005,
+      "one_sided_95_upper_bound": -0.0893,
+      "baseline_f1": 0.1382,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.1,
+          0.3,
+          0.5,
+          0.7
+        ],
+        "mean_f1": [
+          0.1382,
+          0.0385,
+          0.0043,
+          0.0047,
+          0.0495
+        ]
+      },
+      "holm_adjusted_p_value": 0.003,
+      "decision": "REJECT_H0",
+      "trend_significance": "SIGNIFICANT_NEGATIVE_TREND"
+    },
+    {
+      "test_id": "Test_4.3.6",
+      "name": "Change Detection x Scaled Input-Domain Noise",
+      "domain": "Change Detection",
+      "operator": "Scaled Input-Domain Gaussian Noise",
+      "beta_1_slope": -0.8696,
+      "se_cluster": 0.0538,
+      "t_statistic": -16.1624,
+      "raw_p_null": 0.0005,
+      "one_sided_95_upper_bound": -0.7726,
+      "baseline_f1": 0.1382,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.01,
+          0.02,
+          0.05,
+          0.1
+        ],
+        "mean_f1": [
+          0.1382,
+          0.1233,
+          0.1083,
+          0.0768,
+          0.0495
+        ]
+      },
+      "holm_adjusted_p_value": 0.003,
+      "decision": "REJECT_H0",
+      "trend_significance": "SIGNIFICANT_NEGATIVE_TREND"
+    }
+  ],
+  "all_tests_significant": false
+}

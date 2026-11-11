@@ -1,0 +1,396 @@
+{
+  "metadata": {
+    "protocol_reference": "SATQUERY-P4-PROTOCOL-V1.12.1-FROZEN.md",
+    "protocol_hash": "7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5",
+    "track": "Track 4.3: Atmospheric & Image-Quality Stress Testing",
+    "status": "EVALUATION_COMPLETED"
+  },
+  "sample_accounting": {
+    "per_cluster": {
+      "CL01_Sinai_Arid": {
+        "cluster_id": 0,
+        "N_candidate_drawn": 25,
+        "N_excluded_excursion": 0,
+        "N_evaluable": 25,
+        "excursion_rate": 0.0
+      },
+      "CL02_RubAlKhali_Arid": {
+        "cluster_id": 1,
+        "N_candidate_drawn": 28,
+        "N_excluded_excursion": 3,
+        "N_evaluable": 25,
+        "excursion_rate": 0.1071
+      },
+      "CL03_Amazon_Tropical": {
+        "cluster_id": 2,
+        "N_candidate_drawn": 27,
+        "N_excluded_excursion": 2,
+        "N_evaluable": 25,
+        "excursion_rate": 0.0741
+      },
+      "CL04_Congo_Tropical": {
+        "cluster_id": 3,
+        "N_candidate_drawn": 25,
+        "N_excluded_excursion": 0,
+        "N_evaluable": 25,
+        "excursion_rate": 0.0
+      },
+      "CL05_Lapland_Boreal": {
+        "cluster_id": 4,
+        "N_candidate_drawn": 26,
+        "N_excluded_excursion": 1,
+        "N_evaluable": 25,
+        "excursion_rate": 0.0385
+      },
+      "CL06_Alaska_Boreal": {
+        "cluster_id": 5,
+        "N_candidate_drawn": 25,
+        "N_excluded_excursion": 0,
+        "N_evaluable": 25,
+        "excursion_rate": 0.0
+      },
+      "CL07_Punjab_Cropland": {
+        "cluster_id": 6,
+        "N_candidate_drawn": 27,
+        "N_excluded_excursion": 2,
+        "N_evaluable": 25,
+        "excursion_rate": 0.0741
+      },
+      "CL08_Mekong_Cropland": {
+        "cluster_id": 7,
+        "N_candidate_drawn": 26,
+        "N_excluded_excursion": 1,
+        "N_evaluable": 25,
+        "excursion_rate": 0.0385
+      },
+      "CL09_Serbia_T34TCR": {
+        "cluster_id": 8,
+        "N_candidate_drawn": 27,
+        "N_excluded_excursion": 2,
+        "N_evaluable": 25,
+        "excursion_rate": 0.0741
+      },
+      "CL10_Serbia_T34TEQ": {
+        "cluster_id": 9,
+        "N_candidate_drawn": 26,
+        "N_excluded_excursion": 1,
+        "N_evaluable": 25,
+        "excursion_rate": 0.0385
+      }
+    },
+    "pooled": {
+      "N_candidate_drawn": 262,
+      "N_excluded_excursion": 12,
+      "N_evaluable": 250,
+      "empirical_excursion_rate": 0.0458
+    }
+  },
+  "confirmatory_trend_tests": [
+    {
+      "test_id": "Test_4.3.1",
+      "name": "Land Cover x Synthetic Cloud Occlusion",
+      "domain": "Land Cover",
+      "operator": "Synthetic Cloud Occlusion",
+      "beta_1_slope": -0.0082,
+      "se_cluster": 0.0042,
+      "t_statistic": -1.9531,
+      "raw_p_null": 0.02099,
+      "one_sided_95_upper_bound": -0.0017,
+      "baseline_f1": 0.1161,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.05,
+          0.1,
+          0.15,
+          0.2,
+          0.3,
+          0.4,
+          0.5
+        ],
+        "mean_f1": [
+          0.1161,
+          0.1096,
+          0.1083,
+          0.1085,
+          0.1085,
+          0.1085,
+          0.1085,
+          0.1085
+        ]
+      },
+      "holm_adjusted_p_value": 0.04498,
+      "decision": "REJECT_H0",
+      "trend_significance": "SIGNIFICANT_NEGATIVE_TREND"
+    },
+    {
+      "test_id": "Test_4.3.2",
+      "name": "Land Cover x Atmospheric Haze Scattering",
+      "domain": "Land Cover",
+      "operator": "Atmospheric Haze Scattering",
+      "beta_1_slope": -0.0086,
+      "se_cluster": 0.0041,
+      "t_statistic": -2.1134,
+      "raw_p_null": 0.01499,
+      "one_sided_95_upper_bound": -0.0024,
+      "baseline_f1": 0.1161,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.1,
+          0.3,
+          0.5,
+          0.7
+        ],
+        "mean_f1": [
+          0.1161,
+          0.1103,
+          0.1085,
+          0.1085,
+          0.1085
+        ]
+      },
+      "holm_adjusted_p_value": 0.04498,
+      "decision": "REJECT_H0",
+      "trend_significance": "SIGNIFICANT_NEGATIVE_TREND"
+    },
+    {
+      "test_id": "Test_4.3.3",
+      "name": "Land Cover x Scaled Input-Domain Noise",
+      "domain": "Land Cover",
+      "operator": "Scaled Input-Domain Gaussian Noise",
+      "beta_1_slope": -0.044,
+      "se_cluster": 0.0412,
+      "t_statistic": -1.0696,
+      "raw_p_null": 0.17491,
+      "one_sided_95_upper_bound": 0.0293,
+      "baseline_f1": 0.1161,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.01,
+          0.02,
+          0.05,
+          0.1
+        ],
+        "mean_f1": [
+          0.1161,
+          0.1161,
+          0.1149,
+          0.1125,
+          0.1121
+        ]
+      },
+      "holm_adjusted_p_value": 0.17491,
+      "decision": "RETAIN_H0",
+      "trend_significance": "NOT_SIGNIFICANT"
+    },
+    {
+      "test_id": "Test_4.3.4",
+      "name": "Change Detection x Synthetic Cloud Occlusion",
+      "domain": "Change Detection",
+      "operator": "Synthetic Cloud Occlusion",
+      "beta_1_slope": -0.077,
+      "se_cluster": 0.0082,
+      "t_statistic": -9.4445,
+      "raw_p_null": 0.0005,
+      "one_sided_95_upper_bound": -0.0653,
+      "baseline_f1": 0.1382,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.05,
+          0.1,
+          0.15,
+          0.2,
+          0.3,
+          0.4,
+          0.5
+        ],
+        "mean_f1": [
+          0.1382,
+          0.0453,
+          0.0521,
+          0.0553,
+          0.0569,
+          0.0563,
+          0.0546,
+          0.0526
+        ]
+      },
+      "holm_adjusted_p_value": 0.003,
+      "decision": "REJECT_H0",
+      "trend_significance": "SIGNIFICANT_NEGATIVE_TREND"
+    },
+    {
+      "test_id": "Test_4.3.5",
+      "name": "Change Detection x Atmospheric Haze Scattering",
+      "domain": "Change Detection",
+      "operator": "Atmospheric Haze Scattering",
+      "beta_1_slope": -0.101,
+      "se_cluster": 0.0077,
+      "t_statistic": -13.051,
+      "raw_p_null": 0.0005,
+      "one_sided_95_upper_bound": -0.0893,
+      "baseline_f1": 0.1382,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.1,
+          0.3,
+          0.5,
+          0.7
+        ],
+        "mean_f1": [
+          0.1382,
+          0.0385,
+          0.0043,
+          0.0047,
+          0.0495
+        ]
+      },
+      "holm_adjusted_p_value": 0.003,
+      "decision": "REJECT_H0",
+      "trend_significance": "SIGNIFICANT_NEGATIVE_TREND"
+    },
+    {
+      "test_id": "Test_4.3.6",
+      "name": "Change Detection x Scaled Input-Domain Noise",
+      "domain": "Change Detection",
+      "operator": "Scaled Input-Domain Gaussian Noise",
+      "beta_1_slope": -0.8696,
+      "se_cluster": 0.0538,
+      "t_statistic": -16.1624,
+      "raw_p_null": 0.0005,
+      "one_sided_95_upper_bound": -0.7726,
+      "baseline_f1": 0.1382,
+      "degradation_curve": {
+        "severities": [
+          0.0,
+          0.01,
+          0.02,
+          0.05,
+          0.1
+        ],
+        "mean_f1": [
+          0.1382,
+          0.1233,
+          0.1083,
+          0.0768,
+          0.0495
+        ]
+      },
+      "holm_adjusted_p_value": 0.003,
+      "decision": "REJECT_H0",
+      "trend_significance": "SIGNIFICANT_NEGATIVE_TREND"
+    }
+  ],
+  "cloud_metadata_boundary_gate": {
+    "boundary_cases": [
+      {
+        "task": "LAND_COVER_CLASSIFICATION",
+        "cloud_fraction": 0.1,
+        "boundary_type": "Sub-threshold",
+        "expected_decision": "PASS",
+        "actual_decision": "PASS",
+        "expected_code": null,
+        "actual_codes": [],
+        "passed_audit": true
+      },
+      {
+        "task": "LAND_COVER_CLASSIFICATION",
+        "cloud_fraction": 0.2,
+        "boundary_type": "Exact Boundary Equality",
+        "expected_decision": "PASS",
+        "actual_decision": "PASS",
+        "expected_code": null,
+        "actual_codes": [],
+        "passed_audit": true
+      },
+      {
+        "task": "LAND_COVER_CLASSIFICATION",
+        "cloud_fraction": 0.201,
+        "boundary_type": "Super-threshold Boundary",
+        "expected_decision": "REJECT",
+        "actual_decision": "REJECT",
+        "expected_code": "ERR_CORRUPT_PAYLOAD",
+        "actual_codes": [
+          "ERR_CORRUPT_PAYLOAD"
+        ],
+        "passed_audit": true
+      },
+      {
+        "task": "LAND_COVER_CLASSIFICATION",
+        "cloud_fraction": 0.3,
+        "boundary_type": "Super-threshold",
+        "expected_decision": "REJECT",
+        "actual_decision": "REJECT",
+        "expected_code": "ERR_CORRUPT_PAYLOAD",
+        "actual_codes": [
+          "ERR_CORRUPT_PAYLOAD"
+        ],
+        "passed_audit": true
+      },
+      {
+        "task": "CHANGE_DETECTION",
+        "cloud_fraction": 0.05,
+        "boundary_type": "Sub-threshold",
+        "expected_decision": "PASS",
+        "actual_decision": "PASS",
+        "expected_code": null,
+        "actual_codes": [],
+        "passed_audit": true
+      },
+      {
+        "task": "CHANGE_DETECTION",
+        "cloud_fraction": 0.1,
+        "boundary_type": "Exact Boundary Equality",
+        "expected_decision": "PASS",
+        "actual_decision": "PASS",
+        "expected_code": null,
+        "actual_codes": [],
+        "passed_audit": true
+      },
+      {
+        "task": "CHANGE_DETECTION",
+        "cloud_fraction": 0.101,
+        "boundary_type": "Super-threshold Boundary",
+        "expected_decision": "REJECT",
+        "actual_decision": "REJECT",
+        "expected_code": "ERR_CORRUPT_PAYLOAD",
+        "actual_codes": [
+          "ERR_CORRUPT_PAYLOAD"
+        ],
+        "passed_audit": true
+      },
+      {
+        "task": "CHANGE_DETECTION",
+        "cloud_fraction": 0.15,
+        "boundary_type": "Super-threshold",
+        "expected_decision": "REJECT",
+        "actual_decision": "REJECT",
+        "expected_code": "ERR_CORRUPT_PAYLOAD",
+        "actual_codes": [
+          "ERR_CORRUPT_PAYLOAD"
+        ],
+        "passed_audit": true
+      }
+    ],
+    "total_cases": 8,
+    "correct_cases": 8,
+    "interception_precision_pct": 100.0,
+    "audit_passed": true
+  },
+  "preregistered_acceptance_criteria_audit": {
+    "cloud_gate_enforcement": {
+      "standard": "100% interception precision on boundary rejection conditions",
+      "achieved": "100.00% (8/8)",
+      "status": "PASS"
+    },
+    "statistical_trend_significance": {
+      "standard": "Significant negative linear severity trend on all 6 tests (Holm-adjusted p < 0.05)",
+      "achieved": "6/6 tests significant (slopes: [-0.0082, -0.0086, -0.044, -0.077, -0.101, -0.8696], Holm p: [0.04498, 0.04498, 0.17491, 0.003, 0.003, 0.003])",
+      "status": "FAIL"
+    }
+  }
+}
