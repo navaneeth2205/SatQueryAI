@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "protocol_reference": "SATQUERY-P4-PROTOCOL-V1.12.1-FROZEN.md",
+    "protocol_hash": "7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5",
+    "track": "Track 4.2: Cross-Sensor & Cross-Resolution Compatibility Defense",
+    "evaluation_scope": "Physical observation compatibility gate C(t, o) multi-sensor stress evaluation",
+    "status": "EVALUATION_COMPLETED"
+  },
+  "confirmatory_safety_hypothesis": {
+    "hypothesis": "H0: IDER_source >= 0.10 vs H1: IDER_source < 0.10",
+    "n_source_trials": 40,
+    "failed_source_scenes": 0,
+    "IDER_source_pct": 0.0,
+    "exact_binomial_p_value": 0.014781,
+    "alpha_significance_level": 0.05,
+    "decision": "REJECT_H0",
+    "decision_rule_passed": true,
+    "confidence_bounds": {
+      "one_sided_95_clopper_pearson_upper_pct": 7.2158,
+      "preregistered_bound_ceiling_pct": 10.0,
+      "bound_ceiling_satisfied": true,
+      "two_sided_95_clopper_pearson_pct": [
+        0.0,
+        8.8097
+      ],
+      "two_sided_95_wilson_score_pct": [
+        0.0,
+        8.7622
+      ]
+    }
+  },
+  "descriptive_engineering_metrics": {
+    "n_invalid_payloads": 80,
+    "n_intercepted_payloads": 80,
+    "n_dispatched_incompatible": 0,
+    "CVDR_payload_pct": 100.0,
+    "IDER_payload_pct": 0.0,
+    "stress_type_breakdown": {
+      "resolution_stress": {
+        "n_payloads": 40,
+        "CVDR_pct": 100.0
+      },
+      "modality_spectral_stress": {
+        "n_payloads": 40,
+        "CVDR_pct": 100.0
+      }
+    },
+    "violation_code_counts": {
+      "ERR_INSUFFICIENT_BANDS": 60,
+      "ERR_RESOLUTION_INCOMPATIBLE": 40
+    }
+  },
+  "control_metrics": {
+    "n_control_payloads": 20,
+    "n_dispatched_controls": 20,
+    "n_rejected_controls": 0,
+    "FRR_control_pct": 0.0,
+    "two_sided_95_wilson_score_pct": [
+      0.0,
+      16.1125
+    ],
+    "control_preservation_passed": true
+  },
+  "preregistered_acceptance_criteria_audit": {
+    "statistical_safety_confirmation": {
+      "metric": "IDER_source == 0.00% and p = 0.0148 < 0.05",
+      "achieved": "IDER_source = 0.00%, p = 0.01478, 1-sided CP upper = 7.22%",
+      "status": "PASS"
+    },
+    "descriptive_engineering_target": {
+      "metric": "CVDR_payload == 100.0% and IDER_payload == 0.00%",
+      "achieved": "CVDR = 100.00%, IDER = 0.00%",
+      "status": "PASS"
+    },
+    "control_preservation": {
+      "metric": "FRR_control == 0.00%",
+      "achieved": "FRR = 0.00% (Wilson upper: 16.11%)",
+      "status": "PASS"
+    }
+  }
+}

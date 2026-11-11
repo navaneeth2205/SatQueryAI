@@ -1,0 +1,2492 @@
+[
+  {
+    "payload_id": "LS_01_PAYLOAD_A",
+    "source_scene_id": "LS_01",
+    "sensor": "Landsat-8",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_01_PAYLOAD_B",
+    "source_scene_id": "LS_01",
+    "sensor": "Landsat-8",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_02_PAYLOAD_A",
+    "source_scene_id": "LS_02",
+    "sensor": "Landsat-9",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_02_PAYLOAD_B",
+    "source_scene_id": "LS_02",
+    "sensor": "Landsat-9",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_03_PAYLOAD_A",
+    "source_scene_id": "LS_03",
+    "sensor": "Landsat-8",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_03_PAYLOAD_B",
+    "source_scene_id": "LS_03",
+    "sensor": "Landsat-8",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_04_PAYLOAD_A",
+    "source_scene_id": "LS_04",
+    "sensor": "Landsat-9",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_04_PAYLOAD_B",
+    "source_scene_id": "LS_04",
+    "sensor": "Landsat-9",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_05_PAYLOAD_A",
+    "source_scene_id": "LS_05",
+    "sensor": "Landsat-8",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_05_PAYLOAD_B",
+    "source_scene_id": "LS_05",
+    "sensor": "Landsat-8",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_06_PAYLOAD_A",
+    "source_scene_id": "LS_06",
+    "sensor": "Landsat-9",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_06_PAYLOAD_B",
+    "source_scene_id": "LS_06",
+    "sensor": "Landsat-9",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_07_PAYLOAD_A",
+    "source_scene_id": "LS_07",
+    "sensor": "Landsat-8",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_07_PAYLOAD_B",
+    "source_scene_id": "LS_07",
+    "sensor": "Landsat-8",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_08_PAYLOAD_A",
+    "source_scene_id": "LS_08",
+    "sensor": "Landsat-9",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_08_PAYLOAD_B",
+    "source_scene_id": "LS_08",
+    "sensor": "Landsat-9",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_09_PAYLOAD_A",
+    "source_scene_id": "LS_09",
+    "sensor": "Landsat-8",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_09_PAYLOAD_B",
+    "source_scene_id": "LS_09",
+    "sensor": "Landsat-8",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_10_PAYLOAD_A",
+    "source_scene_id": "LS_10",
+    "sensor": "Landsat-9",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_10_PAYLOAD_B",
+    "source_scene_id": "LS_10",
+    "sensor": "Landsat-9",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_11_PAYLOAD_A",
+    "source_scene_id": "LS_11",
+    "sensor": "Landsat-8",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_11_PAYLOAD_B",
+    "source_scene_id": "LS_11",
+    "sensor": "Landsat-8",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_12_PAYLOAD_A",
+    "source_scene_id": "LS_12",
+    "sensor": "Landsat-9",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_12_PAYLOAD_B",
+    "source_scene_id": "LS_12",
+    "sensor": "Landsat-9",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_13_PAYLOAD_A",
+    "source_scene_id": "LS_13",
+    "sensor": "Landsat-8",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_13_PAYLOAD_B",
+    "source_scene_id": "LS_13",
+    "sensor": "Landsat-8",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_14_PAYLOAD_A",
+    "source_scene_id": "LS_14",
+    "sensor": "Landsat-9",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_14_PAYLOAD_B",
+    "source_scene_id": "LS_14",
+    "sensor": "Landsat-9",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_15_PAYLOAD_A",
+    "source_scene_id": "LS_15",
+    "sensor": "Landsat-8",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_15_PAYLOAD_B",
+    "source_scene_id": "LS_15",
+    "sensor": "Landsat-8",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_16_PAYLOAD_A",
+    "source_scene_id": "LS_16",
+    "sensor": "Landsat-9",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_16_PAYLOAD_B",
+    "source_scene_id": "LS_16",
+    "sensor": "Landsat-9",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_17_PAYLOAD_A",
+    "source_scene_id": "LS_17",
+    "sensor": "Landsat-8",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_17_PAYLOAD_B",
+    "source_scene_id": "LS_17",
+    "sensor": "Landsat-8",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_18_PAYLOAD_A",
+    "source_scene_id": "LS_18",
+    "sensor": "Landsat-9",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_18_PAYLOAD_B",
+    "source_scene_id": "LS_18",
+    "sensor": "Landsat-9",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_19_PAYLOAD_A",
+    "source_scene_id": "LS_19",
+    "sensor": "Landsat-8",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_19_PAYLOAD_B",
+    "source_scene_id": "LS_19",
+    "sensor": "Landsat-8",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_20_PAYLOAD_A",
+    "source_scene_id": "LS_20",
+    "sensor": "Landsat-9",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 30.0,
+    "spectral_bands": [
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS",
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}",
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 30.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "LS_20_PAYLOAD_B",
+    "source_scene_id": "LS_20",
+    "sensor": "Landsat-9",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "SR_B1",
+      "SR_B2",
+      "SR_B3",
+      "SR_B4",
+      "SR_B5",
+      "SR_B6",
+      "SR_B7"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_01_PAYLOAD_A",
+    "source_scene_id": "PS_01",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_01_PAYLOAD_B",
+    "source_scene_id": "PS_01",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_02_PAYLOAD_A",
+    "source_scene_id": "PS_02",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_02_PAYLOAD_B",
+    "source_scene_id": "PS_02",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_03_PAYLOAD_A",
+    "source_scene_id": "PS_03",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_03_PAYLOAD_B",
+    "source_scene_id": "PS_03",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_04_PAYLOAD_A",
+    "source_scene_id": "PS_04",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_04_PAYLOAD_B",
+    "source_scene_id": "PS_04",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_05_PAYLOAD_A",
+    "source_scene_id": "PS_05",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_05_PAYLOAD_B",
+    "source_scene_id": "PS_05",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_06_PAYLOAD_A",
+    "source_scene_id": "PS_06",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_06_PAYLOAD_B",
+    "source_scene_id": "PS_06",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_07_PAYLOAD_A",
+    "source_scene_id": "PS_07",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_07_PAYLOAD_B",
+    "source_scene_id": "PS_07",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_08_PAYLOAD_A",
+    "source_scene_id": "PS_08",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_08_PAYLOAD_B",
+    "source_scene_id": "PS_08",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_09_PAYLOAD_A",
+    "source_scene_id": "PS_09",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_09_PAYLOAD_B",
+    "source_scene_id": "PS_09",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_10_PAYLOAD_A",
+    "source_scene_id": "PS_10",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_10_PAYLOAD_B",
+    "source_scene_id": "PS_10",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_11_PAYLOAD_A",
+    "source_scene_id": "PS_11",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_11_PAYLOAD_B",
+    "source_scene_id": "PS_11",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_12_PAYLOAD_A",
+    "source_scene_id": "PS_12",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_12_PAYLOAD_B",
+    "source_scene_id": "PS_12",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_13_PAYLOAD_A",
+    "source_scene_id": "PS_13",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_13_PAYLOAD_B",
+    "source_scene_id": "PS_13",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_14_PAYLOAD_A",
+    "source_scene_id": "PS_14",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_14_PAYLOAD_B",
+    "source_scene_id": "PS_14",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_15_PAYLOAD_A",
+    "source_scene_id": "PS_15",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_15_PAYLOAD_B",
+    "source_scene_id": "PS_15",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_16_PAYLOAD_A",
+    "source_scene_id": "PS_16",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_16_PAYLOAD_B",
+    "source_scene_id": "PS_16",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_17_PAYLOAD_A",
+    "source_scene_id": "PS_17",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_17_PAYLOAD_B",
+    "source_scene_id": "PS_17",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_18_PAYLOAD_A",
+    "source_scene_id": "PS_18",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_18_PAYLOAD_B",
+    "source_scene_id": "PS_18",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_19_PAYLOAD_A",
+    "source_scene_id": "PS_19",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_19_PAYLOAD_B",
+    "source_scene_id": "PS_19",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_20_PAYLOAD_A",
+    "source_scene_id": "PS_20",
+    "sensor": "PlanetScope",
+    "stress_type": "RESOLUTION_STRESS",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 3.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_RESOLUTION_INCOMPATIBLE"
+    ],
+    "failure_reasons": [
+      "ERR_RESOLUTION_INCOMPATIBLE: GSD 3.0m outside operational window [8.0m, 12.0m]"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "PS_20_PAYLOAD_B",
+    "source_scene_id": "PS_20",
+    "sensor": "PlanetScope",
+    "stress_type": "MODALITY_SPECTRAL_STRESS",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "blue",
+      "green",
+      "red",
+      "nir"
+    ],
+    "is_valid_payload": false,
+    "gate_passed": false,
+    "dispatched_to_specialist": false,
+    "failure_codes": [
+      "ERR_INSUFFICIENT_BANDS"
+    ],
+    "failure_reasons": [
+      "ERR_INSUFFICIENT_BANDS: Missing required multispectral bands: {'B02', 'B08', 'B03', 'B04'}"
+    ],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_LC_01_CONTROL",
+    "source_scene_id": "S2C_LC_01",
+    "sensor": "Sentinel-2A",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12",
+      "VH",
+      "VV"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_LC_02_CONTROL",
+    "source_scene_id": "S2C_LC_02",
+    "sensor": "Sentinel-2B",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12",
+      "VH",
+      "VV"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_LC_03_CONTROL",
+    "source_scene_id": "S2C_LC_03",
+    "sensor": "Sentinel-2A",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12",
+      "VH",
+      "VV"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_LC_04_CONTROL",
+    "source_scene_id": "S2C_LC_04",
+    "sensor": "Sentinel-2B",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12",
+      "VH",
+      "VV"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_LC_05_CONTROL",
+    "source_scene_id": "S2C_LC_05",
+    "sensor": "Sentinel-2A",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12",
+      "VH",
+      "VV"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_LC_06_CONTROL",
+    "source_scene_id": "S2C_LC_06",
+    "sensor": "Sentinel-2B",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12",
+      "VH",
+      "VV"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_LC_07_CONTROL",
+    "source_scene_id": "S2C_LC_07",
+    "sensor": "Sentinel-2A",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12",
+      "VH",
+      "VV"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_LC_08_CONTROL",
+    "source_scene_id": "S2C_LC_08",
+    "sensor": "Sentinel-2B",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12",
+      "VH",
+      "VV"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_LC_09_CONTROL",
+    "source_scene_id": "S2C_LC_09",
+    "sensor": "Sentinel-2A",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12",
+      "VH",
+      "VV"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_LC_10_CONTROL",
+    "source_scene_id": "S2C_LC_10",
+    "sensor": "Sentinel-2B",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "LAND_COVER_CLASSIFICATION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04",
+      "B05",
+      "B06",
+      "B07",
+      "B08",
+      "B8A",
+      "B11",
+      "B12",
+      "VH",
+      "VV"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_CD_01_CONTROL",
+    "source_scene_id": "S2C_CD_01",
+    "sensor": "Sentinel-2A",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_CD_02_CONTROL",
+    "source_scene_id": "S2C_CD_02",
+    "sensor": "Sentinel-2B",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_CD_03_CONTROL",
+    "source_scene_id": "S2C_CD_03",
+    "sensor": "Sentinel-2A",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_CD_04_CONTROL",
+    "source_scene_id": "S2C_CD_04",
+    "sensor": "Sentinel-2B",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_CD_05_CONTROL",
+    "source_scene_id": "S2C_CD_05",
+    "sensor": "Sentinel-2A",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_CD_06_CONTROL",
+    "source_scene_id": "S2C_CD_06",
+    "sensor": "Sentinel-2B",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_CD_07_CONTROL",
+    "source_scene_id": "S2C_CD_07",
+    "sensor": "Sentinel-2A",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_CD_08_CONTROL",
+    "source_scene_id": "S2C_CD_08",
+    "sensor": "Sentinel-2B",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_CD_09_CONTROL",
+    "source_scene_id": "S2C_CD_09",
+    "sensor": "Sentinel-2A",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  },
+  {
+    "payload_id": "S2C_CD_10_CONTROL",
+    "source_scene_id": "S2C_CD_10",
+    "sensor": "Sentinel-2B",
+    "stress_type": "CONTROL_VALID",
+    "target_task": "CHANGE_DETECTION",
+    "gsd_m": 10.0,
+    "spectral_bands": [
+      "B02",
+      "B03",
+      "B04"
+    ],
+    "is_valid_payload": true,
+    "gate_passed": true,
+    "dispatched_to_specialist": true,
+    "failure_codes": [],
+    "failure_reasons": [],
+    "correct_decision": true
+  }
+]
