@@ -35,6 +35,13 @@ from satquery.utils.perturbations import (
     NOISE_SEVERITY_SIGMAS,
 )
 
+from satquery.utils.linguistic import (
+    LinguisticDefenseResult,
+    evaluate_linguistic_defense_gate,
+    OOD_TELEMETRY_TERMS,
+    TASK_KEYWORDS,
+)
+
 __all__ = [
     "validate_temporal_pair",
     "TemporalPairValidation",
@@ -63,4 +70,8 @@ __all__ = [
     "CLOUD_SEVERITY_FRACTIONS",
     "HAZE_TRANSMITTANCES",
     "NOISE_SEVERITY_SIGMAS",
+    "LinguisticDefenseResult",
+    "evaluate_linguistic_defense_gate",
+    "OOD_TELEMETRY_TERMS",
+    "TASK_KEYWORDS",
 ]
