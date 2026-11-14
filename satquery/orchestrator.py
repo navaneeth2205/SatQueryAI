@@ -21,7 +21,11 @@ from satquery.router import TaskRouter, ExecutionRoute
 from satquery.specialists.base import SpecialistResult, SpecialistStatus
 from satquery.specialists.registry import SpecialistRegistry
 from satquery.specialists.land_cover import LandCoverClassifier
-from satquery.specialists.change_detection import TemporalDifferenceBaseline
+from satquery.specialists.change_detection import (
+    TemporalDifferenceBaseline,
+    ChangeDetectionSpecialist,
+    SiameseResNetChangeDetectionSpecialist,
+)
 from satquery.evidence import format_evidence, EvidenceReport
 from satquery.utils.metadata import (
     InputObservationMetadata,
@@ -81,7 +85,8 @@ class SatQueryEngine:
     def create_default(
         cls,
         router_path: Optional[str | Path] = None,
-        routing_policy: str = "provisional"
+        routing_policy: str = "provisional",
+        device: Optional[str] = None
     ) -> "SatQueryEngine":
         """
         Factory method instantiating the default production SatQueryEngine.
@@ -99,8 +104,8 @@ class SatQueryEngine:
         lc_specialist = LandCoverClassifier()
         registry.register(lc_specialist)
 
-        # Register Multitemporal Change Detection Specialist (Milestone 3)
-        cd_specialist = TemporalDifferenceBaseline()
+        # Register Multitemporal Change Detection Specialist (Milestone 3 Production Champion)
+        cd_specialist = ChangeDetectionSpecialist(device=device)
         registry.register(cd_specialist)
 
         return cls(router=router, registry=registry, routing_policy=routing_policy)

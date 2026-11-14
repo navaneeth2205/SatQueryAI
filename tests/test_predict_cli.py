@@ -11,15 +11,17 @@ repo_root = Path(__file__).resolve().parent.parent
 
 
 def test_predict_cli_execution():
-    # 1. First ensure model is trained
-    train_script = repo_root / "scripts" / "train_router.py"
-    train_res = subprocess.run(
-        [sys.executable, str(train_script)],
-        capture_output=True,
-        text=True,
-        cwd=str(repo_root)
-    )
-    assert train_res.returncode == 0, f"Training failed: {train_res.stderr}"
+    # 1. Ensure model exists; only train if missing to preserve frozen artifact integrity
+    model_path = repo_root / "artifacts" / "router" / "router_model.joblib"
+    if not model_path.exists():
+        train_script = repo_root / "scripts" / "train_router.py"
+        train_res = subprocess.run(
+            [sys.executable, str(train_script)],
+            capture_output=True,
+            text=True,
+            cwd=str(repo_root)
+        )
+        assert train_res.returncode == 0, f"Training failed: {train_res.stderr}"
 
     # 2. Test predict CLI text output
     predict_script = repo_root / "scripts" / "predict_query.py"

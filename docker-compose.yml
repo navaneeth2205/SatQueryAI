@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  satquery-cpu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TARGET_ENV: cpu
+    image: satquery-ai:cpu
+    container_name: satquery-cpu-service
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SATQUERY_DEVICE=cpu
+      - SATQUERY_LOG_FORMAT=json
+    volumes:
+      - ./data:/app/data:ro
+      - ./artifacts:/app/artifacts:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/catalog"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  satquery-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TARGET_ENV: cuda
+    image: satquery-ai:cuda
+    container_name: satquery-gpu-service
+    ports:
+      - "5001:5000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - SATQUERY_DEVICE=cuda
+      - SATQUERY_LOG_FORMAT=json
+    volumes:
+      - ./data:/app/data:ro
+      - ./artifacts:/app/artifacts:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/catalog"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
