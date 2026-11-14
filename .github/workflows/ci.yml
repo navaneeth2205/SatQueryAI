@@ -44,9 +44,9 @@ jobs:
 
       - name: Verify 13 Production Assets against Freeze Manifest
         run: |
-          python -m satquery.cli verify --json-output > artifact_verification.json
-          cat artifact_verification.json
-          python -c "import json; data = json.load(open('artifact_verification.json')); assert data['all_artifacts_intact'] is True, 'Cryptographic manifest check failed!'"
+          python -m satquery.cli verify --json-output > "${RUNNER_TEMP}/artifact_verification.json"
+          cat "${RUNNER_TEMP}/artifact_verification.json"
+          python -c "import json, os; data = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'artifact_verification.json'))); assert data['all_artifacts_intact'] is True, 'Cryptographic manifest check failed!'"
 
       - name: Check Working Tree Immutability
         run: |
@@ -65,7 +65,7 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
         include:
-          - python-version: "3.14-dev"
+          - python-version: "3.14"
             experimental: true
     continue-on-error: ${{ matrix.experimental || false }}
     steps:
@@ -87,8 +87,8 @@ jobs:
 
       - name: Verify Cryptographic Artifact Manifest (Pre-Test)
         run: |
-          python -m satquery.cli verify --json-output > pre_test_verification.json
-          python -c "import json; data = json.load(open('pre_test_verification.json')); assert data['all_artifacts_intact'] is True, 'Pre-test manifest check failed!'"
+          python -m satquery.cli verify --json-output > "${RUNNER_TEMP}/pre_test_verification.json"
+          python -c "import json, os; data = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'pre_test_verification.json'))); assert data['all_artifacts_intact'] is True, 'Pre-test manifest check failed!'"
 
       - name: Execute Core Integration & Packaging Contracts (30 Tests)
         run: |
@@ -99,12 +99,12 @@ jobs:
 
       - name: Execute Full Repository Regression Suite (181 Tests)
         run: |
-          pytest tests/ -v --junitxml=junit-results-${{ matrix.python-version }}.xml
+          pytest tests/ -v --junitxml="${RUNNER_TEMP}/junit-results-${{ matrix.python-version }}.xml"
 
       - name: Verify Cryptographic Artifact Manifest (Post-Test Immutability Check)
         run: |
-          python -m satquery.cli verify --json-output > post_test_verification.json
-          python -c "import json; data = json.load(open('post_test_verification.json')); assert data['all_artifacts_intact'] is True, 'CRITICAL: Test suite modified production artifacts!'"
+          python -m satquery.cli verify --json-output > "${RUNNER_TEMP}/post_test_verification.json"
+          python -c "import json, os; data = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'post_test_verification.json'))); assert data['all_artifacts_intact'] is True, 'CRITICAL: Test suite modified production artifacts!'"
 
       - name: Verify Working Tree Immutability
         run: |
@@ -116,7 +116,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.python-version }}
-          path: junit-results-${{ matrix.python-version }}.xml
+          path: ${{ runner.temp }}/junit-results-${{ matrix.python-version }}.xml
 
   # =========================================================================
   # 3. Docker Packaging & Live Runtime Validation
@@ -156,11 +156,11 @@ jobs:
           echo "Awaiting healthy status from SatQuery container..."
           HEALTHY=false
           for i in {1..20}; do
-            HTTP_CODE=$(curl -s -o catalog_response.json -w "%{http_code}" http://localhost:5000/api/catalog || true)
+            HTTP_CODE=$(curl -s -o "${RUNNER_TEMP}/catalog_response.json" -w "%{http_code}" http://localhost:5000/api/catalog || true)
             if [ "$HTTP_CODE" = "200" ]; then
               echo "Container health check passed on attempt $i!"
-              cat catalog_response.json
-              python -c "import json; data = json.load(open('catalog_response.json')); assert data['status'] == 'success', f'Catalog response status invalid: {data}'"
+              cat "${RUNNER_TEMP}/catalog_response.json"
+              python -c "import json, os; data = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'catalog_response.json'))); assert data['status'] == 'success', f'Catalog response status invalid: {data}'"
               HEALTHY=true
               break
             fi
@@ -169,32 +169,32 @@ jobs:
           done
           if [ "$HEALTHY" != "true" ]; then
             echo "ERROR: Container failed healthcheck within timeout."
-            docker logs satquery-live
+            docker logs satquery-live --tail 50 || true
             exit 1
           fi
 
       - name: Live Container Inference — Task Routing & Ambiguity Gate
         run: |
           echo "Testing /api/query routing endpoint..."
-          curl -f -s -X POST http://localhost:5000/api/query \
+          curl -fsS -X POST http://localhost:5000/api/query \
             -H "Content-Type: application/json" \
             -d '{"query": "Detect changes between before and after flood imagery", "mode": "query_only"}' \
-            | tee routing_result.json
-          python -c "import json; res = json.load(open('routing_result.json')); assert res['status'] in ('SUCCESS', 'success'), f'Routing query failed: {res}'; assert 'predictions' in res, 'Missing predictions in response'"
+            | tee "${RUNNER_TEMP}/routing_result.json"
+          python -c "import json, os; res = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'routing_result.json'))); assert res['status'] in ('SUCCESS', 'success'), f'Routing query failed: {res}'; assert 'predictions' in res, 'Missing predictions in response'"
 
       - name: Live Container Inference — Unsupported Task Gate
         run: |
           echo "Testing unsupported VQA query handling..."
-          curl -f -s -X POST http://localhost:5000/api/query \
+          curl -fsS -X POST http://localhost:5000/api/query \
             -H "Content-Type: application/json" \
             -d '{"query": "Count the number of vessels in the harbor", "mode": "query_only"}' \
-            | tee unavail_result.json
-          python -c "import json; res = json.load(open('unavail_result.json')); assert res['status'] == 'UNAVAILABLE', f'Unexpected status: {res}'"
+            | tee "${RUNNER_TEMP}/unavail_result.json"
+          python -c "import json, os; res = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'unavail_result.json'))); assert res['status'] == 'UNAVAILABLE', f'Unexpected status: {res}'"
 
       - name: Container Audit & Graceful Teardown
         if: always()
         run: |
           echo "=== Container Logs ==="
-          docker logs satquery-live --tail 50
+          docker logs satquery-live --tail 50 || true
           docker stop satquery-live || true
           docker rm satquery-live || true
