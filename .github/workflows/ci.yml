@@ -17,6 +17,9 @@ name: SatQuery AI CI/CD Release Validation
 env:
   PYTHONUNBUFFERED: "1"
   PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  SATQUERY_RELEASE_TAG: "v1.0.0-rc1"
+  SATQUERY_BUNDLE_SHA256: "866e5961925bbb613d3778e75f5690e0e443fec1560612c5862f731ed1fb5b5b"
+  SATQUERY_BUNDLE_NAME: "satquery-production-artifacts-v1.0.0-rc1.tar.gz"
 
 jobs:
   # =========================================================================
@@ -34,6 +37,26 @@ jobs:
         with:
           python-version: "3.11"
           cache: "pip"
+
+      - name: Restore Frozen Production Artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p "${RUNNER_TEMP}/dist_bundle"
+          if [ -f "dist_bundle/${SATQUERY_BUNDLE_NAME}" ]; then
+            echo "Using pre-staged dist_bundle/${SATQUERY_BUNDLE_NAME}"
+            ARCHIVE_PATH="dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          else
+            echo "Fetching ${SATQUERY_BUNDLE_NAME} from GitHub Release ${SATQUERY_RELEASE_TAG}..."
+            gh release download "${SATQUERY_RELEASE_TAG}" \
+              --pattern "${SATQUERY_BUNDLE_NAME}*" \
+              --dir "${RUNNER_TEMP}/dist_bundle"
+            ARCHIVE_PATH="${RUNNER_TEMP}/dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          fi
+          python scripts/restore_production_bundle.py \
+            --archive "${ARCHIVE_PATH}" \
+            --expected-sha256 "${SATQUERY_BUNDLE_SHA256}" \
+            --dest .
 
       - name: Install CPU PyTorch and runtime dependencies
         run: |
@@ -77,6 +100,26 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: "pip"
+
+      - name: Restore Frozen Production Artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p "${RUNNER_TEMP}/dist_bundle"
+          if [ -f "dist_bundle/${SATQUERY_BUNDLE_NAME}" ]; then
+            echo "Using pre-staged dist_bundle/${SATQUERY_BUNDLE_NAME}"
+            ARCHIVE_PATH="dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          else
+            echo "Fetching ${SATQUERY_BUNDLE_NAME} from GitHub Release ${SATQUERY_RELEASE_TAG}..."
+            gh release download "${SATQUERY_RELEASE_TAG}" \
+              --pattern "${SATQUERY_BUNDLE_NAME}*" \
+              --dir "${RUNNER_TEMP}/dist_bundle"
+            ARCHIVE_PATH="${RUNNER_TEMP}/dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          fi
+          python scripts/restore_production_bundle.py \
+            --archive "${ARCHIVE_PATH}" \
+            --expected-sha256 "${SATQUERY_BUNDLE_SHA256}" \
+            --dest .
 
       - name: Install CPU PyTorch and dependencies
         run: |
@@ -128,6 +171,31 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Set up Python for Artifact Restoration
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Restore Frozen Production Artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p "${RUNNER_TEMP}/dist_bundle"
+          if [ -f "dist_bundle/${SATQUERY_BUNDLE_NAME}" ]; then
+            echo "Using pre-staged dist_bundle/${SATQUERY_BUNDLE_NAME}"
+            ARCHIVE_PATH="dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          else
+            echo "Fetching ${SATQUERY_BUNDLE_NAME} from GitHub Release ${SATQUERY_RELEASE_TAG}..."
+            gh release download "${SATQUERY_RELEASE_TAG}" \
+              --pattern "${SATQUERY_BUNDLE_NAME}*" \
+              --dir "${RUNNER_TEMP}/dist_bundle"
+            ARCHIVE_PATH="${RUNNER_TEMP}/dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          fi
+          python scripts/restore_production_bundle.py \
+            --archive "${ARCHIVE_PATH}" \
+            --expected-sha256 "${SATQUERY_BUNDLE_SHA256}" \
+            --dest .
 
       - name: Set up Docker Buildx
         uses: actions/setup-buildx-action@v3

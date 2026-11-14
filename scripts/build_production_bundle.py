@@ -9,6 +9,7 @@ for attachment to GitHub Release candidate v1.0.0-rc1.
 
 import hashlib
 import json
+import gzip
 import logging
 import os
 import pathlib
@@ -50,8 +51,7 @@ def build_bundle(output_dir: pathlib.Path, version_tag: str = "v1.0.0-rc1"):
         file_path = REPO_ROOT / meta["path"]
         if not file_path.exists():
             raise FileNotFoundError(f"Required production asset {key} missing at {file_path}")
-        # Only add files under artifacts/ or data/ (pyproject and requirements are already in Git)
-        if meta["path"].startswith("artifacts/") or meta["path"].startswith("data/"):
+        if file_path not in bundle_files:
             bundle_files.append(file_path)
 
     # 2. Add classical CVA benchmark artifacts required by tests
@@ -63,26 +63,31 @@ def build_bundle(output_dir: pathlib.Path, version_tag: str = "v1.0.0-rc1"):
         if af.exists() and af not in bundle_files:
             bundle_files.append(af)
 
+    # Sort files deterministically by normalized relative path
+    bundle_files.sort(key=lambda p: str(p.relative_to(REPO_ROOT)).replace("\\", "/"))
+
     logger.info(f"Total files to package: {len(bundle_files)}")
 
-    # 3. Create deterministic tar.gz archive
-    with tarfile.open(archive_path, "w:gz") as tar:
-        for f in bundle_files:
-            rel = f.relative_to(REPO_ROOT)
-            arcname = str(rel).replace("\\", "/")
-            logger.info(f"  Adding {arcname} ({f.stat().st_size:,} bytes)")
-            # Set deterministic metadata
-            tarinfo = tar.gettarinfo(str(f), arcname=arcname)
-            tarinfo.uid = 1000
-            tarinfo.gid = 1000
-            tarinfo.uname = "satquery"
-            tarinfo.gname = "satquery"
-            tarinfo.mtime = 1731556800  # Frozen timestamp (2026-11-14 04:00:00 UTC)
-            if tarinfo.isreg():
-                with open(f, "rb") as reg_f:
-                    tar.addfile(tarinfo, reg_f)
-            else:
-                tar.addfile(tarinfo)
+    # 3. Create deterministic tar.gz archive with pinned gzip timestamp
+    with open(archive_path, "wb") as f_out:
+        with gzip.GzipFile(filename="", mode="wb", fileobj=f_out, mtime=1731556800) as gz_out:
+            with tarfile.open(fileobj=gz_out, mode="w:") as tar:
+                for f in bundle_files:
+                    rel = f.relative_to(REPO_ROOT)
+                    arcname = str(rel).replace("\\", "/")
+                    logger.info(f"  Adding {arcname} ({f.stat().st_size:,} bytes)")
+                    # Set deterministic metadata
+                    tarinfo = tar.gettarinfo(str(f), arcname=arcname)
+                    tarinfo.uid = 1000
+                    tarinfo.gid = 1000
+                    tarinfo.uname = "satquery"
+                    tarinfo.gname = "satquery"
+                    tarinfo.mtime = 1731556800  # Frozen timestamp (2026-11-14 04:00:00 UTC)
+                    if tarinfo.isreg():
+                        with open(f, "rb") as reg_f:
+                            tar.addfile(tarinfo, reg_f)
+                    else:
+                        tar.addfile(tarinfo)
 
     archive_size = archive_path.stat().st_size
     archive_sha256 = compute_sha256(archive_path)

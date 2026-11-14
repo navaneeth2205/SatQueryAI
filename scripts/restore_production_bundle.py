@@ -30,6 +30,11 @@ logging.basicConfig(
 logger = logging.getLogger("satquery.restore")
 
 
+ALLOWED_ROOT_FILES = {"requirements.txt", "pyproject.toml"}
+ALLOWED_PREFIXES = ("artifacts/", "data/")
+FROZEN_MANIFEST_SHA256 = "4414e6e31bd756f5804fb742ecfb0bc7dfd3ccdbe57009d0e3d1904c49e21831"
+
+
 def compute_sha256(file_path: pathlib.Path) -> str:
     """Compute SHA-256 hex digest of a file in 64 KiB chunks."""
     h = hashlib.sha256()
@@ -41,30 +46,73 @@ def compute_sha256(file_path: pathlib.Path) -> str:
 
 def is_safe_tar_member(member: tarfile.TarInfo, destination: pathlib.Path) -> bool:
     """
-    Prevent directory traversal attacks (Zip Slip / Tar Slip).
-    Rejects absolute paths, drive letters, and paths resolving outside destination.
+    Comprehensive security validation of archive members.
+    Rejects:
+      - Symlinks & Hardlinks (prevent symlink overwrite/escape)
+      - Special device nodes / FIFOs
+      - Absolute paths (Unix '/' or Windows drive letters 'C:')
+      - UNC network paths ('\\\\server\\share' or '//server/share')
+      - Directory traversal sequences ('..')
+      - Resolution outside destination root
+      - Paths outside the whitelist: 'artifacts/', 'data/', or root manifests.
     """
-    path = member.name
-    # Reject Windows drive letters (e.g. C:) or root slashes
-    if os.path.isabs(path) or (len(path) > 1 and path[1] == ":"):
-        logger.error(f"REJECTED: Member contains absolute path: {path}")
+    # 1. Type check: Only allow regular files and directories
+    if member.issym() or member.islnk():
+        logger.error(f"REJECTED: Member is a symlink or hardlink: {member.name} -> {member.linkname}")
+        return False
+    if member.ischr() or member.isblk() or member.isfifo():
+        logger.error(f"REJECTED: Member is a special device node or FIFO: {member.name}")
+        return False
+    if not (member.isreg() or member.isdir()):
+        logger.error(f"REJECTED: Member is not a regular file: {member.name}")
         return False
 
-    # Check normalized destination
-    dest_path = (destination / path).resolve()
+    # 2. Path sanitization
+    raw_name = member.name.replace("\\", "/")
+
+    # Check for UNC network paths
+    if raw_name.startswith("//") or member.name.startswith("\\\\"):
+        logger.error(f"REJECTED: UNC network path detected: {member.name}")
+        return False
+
+    # Check for Windows drive letters (e.g. C:, D:)
+    if ":" in raw_name:
+        logger.error(f"REJECTED: Windows drive letter detected: {member.name}")
+        return False
+
+    # Check for absolute paths
+    if raw_name.startswith("/") or os.path.isabs(member.name):
+        logger.error(f"REJECTED: Absolute path detected: {member.name}")
+        return False
+
+    # Check for path traversal segments ('..')
+    path_parts = pathlib.PurePosixPath(raw_name).parts
+    if ".." in path_parts:
+        logger.error(f"REJECTED: Directory traversal '..' detected: {member.name}")
+        return False
+
+    # 3. Normalized destination boundary check
+    dest_path = (destination / raw_name).resolve()
     dest_root = destination.resolve()
 
     try:
-        dest_path.relative_to(dest_root)
+        rel_path = dest_path.relative_to(dest_root)
     except ValueError:
-        logger.error(f"REJECTED: Directory traversal attempt detected: {path}")
+        logger.error(f"REJECTED: Path resolves outside destination boundary: {member.name}")
         return False
 
-    # Whitelist prefix check: must be inside artifacts/ or data/
-    normalized_rel = str(dest_path.relative_to(dest_root)).replace("\\", "/")
-    if not (normalized_rel.startswith("artifacts/") or normalized_rel.startswith("data/")):
-        logger.error(f"REJECTED: Member is outside allowed prefixes (artifacts/, data/): {normalized_rel}")
-        return False
+    # 4. Strict Whitelist Prefix & Root File Check
+    normalized_rel = str(rel_path).replace("\\", "/")
+    if member.isdir():
+        if not (normalized_rel.startswith(ALLOWED_PREFIXES) or normalized_rel == "."):
+            logger.error(f"REJECTED: Directory member outside allowed prefixes: {normalized_rel}")
+            return False
+    else:
+        is_allowed_root = normalized_rel in ALLOWED_ROOT_FILES
+        is_allowed_prefix = any(normalized_rel.startswith(p) for p in ALLOWED_PREFIXES)
+        if not (is_allowed_root or is_allowed_prefix):
+            logger.error(f"REJECTED: Member outside allowed whitelist (artifacts/, data/, root configs): {normalized_rel}")
+            return False
 
     return True
 
@@ -91,13 +139,20 @@ def extract_secure(
     archive_path: pathlib.Path,
     destination: pathlib.Path
 ) -> Tuple[bool, List[str]]:
-    """Safely extract archive members with path sanitization."""
+    """Safely extract archive members with path sanitization and collision prevention."""
     extracted_members = []
+    seen_members = set()
     logger.info(f"Inspecting archive: {archive_path}")
 
     with tarfile.open(archive_path, "r:gz") as tar:
         members = tar.getmembers()
         for member in members:
+            norm_name = str(pathlib.PurePosixPath(member.name.replace("\\", "/")))
+            if norm_name in seen_members:
+                logger.error(f"REJECTED: Duplicate member detected in archive: {member.name}")
+                return False, []
+            seen_members.add(norm_name)
+
             if not is_safe_tar_member(member, destination):
                 return False, []
 
@@ -164,9 +219,18 @@ def verify_production_manifest(
             }
             all_passed = False
 
+    manifest_hash = compute_sha256(manifest_file)
+    manifest_hash_match = (manifest_hash == FROZEN_MANIFEST_SHA256)
+    if not manifest_hash_match:
+        logger.warning(
+            f"Manifest SHA-256 differs from frozen reference: computed {manifest_hash}, expected {FROZEN_MANIFEST_SHA256}"
+        )
+
     return {
-        "all_passed": all_passed,
+        "all_passed": all_passed and manifest_hash_match,
         "manifest_path": str(manifest_file),
+        "manifest_sha256": manifest_hash,
+        "manifest_sha256_match": manifest_hash_match,
         "total_assets_checked": len(artifacts),
         "passed_count": sum(1 for v in asset_results.values() if v.get("status") == "PASS"),
         "failed_count": sum(1 for v in asset_results.values() if v.get("status") == "FAIL"),
@@ -183,6 +247,12 @@ def main():
         type=pathlib.Path,
         required=True,
         help="Path to production bundle tar.gz archive"
+    )
+    parser.add_argument(
+        "--expected-sha256",
+        type=str,
+        default=None,
+        help="Trusted SHA-256 digest of the archive (independent verification anchor)"
     )
     parser.add_argument(
         "--ledger",
@@ -207,13 +277,24 @@ def main():
     ledger_path = args.ledger or args.archive.with_suffix(args.archive.suffix + ".sha256")
     logger.info("Starting secure artifact restoration...")
 
-    # 1. Ledger Verification
+    # 1. Archive Hash Verification (Trusted Pinned Anchor and/or Ledger)
+    computed_archive_hash = compute_sha256(args.archive)
+    if args.expected_sha256:
+        if computed_archive_hash.lower() != args.expected_sha256.lower().strip():
+            logger.error(
+                f"Archive SHA-256 MISMATCH against pinned expected hash!\n"
+                f"  Computed: {computed_archive_hash.lower()}\n"
+                f"  Expected: {args.expected_sha256.lower().strip()}"
+            )
+            sys.exit(1)
+        logger.info(f"Archive SHA-256 MATCHES pinned expected hash: {computed_archive_hash}")
+
     if ledger_path.exists():
         if not verify_archive_ledger(args.archive, ledger_path):
             logger.error("Ledger verification FAILED! Halting restoration.")
             sys.exit(1)
-    else:
-        logger.warning(f"No ledger file found at {ledger_path}; proceeding with caution.")
+    elif not args.expected_sha256:
+        logger.warning(f"No ledger file found at {ledger_path} and no --expected-sha256 provided; proceeding with caution.")
 
     # 2. Secure Extraction
     success, extracted_files = extract_secure(args.archive, args.dest)
