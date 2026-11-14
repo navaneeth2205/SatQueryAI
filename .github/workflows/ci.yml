@@ -1,0 +1,190 @@
+name: SatQuery AI CI/CD Release Validation
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - "feature/**"
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+env:
+  PYTHONUNBUFFERED: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+
+jobs:
+  # =========================================================================
+  # 1. Cryptographic Artifact Integrity Audit
+  # =========================================================================
+  verify-artifacts:
+    name: "1. Cryptographic Artifact Integrity Audit"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install CPU PyTorch and runtime dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+          pip install --no-deps -e .
+
+      - name: Verify 13 Production Assets against Freeze Manifest
+        run: |
+          python -m satquery.cli verify --json-output > artifact_verification.json
+          cat artifact_verification.json
+          # Assert that all_artifacts_intact is true
+          python -c "import json; data = json.load(open('artifact_verification.json')); assert data['all_artifacts_intact'] is True, 'Cryptographic manifest check failed!'"
+
+      - name: Check Working Tree Immutability
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)" || (echo "Working tree modified during verification!" && exit 1)
+
+  # =========================================================================
+  # 2. Dual-Runtime Regression Test Suite
+  # =========================================================================
+  test-suite:
+    name: "2. Test Suite (${{ matrix.python-version }})"
+    needs: verify-artifacts
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+        include:
+          - python-version: "3.14-dev"
+            experimental: true
+    continue-on-error: ${{ matrix.experimental || false }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install CPU PyTorch and dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt seaborn
+          pip install --no-deps -e .
+
+      - name: Execute Core Integration & Packaging Contracts (30 Tests)
+        run: |
+          pytest tests/test_step4_multi_specialist_integration.py \
+                 tests/test_m33_selective_routing.py \
+                 tests/test_predict_cli.py \
+                 tests/test_cli_packaging.py -v
+
+      - name: Execute Full Repository Regression Suite (181 Tests)
+        run: |
+          pytest tests/ -v --junitxml=junit-results-${{ matrix.python-version }}.xml
+
+      - name: Verify Zero Model Retraining & Artifact Immutability
+        run: |
+          git status --porcelain
+          test -z "$(git status --porcelain)" || (echo "Test suite mutated model artifacts or created unstaged files!" && exit 1)
+
+      - name: Upload Test Results XML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.python-version }}
+          path: junit-results-${{ matrix.python-version }}.xml
+
+  # =========================================================================
+  # 3. Docker Packaging & Live Runtime Validation
+  # =========================================================================
+  docker-validation:
+    name: "3. Docker Packaging & Live Container Inference"
+    needs: verify-artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: actions/setup-buildx-action@v3
+
+      - name: Build Production Docker Image (CPU Target)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          build-args: |
+            TARGET_ENV=cpu
+          tags: satquery:ci-test
+          load: true
+
+      - name: Inspect Image Specifications
+        run: |
+          docker images satquery:ci-test
+
+      - name: Start Containerized Service
+        run: |
+          docker run -d --name satquery-live -p 5000:5000 satquery:ci-test
+          sleep 5
+
+      - name: Validate Container Healthcheck (/api/catalog)
+        run: |
+          echo "Awaiting healthy status from SatQuery container..."
+          HEALTHY=false
+          for i in {1..20}; do
+            HTTP_CODE=$(curl -s -o catalog_response.json -w "%{http_code}" http://localhost:5000/api/catalog || true)
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "Container health check passed on attempt $i!"
+              cat catalog_response.json
+              HEALTHY=true
+              break
+            fi
+            echo "Attempt $i: received HTTP $HTTP_CODE. Retrying in 3s..."
+            sleep 3
+          done
+          if [ "$HEALTHY" != "true" ]; then
+            echo "ERROR: Container failed healthcheck within timeout."
+            docker logs satquery-live
+            exit 1
+          fi
+
+      - name: Live Container Inference — Task Routing & Ambiguity Gate
+        run: |
+          echo "Testing /api/query routing endpoint..."
+          curl -f -s -X POST http://localhost:5000/api/query \
+            -H "Content-Type: application/json" \
+            -d '{"query": "Detect changes between before and after flood imagery", "mode": "query_only"}' \
+            | tee routing_result.json
+          python -c "import json; res = json.load(open('routing_result.json')); assert res['status'] in ('SUCCESS', 'success'), f'Routing query failed: {res}'"
+
+      - name: Live Container Inference — Unsupported Task Gate
+        run: |
+          echo "Testing unsupported VQA query handling..."
+          curl -f -s -X POST http://localhost:5000/api/query \
+            -H "Content-Type: application/json" \
+            -d '{"query": "Count the number of vessels in the harbor", "mode": "query_only"}' \
+            | tee unavail_result.json
+          python -c "import json; res = json.load(open('unavail_result.json')); assert res['status'] == 'UNAVAILABLE', f'Unexpected status: {res}'"
+
+      - name: Container Audit & Graceful Teardown
+        if: always()
+        run: |
+          echo "=== Container Logs ==="
+          docker logs satquery-live --tail 50
+          docker stop satquery-live || true
+          docker rm satquery-live || true
