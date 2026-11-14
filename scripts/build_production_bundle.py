@@ -23,6 +23,7 @@ logger = logging.getLogger("satquery.pack")
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 MANIFEST_PATH = REPO_ROOT / "artifacts" / "deployment" / "m33_production_freeze_manifest.json"
+FROZEN_EPOCH = 1794628800  # 2026-11-14 04:00:00 UTC
 
 
 def compute_sha256(path: pathlib.Path) -> str:
@@ -68,21 +69,24 @@ def build_bundle(output_dir: pathlib.Path, version_tag: str = "v1.0.0-rc1"):
 
     logger.info(f"Total files to package: {len(bundle_files)}")
 
-    # 3. Create deterministic tar.gz archive with pinned gzip timestamp
+    # 3. Create deterministic tar.gz archive with pinned gzip timestamp & normalized metadata
     with open(archive_path, "wb") as f_out:
-        with gzip.GzipFile(filename="", mode="wb", fileobj=f_out, mtime=1731556800) as gz_out:
+        with gzip.GzipFile(filename="", mode="wb", fileobj=f_out, mtime=FROZEN_EPOCH) as gz_out:
             with tarfile.open(fileobj=gz_out, mode="w:") as tar:
                 for f in bundle_files:
                     rel = f.relative_to(REPO_ROOT)
                     arcname = str(rel).replace("\\", "/")
                     logger.info(f"  Adding {arcname} ({f.stat().st_size:,} bytes)")
-                    # Set deterministic metadata
+                    # Set deterministic metadata across all platforms
                     tarinfo = tar.gettarinfo(str(f), arcname=arcname)
                     tarinfo.uid = 1000
                     tarinfo.gid = 1000
                     tarinfo.uname = "satquery"
                     tarinfo.gname = "satquery"
-                    tarinfo.mtime = 1731556800  # Frozen timestamp (2026-11-14 04:00:00 UTC)
+                    tarinfo.mtime = FROZEN_EPOCH
+                    tarinfo.mode = 0o644 if tarinfo.isreg() else 0o755
+                    tarinfo.devmajor = 0
+                    tarinfo.devminor = 0
                     if tarinfo.isreg():
                         with open(f, "rb") as reg_f:
                             tar.addfile(tarinfo, reg_f)
