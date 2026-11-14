@@ -53,12 +53,10 @@ flowchart TD
 - **Test Scopes**:
   1. *Core Contracts (30 Tests)*: Multi-specialist integration, selective routing, predict CLI, and packaging contracts.
   2. *Full Suite (181 Tests)*: Complete unit and integration suite with JUnit XML reporting.
-- **Zero-Retraining Guard**:
-  ```bash
-  git status --porcelain
-  test -z "$(git status --porcelain)" || (echo "Test suite mutated model artifacts!" && exit 1)
-  ```
-  Guarantees that no test generates or re-saves model pickles or neural checkpoints during execution.
+- **Dual Cryptographic Manifest & Zero-Retraining Guard**:
+  1. *Pre-Test Integrity Check*: Runs `python -m satquery.cli verify` before tests begin to establish the baseline.
+  2. *Post-Test Immutability Check*: Runs `python -m satquery.cli verify` immediately after tests conclude to assert that all 13 production binaries remain bitwise identical to the freeze manifest.
+  3. *Working Tree Audit*: Executes `git status --porcelain` to verify that no untracked, intermediate, or mutated files were left behind.
 
 ### Job 3: Docker Packaging & Live Container Inference (`docker-validation`)
 - **Environment**: `ubuntu-latest` with native Docker daemon.

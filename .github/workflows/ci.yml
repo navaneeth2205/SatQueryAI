@@ -1,6 +1,6 @@
 name: SatQuery AI CI/CD Release Validation
 
-on:
+'on':
   push:
     branches:
       - main
@@ -46,7 +46,6 @@ jobs:
         run: |
           python -m satquery.cli verify --json-output > artifact_verification.json
           cat artifact_verification.json
-          # Assert that all_artifacts_intact is true
           python -c "import json; data = json.load(open('artifact_verification.json')); assert data['all_artifacts_intact'] is True, 'Cryptographic manifest check failed!'"
 
       - name: Check Working Tree Immutability
@@ -86,6 +85,11 @@ jobs:
           pip install -r requirements.txt seaborn
           pip install --no-deps -e .
 
+      - name: Verify Cryptographic Artifact Manifest (Pre-Test)
+        run: |
+          python -m satquery.cli verify --json-output > pre_test_verification.json
+          python -c "import json; data = json.load(open('pre_test_verification.json')); assert data['all_artifacts_intact'] is True, 'Pre-test manifest check failed!'"
+
       - name: Execute Core Integration & Packaging Contracts (30 Tests)
         run: |
           pytest tests/test_step4_multi_specialist_integration.py \
@@ -97,10 +101,15 @@ jobs:
         run: |
           pytest tests/ -v --junitxml=junit-results-${{ matrix.python-version }}.xml
 
-      - name: Verify Zero Model Retraining & Artifact Immutability
+      - name: Verify Cryptographic Artifact Manifest (Post-Test Immutability Check)
+        run: |
+          python -m satquery.cli verify --json-output > post_test_verification.json
+          python -c "import json; data = json.load(open('post_test_verification.json')); assert data['all_artifacts_intact'] is True, 'CRITICAL: Test suite modified production artifacts!'"
+
+      - name: Verify Working Tree Immutability
         run: |
           git status --porcelain
-          test -z "$(git status --porcelain)" || (echo "Test suite mutated model artifacts or created unstaged files!" && exit 1)
+          test -z "$(git status --porcelain)" || (echo "Test suite created untracked or modified files!" && exit 1)
 
       - name: Upload Test Results XML
         if: always()
@@ -151,6 +160,7 @@ jobs:
             if [ "$HTTP_CODE" = "200" ]; then
               echo "Container health check passed on attempt $i!"
               cat catalog_response.json
+              python -c "import json; data = json.load(open('catalog_response.json')); assert data['status'] == 'success', f'Catalog response status invalid: {data}'"
               HEALTHY=true
               break
             fi
@@ -170,7 +180,7 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"query": "Detect changes between before and after flood imagery", "mode": "query_only"}' \
             | tee routing_result.json
-          python -c "import json; res = json.load(open('routing_result.json')); assert res['status'] in ('SUCCESS', 'success'), f'Routing query failed: {res}'"
+          python -c "import json; res = json.load(open('routing_result.json')); assert res['status'] in ('SUCCESS', 'success'), f'Routing query failed: {res}'; assert 'predictions' in res, 'Missing predictions in response'"
 
       - name: Live Container Inference — Unsupported Task Gate
         run: |
