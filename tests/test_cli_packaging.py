@@ -184,7 +184,10 @@ class TestCliPackagingContracts(unittest.TestCase):
         # Inspect Dockerfile contents
         df_content = dockerfile.read_text(encoding="utf-8")
         self.assertIn("ARG TARGET_ENV=cpu", df_content)
-        self.assertIn("FROM python:3.11-slim", df_content)
+        self.assertTrue(
+            "FROM python:3.11-slim" in df_content or "FROM python:3.12-slim" in df_content,
+            "Dockerfile must use supported python:3.11-slim or python:3.12-slim base"
+        )
         self.assertIn("useradd -m -u 1000 -s /bin/bash satquery", df_content)
         self.assertIn("EXPOSE 5000", df_content)
         self.assertIn("HEALTHCHECK", df_content)

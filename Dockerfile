@@ -7,7 +7,7 @@ ARG TARGET_ENV=cpu
 # ==========================================
 # Base Environment
 # ==========================================
-FROM python:3.11-slim-bookworm AS base
+FROM python:3.12-slim-bookworm AS base
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
