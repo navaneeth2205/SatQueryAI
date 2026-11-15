@@ -1,347 +1,709 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SatQuery AI — Earth Observation Intelligence Hub</title>
+  <title>SatQuery AI — Autonomous Earth Observation Intelligence &amp; Multi-Specialist Dispatch Hub</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @keyframes pulse-subtle {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.85; }
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+              900: '#164e63',
+            },
+            surface: {
+              950: '#070a12',
+              900: '#0b1120',
+              850: '#0f172a',
+              800: '#1e293b',
+              750: '#243247',
+              700: '#334155',
+            }
+          }
+        }
+      }
     }
-    .badge-glow {
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+  </script>
+
+  <style>
+    /* Custom High-Precision Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #070a12; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    /* Tactical Grid & Glow Effects */
+    .tech-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    }
+    .hud-glow {
+      box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.15);
+    }
+    .card-border {
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .card-border:hover {
+      border-color: rgba(6, 182, 212, 0.25);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.35);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
+    }
+    .glow-amber {
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.35);
+    }
+    .glow-rose {
+      box-shadow: 0 0 15px rgba(244, 63, 94, 0.35);
+    }
+    
+    /* Image Crosshair Overlay */
+    .crosshair-grid {
+      position: relative;
+    }
+    .crosshair-grid::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 40%, rgba(7, 10, 18, 0.4) 100%);
+      border: 1px solid rgba(6, 182, 212, 0.15);
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased">
+<body class="bg-surface-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased tech-grid selection:bg-brand-500 selection:text-black">
 
-  <!-- Header -->
-  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="h-9 w-9 rounded-lg bg-blue-600 flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/30">
-          SQ
+  <!-- ========================================================================= -->
+  <!-- TOP TACTICAL HUD & SYSTEM TELEMETRY BAR                                    -->
+  <!-- ========================================================================= -->
+  <header class="border-b border-surface-800/90 bg-surface-900/95 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-[1720px] mx-auto px-4 lg:px-6 py-2.5 flex items-center justify-between">
+      
+      <!-- Logo & System Designation -->
+      <div class="flex items-center space-x-3.5">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-700 p-0.5 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+          <div class="w-full h-full bg-surface-950 rounded-[10px] flex items-center justify-center">
+            <svg class="w-5 h-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14" stroke-opacity="0.3" />
+              <circle cx="12" cy="12" r="7" stroke-width="2" />
+              <circle cx="12" cy="12" r="2" fill="currentColor" />
+            </svg>
+          </div>
         </div>
         <div>
-          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
-            SatQuery AI
-            <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-900/60 text-blue-400 border border-blue-700/50">v1.0.0-rc1</span>
-          </h1>
-          <p class="text-xs text-slate-400">Academic ML Project · Multimodal Routing &amp; Earth Observation Specialists</p>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-extrabold tracking-tight text-white flex items-center gap-2">
+              SATQUERY <span class="text-cyan-400 font-mono font-normal">AI</span>
+            </h1>
+            <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-800/60 tracking-wider">
+              v1.0.0-rc1
+            </span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/70 text-emerald-400 border border-emerald-800/50 flex items-center gap-1">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              PRODUCTION FREEZE
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-400 hidden sm:block">
+            Autonomous Multi-Specialist Dispatcher &bull; Sentinel-1 SAR &bull; Sentinel-2 MSI &bull; OSCD &bull; BigEarthNet
+          </p>
         </div>
       </div>
-      <div class="flex items-center gap-3">
-        <span class="inline-flex items-center gap-1.5 text-xs text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800/60">
-          <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          2 Specialists Active
-        </span>
-        <span class="text-xs text-slate-400 bg-slate-800/80 px-2.5 py-1 rounded-full border border-slate-700">
-          Smart Auto-Routing Enabled
-        </span>
+
+      <!-- Real-Time Hardware & Inference Telemetry -->
+      <div class="flex items-center gap-2 sm:gap-4 text-xs font-mono">
+        <!-- Latency Counter -->
+        <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-850/80 border border-surface-750 text-slate-300">
+          <span class="text-slate-500 text-[10px] uppercase">Latency</span>
+          <span id="telemetryLatency" class="text-cyan-400 font-semibold">14.2 ms</span>
+        </div>
+
+        <!-- Router Status -->
+        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-850/80 border border-surface-750 text-slate-300">
+          <span class="text-slate-500 text-[10px] uppercase">Gate</span>
+          <span class="text-emerald-400 font-semibold">&tau;=0.65 / &Delta;=0.15</span>
+        </div>
+
+        <!-- Specialists Status -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-850/80 border border-surface-750 text-slate-300">
+          <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+          <span class="text-slate-200 font-medium">2 Specialists Online</span>
+        </div>
+
+        <!-- Quick Docs Modal Pill -->
+        <a href="https://github.com/navaneeth2205/SatQueryAI" target="_blank" rel="noopener noreferrer"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-200 transition text-[11px]">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+          </svg>
+          <span class="hidden sm:inline">GitHub v1.0.0-rc1</span>
+        </a>
       </div>
+
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+  <!-- ========================================================================= -->
+  <!-- MAIN WORKSPACE: 3-PANE GEOSPATIAL INTELLIGENCE GRID                        -->
+  <!-- ========================================================================= -->
+  <main class="max-w-[1720px] mx-auto px-4 lg:px-6 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-    <!-- Left Column: Controls & Input Panel (5 cols) -->
-    <div class="lg:col-span-5 space-y-5">
+    <!-- ======================================================================= -->
+    <!-- LEFT CONTROL CONSOLE: INGESTION, MODALITY & DISPATCH (4 COLS)            -->
+    <!-- ======================================================================= -->
+    <div class="lg:col-span-4 space-y-5">
       
-      <!-- Query Input Card -->
-      <div class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-4">
+      <!-- Natural Language Query Terminal -->
+      <div class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-4">
+        
+        <!-- Header -->
         <div class="flex items-center justify-between">
-          <label class="text-xs font-bold uppercase tracking-wider text-slate-400">Natural-Language Query</label>
-          <span class="text-xs text-slate-500">Stage 4 Task Router</span>
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-cyan-400"></span>
+            <label for="queryInput" class="text-xs font-bold uppercase tracking-wider text-slate-300">
+              Analyst Query Input
+            </label>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-800 text-slate-400 border border-surface-700">
+            Ctrl + Enter to Run
+          </span>
         </div>
 
-        <div class="relative">
+        <!-- Textarea Console -->
+        <div class="relative group">
           <textarea id="queryInput" rows="3" 
-            class="w-full bg-slate-950 border border-slate-750 rounded-lg p-3 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
-            placeholder="Type your Earth observation question or pick a preset chip below...">What changed in this area between 2024 and 2026?</textarea>
-        </div>
-
-        <!-- Preset Chips -->
-        <div>
-          <div class="text-[11px] font-medium text-slate-400 mb-2">Preset Benchmark Queries (Click to test):</div>
-          <div id="presetChips" class="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto pr-1">
-            <!-- Dynamically populated -->
+            class="w-full bg-surface-950 border border-surface-750 group-hover:border-cyan-500/50 rounded-xl p-3.5 text-sm text-slate-100 font-sans focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 transition resize-none leading-relaxed shadow-inner"
+            placeholder="Type your Earth observation question or choose a benchmark query below...">What changed in this area between 2024 and 2026?</textarea>
+          
+          <div class="absolute bottom-2.5 right-3 flex items-center gap-2">
+            <button type="button" onclick="clearQuery()" title="Clear input"
+              class="text-slate-500 hover:text-slate-300 text-xs px-1.5 py-0.5 rounded hover:bg-surface-800 transition">
+              Clear
+            </button>
           </div>
         </div>
 
-        <!-- Input Modality & Observation Selection -->
-        <div class="pt-2 border-t border-slate-800/80 space-y-3">
+        <!-- Curated Preset Categories & Chips -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-[11px] text-slate-400">
+            <span class="font-semibold text-slate-300 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+              Benchmark Presets
+            </span>
+            <span class="text-[10px] text-slate-500 font-mono">1-Click Dispatch</span>
+          </div>
+          
+          <!-- Chips Container -->
+          <div id="presetChips" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
+            <!-- Dynamically populated from /api/catalog -->
+          </div>
+        </div>
+
+        <!-- =================================================================== -->
+        <!-- OBSERVATION MODALITY & SENSOR CONFIGURATION                         -->
+        <!-- =================================================================== -->
+        <div class="pt-4 border-t border-surface-800 space-y-4">
+          
           <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Observation Modality</span>
-            <span class="text-[11px] text-blue-400 font-medium" id="modalityHint">Auto-Detect (Smart Dispatch)</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+              </svg>
+              Observation Modality
+            </span>
+            <span id="modalityHint" class="text-[11px] font-mono text-cyan-400 font-medium">
+              Auto-Detect (Smart Dispatch)
+            </span>
           </div>
 
-          <div class="grid grid-cols-4 gap-1 p-1 bg-slate-950 rounded-lg border border-slate-800 text-xs">
+          <!-- Modality Tabs -->
+          <div class="grid grid-cols-4 gap-1 p-1 bg-surface-950 rounded-xl border border-surface-750 text-xs font-medium">
             <button type="button" id="tabAuto" onclick="setMode('auto')"
-              class="py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center text-[11px]">
+              class="py-2 rounded-lg bg-cyan-600 text-white transition text-center text-[11px] font-semibold shadow-sm">
               Auto (Smart)
             </button>
             <button type="button" id="tabCD" onclick="setMode('change_detection')"
-              class="py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center text-[11px]">
+              class="py-2 rounded-lg text-slate-400 hover:text-white transition text-center text-[11px]">
               Temporal Pair
             </button>
             <button type="button" id="tabLC" onclick="setMode('land_cover')"
-              class="py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center text-[11px]">
+              class="py-2 rounded-lg text-slate-400 hover:text-white transition text-center text-[11px]">
               Single Image
             </button>
             <button type="button" id="tabNone" onclick="setMode('query_only')"
-              class="py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center text-[11px]">
+              class="py-2 rounded-lg text-slate-400 hover:text-white transition text-center text-[11px]">
               Query Only
             </button>
           </div>
 
-          <!-- Change Detection Observation Selector -->
-          <div id="cdSelectorGroup" class="space-y-2">
-            <label class="text-[11px] text-slate-400 flex items-center justify-between">
-              <span>OSCD Benchmark Temporal Scene:</span>
-              <span class="text-[10px] text-slate-500">24 georeferenced sites</span>
-            </label>
-            <select id="cdSceneSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
-              <option value="0">Loading scenes...</option>
-            </select>
+          <!-- Change Detection Observation Sub-Panel -->
+          <div id="cdSelectorGroup" class="space-y-3 bg-surface-950/60 p-3.5 rounded-xl border border-surface-800">
+            
+            <div>
+              <label for="cdSceneSelect" class="text-[11px] text-slate-300 font-semibold flex items-center justify-between mb-1.5">
+                <span>OSCD Co-Registered Scene:</span>
+                <span class="text-[10px] font-mono text-slate-500">24 geocoded sites</span>
+              </label>
+              <select id="cdSceneSelect" class="w-full bg-surface-900 border border-surface-750 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
+                <option value="0">Loading scenes...</option>
+              </select>
+            </div>
 
             <!-- Algorithm Mode Selector -->
             <div>
-              <label class="text-[11px] text-slate-400 flex items-center justify-between mb-1">
-                <span>CVA Detection Algorithm:</span>
-                <span class="text-[10px] text-emerald-400 font-medium">Evaluated Grid</span>
+              <label for="cdMethodSelect" class="text-[11px] text-slate-300 font-semibold flex items-center justify-between mb-1.5">
+                <span>Change Detection Specialist Backend:</span>
+                <span class="text-[10px] font-mono text-emerald-400 font-semibold">scSE Neural + CVA</span>
               </label>
-              <select id="cdMethodSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
+              <select id="cdMethodSelect" class="w-full bg-surface-900 border border-surface-750 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
                 <option value="smoothed" selected>Gaussian-Smoothed CVA (Highest F1: 0.339, IoU: 0.204)</option>
                 <option value="hysteresis">Dual-Threshold Hysteresis (Highest Recall: 44.3%, +26.1%)</option>
                 <option value="standard">Standard Normalized CVA Baseline (F1: 0.278, Recall: 18.2%)</option>
               </select>
             </div>
 
-            <div class="flex items-center gap-2 pt-1">
-              <input type="checkbox" id="syntheticIdentical" class="rounded bg-slate-950 border-slate-800 text-blue-600 focus:ring-0">
-              <label for="syntheticIdentical" class="text-xs text-amber-400/90 cursor-pointer">
-                Synthetic Regression: Force T1 = T2 (Test 0% Change)
+            <!-- Invariance Checkbox -->
+            <div class="flex items-center gap-2 pt-1 border-t border-surface-800/80">
+              <input type="checkbox" id="syntheticIdentical" class="rounded bg-surface-950 border-surface-700 text-cyan-500 focus:ring-0">
+              <label for="syntheticIdentical" class="text-[11px] text-amber-400 font-medium cursor-pointer">
+                Synthetic Invariance Test: Force T1 = T2 (Assert 0.0% Change)
               </label>
             </div>
           </div>
 
-          <!-- Land Cover Sample Selector -->
-          <div id="lcSelectorGroup" class="space-y-2 hidden">
-            <label class="text-[11px] text-slate-400 flex items-center justify-between">
-              <span>BigEarthNet-14k Validation Tile:</span>
-              <span class="text-[10px] text-slate-500">Multimodal Patch</span>
-            </label>
-            <select id="lcSampleSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
-              <option value="0">Loading tiles...</option>
-            </select>
+          <!-- Land Cover Sample Sub-Panel -->
+          <div id="lcSelectorGroup" class="space-y-3 bg-surface-950/60 p-3.5 rounded-xl border border-surface-800 hidden">
+            <div>
+              <label for="lcSampleSelect" class="text-[11px] text-slate-300 font-semibold flex items-center justify-between mb-1.5">
+                <span>BigEarthNet Sentinel-1/2 Multimodal Patch:</span>
+                <span class="text-[10px] font-mono text-slate-500">14k Validation Pool</span>
+              </label>
+              <select id="lcSampleSelect" class="w-full bg-surface-900 border border-surface-750 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
+                <option value="0">Loading tiles...</option>
+              </select>
+            </div>
 
             <!-- Classifier Architecture Selector -->
             <div>
-              <label class="text-[11px] text-slate-400 flex items-center justify-between mb-1">
-                <span>Classifier Architecture:</span>
-                <span class="text-[10px] text-emerald-400 font-medium">Phase 2 Hardened</span>
+              <label for="lcModelSelect" class="text-[11px] text-slate-300 font-semibold flex items-center justify-between mb-1.5">
+                <span>Land Cover Classifier Architecture:</span>
+                <span class="text-[10px] font-mono text-emerald-400 font-semibold">Phase 2 Champion</span>
               </label>
-              <select id="lcModelSelect" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
+              <select id="lcModelSelect" class="w-full bg-surface-900 border border-surface-750 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
                 <option value="phase2" selected>Phase 2 LightGBM (488 features, Tuned Micro F1: 72.99%)</option>
                 <option value="baseline">Baseline Random Forest (84 features, Micro F1: 0.718)</option>
               </select>
             </div>
           </div>
+
         </div>
 
-        <!-- Safety Routing Policy Toggle -->
-        <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between">
+        <!-- =================================================================== -->
+        <!-- SAFETY ROUTING POLICY TOGGLE                                        -->
+        <!-- =================================================================== -->
+        <div class="pt-3 border-t border-surface-800 flex items-center justify-between">
           <div>
-            <div class="text-xs font-semibold text-slate-300">Routing Policy</div>
-            <div class="text-[11px] text-slate-500">Confidence arbitration mode</div>
+            <div class="text-xs font-bold text-slate-300">Ambiguity Arbitration Policy</div>
+            <div class="text-[10px] text-slate-500 font-mono">Joint Confidence Margin Gate</div>
           </div>
-          <select id="policySelect" class="bg-slate-950 border border-slate-800 rounded-lg p-1.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500">
-            <option value="provisional" selected>Provisional Execution (Recommended)</option>
+          <select id="policySelect" class="bg-surface-950 border border-surface-750 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
+            <option value="provisional" selected>Provisional Dispatch (Default)</option>
             <option value="clarify">Clarification Required (&lt; 65%)</option>
           </select>
         </div>
 
-        <!-- Submit Button -->
+        <!-- =================================================================== -->
+        <!-- DISPATCH PRIMARY ACTION BUTTON                                      -->
+        <!-- =================================================================== -->
         <button id="runBtn" onclick="runAnalysis()"
-          class="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-semibold rounded-lg text-sm shadow-lg shadow-blue-600/30 transition flex items-center justify-center gap-2">
+          class="w-full py-3 px-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 active:from-cyan-700 active:to-blue-700 text-white font-bold rounded-xl text-sm shadow-lg shadow-cyan-600/25 transition-all flex items-center justify-center gap-2.5">
           <svg id="spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          <span id="runBtnText">Run Query &amp; Dispatch Analysis</span>
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+          <span id="runBtnText">Dispatch Query &amp; Execute Specialist</span>
         </button>
+
       </div>
 
-      <!-- Active Pipeline Capabilities -->
-      <div class="bg-slate-900/60 rounded-xl border border-slate-800 p-4 text-xs text-slate-400 space-y-2">
-        <div class="font-semibold text-slate-300 flex items-center gap-2">
-          <span>Active Pipeline Specialists</span>
+      <!-- Live Engine Architecture Summary Card -->
+      <div class="bg-surface-900/70 rounded-2xl card-border p-4 text-xs space-y-2.5">
+        <div class="flex items-center justify-between text-slate-300 font-bold border-b border-surface-800 pb-2">
+          <span class="flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Production Model Fleet (Frozen)
+          </span>
+          <span class="text-[10px] font-mono text-emerald-400">100% Immutable</span>
         </div>
-        <ul class="space-y-1 text-[11px] text-slate-400 list-disc list-inside">
-          <li><span class="text-slate-200 font-medium">Task Router:</span> Calibrated Logistic Regression (tau=0.65, 95% safety recall, 0-IDER target)</li>
-          <li><span class="text-slate-200 font-medium">Land Cover:</span> Phase 2 LightGBM (488 features, 16 CORINE classes, Tuned Micro F1: 72.99%)</li>
-          <li><span class="text-slate-200 font-medium">Change Detection:</span> Evaluated CVA (Smoothed F1 0.339 vs Hysteresis Recall 44.3%)</li>
-          <li><span class="text-slate-200 font-medium">Zero-Hallucination Guard:</span> Explicit UNAVAILABLE status on VQA/Grounding queries</li>
-        </ul>
+        <div class="grid grid-cols-2 gap-2 text-[11px] font-mono">
+          <div class="bg-surface-950 p-2.5 rounded-lg border border-surface-800">
+            <div class="text-slate-500 text-[10px]">TASK ROUTER</div>
+            <div class="text-slate-200 font-semibold truncate">Calibrated Softmax</div>
+            <div class="text-cyan-400 text-[10px]">&tau;=0.65, 0-IDER Target</div>
+          </div>
+          <div class="bg-surface-950 p-2.5 rounded-lg border border-surface-800">
+            <div class="text-slate-500 text-[10px]">CHANGE DETECTION</div>
+            <div class="text-slate-200 font-semibold truncate">Siamese ResNet-18</div>
+            <div class="text-cyan-400 text-[10px]">scSE Attention + CVA</div>
+          </div>
+          <div class="bg-surface-950 p-2.5 rounded-lg border border-surface-800">
+            <div class="text-slate-500 text-[10px]">LAND COVER</div>
+            <div class="text-slate-200 font-semibold truncate">Phase 2 LightGBM</div>
+            <div class="text-cyan-400 text-[10px]">488 Feats, F1: 72.99%</div>
+          </div>
+          <div class="bg-surface-950 p-2.5 rounded-lg border border-surface-800">
+            <div class="text-slate-500 text-[10px]">ZERO-HALLUCINATION</div>
+            <div class="text-slate-200 font-semibold truncate">VQA &amp; Grounding</div>
+            <div class="text-emerald-400 text-[10px]">Guaranteed Intercept</div>
+          </div>
+        </div>
       </div>
 
     </div>
 
-    <!-- Right Column: Results & Visual Inspector Panel (7 cols) -->
-    <div class="lg:col-span-7 space-y-5">
+    <!-- ======================================================================= -->
+    <!-- RIGHT INTELLIGENCE STAGE: VISUAL RESULTS & EXPLAINABILITY (8 COLS)      -->
+    <!-- ======================================================================= -->
+    <div class="lg:col-span-8 space-y-5">
 
-      <!-- Status & Routing Header Card -->
-      <div id="routingCard" class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <!-- ===================================================================== -->
+      <!-- TOP STATUS & SYNTHESIZED NATURAL LANGUAGE CARD                        -->
+      <!-- ===================================================================== -->
+      <div id="routingCard" class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-4">
+        
+        <!-- Status Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-800 pb-3">
           <div class="flex items-center gap-2">
-            <span id="statusBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400">
-              Ready for Query
+            <span id="statusBadge" class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-surface-800 text-slate-400 border border-surface-700">
+              STANDBY &bull; AWAITING QUERY
             </span>
-            <span id="policyBadge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800/60 text-slate-500">
-              Policy: Standby
+            <span id="policyBadge" class="text-xs font-mono px-2.5 py-1 rounded-full bg-surface-950 text-slate-400 border border-surface-800">
+              Policy: Provisional
             </span>
           </div>
-          <div class="text-right">
-            <span class="text-[11px] text-slate-500">Task Router Confidence</span>
-            <div id="confScore" class="text-sm font-bold text-slate-300">--%</div>
+
+          <div class="flex items-center gap-4 text-right">
+            <div>
+              <span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">Routing Confidence</span>
+              <span id="confScore" class="text-base font-mono font-bold text-slate-300">--%</span>
+            </div>
+            <div class="h-8 w-px bg-surface-800"></div>
+            <div>
+              <span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">Specialist Target</span>
+              <span id="taskName" class="text-xs font-mono font-bold text-cyan-400">--</span>
+            </div>
           </div>
         </div>
 
-        <div>
-          <div class="text-xs text-slate-400">Routed Specialist Pipeline:</div>
-          <div id="taskName" class="text-base font-bold text-white mt-0.5">--</div>
-        </div>
-
-        <!-- Natural-Language Answer Box -->
-        <div class="bg-slate-950 rounded-lg p-3.5 border border-slate-800/80">
-          <div class="text-xs font-semibold text-blue-400 mb-1">Synthesized Answer:</div>
-          <div id="answerText" class="text-sm text-slate-200 leading-relaxed">
-            Submit a query to inspect the end-to-end task routing and specialist execution output.
-          </div>
-          <div id="clarifyActionBox" class="mt-3 pt-2.5 border-t border-slate-800/80 hidden">
-            <button onclick="proceedWithProvisional()" class="text-xs px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-medium rounded-md transition shadow">
-              Proceed with Provisional Specialist Execution &rarr;
+        <!-- Synthesized Answer Panel -->
+        <div class="bg-surface-950 rounded-xl p-4 border border-surface-800 shadow-inner space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+              Synthesized Specialist Intelligence
+            </span>
+            <button onclick="copyAnswerText()" title="Copy answer" class="text-[11px] font-mono text-slate-500 hover:text-slate-300 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              Copy
             </button>
           </div>
+          <p id="answerText" class="text-sm text-slate-200 leading-relaxed font-sans">
+            Ready to analyze. Submit a natural-language query to trigger task intent classification, input validation, and specialized model inference.
+          </p>
+
+          <!-- Interactive Clarification Option (Revealed when confidence < 0.65) -->
+          <div id="clarifyActionBox" class="mt-3 pt-3 border-t border-surface-800/80 hidden">
+            <div class="bg-amber-950/40 border border-amber-600/40 rounded-lg p-3 flex items-center justify-between">
+              <div class="text-xs text-amber-300">
+                <span class="font-bold">Ambiguous Intent Detected (&lt; 65% Confidence).</span> Would you like to force execution under the Provisional Specialist Policy?
+              </div>
+              <button onclick="proceedWithProvisional()" class="text-xs px-3 py-1.5 bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white font-bold rounded-lg transition shadow-md whitespace-nowrap">
+                Proceed with Provisional Execution &rarr;
+              </button>
+            </div>
+          </div>
         </div>
+
       </div>
 
-      <!-- Zero-Hallucination Guard Banner for Unsupported Tasks -->
-      <div id="guardBanner" class="bg-amber-950/30 border border-amber-600/50 rounded-xl p-4 hidden space-y-2 shadow-sm">
-        <div class="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
-          <svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-          </svg>
-          Zero-Hallucination Specialist Guard Active
+      <!-- ===================================================================== -->
+      <!-- ZERO-HALLUCINATION GUARD BANNER (Out-of-Scope Interception)           -->
+      <!-- ===================================================================== -->
+      <div id="guardBanner" class="bg-gradient-to-r from-rose-950/40 via-surface-900 to-surface-900 border border-rose-600/50 rounded-2xl p-5 hidden space-y-3 shadow-lg">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5 text-rose-400 font-bold text-xs uppercase tracking-wider">
+            <div class="h-6 w-6 rounded-lg bg-rose-900/60 flex items-center justify-center border border-rose-700/60">
+              <svg class="w-4 h-4 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              </svg>
+            </div>
+            <span>Zero-Hallucination Specialist Guard Active</span>
+          </div>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800">
+            UNAVAILABLE_SPECIALIST
+          </span>
         </div>
         <p class="text-xs text-slate-300 leading-relaxed">
-          SatQuery AI strictly rejects generating unverified or hallucinated text for vision-language queries (VQA, Grounding, Captioning). While these tasks are formally registered in the 7-task taxonomy, they are documented as roadmap stubs awaiting dedicated multimodal foundation models.
+          SatQuery AI strictly prohibits fabricating or hallucinating responses for unverified vision-language capabilities (e.g. Visual Question Answering, Referring Expression Grounding, and Freeform Captioning). These tasks are formally tracked in the operational taxonomy and intercepted until dedicated foundational multimodal models are certified in future milestones.
         </p>
-        <div class="flex items-center gap-2 pt-1 text-[11px] text-amber-300/90 font-mono">
-          <span class="bg-amber-900/40 px-2 py-0.5 rounded border border-amber-700/60">Status: UNAVAILABLE_SPECIALIST</span>
-          <span class="text-slate-500">&bull;</span>
-          <span>Roadmap: Milestone 4 VLM Multimodal Integration</span>
+        <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-rose-300 font-mono">
+          <span class="bg-surface-950 px-2 py-1 rounded border border-surface-750">Status: ZERO INAPPROPRIATE DELEGATION</span>
+          <span class="text-slate-600">&bull;</span>
+          <span class="text-slate-400">Roadmap: Milestone M4 Vision-Language Foundation Integration</span>
         </div>
       </div>
 
-      <!-- Change Detection Visual Viewer Card -->
-      <div id="visualCard" class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-4 hidden">
-        <div class="flex items-center justify-between">
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Multitemporal Satellite Inspector</div>
-          <span id="sceneMetaLabel" class="text-xs text-slate-400 font-mono">--</span>
+      <!-- ===================================================================== -->
+      <!-- CHANGE DETECTION VISUAL INSPECTOR (Bitemporal Dual/Tri-Pane)         -->
+      <!-- ===================================================================== -->
+      <div id="visualCard" class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-4 hidden">
+        
+        <div class="flex items-center justify-between border-b border-surface-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-cyan-400"></span>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">
+              Bitemporal Change Detection Analysis
+            </h3>
+          </div>
+          <div class="flex items-center gap-3">
+            <!-- Opacity Slider -->
+            <div class="flex items-center gap-2 text-[11px] font-mono text-slate-400">
+              <span>Mask Opacity:</span>
+              <input type="range" id="overlayOpacity" min="0" max="100" value="80" 
+                class="w-20 accent-cyan-500 cursor-pointer" oninput="adjustOverlayOpacity(this.value)">
+              <span id="opacityVal" class="text-cyan-400 w-8">80%</span>
+            </div>
+            <span id="sceneMetaLabel" class="text-xs font-mono px-2.5 py-0.5 rounded bg-surface-950 text-cyan-400 border border-surface-800">
+              --
+            </span>
+          </div>
         </div>
 
-        <div id="cdVisualContainer" class="space-y-3">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-center space-y-1">
-              <span class="text-[11px] font-semibold text-slate-400">T1 Baseline Observation</span>
-              <img id="imgT1" class="w-full h-44 object-cover rounded border border-slate-800/50" src="" alt="T1">
+        <!-- 3-Pane Image Grid -->
+        <div id="cdVisualContainer" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <!-- T1 Image -->
+            <div class="bg-surface-950 p-2.5 rounded-xl border border-surface-800 space-y-2 group">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono px-1">
+                <span class="font-semibold text-slate-300">T1 Pre-Event Baseline</span>
+                <span class="text-[10px] text-slate-500">Sentinel-2 True Color</span>
+              </div>
+              <div class="relative overflow-hidden rounded-lg bg-surface-900 border border-surface-800 crosshair-grid aspect-square">
+                <img id="imgT1" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="" alt="T1 Pre-Event">
+              </div>
             </div>
-            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-center space-y-1">
-              <span class="text-[11px] font-semibold text-slate-400">T2 Subsequent Observation</span>
-              <img id="imgT2" class="w-full h-44 object-cover rounded border border-slate-800/50" src="" alt="T2">
+
+            <!-- T2 Image -->
+            <div class="bg-surface-950 p-2.5 rounded-xl border border-surface-800 space-y-2 group">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono px-1">
+                <span class="font-semibold text-slate-300">T2 Post-Event Subsequent</span>
+                <span class="text-[10px] text-slate-500">Sentinel-2 True Color</span>
+              </div>
+              <div class="relative overflow-hidden rounded-lg bg-surface-900 border border-surface-800 crosshair-grid aspect-square">
+                <img id="imgT2" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="" alt="T2 Post-Event">
+              </div>
             </div>
-            <div class="bg-slate-950 p-2 rounded-lg border border-slate-800 text-center space-y-1">
-              <span class="text-[11px] font-semibold text-red-400">Predicted Change Overlay</span>
-              <img id="imgOverlay" class="w-full h-44 object-cover rounded border border-slate-800/50" src="" alt="Overlay">
+
+            <!-- Overlay / Change Mask -->
+            <div class="bg-surface-950 p-2.5 rounded-xl border border-surface-800 space-y-2 group">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono px-1">
+                <span class="font-semibold text-rose-400">Predicted Change Mask</span>
+                <span class="text-[10px] text-cyan-400 font-semibold">Cluster Bounding Box</span>
+              </div>
+              <div class="relative overflow-hidden rounded-lg bg-surface-900 border border-surface-800 crosshair-grid aspect-square">
+                <img id="imgOverlay" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="" alt="Predicted Change Overlay">
+              </div>
             </div>
+
           </div>
-          <div class="text-[11px] text-slate-400 text-center">
-            <span class="text-red-400 font-semibold">&#9632; Red Highlight:</span> Altered Pixels (&tau; &ge; 0.28) &nbsp;|&nbsp; 
-            <span class="text-cyan-400 font-semibold">&#9632; Cyan Box:</span> Largest Connected Change Cluster
+
+          <!-- Annotation Legend & Telemetry Readout -->
+          <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-surface-950/70 rounded-xl border border-surface-800 text-[11px] font-mono">
+            <div class="flex items-center gap-4">
+              <span class="flex items-center gap-1.5 text-rose-400">
+                <span class="h-2.5 w-2.5 rounded bg-rose-500 inline-block"></span>
+                <span>Altered Pixel Extent (&tau; &ge; 0.28)</span>
+              </span>
+              <span class="flex items-center gap-1.5 text-cyan-400">
+                <span class="h-2.5 w-2.5 rounded border border-cyan-400 inline-block"></span>
+                <span>Max Component Bounding Box</span>
+              </span>
+            </div>
+            <div class="text-slate-400">
+              Spatial Resolution: <span class="text-slate-200">10m GSD</span> &bull; Channels: <span class="text-slate-200">RGB (B04, B03, B02)</span>
+            </div>
           </div>
         </div>
+
       </div>
 
-      <!-- Land Cover Visual Card -->
-      <div id="landCoverCard" class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-4 hidden">
-        <div class="flex items-center justify-between">
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Land Cover Multi-Label Analysis</div>
-          <span id="lcPatchLabel" class="text-xs text-slate-400 font-mono">--</span>
+      <!-- ===================================================================== -->
+      <!-- LAND COVER MULTI-LABEL DISTRIBUTION STAGE                             -->
+      <!-- ===================================================================== -->
+      <div id="landCoverCard" class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-4 hidden">
+        
+        <div class="flex items-center justify-between border-b border-surface-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">
+              Land Cover Multi-Label Probability Spectrum
+            </h3>
+          </div>
+          <span id="lcPatchLabel" class="text-xs font-mono px-2.5 py-0.5 rounded bg-surface-950 text-emerald-400 border border-surface-800">
+            --
+          </span>
         </div>
 
-        <div>
-          <div class="text-xs font-medium text-slate-400 mb-2">Detected Classes (Above Validation Decision Thresholds):</div>
-          <div id="detectedBadges" class="flex flex-wrap gap-1.5">
-            <!-- Detected badge pills -->
+        <!-- Detected Positive Classes Badges -->
+        <div class="space-y-1.5">
+          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+            Predicted Classes (Exceeding Calibrated Thresholds &tau;<sub>k</sub>):
+          </div>
+          <div id="detectedBadges" class="flex flex-wrap gap-1.5 min-h-[32px] items-center">
+            <!-- Badges dynamically injected -->
           </div>
         </div>
 
-        <div class="space-y-2 pt-2 border-t border-slate-800">
-          <div class="text-xs font-medium text-slate-400">Top Class Confidence Scores &amp; Decision Thresholds:</div>
-          <div id="probBarsContainer" class="space-y-1.5">
-            <!-- Bars dynamically injected -->
+        <!-- Class Probabilities & Calibrated Threshold Bars -->
+        <div class="space-y-2.5 pt-3 border-t border-surface-800">
+          <div class="flex items-center justify-between text-[11px] text-slate-400">
+            <span class="font-semibold uppercase tracking-wider">Class Probabilities vs Per-Class Decision Bounds</span>
+            <span class="font-mono text-slate-500">Sorted by Activation Rank</span>
+          </div>
+          
+          <div id="probBarsContainer" class="space-y-2 font-mono text-xs">
+            <!-- Dynamic progress bars injected here -->
           </div>
         </div>
 
-        <div id="groundTruthRow" class="pt-2 border-t border-slate-800 text-xs text-slate-400 flex items-center justify-between">
-          <span>Ground Truth Labels (Benchmark Metadata):</span>
-          <span id="groundTruthText" class="text-slate-300 font-medium">--</span>
+        <!-- Ground Truth Metadata Comparison -->
+        <div id="groundTruthRow" class="pt-3 border-t border-surface-800 text-xs text-slate-400 flex flex-wrap items-center justify-between gap-2">
+          <span class="font-medium">Benchmark Reference Labels (CORINE Taxonomy):</span>
+          <span id="groundTruthText" class="text-slate-200 font-mono font-semibold px-2 py-0.5 rounded bg-surface-950 border border-surface-800">
+            --
+          </span>
         </div>
+
       </div>
 
-      <!-- Evidence Points Card -->
-      <div id="evidenceCard" class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-3">
-        <div class="flex items-center justify-between">
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400">Explainable Evidence Points</div>
-          <span class="text-xs text-slate-500">Stage 5 Evidence Engine</span>
+      <!-- ===================================================================== -->
+      <!-- EXPLAINABLE EVIDENCE POINTS & SENSOR SUMMARY                          -->
+      <!-- ===================================================================== -->
+      <div id="evidenceCard" class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-3">
+        <div class="flex items-center justify-between border-b border-surface-800 pb-2.5">
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">
+              Explainable Evidence Points (Stage 5 Evidence Engine)
+            </h3>
+          </div>
+          <span class="text-[10px] font-mono text-slate-500">Deterministic Attribution</span>
         </div>
-        <ul id="evidenceList" class="space-y-1.5 text-xs text-slate-300">
-          <li class="text-slate-500 italic">No execution evidence yet.</li>
+
+        <ul id="evidenceList" class="space-y-2 text-xs text-slate-300 font-sans">
+          <li class="text-slate-500 italic p-3 bg-surface-950/60 rounded-xl border border-surface-800/80">
+            No execution evidence produced yet. Run a query to inspect explainable attributions.
+          </li>
         </ul>
       </div>
 
-      <!-- Observable Execution Trace Drawer -->
-      <div class="bg-slate-900 rounded-xl border border-slate-800 p-5 shadow-sm space-y-3">
+      <!-- ===================================================================== -->
+      <!-- OBSERVABLE EXECUTION TRACE (Forensic Stepper)                         -->
+      <!-- ===================================================================== -->
+      <div class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-3">
+        
         <div class="flex items-center justify-between cursor-pointer" onclick="toggleTrace()">
-          <div class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
-            <span>Observable Execution Trace</span>
-            <span id="traceCount" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-400">5 steps</span>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-200">
+              Observable 5-Step Execution Trace
+            </span>
+            <span id="traceCount" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800">
+              5 steps
+            </span>
           </div>
-          <span id="traceToggleIcon" class="text-xs text-slate-400 font-mono">[Collapse]</span>
+          <span id="traceToggleIcon" class="text-xs text-slate-400 font-mono hover:text-white transition">
+            [Collapse]
+          </span>
         </div>
-        <div id="traceContainer" class="space-y-1.5 font-mono text-[11px] text-slate-300 bg-slate-950 p-3 rounded-lg border border-slate-800 max-h-52 overflow-y-auto">
+
+        <div id="traceContainer" class="space-y-2 font-mono text-[11px] text-slate-300 bg-surface-950 p-4 rounded-xl border border-surface-800 max-h-60 overflow-y-auto">
           <div class="text-slate-500 italic">System ready for query dispatch.</div>
         </div>
+
       </div>
 
     </div>
 
   </main>
 
-  <footer class="border-t border-slate-800 py-3 text-center text-xs text-slate-500">
-    SatQuery AI · Academic ML Research Project · Open-Source Multispectral &amp; Radar Orchestration
+  <!-- ========================================================================= -->
+  <!-- TACTICAL FOOTER & ATTRIBUTION                                             -->
+  <!-- ========================================================================= -->
+  <footer class="border-t border-surface-800/80 bg-surface-900/60 py-3.5 text-center text-xs font-mono text-slate-500">
+    <div class="max-w-[1720px] mx-auto px-4 flex flex-wrap items-center justify-between gap-2">
+      <div>
+        SatQuery AI &bull; Milestone M3.3 Release Candidate <span class="text-cyan-400">v1.0.0-rc1</span> &bull; Frozen Charter
+      </div>
+      <div class="flex items-center gap-4 text-slate-400 text-[11px]">
+        <span>SHA-256 Verified Release Bundle</span>
+        <span>&bull;</span>
+        <span>CI/CD Certified across Python 3.12, 3.13, 3.14</span>
+      </div>
+    </div>
   </footer>
 
-  <!-- Frontend Logic -->
+  <!-- ========================================================================= -->
+  <!-- FRONTEND LOGIC & ENGINE INTEGRATION                                       -->
+  <!-- ========================================================================= -->
   <script>
     let currentMode = 'auto';
     let catalog = { change_detection_scenes: [], land_cover_samples: [], preset_queries: [] };
 
+    // Format millisecond duration cleanly
+    function formatMs(ms) {
+      return ms.toFixed(1) + ' ms';
+    }
+
+    // Load dynamic scenes and benchmark queries
     async function loadCatalog() {
       try {
         const res = await fetch('/api/catalog');
@@ -353,8 +715,9 @@
         chipsContainer.innerHTML = '';
         data.preset_queries.forEach((p) => {
           const btn = document.createElement('button');
-          btn.className = 'text-[11px] text-left px-2.5 py-1 rounded bg-slate-800/80 hover:bg-slate-700 text-slate-300 transition truncate max-w-full';
-          btn.textContent = p.query;
+          btn.type = 'button';
+          btn.className = 'text-[11px] text-left px-2.5 py-1.5 rounded-lg bg-surface-800 hover:bg-surface-750 text-slate-300 hover:text-white border border-surface-700/60 hover:border-cyan-500/40 transition truncate max-w-full font-sans flex items-center gap-1.5 group';
+          btn.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-cyan-400/70 group-hover:bg-cyan-400"></span><span class="truncate">${p.query}</span>`;
           btn.title = `[${p.category}] ${p.query}`;
           btn.onclick = () => {
             document.getElementById('queryInput').value = p.query;
@@ -369,7 +732,7 @@
         data.change_detection_scenes.forEach(s => {
           const opt = document.createElement('option');
           opt.value = s.id;
-          opt.textContent = `${s.name.toUpperCase()} (${s.split} split, ${s.width}x${s.height}, ${s.change_pct}% change)`;
+          opt.textContent = `${s.name.toUpperCase()} &bull; ${s.split.toUpperCase()} &bull; ${s.width}x${s.height} px &bull; ${s.change_pct}% change`;
           cdSelect.appendChild(opt);
         });
 
@@ -379,7 +742,7 @@
         data.land_cover_samples.forEach(s => {
           const opt = document.createElement('option');
           opt.value = s.id;
-          opt.textContent = `Sample #${s.id} — ${s.ground_truth_labels.slice(0, 2).join(', ')}`;
+          opt.textContent = `Tile #${s.id} &bull; ${s.ground_truth_labels.slice(0, 3).join(', ')}`;
           lcSelect.appendChild(opt);
         });
 
@@ -399,31 +762,57 @@
       const hint = document.getElementById('modalityHint');
 
       [tabAuto, tabCD, tabLC, tabNone].forEach(t => {
-        t.className = 'py-1.5 font-medium rounded-md text-slate-400 hover:text-white transition text-center text-[11px]';
+        t.className = 'py-2 rounded-lg text-slate-400 hover:text-white transition text-center text-[11px]';
       });
 
       if (mode === 'auto') {
-        tabAuto.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center text-[11px]';
+        tabAuto.className = 'py-2 rounded-lg bg-cyan-600 text-white font-semibold transition text-center text-[11px] shadow-sm';
         cdGroup.classList.remove('hidden');
         lcGroup.classList.remove('hidden');
         hint.textContent = 'Auto-Detect (Smart Dispatch)';
       } else if (mode === 'change_detection') {
-        tabCD.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center text-[11px]';
+        tabCD.className = 'py-2 rounded-lg bg-cyan-600 text-white font-semibold transition text-center text-[11px] shadow-sm';
         cdGroup.classList.remove('hidden');
         lcGroup.classList.add('hidden');
-        hint.textContent = 'Force OSCD Temporal Pair';
+        hint.textContent = 'Force OSCD Bitemporal Pair';
       } else if (mode === 'land_cover') {
-        tabLC.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center text-[11px]';
+        tabLC.className = 'py-2 rounded-lg bg-cyan-600 text-white font-semibold transition text-center text-[11px] shadow-sm';
         cdGroup.classList.add('hidden');
         lcGroup.classList.remove('hidden');
-        hint.textContent = 'Force BigEarthNet S1+S2 Feature Vector';
+        hint.textContent = 'Force BigEarthNet Multimodal';
       } else {
-        tabNone.className = 'py-1.5 font-medium rounded-md bg-blue-600 text-white transition text-center text-[11px]';
+        tabNone.className = 'py-2 rounded-lg bg-cyan-600 text-white font-semibold transition text-center text-[11px] shadow-sm';
         cdGroup.classList.add('hidden');
         lcGroup.classList.add('hidden');
-        hint.textContent = 'Query Only (No Imagery Attached)';
+        hint.textContent = 'Natural Language Only (No Imagery)';
       }
     }
+
+    function clearQuery() {
+      document.getElementById('queryInput').value = '';
+      document.getElementById('queryInput').focus();
+    }
+
+    function copyAnswerText() {
+      const text = document.getElementById('answerText').textContent;
+      navigator.clipboard.writeText(text);
+      alert('Synthesized response copied to clipboard.');
+    }
+
+    function adjustOverlayOpacity(val) {
+      document.getElementById('opacityVal').textContent = val + '%';
+      const img = document.getElementById('imgOverlay');
+      if (img) {
+        img.style.opacity = val / 100.0;
+      }
+    }
+
+    // Keyboard shortcut: Ctrl + Enter to run
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        runAnalysis();
+      }
+    });
 
     async function runAnalysis() {
       const query = document.getElementById('queryInput').value.trim();
@@ -440,7 +829,9 @@
 
       runBtn.disabled = true;
       spinner.classList.remove('hidden');
-      runBtnText.textContent = 'Processing & Routing...';
+      runBtnText.textContent = 'Routing Intent & Executing Specialist...';
+
+      const t0 = performance.now();
 
       try {
         const cdMethod = document.getElementById('cdMethodSelect') ? document.getElementById('cdMethodSelect').value : 'smoothed';
@@ -463,6 +854,9 @@
           body: JSON.stringify(payload)
         });
 
+        const dt = performance.now() - t0;
+        document.getElementById('telemetryLatency').textContent = formatMs(dt);
+
         const data = await res.json();
         renderResponse(data);
 
@@ -472,7 +866,7 @@
       } finally {
         runBtn.disabled = false;
         spinner.classList.add('hidden');
-        runBtnText.textContent = 'Run Query & Dispatch Analysis';
+        runBtnText.textContent = 'Dispatch Query & Execute Specialist';
       }
     }
 
@@ -489,15 +883,15 @@
       const statusBadge = document.getElementById('statusBadge');
       statusBadge.textContent = resp.status;
       if (resp.status === 'SUCCESS') {
-        statusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800';
+        statusBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700 glow-emerald';
       } else if (resp.status === 'PROVISIONAL_SUCCESS') {
-        statusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-950 text-amber-400 border border-amber-800';
+        statusBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-amber-950 text-amber-300 border border-amber-700 glow-amber';
       } else if (resp.status === 'NEEDS_CLARIFICATION') {
-        statusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-950 text-blue-400 border border-blue-800';
+        statusBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-blue-950 text-blue-300 border border-blue-700 glow-cyan';
       } else if (resp.status === 'INCOMPATIBLE_INPUT') {
-        statusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-rose-950 text-rose-400 border border-rose-800';
+        statusBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-rose-950 text-rose-300 border border-rose-700 glow-rose';
       } else {
-        statusBadge.className = 'text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-400 border border-slate-700';
+        statusBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-surface-800 text-slate-300 border border-surface-700';
       }
 
       // Policy Badge
@@ -506,7 +900,7 @@
 
       // Routing Confidence & Task
       document.getElementById('confScore').textContent = `${(resp.router_confidence * 100).toFixed(1)}%`;
-      document.getElementById('taskName').textContent = `${resp.routed_task_display} (${resp.routed_task})`;
+      document.getElementById('taskName').textContent = `${resp.routed_task_display || resp.routed_task}`;
 
       // Answer Text
       document.getElementById('answerText').textContent = resp.answer;
@@ -539,7 +933,7 @@
           document.getElementById('imgOverlay').src = visuals.t2_image;
         }
         if (data.scene_metadata) {
-          document.getElementById('sceneMetaLabel').textContent = `${data.scene_metadata.scene_name.toUpperCase()} (${data.scene_metadata.split})`;
+          document.getElementById('sceneMetaLabel').textContent = `${data.scene_metadata.scene_name.toUpperCase()} &bull; ${data.scene_metadata.split.toUpperCase()}`;
         }
       } else {
         visualCard.classList.add('hidden');
@@ -550,7 +944,7 @@
       if (resp.routed_task === 'LAND_COVER_CLASSIFICATION' || resp.routed_task === 'OPTICAL_SAR_FUSION') {
         lcCard.classList.remove('hidden');
         if (visuals.patch_id) {
-          document.getElementById('lcPatchLabel').textContent = `BEN-14k Patch: ${visuals.patch_id}`;
+          document.getElementById('lcPatchLabel').textContent = `Patch ID: ${visuals.patch_id}`;
         }
 
         // Render detected badges
@@ -560,12 +954,12 @@
         if (detected.length > 0) {
           detected.forEach(c => {
             const badge = document.createElement('span');
-            badge.className = 'px-2.5 py-1 text-xs rounded-full font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800';
-            badge.textContent = c;
+            badge.className = 'px-3 py-1 text-xs rounded-full font-semibold bg-emerald-950 text-emerald-300 border border-emerald-700/80 shadow-sm flex items-center gap-1.5';
+            badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span><span>${c}</span>`;
             badgesContainer.appendChild(badge);
           });
         } else {
-          badgesContainer.innerHTML = '<span class="text-xs text-slate-500 italic">No classes crossed decision thresholds.</span>';
+          badgesContainer.innerHTML = '<span class="text-xs text-slate-500 italic">Zero classes exceeded decision thresholds.</span>';
         }
 
         // Render probability progress bars
@@ -573,20 +967,28 @@
         probContainer.innerHTML = '';
         const probs = (resp.evidence && resp.evidence.class_probabilities) || {};
         const thresholds = (resp.evidence && resp.evidence.thresholds_applied) || {};
-        const sortedEntries = Object.entries(probs).sort((a, b) => b[1] - a[1]).slice(0, 7);
+        const sortedEntries = Object.entries(probs).sort((a, b) => b[1] - a[1]).slice(0, 8);
 
         sortedEntries.forEach(([clsName, prob]) => {
           const thresh = thresholds[clsName] || 0.40;
           const isPassed = prob >= thresh;
           const row = document.createElement('div');
-          row.className = 'space-y-0.5';
+          row.className = 'space-y-1 bg-surface-950/80 p-2.5 rounded-xl border border-surface-800';
           row.innerHTML = `
-            <div class="flex justify-between text-[11px]">
-              <span class="${isPassed ? 'text-emerald-300 font-semibold' : 'text-slate-400'}">${clsName}</span>
-              <span class="font-mono text-slate-300">${(prob * 100).toFixed(1)}% <span class="text-slate-500 text-[10px]">(thresh: ${(thresh * 100).toFixed(0)}%)</span></span>
+            <div class="flex justify-between items-center text-xs">
+              <span class="${isPassed ? 'text-emerald-300 font-bold' : 'text-slate-400'} flex items-center gap-1.5">
+                <span class="h-1.5 w-1.5 rounded-full ${isPassed ? 'bg-emerald-400' : 'bg-slate-600'}"></span>
+                ${clsName}
+              </span>
+              <div class="text-right">
+                <span class="${isPassed ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${(prob * 100).toFixed(1)}%</span>
+                <span class="text-slate-500 text-[10px] ml-1">(&tau; ${(thresh * 100).toFixed(0)}%)</span>
+              </div>
             </div>
-            <div class="w-full bg-slate-950 rounded-full h-1.5 border border-slate-800 overflow-hidden">
-              <div class="${isPassed ? 'bg-emerald-500' : 'bg-slate-600'} h-1.5 rounded-full" style="width: ${Math.min(100, Math.max(3, prob * 100))}%"></div>
+            <div class="w-full bg-surface-900 rounded-full h-2 border border-surface-800 overflow-hidden relative">
+              <!-- Threshold marker line -->
+              <div class="absolute top-0 bottom-0 w-0.5 bg-amber-400 z-10" style="left: ${thresh * 100}%" title="Decision Threshold"></div>
+              <div class="${isPassed ? 'bg-gradient-to-r from-emerald-500 to-cyan-500' : 'bg-slate-700'} h-2 rounded-full transition-all duration-500" style="width: ${Math.min(100, Math.max(3, prob * 100))}%"></div>
             </div>
           `;
           probContainer.appendChild(row);
@@ -595,7 +997,7 @@
         // Ground truth comparison
         const gtText = document.getElementById('groundTruthText');
         const gts = visuals.ground_truth_labels || [];
-        gtText.textContent = gts.length > 0 ? gts.join(', ') : 'None listed';
+        gtText.textContent = gts.length > 0 ? gts.join(' &bull; ') : 'None listed in benchmark';
 
       } else {
         lcCard.classList.add('hidden');
@@ -607,12 +1009,17 @@
       if (resp.evidence && resp.evidence.evidence_points && resp.evidence.evidence_points.length > 0) {
         resp.evidence.evidence_points.forEach(pt => {
           const li = document.createElement('li');
-          li.className = 'bg-slate-950/80 p-2 rounded border border-slate-850 flex items-start gap-2';
-          li.innerHTML = `<span class="text-blue-400 font-bold">&bull;</span><span>${pt}</span>`;
+          li.className = 'bg-surface-950 p-3 rounded-xl border border-surface-800 flex items-start gap-2.5';
+          li.innerHTML = `
+            <div class="h-5 w-5 rounded-full bg-cyan-950 border border-cyan-800 flex items-center justify-center shrink-0 mt-0.5">
+              <span class="h-1.5 w-1.5 rounded-full bg-cyan-400"></span>
+            </div>
+            <span class="text-slate-200 leading-relaxed font-sans">${pt}</span>
+          `;
           evList.appendChild(li);
         });
       } else {
-        evList.innerHTML = '<li class="text-slate-500 italic">No structured evidence produced.</li>';
+        evList.innerHTML = '<li class="text-slate-500 italic p-3 bg-surface-950 rounded-xl border border-surface-800">No structured evidence points produced.</li>';
       }
 
       // Trace
@@ -620,17 +1027,21 @@
       traceContainer.innerHTML = '';
       if (resp.execution_trace) {
         document.getElementById('traceCount').textContent = `${resp.execution_trace.length} steps`;
-        resp.execution_trace.forEach(step => {
+        resp.execution_trace.forEach((step, idx) => {
           const line = document.createElement('div');
-          line.className = 'py-0.5 border-b border-slate-900/60 last:border-b-0';
-          if (step.includes('WARNING') || step.includes('Policy:') || step.includes('PROVISIONAL')) {
-            line.className += ' text-amber-300';
-          } else if (step.includes('Error') || step.includes('INCOMPATIBLE')) {
-            line.className += ' text-rose-300';
+          line.className = 'py-1.5 px-2.5 rounded border border-transparent font-mono flex items-start gap-2 text-[11px]';
+          
+          if (step.includes('WARNING') || step.includes('Policy:') || step.includes('PROVISIONAL') || step.includes('Clarification')) {
+            line.className += ' bg-amber-950/20 text-amber-300 border-amber-800/40';
+          } else if (step.includes('Error') || step.includes('INCOMPATIBLE') || step.includes('UNAVAILABLE')) {
+            line.className += ' bg-rose-950/20 text-rose-300 border-rose-800/40';
+          } else if (step.includes('Trace 2/5') || step.includes('classified intent')) {
+            line.className += ' bg-cyan-950/20 text-cyan-300 border-cyan-800/40';
           } else {
-            line.className += ' text-slate-300';
+            line.className += ' text-slate-300 hover:bg-surface-900';
           }
-          line.textContent = step;
+
+          line.innerHTML = `<span class="text-slate-500 shrink-0 select-none">#0${idx + 1}</span><span>${step}</span>`;
           traceContainer.appendChild(line);
         });
       }
