@@ -213,7 +213,75 @@ def create_app() -> Flask:
         visual_assets = {}
         scene_meta = None
 
-        if effective_mode == "change_detection":
+        # Check for custom uploaded imagery
+        custom_t1_b64 = payload.get("custom_t1")
+        custom_t2_b64 = payload.get("custom_t2")
+        is_custom = bool(custom_t1_b64)
+
+        if is_custom:
+            try:
+                raw_t1 = custom_t1_b64.split(",", 1)[1] if "," in custom_t1_b64 else custom_t1_b64
+                im1 = Image.open(io.BytesIO(base64.b64decode(raw_t1))).convert("RGB")
+                
+                if custom_t2_b64:
+                    raw_t2 = custom_t2_b64.split(",", 1)[1] if "," in custom_t2_b64 else custom_t2_b64
+                    im2 = Image.open(io.BytesIO(base64.b64decode(raw_t2))).convert("RGB")
+                    if im2.size != im1.size:
+                        im2 = im2.resize(im1.size, Image.Resampling.BILINEAR)
+                else:
+                    im2 = im1.copy()
+
+                visual_assets["t1_image"] = _encode_image_base64(im1)
+                visual_assets["t2_image"] = _encode_image_base64(im2)
+
+                if effective_mode == "change_detection" or (effective_mode == "auto" and custom_t2_b64):
+                    effective_mode = "change_detection"
+                    input_data = {
+                        "t1": im1,
+                        "t2": im2,
+                        "scene_name": "Custom Uploaded Scene",
+                        "product_type": "rgb_8bit",
+                        "method": cd_method
+                    }
+                    scene_meta = {
+                        "scene_name": "Custom Uploaded Scene",
+                        "split": "custom",
+                        "dimensions": f"{im1.width} x {im1.height} px",
+                        "method": cd_method
+                    }
+                else:
+                    effective_mode = "land_cover"
+                    arr = np.array(im1).astype(np.float32)
+                    r = arr[:, :, 0]
+                    g = arr[:, :, 1]
+                    b = arr[:, :, 2]
+                    nir = np.clip(1.5 * g - 0.5 * r + 20, 0, 255)
+                    vv = (0.299 * r + 0.587 * g + 0.114 * b)
+                    vh = vv * 0.5
+                    bands = [b, g, r, nir, g * 0.9, g * 0.8, r * 0.9, nir * 0.9, r * 0.7, r * 0.5, vv, vh]
+                    feats = []
+                    for band in bands:
+                        feats.extend([
+                            float(np.nanmean(band)), float(np.nanstd(band)),
+                            float(np.nanmin(band)), float(np.nanmax(band)),
+                            float(np.nanpercentile(band, 25)), float(np.nanpercentile(band, 50)),
+                            float(np.nanpercentile(band, 75))
+                        ])
+                    feats = np.array(feats, dtype=np.float32)
+                    input_data = {
+                        "features": feats,
+                        "patch_id": "custom_uploaded_patch",
+                        "ground_truth_labels": []
+                    }
+                    visual_assets["mode"] = "land_cover"
+                    visual_assets["patch_id"] = "custom_uploaded_patch"
+                    visual_assets["ground_truth_labels"] = []
+                    visual_assets["active_model"] = "Custom Upload (84 Multi-Spectral Inferred Features)"
+            except Exception as e:
+                print(f"[API Warning] Failed to process custom image: {e}")
+                is_custom = False
+
+        if not is_custom and effective_mode == "change_detection":
             target_cd_idx = int(cd_idx) if cd_idx is not None else 0
             scene_name = f"sample_scene_{target_cd_idx}"
             split = "test"
@@ -314,7 +382,7 @@ def create_app() -> Flask:
                     np.array(im1_obj).astype(np.float32),
                     np.array(im2_obj).astype(np.float32),
                     np.ones((im1_obj.size[1], im1_obj.size[0]), dtype=bool),
-                    product_type="oscd_rgb",
+                    product_type="rgb_8bit" if is_custom else "oscd_rgb",
                     source_dtype="uint8",
                     method=cd_method
                 )

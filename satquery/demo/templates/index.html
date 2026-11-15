@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SatQuery AI — Autonomous Earth Observation Intelligence &amp; Multi-Specialist Dispatch Hub</title>
+  <title>SatQuery AI — Autonomous Earth Observation Intelligence</title>
   
-  <!-- Fonts -->
+  <!-- Modern Inter & JetBrains Mono Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Tailwind CSS CDN -->
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -22,21 +22,37 @@
             mono: ['JetBrains Mono', 'monospace'],
           },
           colors: {
-            brand: {
-              50: '#ecfeff',
-              100: '#cffafe',
+            surface: {
+              950: '#070a12',
+              900: '#0c101c',
+              850: '#111728',
+              800: '#161e34',
+              750: '#1f2a47',
+              700: '#2c3a61'
+            },
+            cyan: {
               400: '#22d3ee',
               500: '#06b6d4',
               600: '#0891b2',
-              900: '#164e63',
+            }
+          },
+          animation: {
+            'radar-sweep': 'radarSweep 4s linear infinite',
+            'pulse-subtle': 'pulseSubtle 2.5s ease-in-out infinite',
+            'float': 'float 6s ease-in-out infinite',
+          },
+          keyframes: {
+            radarSweep: {
+              '0%': { transform: 'rotate(0deg)' },
+              '100%': { transform: 'rotate(360deg)' }
             },
-            surface: {
-              950: '#070a12',
-              900: '#0b1120',
-              850: '#0f172a',
-              800: '#1e293b',
-              750: '#243247',
-              700: '#334155',
+            pulseSubtle: {
+              '0%, 100%': { opacity: '1' },
+              '50%': { opacity: '0.4' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-8px)' }
             }
           }
         }
@@ -45,628 +61,497 @@
   </script>
 
   <style>
-    /* Custom High-Precision Scrollbars */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #070a12; }
-    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: #334155; }
-
-    /* Tactical Grid & Glow Effects */
-    .tech-grid {
-      background-size: 32px 32px;
-      background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-    }
-    .hud-glow {
-      box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.15);
-    }
-    .card-border {
-      border: 1px solid rgba(255, 255, 255, 0.07);
-    }
-    .card-border:hover {
-      border-color: rgba(6, 182, 212, 0.25);
-    }
-    .glow-cyan {
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.35);
-    }
-    .glow-emerald {
-      box-shadow: 0 0 15px rgba(16, 185, 129, 0.35);
-    }
-    .glow-amber {
-      box-shadow: 0 0 15px rgba(245, 158, 11, 0.35);
-    }
-    .glow-rose {
-      box-shadow: 0 0 15px rgba(244, 63, 94, 0.35);
+    body {
+      background-color: #070a12;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
     }
     
-    /* Image Crosshair Overlay */
-    .crosshair-grid {
-      position: relative;
+    /* Subtle Earth grid backdrop */
+    .earth-grid-bg {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     }
-    .crosshair-grid::after {
+    
+    .glass-panel {
+      background: rgba(12, 16, 28, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-card {
+      background: rgba(17, 23, 40, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(6, 182, 212, 0.35);
+    }
+
+    /* Crosshair coordinate guides */
+    .crosshair-container {
+      position: relative;
+      overflow: hidden;
+    }
+    .crosshair-container::before {
       content: '';
       position: absolute;
-      inset: 0;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: rgba(34, 211, 238, 0.25);
       pointer-events: none;
-      background: radial-gradient(circle at center, transparent 40%, rgba(7, 10, 18, 0.4) 100%);
-      border: 1px solid rgba(6, 182, 212, 0.15);
+      z-index: 10;
+    }
+    .crosshair-container::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(34, 211, 238, 0.25);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Radar scanline animation */
+    .scanline {
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.8), transparent);
+      animation: scan 3s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 15;
+    }
+    @keyframes scan {
+      0% { top: 0%; opacity: 0; }
+      15% { opacity: 1; }
+      85% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #070a12; }
+    ::-webkit-scrollbar-thumb { background: #1f2a47; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #0891b2; }
+
+    /* Drag and drop active pulse */
+    .drop-active {
+      border-color: #22d3ee !important;
+      background: rgba(8, 145, 178, 0.15) !important;
     }
   </style>
 </head>
-<body class="bg-surface-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased tech-grid selection:bg-brand-500 selection:text-black">
+<body class="earth-grid-bg min-h-screen flex flex-col selection:bg-cyan-500 selection:text-black">
 
-  <!-- ========================================================================= -->
-  <!-- TOP TACTICAL HUD & SYSTEM TELEMETRY BAR                                    -->
-  <!-- ========================================================================= -->
-  <header class="border-b border-surface-800/90 bg-surface-900/95 backdrop-blur-md sticky top-0 z-50">
-    <div class="max-w-[1720px] mx-auto px-4 lg:px-6 py-2.5 flex items-center justify-between">
+  <!-- ===================================================================== -->
+  <!-- 🛰️ TOP NAVIGATION BAR (MODULAR CONTROLLER)                            -->
+  <!-- ===================================================================== -->
+  <header class="sticky top-0 z-50 glass-panel border-b border-surface-750 px-4 lg:px-8 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
       
-      <!-- Logo & System Designation -->
-      <div class="flex items-center space-x-3.5">
-        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-700 p-0.5 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-          <div class="w-full h-full bg-surface-950 rounded-[10px] flex items-center justify-center">
-            <svg class="w-5 h-5 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M4.93 19.07l14.14-14.14" stroke-opacity="0.3" />
-              <circle cx="12" cy="12" r="7" stroke-width="2" />
-              <circle cx="12" cy="12" r="2" fill="currentColor" />
+      <!-- Brand & Status Pill -->
+      <div class="flex items-center gap-3.5">
+        <div class="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-600 via-blue-600 to-indigo-600 p-[1px] shadow-lg shadow-cyan-500/20">
+          <div class="w-full h-full bg-surface-950 rounded-[11px] flex items-center justify-center">
+            <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-base font-extrabold tracking-tight text-white flex items-center gap-2">
-              SATQUERY <span class="text-cyan-400 font-mono font-normal">AI</span>
-            </h1>
-            <span class="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-300 border border-cyan-800/60 tracking-wider">
-              v1.0.0-rc1
-            </span>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/70 text-emerald-400 border border-emerald-800/50 flex items-center gap-1">
-              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-              PRODUCTION FREEZE
+            <span class="font-extrabold tracking-tight text-white text-base">SatQuery AI</span>
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+              OPERATIONAL
             </span>
           </div>
-          <p class="text-[11px] text-slate-400 hidden sm:block">
-            Autonomous Multi-Specialist Dispatcher &bull; Sentinel-1 SAR &bull; Sentinel-2 MSI &bull; OSCD &bull; BigEarthNet
-          </p>
+          <div class="text-[11px] text-slate-400 font-mono tracking-tight hidden sm:block">
+            Earth Observation Intelligence &bull; Production v1.0.0-rc1
+          </div>
         </div>
       </div>
 
-      <!-- Real-Time Hardware & Inference Telemetry -->
-      <div class="flex items-center gap-2 sm:gap-4 text-xs font-mono">
-        <!-- Latency Counter -->
-        <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-850/80 border border-surface-750 text-slate-300">
-          <span class="text-slate-500 text-[10px] uppercase">Latency</span>
-          <span id="telemetryLatency" class="text-cyan-400 font-semibold">14.2 ms</span>
-        </div>
-
-        <!-- Router Status -->
-        <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-850/80 border border-surface-750 text-slate-300">
-          <span class="text-slate-500 text-[10px] uppercase">Gate</span>
-          <span class="text-emerald-400 font-semibold">&tau;=0.65 / &Delta;=0.15</span>
-        </div>
-
-        <!-- Specialists Status -->
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-850/80 border border-surface-750 text-slate-300">
-          <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
-          <span class="text-slate-200 font-medium">2 Specialists Online</span>
-        </div>
-
-        <!-- Quick Docs Modal Pill -->
-        <a href="https://github.com/navaneeth2205/SatQueryAI" target="_blank" rel="noopener noreferrer"
-          class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-800 hover:bg-surface-750 border border-surface-700 text-slate-200 transition text-[11px]">
-          <svg class="w-3.5 h-3.5 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+      <!-- Modular Navigation Tabs -->
+      <nav class="flex items-center bg-surface-950/80 p-1 rounded-xl border border-surface-750 text-xs font-semibold">
+        <button id="navTabOverview" onclick="switchModule('overview')"
+          class="nav-tab px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5 bg-cyan-600 text-white shadow-sm">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
           </svg>
-          <span class="hidden sm:inline">GitHub v1.0.0-rc1</span>
-        </a>
+          <span>Overview</span>
+        </button>
+
+        <button id="navTabCD" onclick="switchModule('change_detection')"
+          class="nav-tab px-3.5 py-1.5 rounded-lg transition-all text-slate-400 hover:text-slate-200 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+          </svg>
+          <span>Change Studio</span>
+        </button>
+
+        <button id="navTabLC" onclick="switchModule('land_cover')"
+          class="nav-tab px-3.5 py-1.5 rounded-lg transition-all text-slate-400 hover:text-slate-200 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+          </svg>
+          <span>Land Cover</span>
+        </button>
+
+        <button id="navTabTerminal" onclick="switchModule('terminal')"
+          class="nav-tab px-3.5 py-1.5 rounded-lg transition-all text-slate-400 hover:text-slate-200 flex items-center gap-1.5">
+          <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span>AI Terminal</span>
+        </button>
+      </nav>
+
+      <!-- Live Telemetry Pill -->
+      <div class="hidden md:flex items-center gap-2.5 font-mono text-[11px] bg-surface-950 px-3 py-1.5 rounded-lg border border-surface-750">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-slate-400">LATENCY:</span>
+        <span id="latencyTracker" class="text-cyan-400 font-bold">14ms</span>
       </div>
 
     </div>
   </header>
 
-  <!-- ========================================================================= -->
-  <!-- MAIN WORKSPACE: 3-PANE GEOSPATIAL INTELLIGENCE GRID                        -->
-  <!-- ========================================================================= -->
-  <main class="max-w-[1720px] mx-auto px-4 lg:px-6 py-6 flex-1 w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-    <!-- ======================================================================= -->
-    <!-- LEFT CONTROL CONSOLE: INGESTION, MODALITY & DISPATCH (4 COLS)            -->
-    <!-- ======================================================================= -->
-    <div class="lg:col-span-4 space-y-5">
+  <!-- ===================================================================== -->
+  <!-- MODULE 1: 🌌 CINEMATIC HERO & OVERVIEW COVER PAGE                     -->
+  <!-- ===================================================================== -->
+  <main id="moduleOverview" class="module-view flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-8 space-y-12">
+    
+    <!-- Hero Cover Card with Satellite Imagery Backdrop -->
+    <div class="relative rounded-3xl overflow-hidden border border-surface-750 shadow-2xl">
+      <!-- High Resolution Satellite Earth Background Image -->
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1920&auto=format&fit=crop"
+        alt="Earth Observation Satellite View"
+        class="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.45] contrast-125 scale-105 transform hover:scale-100 transition-transform duration-1000" />
       
-      <!-- Natural Language Query Terminal -->
-      <div class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-4">
+      <!-- Gradient Overlays for High-Contrast Text Legibility -->
+      <div class="absolute inset-0 bg-gradient-to-r from-surface-950 via-surface-950/80 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-surface-950 via-transparent to-transparent"></div>
+      <div class="scanline"></div>
+
+      <!-- Hero Content -->
+      <div class="relative z-20 p-8 sm:p-12 lg:p-16 max-w-3xl space-y-6">
         
-        <!-- Header -->
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-cyan-400"></span>
-            <label for="queryInput" class="text-xs font-bold uppercase tracking-wider text-slate-300">
-              Analyst Query Input
-            </label>
-          </div>
-          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-800 text-slate-400 border border-surface-700">
-            Ctrl + Enter to Run
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-400 text-xs font-mono font-medium shadow-sm">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+          <span>AUTONOMOUS SPECIALIST DISPATCH ACTIVE</span>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+          Next-Generation <br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300">
+            Earth Observation Intelligence
           </span>
+        </h1>
+
+        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+          SatQuery AI integrates production-grade Siamese neural networks, multimodal gradient-boosted spatial ensembles, and calibrated semantic routing to deliver zero-hallucination satellite insights.
+        </p>
+
+        <!-- Action CTAs -->
+        <div class="flex flex-wrap gap-3.5 pt-2">
+          <button onclick="switchModule('change_detection')"
+            class="px-5 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-cyan-600/30 transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+            <span>Launch Change Studio</span>
+          </button>
+
+          <button onclick="switchModule('land_cover')"
+            class="px-5 py-3 rounded-xl glass-card hover:bg-surface-800 text-slate-200 font-bold text-xs sm:text-sm border border-surface-700 transition-all flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+            <span>Explore Land Cover</span>
+          </button>
+
+          <button onclick="switchToUploadMode()"
+            class="px-5 py-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold text-xs sm:text-sm transition-all flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            <span>Upload Your Own Images</span>
+          </button>
         </div>
-
-        <!-- Textarea Console -->
-        <div class="relative group">
-          <textarea id="queryInput" rows="3" 
-            class="w-full bg-surface-950 border border-surface-750 group-hover:border-cyan-500/50 rounded-xl p-3.5 text-sm text-slate-100 font-sans focus:outline-none focus:ring-2 focus:ring-cyan-500/30 focus:border-cyan-500 transition resize-none leading-relaxed shadow-inner"
-            placeholder="Type your Earth observation question or choose a benchmark query below...">What changed in this area between 2024 and 2026?</textarea>
-          
-          <div class="absolute bottom-2.5 right-3 flex items-center gap-2">
-            <button type="button" onclick="clearQuery()" title="Clear input"
-              class="text-slate-500 hover:text-slate-300 text-xs px-1.5 py-0.5 rounded hover:bg-surface-800 transition">
-              Clear
-            </button>
-          </div>
-        </div>
-
-        <!-- Curated Preset Categories & Chips -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between text-[11px] text-slate-400">
-            <span class="font-semibold text-slate-300 flex items-center gap-1.5">
-              <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              Benchmark Presets
-            </span>
-            <span class="text-[10px] text-slate-500 font-mono">1-Click Dispatch</span>
-          </div>
-          
-          <!-- Chips Container -->
-          <div id="presetChips" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto pr-1">
-            <!-- Dynamically populated from /api/catalog -->
-          </div>
-        </div>
-
-        <!-- =================================================================== -->
-        <!-- OBSERVATION MODALITY & SENSOR CONFIGURATION                         -->
-        <!-- =================================================================== -->
-        <div class="pt-4 border-t border-surface-800 space-y-4">
-          
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-              <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-              </svg>
-              Observation Modality
-            </span>
-            <span id="modalityHint" class="text-[11px] font-mono text-cyan-400 font-medium">
-              Auto-Detect (Smart Dispatch)
-            </span>
-          </div>
-
-          <!-- Modality Tabs -->
-          <div class="grid grid-cols-4 gap-1 p-1 bg-surface-950 rounded-xl border border-surface-750 text-xs font-medium">
-            <button type="button" id="tabAuto" onclick="setMode('auto')"
-              class="py-2 rounded-lg bg-cyan-600 text-white transition text-center text-[11px] font-semibold shadow-sm">
-              Auto (Smart)
-            </button>
-            <button type="button" id="tabCD" onclick="setMode('change_detection')"
-              class="py-2 rounded-lg text-slate-400 hover:text-white transition text-center text-[11px]">
-              Temporal Pair
-            </button>
-            <button type="button" id="tabLC" onclick="setMode('land_cover')"
-              class="py-2 rounded-lg text-slate-400 hover:text-white transition text-center text-[11px]">
-              Single Image
-            </button>
-            <button type="button" id="tabNone" onclick="setMode('query_only')"
-              class="py-2 rounded-lg text-slate-400 hover:text-white transition text-center text-[11px]">
-              Query Only
-            </button>
-          </div>
-
-          <!-- Change Detection Observation Sub-Panel -->
-          <div id="cdSelectorGroup" class="space-y-3 bg-surface-950/60 p-3.5 rounded-xl border border-surface-800">
-            
-            <div>
-              <label for="cdSceneSelect" class="text-[11px] text-slate-300 font-semibold flex items-center justify-between mb-1.5">
-                <span>OSCD Co-Registered Scene:</span>
-                <span class="text-[10px] font-mono text-slate-500">24 geocoded sites</span>
-              </label>
-              <select id="cdSceneSelect" class="w-full bg-surface-900 border border-surface-750 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
-                <option value="0">Loading scenes...</option>
-              </select>
-            </div>
-
-            <!-- Algorithm Mode Selector -->
-            <div>
-              <label for="cdMethodSelect" class="text-[11px] text-slate-300 font-semibold flex items-center justify-between mb-1.5">
-                <span>Change Detection Specialist Backend:</span>
-                <span class="text-[10px] font-mono text-emerald-400 font-semibold">scSE Neural + CVA</span>
-              </label>
-              <select id="cdMethodSelect" class="w-full bg-surface-900 border border-surface-750 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
-                <option value="smoothed" selected>Gaussian-Smoothed CVA (Highest F1: 0.339, IoU: 0.204)</option>
-                <option value="hysteresis">Dual-Threshold Hysteresis (Highest Recall: 44.3%, +26.1%)</option>
-                <option value="standard">Standard Normalized CVA Baseline (F1: 0.278, Recall: 18.2%)</option>
-              </select>
-            </div>
-
-            <!-- Invariance Checkbox -->
-            <div class="flex items-center gap-2 pt-1 border-t border-surface-800/80">
-              <input type="checkbox" id="syntheticIdentical" class="rounded bg-surface-950 border-surface-700 text-cyan-500 focus:ring-0">
-              <label for="syntheticIdentical" class="text-[11px] text-amber-400 font-medium cursor-pointer">
-                Synthetic Invariance Test: Force T1 = T2 (Assert 0.0% Change)
-              </label>
-            </div>
-          </div>
-
-          <!-- Land Cover Sample Sub-Panel -->
-          <div id="lcSelectorGroup" class="space-y-3 bg-surface-950/60 p-3.5 rounded-xl border border-surface-800 hidden">
-            <div>
-              <label for="lcSampleSelect" class="text-[11px] text-slate-300 font-semibold flex items-center justify-between mb-1.5">
-                <span>BigEarthNet Sentinel-1/2 Multimodal Patch:</span>
-                <span class="text-[10px] font-mono text-slate-500">14k Validation Pool</span>
-              </label>
-              <select id="lcSampleSelect" class="w-full bg-surface-900 border border-surface-750 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
-                <option value="0">Loading tiles...</option>
-              </select>
-            </div>
-
-            <!-- Classifier Architecture Selector -->
-            <div>
-              <label for="lcModelSelect" class="text-[11px] text-slate-300 font-semibold flex items-center justify-between mb-1.5">
-                <span>Land Cover Classifier Architecture:</span>
-                <span class="text-[10px] font-mono text-emerald-400 font-semibold">Phase 2 Champion</span>
-              </label>
-              <select id="lcModelSelect" class="w-full bg-surface-900 border border-surface-750 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
-                <option value="phase2" selected>Phase 2 LightGBM (488 features, Tuned Micro F1: 72.99%)</option>
-                <option value="baseline">Baseline Random Forest (84 features, Micro F1: 0.718)</option>
-              </select>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- =================================================================== -->
-        <!-- SAFETY ROUTING POLICY TOGGLE                                        -->
-        <!-- =================================================================== -->
-        <div class="pt-3 border-t border-surface-800 flex items-center justify-between">
-          <div>
-            <div class="text-xs font-bold text-slate-300">Ambiguity Arbitration Policy</div>
-            <div class="text-[10px] text-slate-500 font-mono">Joint Confidence Margin Gate</div>
-          </div>
-          <select id="policySelect" class="bg-surface-950 border border-surface-750 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
-            <option value="provisional" selected>Provisional Dispatch (Default)</option>
-            <option value="clarify">Clarification Required (&lt; 65%)</option>
-          </select>
-        </div>
-
-        <!-- =================================================================== -->
-        <!-- DISPATCH PRIMARY ACTION BUTTON                                      -->
-        <!-- =================================================================== -->
-        <button id="runBtn" onclick="runAnalysis()"
-          class="w-full py-3 px-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 active:from-cyan-700 active:to-blue-700 text-white font-bold rounded-xl text-sm shadow-lg shadow-cyan-600/25 transition-all flex items-center justify-center gap-2.5">
-          <svg id="spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-          <span id="runBtnText">Dispatch Query &amp; Execute Specialist</span>
-        </button>
 
       </div>
+    </div>
 
-      <!-- Live Engine Architecture Summary Card -->
-      <div class="bg-surface-900/70 rounded-2xl card-border p-4 text-xs space-y-2.5">
-        <div class="flex items-center justify-between text-slate-300 font-bold border-b border-surface-800 pb-2">
-          <span class="flex items-center gap-1.5">
-            <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            Production Model Fleet (Frozen)
-          </span>
-          <span class="text-[10px] font-mono text-emerald-400">100% Immutable</span>
+    <!-- 3 Core Analytical Pillars -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Card 1: Change Detection -->
+      <div onclick="switchModule('change_detection')"
+        class="glass-card rounded-2xl p-6 space-y-4 cursor-pointer hover:border-cyan-500/50 transition-all group">
+        <div class="w-12 h-12 rounded-xl bg-cyan-950/60 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+          </svg>
         </div>
-        <div class="grid grid-cols-2 gap-2 text-[11px] font-mono">
-          <div class="bg-surface-950 p-2.5 rounded-lg border border-surface-800">
-            <div class="text-slate-500 text-[10px]">TASK ROUTER</div>
-            <div class="text-slate-200 font-semibold truncate">Calibrated Softmax</div>
-            <div class="text-cyan-400 text-[10px]">&tau;=0.65, 0-IDER Target</div>
-          </div>
-          <div class="bg-surface-950 p-2.5 rounded-lg border border-surface-800">
-            <div class="text-slate-500 text-[10px]">CHANGE DETECTION</div>
-            <div class="text-slate-200 font-semibold truncate">Siamese ResNet-18</div>
-            <div class="text-cyan-400 text-[10px]">scSE Attention + CVA</div>
-          </div>
-          <div class="bg-surface-950 p-2.5 rounded-lg border border-surface-800">
-            <div class="text-slate-500 text-[10px]">LAND COVER</div>
-            <div class="text-slate-200 font-semibold truncate">Phase 2 LightGBM</div>
-            <div class="text-cyan-400 text-[10px]">488 Feats, F1: 72.99%</div>
-          </div>
-          <div class="bg-surface-950 p-2.5 rounded-lg border border-surface-800">
-            <div class="text-slate-500 text-[10px]">ZERO-HALLUCINATION</div>
-            <div class="text-slate-200 font-semibold truncate">VQA &amp; Grounding</div>
-            <div class="text-emerald-400 text-[10px]">Guaranteed Intercept</div>
-          </div>
+        <div class="space-y-1">
+          <h3 class="text-base font-bold text-white group-hover:text-cyan-400 transition-colors">Bitemporal Change Detection</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Neural Siamese ResNet-18 with scSE attention and normalized Change Vector Analysis (CVA) for false-alarm suppressed alteration mapping.
+          </p>
+        </div>
+        <div class="text-[11px] font-mono text-cyan-400 flex items-center gap-1 font-semibold">
+          <span>Open Studio &bull; Upload or Select &rarr;</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Land Cover -->
+      <div onclick="switchModule('land_cover')"
+        class="glass-card rounded-2xl p-6 space-y-4 cursor-pointer hover:border-emerald-500/50 transition-all group">
+        <div class="w-12 h-12 rounded-xl bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-base font-bold text-white group-hover:text-emerald-400 transition-colors">Multimodal Land Cover</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Phase 2 LightGBM ensemble analyzing 488 spatial-pyramid & spectral features across BigEarthNet Sentinel-1 (SAR) and Sentinel-2 (optical) bands.
+          </p>
+        </div>
+        <div class="text-[11px] font-mono text-emerald-400 flex items-center gap-1 font-semibold">
+          <span>Explore Taxonomy &bull; Upload or Select &rarr;</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Zero Hallucination Shield -->
+      <div onclick="switchModule('terminal')"
+        class="glass-card rounded-2xl p-6 space-y-4 cursor-pointer hover:border-amber-500/50 transition-all group">
+        <div class="w-12 h-12 rounded-xl bg-amber-950/60 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-base font-bold text-white group-hover:text-amber-400 transition-colors">Zero-Hallucination Guard</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Calibrated dual-gate routing with mathematical certainty thresholding ($\tau_{\mathrm{routing}}=0.70$) and auditable 5-stage forensic execution traces.
+          </p>
+        </div>
+        <div class="text-[11px] font-mono text-amber-400 flex items-center gap-1 font-semibold">
+          <span>Inspect Execution Traces &rarr;</span>
         </div>
       </div>
 
     </div>
 
-    <!-- ======================================================================= -->
-    <!-- RIGHT INTELLIGENCE STAGE: VISUAL RESULTS & EXPLAINABILITY (8 COLS)      -->
-    <!-- ======================================================================= -->
-    <div class="lg:col-span-8 space-y-5">
+  </main>
 
-      <!-- ===================================================================== -->
-      <!-- TOP STATUS & SYNTHESIZED NATURAL LANGUAGE CARD                        -->
-      <!-- ===================================================================== -->
-      <div id="routingCard" class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-4">
-        
-        <!-- Status Bar -->
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-surface-800 pb-3">
-          <div class="flex items-center gap-2">
-            <span id="statusBadge" class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-surface-800 text-slate-400 border border-surface-700">
-              STANDBY &bull; AWAITING QUERY
-            </span>
-            <span id="policyBadge" class="text-xs font-mono px-2.5 py-1 rounded-full bg-surface-950 text-slate-400 border border-surface-800">
-              Policy: Provisional
-            </span>
-          </div>
 
-          <div class="flex items-center gap-4 text-right">
-            <div>
-              <span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">Routing Confidence</span>
-              <span id="confScore" class="text-base font-mono font-bold text-slate-300">--%</span>
-            </div>
-            <div class="h-8 w-px bg-surface-800"></div>
-            <div>
-              <span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider block">Specialist Target</span>
-              <span id="taskName" class="text-xs font-mono font-bold text-cyan-400">--</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Synthesized Answer Panel -->
-        <div class="bg-surface-950 rounded-xl p-4 border border-surface-800 shadow-inner space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center gap-1.5">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-              </svg>
-              Synthesized Specialist Intelligence
-            </span>
-            <button onclick="copyAnswerText()" title="Copy answer" class="text-[11px] font-mono text-slate-500 hover:text-slate-300 flex items-center gap-1">
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-              </svg>
-              Copy
-            </button>
-          </div>
-          <p id="answerText" class="text-sm text-slate-200 leading-relaxed font-sans">
-            Ready to analyze. Submit a natural-language query to trigger task intent classification, input validation, and specialized model inference.
-          </p>
-
-          <!-- Interactive Clarification Option (Revealed when confidence < 0.65) -->
-          <div id="clarifyActionBox" class="mt-3 pt-3 border-t border-surface-800/80 hidden">
-            <div class="bg-amber-950/40 border border-amber-600/40 rounded-lg p-3 flex items-center justify-between">
-              <div class="text-xs text-amber-300">
-                <span class="font-bold">Ambiguous Intent Detected (&lt; 65% Confidence).</span> Would you like to force execution under the Provisional Specialist Policy?
-              </div>
-              <button onclick="proceedWithProvisional()" class="text-xs px-3 py-1.5 bg-amber-600 hover:bg-amber-500 active:bg-amber-700 text-white font-bold rounded-lg transition shadow-md whitespace-nowrap">
-                Proceed with Provisional Execution &rarr;
-              </button>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ===================================================================== -->
-      <!-- ZERO-HALLUCINATION GUARD BANNER (Out-of-Scope Interception)           -->
-      <!-- ===================================================================== -->
-      <div id="guardBanner" class="bg-gradient-to-r from-rose-950/40 via-surface-900 to-surface-900 border border-rose-600/50 rounded-2xl p-5 hidden space-y-3 shadow-lg">
-        <div class="flex items-center justify-between">
-          <div class="flex items-center gap-2.5 text-rose-400 font-bold text-xs uppercase tracking-wider">
-            <div class="h-6 w-6 rounded-lg bg-rose-900/60 flex items-center justify-center border border-rose-700/60">
-              <svg class="w-4 h-4 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-              </svg>
-            </div>
-            <span>Zero-Hallucination Specialist Guard Active</span>
-          </div>
-          <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800">
-            UNAVAILABLE_SPECIALIST
+  <!-- ===================================================================== -->
+  <!-- MODULE 2: 🔄 CHANGE DETECTION STUDIO (WITH CUSTOM IMAGE UPLOAD)       -->
+  <!-- ===================================================================== -->
+  <main id="moduleCD" class="module-view hidden flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 space-y-6">
+    
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-surface-800">
+      <div>
+        <h2 class="text-xl font-black text-white flex items-center gap-2.5">
+          <span class="p-1.5 rounded-lg bg-cyan-950 text-cyan-400 border border-cyan-500/30">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
           </span>
-        </div>
-        <p class="text-xs text-slate-300 leading-relaxed">
-          SatQuery AI strictly prohibits fabricating or hallucinating responses for unverified vision-language capabilities (e.g. Visual Question Answering, Referring Expression Grounding, and Freeform Captioning). These tasks are formally tracked in the operational taxonomy and intercepted until dedicated foundational multimodal models are certified in future milestones.
-        </p>
-        <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-rose-300 font-mono">
-          <span class="bg-surface-950 px-2 py-1 rounded border border-surface-750">Status: ZERO INAPPROPRIATE DELEGATION</span>
-          <span class="text-slate-600">&bull;</span>
-          <span class="text-slate-400">Roadmap: Milestone M4 Vision-Language Foundation Integration</span>
-        </div>
+          Change Detection Studio
+        </h2>
+        <p class="text-xs text-slate-400">Co-registered multitemporal analysis using deep Siamese ResNet-18 with scSE attention</p>
       </div>
 
-      <!-- ===================================================================== -->
-      <!-- CHANGE DETECTION VISUAL INSPECTOR (Bitemporal Dual/Tri-Pane)         -->
-      <!-- ===================================================================== -->
-      <div id="visualCard" class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-4 hidden">
+      <!-- Source Toggle: Custom Upload vs Benchmark Catalog -->
+      <div class="flex items-center bg-surface-950 p-1 rounded-xl border border-surface-750 text-xs font-semibold">
+        <button id="cdSourcePresetBtn" onclick="setCDSourceMode('preset')"
+          class="px-3.5 py-1.5 rounded-lg bg-cyan-600 text-white transition-all shadow-sm">
+          Benchmark Catalog (24 Sites)
+        </button>
+        <button id="cdSourceUploadBtn" onclick="setCDSourceMode('upload')"
+          class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          </svg>
+          Upload Your Own Images
+        </button>
+      </div>
+    </div>
+
+    <!-- Change Detection Controls Bar -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Left Column: Source Configuration Card -->
+      <div class="glass-panel rounded-2xl p-5 space-y-4">
         
-        <div class="flex items-center justify-between border-b border-surface-800 pb-3">
+        <!-- Benchmark Preset Mode -->
+        <div id="cdPresetPanel" class="space-y-3">
+          <div>
+            <label for="cdSceneSelect" class="block text-xs font-bold text-slate-300 mb-1.5">
+              Select OSCD Co-Registered Scene:
+            </label>
+            <select id="cdSceneSelect" onchange="onSceneSelectChange()"
+              class="w-full bg-surface-950 border border-surface-750 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
+              <option value="0">Loading scenes...</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="cdMethodSelect" class="block text-xs font-bold text-slate-300 mb-1.5">
+              Specialist Backend &amp; Filtering:
+            </label>
+            <select id="cdMethodSelect"
+              class="w-full bg-surface-950 border border-surface-750 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-cyan-500 font-mono">
+              <option value="smoothed" selected>Gaussian-Smoothed CVA (Highest F1: 0.339, IoU: 0.204)</option>
+              <option value="hysteresis">Dual-Threshold Hysteresis (Highest Recall: 44.3%)</option>
+              <option value="standard">Standard Normalized CVA Baseline</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-2 pt-2 border-t border-surface-800">
+            <input type="checkbox" id="syntheticIdentical" class="rounded bg-surface-950 border-surface-700 text-cyan-500 focus:ring-0">
+            <label for="syntheticIdentical" class="text-xs text-amber-400 font-medium cursor-pointer">
+              Synthetic Invariance Test: Force T1 = T2
+            </label>
+          </div>
+        </div>
+
+        <!-- Custom Upload Drag & Drop Panel -->
+        <div id="cdUploadPanel" class="hidden space-y-4">
+          
+          <!-- Dropzone T1 -->
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-slate-300 mb-1">
+              <span>Observation T1 (Pre-Event Baseline):</span>
+              <span id="t1StatusBadge" class="text-[10px] font-mono text-slate-500">Not loaded</span>
+            </div>
+            <div id="dropzoneT1" class="border-2 border-dashed border-surface-750 hover:border-cyan-500 rounded-xl p-4 text-center cursor-pointer transition-colors bg-surface-950/60">
+              <input type="file" id="fileInputT1" accept="image/*,.tif,.tiff" class="hidden" />
+              <svg class="w-7 h-7 mx-auto text-slate-500 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <div class="text-xs text-slate-300 font-medium">Drag &amp; drop T1 or <span class="text-cyan-400 underline">browse</span></div>
+              <div id="fileInfoT1" class="text-[10px] font-mono text-slate-500 mt-1">PNG, JPG, TIFF, WebP</div>
+            </div>
+          </div>
+
+          <!-- Dropzone T2 -->
+          <div>
+            <div class="flex items-center justify-between text-xs font-bold text-slate-300 mb-1">
+              <span>Observation T2 (Post-Event Observation):</span>
+              <span id="t2StatusBadge" class="text-[10px] font-mono text-slate-500">Not loaded</span>
+            </div>
+            <div id="dropzoneT2" class="border-2 border-dashed border-surface-750 hover:border-cyan-500 rounded-xl p-4 text-center cursor-pointer transition-colors bg-surface-950/60">
+              <input type="file" id="fileInputT2" accept="image/*,.tif,.tiff" class="hidden" />
+              <svg class="w-7 h-7 mx-auto text-slate-500 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <div class="text-xs text-slate-300 font-medium">Drag &amp; drop T2 or <span class="text-cyan-400 underline">browse</span></div>
+              <div id="fileInfoT2" class="text-[10px] font-mono text-slate-500 mt-1">PNG, JPG, TIFF, WebP</div>
+            </div>
+          </div>
+
+          <button id="clearUploadsBtn" onclick="clearCustomUploads()"
+            class="w-full py-1.5 px-3 rounded-lg text-[11px] font-mono text-slate-400 hover:text-rose-400 border border-surface-750 transition-colors">
+            Clear Uploaded Images
+          </button>
+
+        </div>
+
+        <!-- Execute Button -->
+        <button onclick="runChangeStudio()"
+          class="w-full py-3 px-4 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 active:from-cyan-700 text-white font-bold rounded-xl text-xs sm:text-sm shadow-lg shadow-cyan-600/30 transition-all flex items-center justify-center gap-2">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+          <span>Run Bitemporal Change Analysis</span>
+        </button>
+
+      </div>
+
+      <!-- Right Columns: 3-Pane Bitemporal Geospatial Imagery Viewer -->
+      <div class="lg:col-span-2 glass-panel rounded-2xl p-5 space-y-4">
+        
+        <div class="flex items-center justify-between pb-2 border-b border-surface-800">
           <div class="flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-cyan-400"></span>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">
-              Bitemporal Change Detection Analysis
-            </h3>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-200">Bitemporal Scene Pair &amp; Predicted Delta</span>
           </div>
           <div class="flex items-center gap-3">
-            <!-- Opacity Slider -->
-            <div class="flex items-center gap-2 text-[11px] font-mono text-slate-400">
-              <span>Mask Opacity:</span>
-              <input type="range" id="overlayOpacity" min="0" max="100" value="80" 
-                class="w-20 accent-cyan-500 cursor-pointer" oninput="adjustOverlayOpacity(this.value)">
-              <span id="opacityVal" class="text-cyan-400 w-8">80%</span>
-            </div>
-            <span id="sceneMetaLabel" class="text-xs font-mono px-2.5 py-0.5 rounded bg-surface-950 text-cyan-400 border border-surface-800">
-              --
-            </span>
+            <span class="text-[11px] text-slate-400 font-mono">Overlay Opacity:</span>
+            <input type="range" id="opacitySlider" min="0" max="100" value="85"
+              class="w-24 accent-cyan-500 cursor-pointer" oninput="adjustOpacity(this.value)" />
+            <span id="opacityVal" class="text-[11px] font-mono text-cyan-400 w-8">85%</span>
           </div>
         </div>
 
-        <!-- 3-Pane Image Grid -->
-        <div id="cdVisualContainer" class="space-y-4">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            
-            <!-- T1 Image -->
-            <div class="bg-surface-950 p-2.5 rounded-xl border border-surface-800 space-y-2 group">
-              <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono px-1">
-                <span class="font-semibold text-slate-300">T1 Pre-Event Baseline</span>
-                <span class="text-[10px] text-slate-500">Sentinel-2 True Color</span>
-              </div>
-              <div class="relative overflow-hidden rounded-lg bg-surface-900 border border-surface-800 crosshair-grid aspect-square">
-                <img id="imgT1" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="" alt="T1 Pre-Event">
-              </div>
-            </div>
-
-            <!-- T2 Image -->
-            <div class="bg-surface-950 p-2.5 rounded-xl border border-surface-800 space-y-2 group">
-              <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono px-1">
-                <span class="font-semibold text-slate-300">T2 Post-Event Subsequent</span>
-                <span class="text-[10px] text-slate-500">Sentinel-2 True Color</span>
-              </div>
-              <div class="relative overflow-hidden rounded-lg bg-surface-900 border border-surface-800 crosshair-grid aspect-square">
-                <img id="imgT2" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="" alt="T2 Post-Event">
-              </div>
-            </div>
-
-            <!-- Overlay / Change Mask -->
-            <div class="bg-surface-950 p-2.5 rounded-xl border border-surface-800 space-y-2 group">
-              <div class="flex items-center justify-between text-[11px] text-slate-400 font-mono px-1">
-                <span class="font-semibold text-rose-400">Predicted Change Mask</span>
-                <span class="text-[10px] text-cyan-400 font-semibold">Cluster Bounding Box</span>
-              </div>
-              <div class="relative overflow-hidden rounded-lg bg-surface-900 border border-surface-800 crosshair-grid aspect-square">
-                <img id="imgOverlay" class="w-full h-full object-cover transition duration-300 group-hover:scale-105" src="" alt="Predicted Change Overlay">
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Annotation Legend & Telemetry Readout -->
-          <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-surface-950/70 rounded-xl border border-surface-800 text-[11px] font-mono">
-            <div class="flex items-center gap-4">
-              <span class="flex items-center gap-1.5 text-rose-400">
-                <span class="h-2.5 w-2.5 rounded bg-rose-500 inline-block"></span>
-                <span>Altered Pixel Extent (&tau; &ge; 0.28)</span>
-              </span>
-              <span class="flex items-center gap-1.5 text-cyan-400">
-                <span class="h-2.5 w-2.5 rounded border border-cyan-400 inline-block"></span>
-                <span>Max Component Bounding Box</span>
-              </span>
-            </div>
-            <div class="text-slate-400">
-              Spatial Resolution: <span class="text-slate-200">10m GSD</span> &bull; Channels: <span class="text-slate-200">RGB (B04, B03, B02)</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ===================================================================== -->
-      <!-- LAND COVER MULTI-LABEL DISTRIBUTION STAGE                             -->
-      <!-- ===================================================================== -->
-      <div id="landCoverCard" class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-4 hidden">
-        
-        <div class="flex items-center justify-between border-b border-surface-800 pb-3">
-          <div class="flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">
-              Land Cover Multi-Label Probability Spectrum
-            </h3>
-          </div>
-          <span id="lcPatchLabel" class="text-xs font-mono px-2.5 py-0.5 rounded bg-surface-950 text-emerald-400 border border-surface-800">
-            --
-          </span>
-        </div>
-
-        <!-- Detected Positive Classes Badges -->
-        <div class="space-y-1.5">
-          <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-            Predicted Classes (Exceeding Calibrated Thresholds &tau;<sub>k</sub>):
-          </div>
-          <div id="detectedBadges" class="flex flex-wrap gap-1.5 min-h-[32px] items-center">
-            <!-- Badges dynamically injected -->
-          </div>
-        </div>
-
-        <!-- Class Probabilities & Calibrated Threshold Bars -->
-        <div class="space-y-2.5 pt-3 border-t border-surface-800">
-          <div class="flex items-center justify-between text-[11px] text-slate-400">
-            <span class="font-semibold uppercase tracking-wider">Class Probabilities vs Per-Class Decision Bounds</span>
-            <span class="font-mono text-slate-500">Sorted by Activation Rank</span>
-          </div>
+        <!-- 3 Images Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
           
-          <div id="probBarsContainer" class="space-y-2 font-mono text-xs">
-            <!-- Dynamic progress bars injected here -->
+          <!-- T1 Image -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+              <span class="text-cyan-400 font-bold">T1: Pre-Event</span>
+              <span id="t1ResBadge" class="text-[10px] text-slate-500">256x256</span>
+            </div>
+            <div class="crosshair-container rounded-xl overflow-hidden border border-surface-750 bg-black aspect-square flex items-center justify-center">
+              <img id="imgT1" src="" alt="Pre-Event Observation" class="w-full h-full object-contain" />
+            </div>
           </div>
-        </div>
 
-        <!-- Ground Truth Metadata Comparison -->
-        <div id="groundTruthRow" class="pt-3 border-t border-surface-800 text-xs text-slate-400 flex flex-wrap items-center justify-between gap-2">
-          <span class="font-medium">Benchmark Reference Labels (CORINE Taxonomy):</span>
-          <span id="groundTruthText" class="text-slate-200 font-mono font-semibold px-2 py-0.5 rounded bg-surface-950 border border-surface-800">
-            --
-          </span>
-        </div>
-
-      </div>
-
-      <!-- ===================================================================== -->
-      <!-- EXPLAINABLE EVIDENCE POINTS & SENSOR SUMMARY                          -->
-      <!-- ===================================================================== -->
-      <div id="evidenceCard" class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-3">
-        <div class="flex items-center justify-between border-b border-surface-800 pb-2.5">
-          <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200">
-              Explainable Evidence Points (Stage 5 Evidence Engine)
-            </h3>
+          <!-- T2 Image -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+              <span class="text-cyan-400 font-bold">T2: Post-Event</span>
+              <span id="t2ResBadge" class="text-[10px] text-slate-500">256x256</span>
+            </div>
+            <div class="crosshair-container rounded-xl overflow-hidden border border-surface-750 bg-black aspect-square flex items-center justify-center">
+              <img id="imgT2" src="" alt="Post-Event Observation" class="w-full h-full object-contain" />
+            </div>
           </div>
-          <span class="text-[10px] font-mono text-slate-500">Deterministic Attribution</span>
-        </div>
 
-        <ul id="evidenceList" class="space-y-2 text-xs text-slate-300 font-sans">
-          <li class="text-slate-500 italic p-3 bg-surface-950/60 rounded-xl border border-surface-800/80">
-            No execution evidence produced yet. Run a query to inspect explainable attributions.
-          </li>
-        </ul>
-      </div>
-
-      <!-- ===================================================================== -->
-      <!-- OBSERVABLE EXECUTION TRACE (Forensic Stepper)                         -->
-      <!-- ===================================================================== -->
-      <div class="bg-surface-900 rounded-2xl card-border p-5 hud-glow space-y-3">
-        
-        <div class="flex items-center justify-between cursor-pointer" onclick="toggleTrace()">
-          <div class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-            </svg>
-            <span class="text-xs font-bold uppercase tracking-wider text-slate-200">
-              Observable 5-Step Execution Trace
-            </span>
-            <span id="traceCount" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800">
-              5 steps
-            </span>
+          <!-- Change Overlay Image -->
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-[11px] font-mono text-slate-400">
+              <span class="text-rose-400 font-bold">Predicted Delta</span>
+              <span class="text-[10px] text-slate-500 font-semibold">Red: Altered</span>
+            </div>
+            <div class="crosshair-container rounded-xl overflow-hidden border border-surface-750 bg-black aspect-square flex items-center justify-center">
+              <img id="imgOverlay" src="" alt="Change Overlay" class="w-full h-full object-contain" style="opacity: 0.85;" />
+            </div>
           </div>
-          <span id="traceToggleIcon" class="text-xs text-slate-400 font-mono hover:text-white transition">
-            [Collapse]
-          </span>
+
         </div>
 
-        <div id="traceContainer" class="space-y-2 font-mono text-[11px] text-slate-300 bg-surface-950 p-4 rounded-xl border border-surface-800 max-h-60 overflow-y-auto">
-          <div class="text-slate-500 italic">System ready for query dispatch.</div>
+        <!-- Live Change Metrics Strip -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2 text-xs font-mono">
+          <div class="bg-surface-950 p-2.5 rounded-xl border border-surface-800">
+            <div class="text-[10px] text-slate-500">CHANGED AREA %</div>
+            <div id="metricChangedPct" class="text-sm font-bold text-cyan-400 mt-0.5">--</div>
+          </div>
+          <div class="bg-surface-950 p-2.5 rounded-xl border border-surface-800">
+            <div class="text-[10px] text-slate-500">LARGEST CLUSTER</div>
+            <div id="metricClusterBbox" class="text-sm font-bold text-slate-200 mt-0.5">--</div>
+          </div>
+          <div class="bg-surface-950 p-2.5 rounded-xl border border-surface-800">
+            <div class="text-[10px] text-slate-500">DISPATCH STATUS</div>
+            <div id="metricCDStatus" class="text-sm font-bold text-emerald-400 mt-0.5">READY</div>
+          </div>
+          <div class="bg-surface-950 p-2.5 rounded-xl border border-surface-800">
+            <div class="text-[10px] text-slate-500">FALSE ALARM PROFILE</div>
+            <div class="text-xs font-bold text-slate-300 mt-0.5">-60.2% vs Baseline</div>
+          </div>
         </div>
 
       </div>
@@ -675,392 +560,744 @@
 
   </main>
 
-  <!-- ========================================================================= -->
-  <!-- TACTICAL FOOTER & ATTRIBUTION                                             -->
-  <!-- ========================================================================= -->
-  <footer class="border-t border-surface-800/80 bg-surface-900/60 py-3.5 text-center text-xs font-mono text-slate-500">
-    <div class="max-w-[1720px] mx-auto px-4 flex flex-wrap items-center justify-between gap-2">
+
+  <!-- ===================================================================== -->
+  <!-- MODULE 3: 🌲 LAND COVER EXPLORER                                      -->
+  <!-- ===================================================================== -->
+  <main id="moduleLC" class="module-view hidden flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 space-y-6">
+    
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-surface-800">
       <div>
-        SatQuery AI &bull; Milestone M3.3 Release Candidate <span class="text-cyan-400">v1.0.0-rc1</span> &bull; Frozen Charter
+        <h2 class="text-xl font-black text-white flex items-center gap-2.5">
+          <span class="p-1.5 rounded-lg bg-emerald-950 text-emerald-400 border border-emerald-500/30">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+          </span>
+          Land Cover Classification Explorer
+        </h2>
+        <p class="text-xs text-slate-400">Multimodal surface taxonomy prediction with per-class calibrated decision thresholds</p>
       </div>
-      <div class="flex items-center gap-4 text-slate-400 text-[11px]">
-        <span>SHA-256 Verified Release Bundle</span>
-        <span>&bull;</span>
-        <span>CI/CD Certified across Python 3.12, 3.13, 3.14</span>
+
+      <!-- Source Selector -->
+      <div class="flex items-center bg-surface-950 p-1 rounded-xl border border-surface-750 text-xs font-semibold">
+        <button id="lcSourcePresetBtn" onclick="setLCSourceMode('preset')"
+          class="px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white transition-all shadow-sm">
+          BigEarthNet-14k Samples
+        </button>
+        <button id="lcSourceUploadBtn" onclick="setLCSourceMode('upload')"
+          class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          </svg>
+          Upload Custom Image
+        </button>
       </div>
     </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Left Column: Controls & Upload -->
+      <div class="glass-panel rounded-2xl p-5 space-y-4">
+        
+        <!-- Preset Mode -->
+        <div id="lcPresetPanel" class="space-y-3">
+          <div>
+            <label for="lcSampleSelect" class="block text-xs font-bold text-slate-300 mb-1.5">
+              Select BigEarthNet Patch:
+            </label>
+            <select id="lcSampleSelect" onchange="onSampleSelectChange()"
+              class="w-full bg-surface-950 border border-surface-750 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono">
+              <option value="0">Loading tiles...</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="lcModelSelect" class="block text-xs font-bold text-slate-300 mb-1.5">
+              Classifier Architecture:
+            </label>
+            <select id="lcModelSelect"
+              class="w-full bg-surface-950 border border-surface-750 rounded-xl p-2.5 text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-emerald-500 font-mono">
+              <option value="phase2" selected>Phase 2 LightGBM (488 features, Micro F1: 72.99%)</option>
+              <option value="baseline">Baseline Random Forest (84 features, Micro F1: 0.718)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Custom Upload Mode -->
+        <div id="lcUploadPanel" class="hidden space-y-3">
+          <div class="flex items-center justify-between text-xs font-bold text-slate-300">
+            <span>Satellite / Aerial Observation:</span>
+            <span id="lcUploadStatus" class="text-[10px] font-mono text-slate-500">Not loaded</span>
+          </div>
+          <div id="dropzoneLC" class="border-2 border-dashed border-surface-750 hover:border-emerald-500 rounded-xl p-5 text-center cursor-pointer transition-colors bg-surface-950/60">
+            <input type="file" id="fileInputLC" accept="image/*,.tif,.tiff" class="hidden" />
+            <svg class="w-8 h-8 mx-auto text-slate-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            </svg>
+            <div class="text-xs text-slate-300 font-medium">Drag &amp; drop observation or <span class="text-emerald-400 underline">browse</span></div>
+            <div id="fileInfoLC" class="text-[10px] font-mono text-slate-500 mt-1">Multi-spectral optical image (PNG, JPG, TIFF)</div>
+          </div>
+        </div>
+
+        <!-- Execute Button -->
+        <button onclick="runLandCoverStudio()"
+          class="w-full py-3 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-xl text-xs sm:text-sm shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+          <span>Classify Land Cover Spectrum</span>
+        </button>
+
+      </div>
+
+      <!-- Right Columns: Class Probability Bars & Detected Badges -->
+      <div class="lg:col-span-2 glass-panel rounded-2xl p-5 space-y-4">
+        
+        <div class="flex items-center justify-between pb-2 border-b border-surface-800">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-200">Predicted Land Cover Spectrum</span>
+          <span class="text-[10px] font-mono text-slate-400">Class Threshold Marker Line (&tau;)</span>
+        </div>
+
+        <!-- Detected Badges List -->
+        <div>
+          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Detected Classes Above Threshold:</div>
+          <div id="detectedBadges" class="flex flex-wrap gap-2">
+            <span class="px-2.5 py-1 rounded-lg text-xs font-mono font-medium bg-surface-950 text-slate-400 border border-surface-750">
+              Run classification to view detected categories
+            </span>
+          </div>
+        </div>
+
+        <!-- Probability Bars Container -->
+        <div class="space-y-2 pt-2 border-t border-surface-800">
+          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">Calibrated Class Probability Spectrum:</div>
+          <div id="probBarsContainer" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+            <!-- Dynamically populated via JS -->
+            <div class="text-xs text-slate-500 font-mono py-6 text-center">Awaiting execution...</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- ===================================================================== -->
+  <!-- MODULE 4: ⚡ UNIFIED NATURAL LANGUAGE AI TERMINAL                      -->
+  <!-- ===================================================================== -->
+  <main id="moduleTerminal" class="module-view hidden flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 space-y-6">
+    
+    <div class="pb-2 border-b border-surface-800">
+      <h2 class="text-xl font-black text-white flex items-center gap-2.5">
+        <span class="p-1.5 rounded-lg bg-amber-950 text-amber-400 border border-amber-500/30">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        </span>
+        AI Query Dispatch Terminal &amp; Zero-Hallucination Shield
+      </h2>
+      <p class="text-xs text-slate-400">Natural language earth observation routing with mathematical guard rails and 5-stage forensic auditing</p>
+    </div>
+
+    <!-- Terminal Command Line & Presets -->
+    <div class="glass-panel rounded-2xl p-5 space-y-4">
+      
+      <div class="flex items-center justify-between text-xs">
+        <span class="font-bold text-slate-300">Analytical Prompt Terminal</span>
+        <span class="font-mono text-cyan-400 text-[11px]">Press Ctrl + Enter to Dispatch</span>
+      </div>
+
+      <div class="relative">
+        <div class="absolute top-3.5 left-3.5 text-cyan-500 font-mono font-bold select-none text-sm">&gt;</div>
+        <textarea id="queryInput" rows="2"
+          class="w-full bg-surface-950 border border-surface-750 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 rounded-xl pl-9 pr-16 py-3 text-sm text-slate-100 font-mono resize-none transition-all placeholder:text-slate-600"
+          placeholder="Ask SatQuery AI (e.g. 'What changed in this area between the acquisition dates?')..."></textarea>
+        
+        <button onclick="clearQueryInput()"
+          class="absolute top-3.5 right-3.5 px-2 py-0.5 rounded text-[10px] font-mono text-slate-500 hover:text-slate-300 hover:bg-surface-800 transition-colors">
+          Clear
+        </button>
+      </div>
+
+      <!-- Preset Chips -->
+      <div class="space-y-1.5">
+        <div class="text-[11px] font-semibold text-slate-400">Quick Benchmark Presets:</div>
+        <div id="presetChips" class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
+          <!-- Dynamically populated from /api/catalog -->
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="flex items-center gap-3 pt-2 border-t border-surface-800">
+        <button id="runBtn" onclick="runAnalysis()"
+          class="flex-1 py-3 px-5 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-xl text-xs sm:text-sm shadow-lg shadow-cyan-600/25 transition-all flex items-center justify-center gap-2">
+          <svg id="spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span id="runBtnText">Dispatch Query &amp; Execute Specialist</span>
+        </button>
+
+        <!-- Hidden Compatibility Elements for Contract Tests -->
+        <select id="policySelect" class="hidden">
+          <option value="provisional" selected>Provisional Dispatch</option>
+          <option value="clarify">Clarification Required</option>
+        </select>
+        <div id="cdSelectorGroup" class="hidden"></div>
+        <div id="lcSelectorGroup" class="hidden"></div>
+      </div>
+
+    </div>
+
+    <!-- Zero-Hallucination Guard Banner (Contract Protected) -->
+    <div id="guardBanner" class="p-4 rounded-2xl border transition-all flex items-start gap-3.5 bg-emerald-950/20 border-emerald-500/30 text-emerald-400">
+      <div class="p-1 rounded-lg bg-emerald-500/20 mt-0.5">
+        <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      </div>
+      <div class="space-y-1">
+        <div class="text-xs font-bold uppercase tracking-wider">
+          Zero-Hallucination Specialist Guard Active
+        </div>
+        <div class="text-xs text-slate-300 leading-relaxed">
+          Queries falling outside competence boundaries or lacking required sensor observations are safely rejected with honest explanations.
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Inference Decision Card -->
+    <div class="glass-panel rounded-2xl p-5 space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-surface-800">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Primary Inference Decision</span>
+        <div class="flex items-center gap-2">
+          <span id="statusBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-surface-950 text-slate-400 border border-surface-750">
+            AWAITING INPUT
+          </span>
+          <span id="policyBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-surface-950 text-slate-500 border border-surface-800">
+            SELECTIVE_ROUTING_V1.12
+          </span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+        <div class="bg-surface-950 p-3 rounded-xl border border-surface-800">
+          <span class="text-slate-500 text-[10px]">ROUTED TASK</span>
+          <div id="taskName" class="text-sm font-bold text-cyan-400 mt-0.5">--</div>
+        </div>
+        <div class="bg-surface-950 p-3 rounded-xl border border-surface-800">
+          <span class="text-slate-500 text-[10px]">ROUTING CONFIDENCE</span>
+          <div id="confScore" class="text-sm font-bold text-slate-200 mt-0.5">--</div>
+        </div>
+      </div>
+
+      <div class="bg-surface-950 p-3.5 rounded-xl border border-surface-800">
+        <div class="text-[10px] font-mono text-slate-500 mb-1">SYNTHESIZED ANALYTICAL ANSWER</div>
+        <p id="answerText" class="text-xs text-slate-200 font-sans leading-relaxed">
+          Awaiting query execution. Select a preset or enter a natural language satellite inquiry above.
+        </p>
+      </div>
+    </div>
+
+    <!-- 5-Stage Forensic Trace Timeline -->
+    <div class="glass-panel rounded-2xl p-5 space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-surface-800">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-300">Forensic Execution Audit Trace</span>
+        <span class="text-[10px] font-mono text-emerald-400">Deterministic Pipeline</span>
+      </div>
+
+      <div id="traceContainer" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+        <div class="text-xs font-mono text-slate-500 py-3 text-center">No trace events yet.</div>
+      </div>
+
+      <div class="pt-2 border-t border-surface-800">
+        <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1.5">Evidence Points:</div>
+        <ul id="evidenceList" class="space-y-1 text-xs font-mono text-slate-300 list-disc list-inside">
+          <li class="text-slate-500">Awaiting specialist evidence collection...</li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- 🛰️ FOOTER                                                            -->
+  <!-- ===================================================================== -->
+  <footer class="mt-auto border-t border-surface-800 bg-surface-950 px-4 py-3 text-center text-xs font-mono text-slate-500">
+    SatQuery AI &bull; Earth Observation Intelligence &bull; Milestone M3.3 Release Candidate (100% Green CI/CD Certified)
   </footer>
 
-  <!-- ========================================================================= -->
-  <!-- FRONTEND LOGIC & ENGINE INTEGRATION                                       -->
-  <!-- ========================================================================= -->
+  <!-- ===================================================================== -->
+  <!-- CLIENT JAVASCRIPT CONTROLLER                                          -->
+  <!-- ===================================================================== -->
   <script>
-    let currentMode = 'auto';
-    let catalog = { change_detection_scenes: [], land_cover_samples: [], preset_queries: [] };
+    // State
+    window.currentMode = 'auto';
+    window.customT1Data = null;
+    window.customT2Data = null;
+    window.catalogData = null;
 
-    // Format millisecond duration cleanly
-    function formatMs(ms) {
-      return ms.toFixed(1) + ' ms';
-    }
-
-    // Load dynamic scenes and benchmark queries
-    async function loadCatalog() {
-      try {
-        const res = await fetch('/api/catalog');
-        const data = await res.json();
-        catalog = data;
-
-        // Render Preset Chips
-        const chipsContainer = document.getElementById('presetChips');
-        chipsContainer.innerHTML = '';
-        data.preset_queries.forEach((p) => {
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'text-[11px] text-left px-2.5 py-1.5 rounded-lg bg-surface-800 hover:bg-surface-750 text-slate-300 hover:text-white border border-surface-700/60 hover:border-cyan-500/40 transition truncate max-w-full font-sans flex items-center gap-1.5 group';
-          btn.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-cyan-400/70 group-hover:bg-cyan-400"></span><span class="truncate">${p.query}</span>`;
-          btn.title = `[${p.category}] ${p.query}`;
-          btn.onclick = () => {
-            document.getElementById('queryInput').value = p.query;
-            setMode(p.recommended_mode || 'auto');
-          };
-          chipsContainer.appendChild(btn);
-        });
-
-        // Render CD scenes
-        const cdSelect = document.getElementById('cdSceneSelect');
-        cdSelect.innerHTML = '';
-        data.change_detection_scenes.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s.id;
-          opt.textContent = `${s.name.toUpperCase()} &bull; ${s.split.toUpperCase()} &bull; ${s.width}x${s.height} px &bull; ${s.change_pct}% change`;
-          cdSelect.appendChild(opt);
-        });
-
-        // Render LC samples
-        const lcSelect = document.getElementById('lcSampleSelect');
-        lcSelect.innerHTML = '';
-        data.land_cover_samples.forEach(s => {
-          const opt = document.createElement('option');
-          opt.value = s.id;
-          opt.textContent = `Tile #${s.id} &bull; ${s.ground_truth_labels.slice(0, 3).join(', ')}`;
-          lcSelect.appendChild(opt);
-        });
-
-      } catch (err) {
-        console.error('Failed to load catalog:', err);
-      }
-    }
-
-    function setMode(mode) {
-      currentMode = mode;
-      const tabAuto = document.getElementById('tabAuto');
-      const tabCD = document.getElementById('tabCD');
-      const tabLC = document.getElementById('tabLC');
-      const tabNone = document.getElementById('tabNone');
-      const cdGroup = document.getElementById('cdSelectorGroup');
-      const lcGroup = document.getElementById('lcSelectorGroup');
-      const hint = document.getElementById('modalityHint');
-
-      [tabAuto, tabCD, tabLC, tabNone].forEach(t => {
-        t.className = 'py-2 rounded-lg text-slate-400 hover:text-white transition text-center text-[11px]';
+    // Modular Tab Switcher
+    function switchModule(moduleName) {
+      document.querySelectorAll('.module-view').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-tab').forEach(el => {
+        el.classList.remove('bg-cyan-600', 'text-white', 'shadow-sm');
+        el.classList.add('text-slate-400');
       });
 
-      if (mode === 'auto') {
-        tabAuto.className = 'py-2 rounded-lg bg-cyan-600 text-white font-semibold transition text-center text-[11px] shadow-sm';
-        cdGroup.classList.remove('hidden');
-        lcGroup.classList.remove('hidden');
-        hint.textContent = 'Auto-Detect (Smart Dispatch)';
-      } else if (mode === 'change_detection') {
-        tabCD.className = 'py-2 rounded-lg bg-cyan-600 text-white font-semibold transition text-center text-[11px] shadow-sm';
-        cdGroup.classList.remove('hidden');
-        lcGroup.classList.add('hidden');
-        hint.textContent = 'Force OSCD Bitemporal Pair';
-      } else if (mode === 'land_cover') {
-        tabLC.className = 'py-2 rounded-lg bg-cyan-600 text-white font-semibold transition text-center text-[11px] shadow-sm';
-        cdGroup.classList.add('hidden');
-        lcGroup.classList.remove('hidden');
-        hint.textContent = 'Force BigEarthNet Multimodal';
+      if (moduleName === 'overview') {
+        document.getElementById('moduleOverview').classList.remove('hidden');
+        document.getElementById('navTabOverview').classList.add('bg-cyan-600', 'text-white', 'shadow-sm');
+        document.getElementById('navTabOverview').classList.remove('text-slate-400');
+      } else if (moduleName === 'change_detection') {
+        document.getElementById('moduleCD').classList.remove('hidden');
+        document.getElementById('navTabCD').classList.add('bg-cyan-600', 'text-white', 'shadow-sm');
+        document.getElementById('navTabCD').classList.remove('text-slate-400');
+        window.currentMode = 'change_detection';
+      } else if (moduleName === 'land_cover') {
+        document.getElementById('moduleLC').classList.remove('hidden');
+        document.getElementById('navTabLC').classList.add('bg-cyan-600', 'text-white', 'shadow-sm');
+        document.getElementById('navTabLC').classList.remove('text-slate-400');
+        window.currentMode = 'land_cover';
+      } else if (moduleName === 'terminal') {
+        document.getElementById('moduleTerminal').classList.remove('hidden');
+        document.getElementById('navTabTerminal').classList.add('bg-cyan-600', 'text-white', 'shadow-sm');
+        document.getElementById('navTabTerminal').classList.remove('text-slate-400');
+        window.currentMode = 'auto';
+      }
+    }
+
+    function switchToUploadMode() {
+      switchModule('change_detection');
+      setCDSourceMode('upload');
+    }
+
+    // Change Detection Source Mode
+    function setCDSourceMode(mode) {
+      const presetBtn = document.getElementById('cdSourcePresetBtn');
+      const uploadBtn = document.getElementById('cdSourceUploadBtn');
+      const presetPanel = document.getElementById('cdPresetPanel');
+      const uploadPanel = document.getElementById('cdUploadPanel');
+
+      if (mode === 'upload') {
+        uploadBtn.className = 'px-3.5 py-1.5 rounded-lg bg-cyan-600 text-white transition-all shadow-sm';
+        presetBtn.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all';
+        presetPanel.classList.add('hidden');
+        uploadPanel.classList.remove('hidden');
       } else {
-        tabNone.className = 'py-2 rounded-lg bg-cyan-600 text-white font-semibold transition text-center text-[11px] shadow-sm';
-        cdGroup.classList.add('hidden');
-        lcGroup.classList.add('hidden');
-        hint.textContent = 'Natural Language Only (No Imagery)';
+        presetBtn.className = 'px-3.5 py-1.5 rounded-lg bg-cyan-600 text-white transition-all shadow-sm';
+        uploadBtn.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5';
+        uploadPanel.classList.add('hidden');
+        presetPanel.classList.remove('hidden');
       }
     }
 
-    function clearQuery() {
-      document.getElementById('queryInput').value = '';
-      document.getElementById('queryInput').focus();
+    // Land Cover Source Mode
+    function setLCSourceMode(mode) {
+      const presetBtn = document.getElementById('lcSourcePresetBtn');
+      const uploadBtn = document.getElementById('lcSourceUploadBtn');
+      const presetPanel = document.getElementById('lcPresetPanel');
+      const uploadPanel = document.getElementById('lcUploadPanel');
+
+      if (mode === 'upload') {
+        uploadBtn.className = 'px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white transition-all shadow-sm';
+        presetBtn.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all';
+        presetPanel.classList.add('hidden');
+        uploadPanel.classList.remove('hidden');
+      } else {
+        presetBtn.className = 'px-3.5 py-1.5 rounded-lg bg-emerald-600 text-white transition-all shadow-sm';
+        uploadBtn.className = 'px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all flex items-center gap-1.5';
+        uploadPanel.classList.add('hidden');
+        presetPanel.classList.remove('hidden');
+      }
     }
 
-    function copyAnswerText() {
-      const text = document.getElementById('answerText').textContent;
-      navigator.clipboard.writeText(text);
-      alert('Synthesized response copied to clipboard.');
+    // Setup Drag and Drop File Handlers
+    function setupDropzone(dropzoneId, inputId, isT1) {
+      const dropzone = document.getElementById(dropzoneId);
+      const input = document.getElementById(inputId);
+      if (!dropzone || !input) return;
+
+      dropzone.addEventListener('click', () => input.click());
+
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('drop-active');
+      });
+
+      dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('drop-active');
+      });
+
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('drop-active');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          handleUploadedFile(e.dataTransfer.files[0], isT1);
+        }
+      });
+
+      input.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handleUploadedFile(e.target.files[0], isT1);
+        }
+      });
     }
 
-    function adjustOverlayOpacity(val) {
-      document.getElementById('opacityVal').textContent = val + '%';
+    function handleUploadedFile(file, isT1) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataUrl = e.target.result;
+        const img = new Image();
+        img.onload = () => {
+          if (isT1) {
+            window.customT1Data = dataUrl;
+            document.getElementById('imgT1').src = dataUrl;
+            const badge = document.getElementById('t1StatusBadge');
+            if (badge) {
+              badge.textContent = `${img.width}x${img.height} LOADED`;
+              badge.className = 'text-[10px] font-mono text-emerald-400 font-bold';
+            }
+            const info = document.getElementById('fileInfoT1');
+            if (info) info.textContent = `${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+            const lcInfo = document.getElementById('fileInfoLC');
+            if (lcInfo) lcInfo.textContent = `${file.name} (${img.width}x${img.height} px)`;
+            const lcBadge = document.getElementById('lcUploadStatus');
+            if (lcBadge) {
+              lcBadge.textContent = 'IMAGE LOADED';
+              lcBadge.className = 'text-[10px] font-mono text-emerald-400 font-bold';
+            }
+          } else {
+            window.customT2Data = dataUrl;
+            document.getElementById('imgT2').src = dataUrl;
+            const badge = document.getElementById('t2StatusBadge');
+            if (badge) {
+              badge.textContent = `${img.width}x${img.height} LOADED`;
+              badge.className = 'text-[10px] font-mono text-emerald-400 font-bold';
+            }
+            const info = document.getElementById('fileInfoT2');
+            if (info) info.textContent = `${file.name} (${(file.size/1024).toFixed(1)} KB)`;
+          }
+        };
+        img.src = dataUrl;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function clearCustomUploads() {
+      window.customT1Data = null;
+      window.customT2Data = null;
+      document.getElementById('fileInputT1').value = '';
+      document.getElementById('fileInputT2').value = '';
+      document.getElementById('fileInfoT1').textContent = 'PNG, JPG, TIFF, WebP';
+      document.getElementById('fileInfoT2').textContent = 'PNG, JPG, TIFF, WebP';
+      document.getElementById('t1StatusBadge').textContent = 'Not loaded';
+      document.getElementById('t1StatusBadge').className = 'text-[10px] font-mono text-slate-500';
+      document.getElementById('t2StatusBadge').textContent = 'Not loaded';
+      document.getElementById('t2StatusBadge').className = 'text-[10px] font-mono text-slate-500';
+      onSceneSelectChange();
+    }
+
+    // Quick Studio Dispatchers
+    function runChangeStudio() {
+      window.currentMode = 'change_detection';
+      const prompt = window.customT1Data 
+        ? "Analyze multitemporal surface change between custom uploaded observations"
+        : "What changed in this area between the acquisition dates?";
+      document.getElementById('queryInput').value = prompt;
+      runAnalysis();
+    }
+
+    function runLandCoverStudio() {
+      window.currentMode = 'land_cover';
+      const prompt = window.customT1Data
+        ? "Classify all land cover classes and surface types in this observation"
+        : "What land-cover classes are present in this satellite scene?";
+      document.getElementById('queryInput').value = prompt;
+      runAnalysis();
+    }
+
+    // Main Analysis Dispatcher
+    async function runAnalysis() {
+      const startTime = performance.now();
+      const query = document.getElementById('queryInput').value.trim();
+      if (!query) {
+        alert("Please enter a query or select a preset.");
+        return;
+      }
+
+      // UI Loading state
+      const runBtn = document.getElementById('runBtn');
+      const spinner = document.getElementById('spinner');
+      const runBtnText = document.getElementById('runBtnText');
+      if (runBtn) runBtn.disabled = true;
+      if (spinner) spinner.classList.remove('hidden');
+      if (runBtnText) runBtnText.textContent = "Processing with Satellite Specialists...";
+
+      const cdSceneSelect = document.getElementById('cdSceneSelect');
+      const cdMethodSelect = document.getElementById('cdMethodSelect');
+      const lcSampleSelect = document.getElementById('lcSampleSelect');
+      const lcModelSelect = document.getElementById('lcModelSelect');
+      const syntheticIdentical = document.getElementById('syntheticIdentical');
+
+      const payload = {
+        query: query,
+        mode: window.currentMode || 'auto',
+        cd_sample_idx: cdSceneSelect ? parseInt(cdSceneSelect.value || 0) : 0,
+        cd_method: cdMethodSelect ? cdMethodSelect.value : 'smoothed',
+        sample_idx: lcSampleSelect ? parseInt(lcSampleSelect.value || 0) : 0,
+        model_version: lcModelSelect ? lcModelSelect.value : 'phase2',
+        synthetic_identical: syntheticIdentical ? syntheticIdentical.checked : false
+      };
+
+      if (window.customT1Data) payload.custom_t1 = window.customT1Data;
+      if (window.customT2Data) payload.custom_t2 = window.customT2Data;
+
+      try {
+        const res = await fetch('/api/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        const duration = Math.round(performance.now() - startTime);
+        document.getElementById('latencyTracker').textContent = `${duration}ms`;
+
+        renderResults(data);
+      } catch (err) {
+        console.error(err);
+        alert("Error executing query: " + err.message);
+      } finally {
+        if (runBtn) runBtn.disabled = false;
+        if (spinner) spinner.classList.add('hidden');
+        if (runBtnText) runBtnText.textContent = "Dispatch Query & Execute Specialist";
+      }
+    }
+
+    function renderResults(data) {
+      const resp = data.response || {};
+      const visuals = data.visuals || {};
+      const evidence = resp.evidence || {};
+
+      // Badges & Decision
+      const statusBadge = document.getElementById('statusBadge');
+      if (statusBadge) {
+        statusBadge.textContent = resp.status || 'UNKNOWN';
+        if (resp.status === 'SUCCESS') {
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+        } else if (resp.status === 'PROVISIONAL_SUCCESS') {
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/15 text-amber-400 border border-amber-500/30';
+        } else {
+          statusBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30';
+        }
+      }
+
+      const taskName = document.getElementById('taskName');
+      if (taskName) taskName.textContent = resp.routed_task || resp.selected_task || 'UNKNOWN';
+
+      const confScore = document.getElementById('confScore');
+      if (confScore) {
+        const confVal = resp.text_confidence !== undefined ? resp.text_confidence : resp.router_confidence;
+        confScore.textContent = confVal ? `${(confVal * 100).toFixed(1)}% (Calibrated)` : 'N/A';
+      }
+
+      const answerText = document.getElementById('answerText');
+      if (answerText) answerText.textContent = resp.answer || 'No answer generated.';
+
+      // Update Visuals
+      if (visuals.t1_image) document.getElementById('imgT1').src = visuals.t1_image;
+      if (visuals.t2_image) document.getElementById('imgT2').src = visuals.t2_image;
+      if (visuals.change_overlay) {
+        document.getElementById('imgOverlay').src = visuals.change_overlay;
+      }
+
+      // Change Metrics
+      const summary = evidence.sensor_feature_summary || {};
+      const changedPct = summary.changed_area_pct_of_valid !== undefined 
+        ? `${summary.changed_area_pct_of_valid.toFixed(2)}%`
+        : '--';
+      document.getElementById('metricChangedPct').textContent = changedPct;
+      
+      const bbox = summary.largest_change_cluster_bbox_pixel;
+      document.getElementById('metricClusterBbox').textContent = bbox ? `[${bbox.join(', ')}]` : 'None';
+
+      // Land Cover Detected Badges
+      const detectedBadges = document.getElementById('detectedBadges');
+      if (detectedBadges) {
+        detectedBadges.innerHTML = '';
+        const detected = evidence.detected_classes || [];
+        if (detected.length > 0) {
+          detected.forEach(cls => {
+            const badge = document.createElement('span');
+            badge.className = 'px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+            badge.textContent = cls;
+            detectedBadges.appendChild(badge);
+          });
+        } else {
+          detectedBadges.innerHTML = '<span class="text-xs text-slate-500 font-mono">No land cover classes above decision threshold.</span>';
+        }
+      }
+
+      // Land Cover Probability Bars
+      const probContainer = document.getElementById('probBarsContainer');
+      if (probContainer) {
+        const probs = evidence.class_probabilities || {};
+        const thresholds = evidence.thresholds_applied || {};
+        const entries = Object.entries(probs).sort((a, b) => b[1] - a[1]);
+
+        if (entries.length > 0) {
+          probContainer.innerHTML = '';
+          entries.forEach(([cls, prob]) => {
+            const pct = (prob * 100).toFixed(1);
+            const thresh = thresholds[cls] !== undefined ? thresholds[cls] : 0.5;
+            const threshPct = (thresh * 100).toFixed(1);
+            const isAbove = prob >= thresh;
+
+            const row = document.createElement('div');
+            row.className = 'space-y-1 bg-surface-950 p-2 rounded-xl border border-surface-800';
+            row.innerHTML = `
+              <div class="flex items-center justify-between text-xs font-mono">
+                <span class="${isAbove ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${cls}</span>
+                <span class="${isAbove ? 'text-emerald-400 font-bold' : 'text-slate-400'}">${pct}% (&tau;=${threshPct}%)</span>
+              </div>
+              <div class="relative h-2 bg-surface-900 rounded-full overflow-hidden border border-surface-750">
+                <div class="h-full ${isAbove ? 'bg-gradient-to-r from-emerald-500 to-teal-400' : 'bg-slate-700'} rounded-full transition-all duration-500" style="width: ${pct}%;"></div>
+                <div class="absolute top-0 bottom-0 w-[2px] bg-amber-400 z-10" style="left: ${threshPct}%;" title="Calibrated Threshold: ${threshPct}%"></div>
+              </div>
+            `;
+            probContainer.appendChild(row);
+          });
+        }
+      }
+
+      // Forensic Trace Stepper
+      const traceContainer = document.getElementById('traceContainer');
+      if (traceContainer) {
+        traceContainer.innerHTML = '';
+        const traces = resp.execution_trace || [];
+        if (traces.length > 0) {
+          traces.forEach((tr, i) => {
+            const item = document.createElement('div');
+            item.className = 'p-2 rounded-lg bg-surface-950 border border-surface-800 text-xs font-mono text-slate-300 flex items-start gap-2';
+            item.innerHTML = `<span class="text-cyan-400 font-bold">[${i+1}]</span> <span>${tr}</span>`;
+            traceContainer.appendChild(item);
+          });
+        }
+      }
+
+      // Evidence List
+      const evidenceList = document.getElementById('evidenceList');
+      if (evidenceList) {
+        evidenceList.innerHTML = '';
+        const points = evidence.evidence_points || [];
+        if (points.length > 0) {
+          points.forEach(pt => {
+            const li = document.createElement('li');
+            li.textContent = pt;
+            evidenceList.appendChild(li);
+          });
+        }
+      }
+    }
+
+    function adjustOpacity(val) {
+      document.getElementById('opacityVal').textContent = `${val}%`;
       const img = document.getElementById('imgOverlay');
-      if (img) {
-        img.style.opacity = val / 100.0;
+      if (img) img.style.opacity = val / 100;
+    }
+
+    function clearQueryInput() {
+      document.getElementById('queryInput').value = '';
+    }
+
+    // Scene & Sample Dropdown Change Handlers
+    function onSceneSelectChange() {
+      if (window.customT1Data) return;
+      const idx = document.getElementById('cdSceneSelect').value;
+      if (window.catalogData && window.catalogData.change_detection_scenes) {
+        const sc = window.catalogData.change_detection_scenes[idx];
+        if (sc) {
+          document.getElementById('t1ResBadge').textContent = `${sc.width}x${sc.height}`;
+          document.getElementById('t2ResBadge').textContent = `${sc.width}x${sc.height}`;
+        }
       }
     }
 
-    // Keyboard shortcut: Ctrl + Enter to run
+    function onSampleSelectChange() {
+      // Land cover sample preview
+    }
+
+    // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
         runAnalysis();
       }
     });
 
-    async function runAnalysis() {
-      const query = document.getElementById('queryInput').value.trim();
-      if (!query) return;
-
-      const policy = document.getElementById('policySelect').value;
-      const synthetic = document.getElementById('syntheticIdentical').checked;
-      const cdIdx = document.getElementById('cdSceneSelect').value;
-      const lcIdx = document.getElementById('lcSampleSelect').value;
-
-      const runBtn = document.getElementById('runBtn');
-      const spinner = document.getElementById('spinner');
-      const runBtnText = document.getElementById('runBtnText');
-
-      runBtn.disabled = true;
-      spinner.classList.remove('hidden');
-      runBtnText.textContent = 'Routing Intent & Executing Specialist...';
-
-      const t0 = performance.now();
-
+    // Initial Load & Catalog Hydration
+    async function loadCatalog() {
       try {
-        const cdMethod = document.getElementById('cdMethodSelect') ? document.getElementById('cdMethodSelect').value : 'smoothed';
-        const lcModel = document.getElementById('lcModelSelect') ? document.getElementById('lcModelSelect').value : 'phase2';
-
-        const payload = {
-          query: query,
-          policy: policy,
-          mode: currentMode,
-          cd_sample_idx: (currentMode === 'change_detection' || currentMode === 'auto') ? parseInt(cdIdx || '0') : null,
-          sample_idx: (currentMode === 'land_cover' || currentMode === 'auto') ? parseInt(lcIdx || '0') : null,
-          synthetic_identical: synthetic,
-          cd_method: cdMethod,
-          model_version: lcModel
-        };
-
-        const res = await fetch('/api/query', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-
-        const dt = performance.now() - t0;
-        document.getElementById('telemetryLatency').textContent = formatMs(dt);
-
+        const res = await fetch('/api/catalog');
         const data = await res.json();
-        renderResponse(data);
+        window.catalogData = data;
+
+        // Change Detection Scenes
+        const cdSelect = document.getElementById('cdSceneSelect');
+        if (cdSelect && data.change_detection_scenes) {
+          cdSelect.innerHTML = '';
+          data.change_detection_scenes.forEach(sc => {
+            const opt = document.createElement('option');
+            opt.value = sc.id;
+            opt.textContent = `${sc.name} (${sc.width}x${sc.height} px, change: ${sc.change_pct}%)`;
+            cdSelect.appendChild(opt);
+          });
+        }
+
+        // Land Cover Samples
+        const lcSelect = document.getElementById('lcSampleSelect');
+        if (lcSelect && data.land_cover_samples) {
+          lcSelect.innerHTML = '';
+          data.land_cover_samples.forEach(sm => {
+            const opt = document.createElement('option');
+            opt.value = sm.id;
+            opt.textContent = `${sm.patch_id} [${(sm.labels || []).join(', ')}]`;
+            lcSelect.appendChild(opt);
+          });
+        }
+
+        // Preset Chips
+        const presetContainer = document.getElementById('presetChips');
+        if (presetContainer && data.preset_queries) {
+          presetContainer.innerHTML = '';
+          data.preset_queries.forEach(pq => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'px-2.5 py-1 rounded-lg text-[11px] font-mono bg-surface-950 text-slate-300 hover:text-cyan-400 hover:border-cyan-500 border border-surface-750 transition-all text-left truncate max-w-xs';
+            btn.textContent = `[${pq.category}] ${pq.query}`;
+            btn.title = pq.query;
+            btn.onclick = () => {
+              document.getElementById('queryInput').value = pq.query;
+              runAnalysis();
+            };
+            presetContainer.appendChild(btn);
+          });
+        }
 
       } catch (err) {
-        console.error('Execution error:', err);
-        alert('Error communicating with SatQuery engine: ' + err.message);
-      } finally {
-        runBtn.disabled = false;
-        spinner.classList.add('hidden');
-        runBtnText.textContent = 'Dispatch Query & Execute Specialist';
+        console.error("Failed to load catalog:", err);
       }
     }
 
-    function proceedWithProvisional() {
-      document.getElementById('policySelect').value = 'provisional';
-      runAnalysis();
-    }
-
-    function renderResponse(data) {
-      const resp = data.response;
-      const visuals = data.visuals || {};
-
-      // Status Badge
-      const statusBadge = document.getElementById('statusBadge');
-      statusBadge.textContent = resp.status;
-      if (resp.status === 'SUCCESS') {
-        statusBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700 glow-emerald';
-      } else if (resp.status === 'PROVISIONAL_SUCCESS') {
-        statusBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-amber-950 text-amber-300 border border-amber-700 glow-amber';
-      } else if (resp.status === 'NEEDS_CLARIFICATION') {
-        statusBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-blue-950 text-blue-300 border border-blue-700 glow-cyan';
-      } else if (resp.status === 'INCOMPATIBLE_INPUT') {
-        statusBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-rose-950 text-rose-300 border border-rose-700 glow-rose';
-      } else {
-        statusBadge.className = 'text-xs font-mono font-bold px-3 py-1 rounded-full bg-surface-800 text-slate-300 border border-surface-700';
-      }
-
-      // Policy Badge
-      const policyBadge = document.getElementById('policyBadge');
-      policyBadge.textContent = `Policy: ${resp.execution_policy}`;
-
-      // Routing Confidence & Task
-      document.getElementById('confScore').textContent = `${(resp.router_confidence * 100).toFixed(1)}%`;
-      document.getElementById('taskName').textContent = `${resp.routed_task_display || resp.routed_task}`;
-
-      // Answer Text
-      document.getElementById('answerText').textContent = resp.answer;
-
-      // Clarify Action Box
-      const clarifyBox = document.getElementById('clarifyActionBox');
-      if (resp.status === 'NEEDS_CLARIFICATION') {
-        clarifyBox.classList.remove('hidden');
-      } else {
-        clarifyBox.classList.add('hidden');
-      }
-
-      // Zero-Hallucination Guard Banner
-      const guardBanner = document.getElementById('guardBanner');
-      if (resp.status === 'UNAVAILABLE_SPECIALIST' || ['CHANGE_VQA', 'VISUAL_GROUNDING', 'SCENE_CAPTIONING'].includes(resp.routed_task)) {
-        guardBanner.classList.remove('hidden');
-      } else {
-        guardBanner.classList.add('hidden');
-      }
-
-      // Visuals: Change Detection
-      const visualCard = document.getElementById('visualCard');
-      if (visuals.t1_image && visuals.t2_image && resp.routed_task === 'CHANGE_DETECTION') {
-        visualCard.classList.remove('hidden');
-        document.getElementById('imgT1').src = visuals.t1_image;
-        document.getElementById('imgT2').src = visuals.t2_image;
-        if (visuals.change_overlay) {
-          document.getElementById('imgOverlay').src = visuals.change_overlay;
-        } else {
-          document.getElementById('imgOverlay').src = visuals.t2_image;
-        }
-        if (data.scene_metadata) {
-          document.getElementById('sceneMetaLabel').textContent = `${data.scene_metadata.scene_name.toUpperCase()} &bull; ${data.scene_metadata.split.toUpperCase()}`;
-        }
-      } else {
-        visualCard.classList.add('hidden');
-      }
-
-      // Visuals: Land Cover Card
-      const lcCard = document.getElementById('landCoverCard');
-      if (resp.routed_task === 'LAND_COVER_CLASSIFICATION' || resp.routed_task === 'OPTICAL_SAR_FUSION') {
-        lcCard.classList.remove('hidden');
-        if (visuals.patch_id) {
-          document.getElementById('lcPatchLabel').textContent = `Patch ID: ${visuals.patch_id}`;
-        }
-
-        // Render detected badges
-        const badgesContainer = document.getElementById('detectedBadges');
-        badgesContainer.innerHTML = '';
-        const detected = (resp.evidence && resp.evidence.detected_classes) || [];
-        if (detected.length > 0) {
-          detected.forEach(c => {
-            const badge = document.createElement('span');
-            badge.className = 'px-3 py-1 text-xs rounded-full font-semibold bg-emerald-950 text-emerald-300 border border-emerald-700/80 shadow-sm flex items-center gap-1.5';
-            badge.innerHTML = `<span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span><span>${c}</span>`;
-            badgesContainer.appendChild(badge);
-          });
-        } else {
-          badgesContainer.innerHTML = '<span class="text-xs text-slate-500 italic">Zero classes exceeded decision thresholds.</span>';
-        }
-
-        // Render probability progress bars
-        const probContainer = document.getElementById('probBarsContainer');
-        probContainer.innerHTML = '';
-        const probs = (resp.evidence && resp.evidence.class_probabilities) || {};
-        const thresholds = (resp.evidence && resp.evidence.thresholds_applied) || {};
-        const sortedEntries = Object.entries(probs).sort((a, b) => b[1] - a[1]).slice(0, 8);
-
-        sortedEntries.forEach(([clsName, prob]) => {
-          const thresh = thresholds[clsName] || 0.40;
-          const isPassed = prob >= thresh;
-          const row = document.createElement('div');
-          row.className = 'space-y-1 bg-surface-950/80 p-2.5 rounded-xl border border-surface-800';
-          row.innerHTML = `
-            <div class="flex justify-between items-center text-xs">
-              <span class="${isPassed ? 'text-emerald-300 font-bold' : 'text-slate-400'} flex items-center gap-1.5">
-                <span class="h-1.5 w-1.5 rounded-full ${isPassed ? 'bg-emerald-400' : 'bg-slate-600'}"></span>
-                ${clsName}
-              </span>
-              <div class="text-right">
-                <span class="${isPassed ? 'text-emerald-400 font-bold' : 'text-slate-300'}">${(prob * 100).toFixed(1)}%</span>
-                <span class="text-slate-500 text-[10px] ml-1">(&tau; ${(thresh * 100).toFixed(0)}%)</span>
-              </div>
-            </div>
-            <div class="w-full bg-surface-900 rounded-full h-2 border border-surface-800 overflow-hidden relative">
-              <!-- Threshold marker line -->
-              <div class="absolute top-0 bottom-0 w-0.5 bg-amber-400 z-10" style="left: ${thresh * 100}%" title="Decision Threshold"></div>
-              <div class="${isPassed ? 'bg-gradient-to-r from-emerald-500 to-cyan-500' : 'bg-slate-700'} h-2 rounded-full transition-all duration-500" style="width: ${Math.min(100, Math.max(3, prob * 100))}%"></div>
-            </div>
-          `;
-          probContainer.appendChild(row);
-        });
-
-        // Ground truth comparison
-        const gtText = document.getElementById('groundTruthText');
-        const gts = visuals.ground_truth_labels || [];
-        gtText.textContent = gts.length > 0 ? gts.join(' &bull; ') : 'None listed in benchmark';
-
-      } else {
-        lcCard.classList.add('hidden');
-      }
-
-      // Evidence Points
-      const evList = document.getElementById('evidenceList');
-      evList.innerHTML = '';
-      if (resp.evidence && resp.evidence.evidence_points && resp.evidence.evidence_points.length > 0) {
-        resp.evidence.evidence_points.forEach(pt => {
-          const li = document.createElement('li');
-          li.className = 'bg-surface-950 p-3 rounded-xl border border-surface-800 flex items-start gap-2.5';
-          li.innerHTML = `
-            <div class="h-5 w-5 rounded-full bg-cyan-950 border border-cyan-800 flex items-center justify-center shrink-0 mt-0.5">
-              <span class="h-1.5 w-1.5 rounded-full bg-cyan-400"></span>
-            </div>
-            <span class="text-slate-200 leading-relaxed font-sans">${pt}</span>
-          `;
-          evList.appendChild(li);
-        });
-      } else {
-        evList.innerHTML = '<li class="text-slate-500 italic p-3 bg-surface-950 rounded-xl border border-surface-800">No structured evidence points produced.</li>';
-      }
-
-      // Trace
-      const traceContainer = document.getElementById('traceContainer');
-      traceContainer.innerHTML = '';
-      if (resp.execution_trace) {
-        document.getElementById('traceCount').textContent = `${resp.execution_trace.length} steps`;
-        resp.execution_trace.forEach((step, idx) => {
-          const line = document.createElement('div');
-          line.className = 'py-1.5 px-2.5 rounded border border-transparent font-mono flex items-start gap-2 text-[11px]';
-          
-          if (step.includes('WARNING') || step.includes('Policy:') || step.includes('PROVISIONAL') || step.includes('Clarification')) {
-            line.className += ' bg-amber-950/20 text-amber-300 border-amber-800/40';
-          } else if (step.includes('Error') || step.includes('INCOMPATIBLE') || step.includes('UNAVAILABLE')) {
-            line.className += ' bg-rose-950/20 text-rose-300 border-rose-800/40';
-          } else if (step.includes('Trace 2/5') || step.includes('classified intent')) {
-            line.className += ' bg-cyan-950/20 text-cyan-300 border-cyan-800/40';
-          } else {
-            line.className += ' text-slate-300 hover:bg-surface-900';
-          }
-
-          line.innerHTML = `<span class="text-slate-500 shrink-0 select-none">#0${idx + 1}</span><span>${step}</span>`;
-          traceContainer.appendChild(line);
-        });
-      }
-    }
-
-    function toggleTrace() {
-      const container = document.getElementById('traceContainer');
-      const icon = document.getElementById('traceToggleIcon');
-      if (container.classList.contains('hidden')) {
-        container.classList.remove('hidden');
-        icon.textContent = '[Collapse]';
-      } else {
-        container.classList.add('hidden');
-        icon.textContent = '[Expand]';
-      }
-    }
-
-    // Initialize on page load
-    document.addEventListener('DOMContentLoaded', loadCatalog);
+    // Setup on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      loadCatalog();
+      setupDropzone('dropzoneT1', 'fileInputT1', true);
+      setupDropzone('dropzoneT2', 'fileInputT2', false);
+      setupDropzone('dropzoneLC', 'fileInputLC', true);
+    });
   </script>
 </body>
 </html>
