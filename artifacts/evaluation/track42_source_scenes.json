@@ -1,0 +1,642 @@
+[
+  {
+    "source_scene_id": "LS_01",
+    "name": "Denver",
+    "country": "USA",
+    "continent": "North America",
+    "sensor": "Landsat-8",
+    "utm_zone": 13,
+    "crs": "EPSG:32613",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_01_PAYLOAD_A",
+      "LS_01_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_02",
+    "name": "Calgary",
+    "country": "Canada",
+    "continent": "North America",
+    "sensor": "Landsat-9",
+    "utm_zone": 11,
+    "crs": "EPSG:32611",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_02_PAYLOAD_A",
+      "LS_02_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_03",
+    "name": "Hermosillo",
+    "country": "Mexico",
+    "continent": "North America",
+    "sensor": "Landsat-8",
+    "utm_zone": 12,
+    "crs": "EPSG:32612",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_03_PAYLOAD_A",
+      "LS_03_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_04",
+    "name": "Bogota",
+    "country": "Colombia",
+    "continent": "South America",
+    "sensor": "Landsat-9",
+    "utm_zone": 18,
+    "crs": "EPSG:32618",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_04_PAYLOAD_A",
+      "LS_04_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_05",
+    "name": "Brasilia",
+    "country": "Brazil",
+    "continent": "South America",
+    "sensor": "Landsat-8",
+    "utm_zone": 23,
+    "crs": "EPSG:32723",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_05_PAYLOAD_A",
+      "LS_05_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_06",
+    "name": "Mendoza",
+    "country": "Argentina",
+    "continent": "South America",
+    "sensor": "Landsat-9",
+    "utm_zone": 19,
+    "crs": "EPSG:32719",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_06_PAYLOAD_A",
+      "LS_06_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_07",
+    "name": "Madrid",
+    "country": "Spain",
+    "continent": "Europe",
+    "sensor": "Landsat-8",
+    "utm_zone": 30,
+    "crs": "EPSG:32630",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_07_PAYLOAD_A",
+      "LS_07_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_08",
+    "name": "Warsaw",
+    "country": "Poland",
+    "continent": "Europe",
+    "sensor": "Landsat-9",
+    "utm_zone": 34,
+    "crs": "EPSG:32634",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_08_PAYLOAD_A",
+      "LS_08_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_09",
+    "name": "Stockholm",
+    "country": "Sweden",
+    "continent": "Europe",
+    "sensor": "Landsat-8",
+    "utm_zone": 34,
+    "crs": "EPSG:32634",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_09_PAYLOAD_A",
+      "LS_09_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_10",
+    "name": "Dakar",
+    "country": "Senegal",
+    "continent": "Africa",
+    "sensor": "Landsat-9",
+    "utm_zone": 28,
+    "crs": "EPSG:32628",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_10_PAYLOAD_A",
+      "LS_10_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_11",
+    "name": "Nairobi",
+    "country": "Kenya",
+    "continent": "Africa",
+    "sensor": "Landsat-8",
+    "utm_zone": 37,
+    "crs": "EPSG:32737",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_11_PAYLOAD_A",
+      "LS_11_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_12",
+    "name": "Windhoek",
+    "country": "Namibia",
+    "continent": "Africa",
+    "sensor": "Landsat-9",
+    "utm_zone": 33,
+    "crs": "EPSG:32733",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_12_PAYLOAD_A",
+      "LS_12_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_13",
+    "name": "Cairo",
+    "country": "Egypt",
+    "continent": "Africa",
+    "sensor": "Landsat-8",
+    "utm_zone": 36,
+    "crs": "EPSG:32636",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_13_PAYLOAD_A",
+      "LS_13_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_14",
+    "name": "Riyadh",
+    "country": "Saudi Arabia",
+    "continent": "Asia",
+    "sensor": "Landsat-9",
+    "utm_zone": 38,
+    "crs": "EPSG:32638",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_14_PAYLOAD_A",
+      "LS_14_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_15",
+    "name": "Almaty",
+    "country": "Kazakhstan",
+    "continent": "Asia",
+    "sensor": "Landsat-8",
+    "utm_zone": 43,
+    "crs": "EPSG:32643",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_15_PAYLOAD_A",
+      "LS_15_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_16",
+    "name": "Hyderabad",
+    "country": "India",
+    "continent": "Asia",
+    "sensor": "Landsat-9",
+    "utm_zone": 44,
+    "crs": "EPSG:32644",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_16_PAYLOAD_A",
+      "LS_16_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_17",
+    "name": "Ulaanbaatar",
+    "country": "Mongolia",
+    "continent": "Asia",
+    "sensor": "Landsat-8",
+    "utm_zone": 48,
+    "crs": "EPSG:32648",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_17_PAYLOAD_A",
+      "LS_17_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_18",
+    "name": "Sapporo",
+    "country": "Japan",
+    "continent": "Asia",
+    "sensor": "Landsat-9",
+    "utm_zone": 54,
+    "crs": "EPSG:32654",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_18_PAYLOAD_A",
+      "LS_18_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_19",
+    "name": "Alice Springs",
+    "country": "Australia",
+    "continent": "Oceania",
+    "sensor": "Landsat-8",
+    "utm_zone": 53,
+    "crs": "EPSG:32753",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_19_PAYLOAD_A",
+      "LS_19_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "LS_20",
+    "name": "Christchurch",
+    "country": "New Zealand",
+    "continent": "Oceania",
+    "sensor": "Landsat-9",
+    "utm_zone": 59,
+    "crs": "EPSG:32759",
+    "n_payloads": 2,
+    "payload_ids": [
+      "LS_20_PAYLOAD_A",
+      "LS_20_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_01",
+    "name": "Phoenix",
+    "country": "USA",
+    "continent": "North America",
+    "sensor": "PlanetScope",
+    "utm_zone": 12,
+    "crs": "EPSG:32612",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_01_PAYLOAD_A",
+      "PS_01_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_02",
+    "name": "Winnipeg",
+    "country": "Canada",
+    "continent": "North America",
+    "sensor": "PlanetScope",
+    "utm_zone": 14,
+    "crs": "EPSG:32614",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_02_PAYLOAD_A",
+      "PS_02_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_03",
+    "name": "Guadalajara",
+    "country": "Mexico",
+    "continent": "North America",
+    "sensor": "PlanetScope",
+    "utm_zone": 13,
+    "crs": "EPSG:32613",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_03_PAYLOAD_A",
+      "PS_03_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_04",
+    "name": "Lima",
+    "country": "Peru",
+    "continent": "South America",
+    "sensor": "PlanetScope",
+    "utm_zone": 18,
+    "crs": "EPSG:32718",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_04_PAYLOAD_A",
+      "PS_04_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_05",
+    "name": "Fortaleza",
+    "country": "Brazil",
+    "continent": "South America",
+    "sensor": "PlanetScope",
+    "utm_zone": 24,
+    "crs": "EPSG:32724",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_05_PAYLOAD_A",
+      "PS_05_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_06",
+    "name": "Santiago",
+    "country": "Chile",
+    "continent": "South America",
+    "sensor": "PlanetScope",
+    "utm_zone": 19,
+    "crs": "EPSG:32719",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_06_PAYLOAD_A",
+      "PS_06_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_07",
+    "name": "Lyon",
+    "country": "France",
+    "continent": "Europe",
+    "sensor": "PlanetScope",
+    "utm_zone": 31,
+    "crs": "EPSG:32631",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_07_PAYLOAD_A",
+      "PS_07_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_08",
+    "name": "Munich",
+    "country": "Germany",
+    "continent": "Europe",
+    "sensor": "PlanetScope",
+    "utm_zone": 32,
+    "crs": "EPSG:32632",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_08_PAYLOAD_A",
+      "PS_08_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_09",
+    "name": "Helsinki",
+    "country": "Finland",
+    "continent": "Europe",
+    "sensor": "PlanetScope",
+    "utm_zone": 35,
+    "crs": "EPSG:32635",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_09_PAYLOAD_A",
+      "PS_09_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_10",
+    "name": "Casablanca",
+    "country": "Morocco",
+    "continent": "Africa",
+    "sensor": "PlanetScope",
+    "utm_zone": 29,
+    "crs": "EPSG:32629",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_10_PAYLOAD_A",
+      "PS_10_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_11",
+    "name": "Addis Ababa",
+    "country": "Ethiopia",
+    "continent": "Africa",
+    "sensor": "PlanetScope",
+    "utm_zone": 37,
+    "crs": "EPSG:32637",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_11_PAYLOAD_A",
+      "PS_11_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_12",
+    "name": "Gaborone",
+    "country": "Botswana",
+    "continent": "Africa",
+    "sensor": "PlanetScope",
+    "utm_zone": 35,
+    "crs": "EPSG:32735",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_12_PAYLOAD_A",
+      "PS_12_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_13",
+    "name": "Tunis",
+    "country": "Tunisia",
+    "continent": "Africa",
+    "sensor": "PlanetScope",
+    "utm_zone": 32,
+    "crs": "EPSG:32632",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_13_PAYLOAD_A",
+      "PS_13_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_14",
+    "name": "Muscat",
+    "country": "Oman",
+    "continent": "Asia",
+    "sensor": "PlanetScope",
+    "utm_zone": 40,
+    "crs": "EPSG:32640",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_14_PAYLOAD_A",
+      "PS_14_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_15",
+    "name": "Tashkent",
+    "country": "Uzbekistan",
+    "continent": "Asia",
+    "sensor": "PlanetScope",
+    "utm_zone": 42,
+    "crs": "EPSG:32642",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_15_PAYLOAD_A",
+      "PS_15_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_16",
+    "name": "Nagpur",
+    "country": "India",
+    "continent": "Asia",
+    "sensor": "PlanetScope",
+    "utm_zone": 44,
+    "crs": "EPSG:32644",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_16_PAYLOAD_A",
+      "PS_16_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_17",
+    "name": "Chengdu",
+    "country": "China",
+    "continent": "Asia",
+    "sensor": "PlanetScope",
+    "utm_zone": 48,
+    "crs": "EPSG:32648",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_17_PAYLOAD_A",
+      "PS_17_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_18",
+    "name": "Fukuoka",
+    "country": "Japan",
+    "continent": "Asia",
+    "sensor": "PlanetScope",
+    "utm_zone": 52,
+    "crs": "EPSG:32652",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_18_PAYLOAD_A",
+      "PS_18_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_19",
+    "name": "Darwin",
+    "country": "Australia",
+    "continent": "Oceania",
+    "sensor": "PlanetScope",
+    "utm_zone": 52,
+    "crs": "EPSG:32752",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_19_PAYLOAD_A",
+      "PS_19_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  },
+  {
+    "source_scene_id": "PS_20",
+    "name": "Suva",
+    "country": "Fiji",
+    "continent": "Oceania",
+    "sensor": "PlanetScope",
+    "utm_zone": 60,
+    "crs": "EPSG:32760",
+    "n_payloads": 2,
+    "payload_ids": [
+      "PS_20_PAYLOAD_A",
+      "PS_20_PAYLOAD_B"
+    ],
+    "dispatched_count": 0,
+    "source_level_failure": false
+  }
+]

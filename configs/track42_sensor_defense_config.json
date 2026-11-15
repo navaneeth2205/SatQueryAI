@@ -1,0 +1,3622 @@
+{
+  "metadata": {
+    "protocol_reference": "SATQUERY-P4-PROTOCOL-V1.12.1-FROZEN.md",
+    "protocol_hash": "7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5",
+    "track": "Track 4.2: Cross-Sensor & Cross-Resolution Compatibility Defense",
+    "n_source_scenes": 60,
+    "n_off_sensor_source_scenes": 40,
+    "n_control_source_scenes": 20,
+    "n_total_payloads": 100,
+    "n_invalid_payloads": 80,
+    "n_control_payloads": 20,
+    "spatial_dispersion": {
+      "min_distance_40_off_sensor_km": 180.76,
+      "min_pair_40": [
+        "LS_06",
+        "PS_06"
+      ],
+      "min_distance_all_60_km": 180.76,
+      "min_pair_all": [
+        "LS_06",
+        "PS_06"
+      ],
+      "distance_floor_km": 150.0,
+      "distance_guarantee_passed": true,
+      "max_pairwise_iou": 0.0,
+      "zero_iou_guarantee_passed": true
+    },
+    "continents_represented": [
+      "Africa",
+      "Asia",
+      "Europe",
+      "North America",
+      "Oceania",
+      "South America"
+    ],
+    "n_continents": 6
+  },
+  "source_scenes": [
+    {
+      "scene_id": "LS_01",
+      "name": "Denver",
+      "country": "USA",
+      "continent": "North America",
+      "lat": 39.7392,
+      "lon": -104.9903,
+      "sensor": "Landsat-8",
+      "date": "2023-01-15",
+      "native_gsd_m": 30.0,
+      "utm_zone": 13,
+      "crs": "EPSG:32613",
+      "bounding_box": [
+        -105.0903,
+        39.6392,
+        -104.8903,
+        39.8392
+      ]
+    },
+    {
+      "scene_id": "LS_02",
+      "name": "Calgary",
+      "country": "Canada",
+      "continent": "North America",
+      "lat": 51.0447,
+      "lon": -114.0719,
+      "sensor": "Landsat-9",
+      "date": "2023-02-20",
+      "native_gsd_m": 30.0,
+      "utm_zone": 11,
+      "crs": "EPSG:32611",
+      "bounding_box": [
+        -114.1719,
+        50.9447,
+        -113.9719,
+        51.1447
+      ]
+    },
+    {
+      "scene_id": "LS_03",
+      "name": "Hermosillo",
+      "country": "Mexico",
+      "continent": "North America",
+      "lat": 29.0729,
+      "lon": -110.9559,
+      "sensor": "Landsat-8",
+      "date": "2023-03-25",
+      "native_gsd_m": 30.0,
+      "utm_zone": 12,
+      "crs": "EPSG:32612",
+      "bounding_box": [
+        -111.0559,
+        28.9729,
+        -110.8559,
+        29.1729
+      ]
+    },
+    {
+      "scene_id": "LS_04",
+      "name": "Bogota",
+      "country": "Colombia",
+      "continent": "South America",
+      "lat": 4.711,
+      "lon": -74.0721,
+      "sensor": "Landsat-9",
+      "date": "2023-04-30",
+      "native_gsd_m": 30.0,
+      "utm_zone": 18,
+      "crs": "EPSG:32618",
+      "bounding_box": [
+        -74.1721,
+        4.611,
+        -73.9721,
+        4.811
+      ]
+    },
+    {
+      "scene_id": "LS_05",
+      "name": "Brasilia",
+      "country": "Brazil",
+      "continent": "South America",
+      "lat": -15.7975,
+      "lon": -47.8919,
+      "sensor": "Landsat-8",
+      "date": "2023-06-05",
+      "native_gsd_m": 30.0,
+      "utm_zone": 23,
+      "crs": "EPSG:32723",
+      "bounding_box": [
+        -47.9919,
+        -15.8975,
+        -47.7919,
+        -15.6975
+      ]
+    },
+    {
+      "scene_id": "LS_06",
+      "name": "Mendoza",
+      "country": "Argentina",
+      "continent": "South America",
+      "lat": -32.8895,
+      "lon": -68.8458,
+      "sensor": "Landsat-9",
+      "date": "2023-07-12",
+      "native_gsd_m": 30.0,
+      "utm_zone": 19,
+      "crs": "EPSG:32719",
+      "bounding_box": [
+        -68.9458,
+        -32.9895,
+        -68.7458,
+        -32.7895
+      ]
+    },
+    {
+      "scene_id": "LS_07",
+      "name": "Madrid",
+      "country": "Spain",
+      "continent": "Europe",
+      "lat": 40.4168,
+      "lon": -3.7038,
+      "sensor": "Landsat-8",
+      "date": "2023-08-18",
+      "native_gsd_m": 30.0,
+      "utm_zone": 30,
+      "crs": "EPSG:32630",
+      "bounding_box": [
+        -3.8038,
+        40.3168,
+        -3.6038,
+        40.5168
+      ]
+    },
+    {
+      "scene_id": "LS_08",
+      "name": "Warsaw",
+      "country": "Poland",
+      "continent": "Europe",
+      "lat": 52.2297,
+      "lon": 21.0122,
+      "sensor": "Landsat-9",
+      "date": "2023-09-22",
+      "native_gsd_m": 30.0,
+      "utm_zone": 34,
+      "crs": "EPSG:32634",
+      "bounding_box": [
+        20.9122,
+        52.1297,
+        21.1122,
+        52.3297
+      ]
+    },
+    {
+      "scene_id": "LS_09",
+      "name": "Stockholm",
+      "country": "Sweden",
+      "continent": "Europe",
+      "lat": 59.3293,
+      "lon": 18.0686,
+      "sensor": "Landsat-8",
+      "date": "2023-10-28",
+      "native_gsd_m": 30.0,
+      "utm_zone": 34,
+      "crs": "EPSG:32634",
+      "bounding_box": [
+        17.9686,
+        59.2293,
+        18.1686,
+        59.4293
+      ]
+    },
+    {
+      "scene_id": "LS_10",
+      "name": "Dakar",
+      "country": "Senegal",
+      "continent": "Africa",
+      "lat": 14.7167,
+      "lon": -17.4677,
+      "sensor": "Landsat-9",
+      "date": "2023-12-02",
+      "native_gsd_m": 30.0,
+      "utm_zone": 28,
+      "crs": "EPSG:32628",
+      "bounding_box": [
+        -17.5677,
+        14.6167,
+        -17.3677,
+        14.8167
+      ]
+    },
+    {
+      "scene_id": "LS_11",
+      "name": "Nairobi",
+      "country": "Kenya",
+      "continent": "Africa",
+      "lat": -1.2921,
+      "lon": 36.8219,
+      "sensor": "Landsat-8",
+      "date": "2024-01-08",
+      "native_gsd_m": 30.0,
+      "utm_zone": 37,
+      "crs": "EPSG:32737",
+      "bounding_box": [
+        36.7219,
+        -1.3921,
+        36.9219,
+        -1.1921
+      ]
+    },
+    {
+      "scene_id": "LS_12",
+      "name": "Windhoek",
+      "country": "Namibia",
+      "continent": "Africa",
+      "lat": -22.5609,
+      "lon": 17.0658,
+      "sensor": "Landsat-9",
+      "date": "2024-02-14",
+      "native_gsd_m": 30.0,
+      "utm_zone": 33,
+      "crs": "EPSG:32733",
+      "bounding_box": [
+        16.9658,
+        -22.6609,
+        17.1658,
+        -22.4609
+      ]
+    },
+    {
+      "scene_id": "LS_13",
+      "name": "Cairo",
+      "country": "Egypt",
+      "continent": "Africa",
+      "lat": 30.0444,
+      "lon": 31.2357,
+      "sensor": "Landsat-8",
+      "date": "2024-03-20",
+      "native_gsd_m": 30.0,
+      "utm_zone": 36,
+      "crs": "EPSG:32636",
+      "bounding_box": [
+        31.1357,
+        29.9444,
+        31.3357,
+        30.1444
+      ]
+    },
+    {
+      "scene_id": "LS_14",
+      "name": "Riyadh",
+      "country": "Saudi Arabia",
+      "continent": "Asia",
+      "lat": 24.7136,
+      "lon": 46.6753,
+      "sensor": "Landsat-9",
+      "date": "2024-04-25",
+      "native_gsd_m": 30.0,
+      "utm_zone": 38,
+      "crs": "EPSG:32638",
+      "bounding_box": [
+        46.5753,
+        24.6136,
+        46.7753,
+        24.8136
+      ]
+    },
+    {
+      "scene_id": "LS_15",
+      "name": "Almaty",
+      "country": "Kazakhstan",
+      "continent": "Asia",
+      "lat": 43.222,
+      "lon": 76.8512,
+      "sensor": "Landsat-8",
+      "date": "2024-05-30",
+      "native_gsd_m": 30.0,
+      "utm_zone": 43,
+      "crs": "EPSG:32643",
+      "bounding_box": [
+        76.7512,
+        43.122,
+        76.9512,
+        43.322
+      ]
+    },
+    {
+      "scene_id": "LS_16",
+      "name": "Hyderabad",
+      "country": "India",
+      "continent": "Asia",
+      "lat": 17.385,
+      "lon": 78.4867,
+      "sensor": "Landsat-9",
+      "date": "2024-07-05",
+      "native_gsd_m": 30.0,
+      "utm_zone": 44,
+      "crs": "EPSG:32644",
+      "bounding_box": [
+        78.3867,
+        17.285,
+        78.5867,
+        17.485
+      ]
+    },
+    {
+      "scene_id": "LS_17",
+      "name": "Ulaanbaatar",
+      "country": "Mongolia",
+      "continent": "Asia",
+      "lat": 47.8864,
+      "lon": 106.9057,
+      "sensor": "Landsat-8",
+      "date": "2024-08-10",
+      "native_gsd_m": 30.0,
+      "utm_zone": 48,
+      "crs": "EPSG:32648",
+      "bounding_box": [
+        106.8057,
+        47.7864,
+        107.0057,
+        47.9864
+      ]
+    },
+    {
+      "scene_id": "LS_18",
+      "name": "Sapporo",
+      "country": "Japan",
+      "continent": "Asia",
+      "lat": 43.0618,
+      "lon": 141.3545,
+      "sensor": "Landsat-9",
+      "date": "2024-09-15",
+      "native_gsd_m": 30.0,
+      "utm_zone": 54,
+      "crs": "EPSG:32654",
+      "bounding_box": [
+        141.2545,
+        42.9618,
+        141.4545,
+        43.1618
+      ]
+    },
+    {
+      "scene_id": "LS_19",
+      "name": "Alice Springs",
+      "country": "Australia",
+      "continent": "Oceania",
+      "lat": -23.698,
+      "lon": 133.8807,
+      "sensor": "Landsat-8",
+      "date": "2024-10-20",
+      "native_gsd_m": 30.0,
+      "utm_zone": 53,
+      "crs": "EPSG:32753",
+      "bounding_box": [
+        133.7807,
+        -23.798,
+        133.9807,
+        -23.598
+      ]
+    },
+    {
+      "scene_id": "LS_20",
+      "name": "Christchurch",
+      "country": "New Zealand",
+      "continent": "Oceania",
+      "lat": -43.5321,
+      "lon": 172.6362,
+      "sensor": "Landsat-9",
+      "date": "2024-11-25",
+      "native_gsd_m": 30.0,
+      "utm_zone": 59,
+      "crs": "EPSG:32759",
+      "bounding_box": [
+        172.5362,
+        -43.6321,
+        172.7362,
+        -43.4321
+      ]
+    },
+    {
+      "scene_id": "PS_01",
+      "name": "Phoenix",
+      "country": "USA",
+      "continent": "North America",
+      "lat": 33.4484,
+      "lon": -112.074,
+      "sensor": "PlanetScope",
+      "date": "2023-01-20",
+      "native_gsd_m": 3.0,
+      "utm_zone": 12,
+      "crs": "EPSG:32612",
+      "bounding_box": [
+        -112.174,
+        33.3484,
+        -111.974,
+        33.5484
+      ]
+    },
+    {
+      "scene_id": "PS_02",
+      "name": "Winnipeg",
+      "country": "Canada",
+      "continent": "North America",
+      "lat": 49.8951,
+      "lon": -97.1384,
+      "sensor": "PlanetScope",
+      "date": "2023-02-25",
+      "native_gsd_m": 3.0,
+      "utm_zone": 14,
+      "crs": "EPSG:32614",
+      "bounding_box": [
+        -97.2384,
+        49.7951,
+        -97.0384,
+        49.9951
+      ]
+    },
+    {
+      "scene_id": "PS_03",
+      "name": "Guadalajara",
+      "country": "Mexico",
+      "continent": "North America",
+      "lat": 20.6597,
+      "lon": -103.3496,
+      "sensor": "PlanetScope",
+      "date": "2023-03-30",
+      "native_gsd_m": 3.0,
+      "utm_zone": 13,
+      "crs": "EPSG:32613",
+      "bounding_box": [
+        -103.4496,
+        20.5597,
+        -103.2496,
+        20.7597
+      ]
+    },
+    {
+      "scene_id": "PS_04",
+      "name": "Lima",
+      "country": "Peru",
+      "continent": "South America",
+      "lat": -12.0464,
+      "lon": -77.0428,
+      "sensor": "PlanetScope",
+      "date": "2023-05-05",
+      "native_gsd_m": 3.0,
+      "utm_zone": 18,
+      "crs": "EPSG:32718",
+      "bounding_box": [
+        -77.1428,
+        -12.1464,
+        -76.9428,
+        -11.9464
+      ]
+    },
+    {
+      "scene_id": "PS_05",
+      "name": "Fortaleza",
+      "country": "Brazil",
+      "continent": "South America",
+      "lat": -3.7319,
+      "lon": -38.5267,
+      "sensor": "PlanetScope",
+      "date": "2023-06-10",
+      "native_gsd_m": 3.0,
+      "utm_zone": 24,
+      "crs": "EPSG:32724",
+      "bounding_box": [
+        -38.6267,
+        -3.8319,
+        -38.4267,
+        -3.6319
+      ]
+    },
+    {
+      "scene_id": "PS_06",
+      "name": "Santiago",
+      "country": "Chile",
+      "continent": "South America",
+      "lat": -33.4489,
+      "lon": -70.6693,
+      "sensor": "PlanetScope",
+      "date": "2023-07-16",
+      "native_gsd_m": 3.0,
+      "utm_zone": 19,
+      "crs": "EPSG:32719",
+      "bounding_box": [
+        -70.7693,
+        -33.5489,
+        -70.5693,
+        -33.3489
+      ]
+    },
+    {
+      "scene_id": "PS_07",
+      "name": "Lyon",
+      "country": "France",
+      "continent": "Europe",
+      "lat": 45.764,
+      "lon": 4.8357,
+      "sensor": "PlanetScope",
+      "date": "2023-08-22",
+      "native_gsd_m": 3.0,
+      "utm_zone": 31,
+      "crs": "EPSG:32631",
+      "bounding_box": [
+        4.7357,
+        45.664,
+        4.9357,
+        45.864
+      ]
+    },
+    {
+      "scene_id": "PS_08",
+      "name": "Munich",
+      "country": "Germany",
+      "continent": "Europe",
+      "lat": 48.1351,
+      "lon": 11.582,
+      "sensor": "PlanetScope",
+      "date": "2023-09-27",
+      "native_gsd_m": 3.0,
+      "utm_zone": 32,
+      "crs": "EPSG:32632",
+      "bounding_box": [
+        11.482,
+        48.0351,
+        11.682,
+        48.2351
+      ]
+    },
+    {
+      "scene_id": "PS_09",
+      "name": "Helsinki",
+      "country": "Finland",
+      "continent": "Europe",
+      "lat": 60.1699,
+      "lon": 24.9384,
+      "sensor": "PlanetScope",
+      "date": "2023-11-02",
+      "native_gsd_m": 3.0,
+      "utm_zone": 35,
+      "crs": "EPSG:32635",
+      "bounding_box": [
+        24.8384,
+        60.0699,
+        25.0384,
+        60.2699
+      ]
+    },
+    {
+      "scene_id": "PS_10",
+      "name": "Casablanca",
+      "country": "Morocco",
+      "continent": "Africa",
+      "lat": 33.5731,
+      "lon": -7.5898,
+      "sensor": "PlanetScope",
+      "date": "2023-12-08",
+      "native_gsd_m": 3.0,
+      "utm_zone": 29,
+      "crs": "EPSG:32629",
+      "bounding_box": [
+        -7.6898,
+        33.4731,
+        -7.4898,
+        33.6731
+      ]
+    },
+    {
+      "scene_id": "PS_11",
+      "name": "Addis Ababa",
+      "country": "Ethiopia",
+      "continent": "Africa",
+      "lat": 9.03,
+      "lon": 38.74,
+      "sensor": "PlanetScope",
+      "date": "2024-01-14",
+      "native_gsd_m": 3.0,
+      "utm_zone": 37,
+      "crs": "EPSG:32637",
+      "bounding_box": [
+        38.64,
+        8.93,
+        38.84,
+        9.13
+      ]
+    },
+    {
+      "scene_id": "PS_12",
+      "name": "Gaborone",
+      "country": "Botswana",
+      "continent": "Africa",
+      "lat": -24.6282,
+      "lon": 25.9231,
+      "sensor": "PlanetScope",
+      "date": "2024-02-19",
+      "native_gsd_m": 3.0,
+      "utm_zone": 35,
+      "crs": "EPSG:32735",
+      "bounding_box": [
+        25.8231,
+        -24.7282,
+        26.0231,
+        -24.5282
+      ]
+    },
+    {
+      "scene_id": "PS_13",
+      "name": "Tunis",
+      "country": "Tunisia",
+      "continent": "Africa",
+      "lat": 36.8065,
+      "lon": 10.1815,
+      "sensor": "PlanetScope",
+      "date": "2024-03-26",
+      "native_gsd_m": 3.0,
+      "utm_zone": 32,
+      "crs": "EPSG:32632",
+      "bounding_box": [
+        10.0815,
+        36.7065,
+        10.2815,
+        36.9065
+      ]
+    },
+    {
+      "scene_id": "PS_14",
+      "name": "Muscat",
+      "country": "Oman",
+      "continent": "Asia",
+      "lat": 23.588,
+      "lon": 58.3829,
+      "sensor": "PlanetScope",
+      "date": "2024-05-01",
+      "native_gsd_m": 3.0,
+      "utm_zone": 40,
+      "crs": "EPSG:32640",
+      "bounding_box": [
+        58.2829,
+        23.488,
+        58.4829,
+        23.688
+      ]
+    },
+    {
+      "scene_id": "PS_15",
+      "name": "Tashkent",
+      "country": "Uzbekistan",
+      "continent": "Asia",
+      "lat": 41.2995,
+      "lon": 69.2401,
+      "sensor": "PlanetScope",
+      "date": "2024-06-06",
+      "native_gsd_m": 3.0,
+      "utm_zone": 42,
+      "crs": "EPSG:32642",
+      "bounding_box": [
+        69.1401,
+        41.1995,
+        69.3401,
+        41.3995
+      ]
+    },
+    {
+      "scene_id": "PS_16",
+      "name": "Nagpur",
+      "country": "India",
+      "continent": "Asia",
+      "lat": 21.1458,
+      "lon": 79.0882,
+      "sensor": "PlanetScope",
+      "date": "2024-07-12",
+      "native_gsd_m": 3.0,
+      "utm_zone": 44,
+      "crs": "EPSG:32644",
+      "bounding_box": [
+        78.9882,
+        21.0458,
+        79.1882,
+        21.2458
+      ]
+    },
+    {
+      "scene_id": "PS_17",
+      "name": "Chengdu",
+      "country": "China",
+      "continent": "Asia",
+      "lat": 30.5728,
+      "lon": 104.0668,
+      "sensor": "PlanetScope",
+      "date": "2024-08-18",
+      "native_gsd_m": 3.0,
+      "utm_zone": 48,
+      "crs": "EPSG:32648",
+      "bounding_box": [
+        103.9668,
+        30.4728,
+        104.1668,
+        30.6728
+      ]
+    },
+    {
+      "scene_id": "PS_18",
+      "name": "Fukuoka",
+      "country": "Japan",
+      "continent": "Asia",
+      "lat": 33.5902,
+      "lon": 130.4017,
+      "sensor": "PlanetScope",
+      "date": "2024-09-23",
+      "native_gsd_m": 3.0,
+      "utm_zone": 52,
+      "crs": "EPSG:32652",
+      "bounding_box": [
+        130.3017,
+        33.4902,
+        130.5017,
+        33.6902
+      ]
+    },
+    {
+      "scene_id": "PS_19",
+      "name": "Darwin",
+      "country": "Australia",
+      "continent": "Oceania",
+      "lat": -12.4634,
+      "lon": 130.8456,
+      "sensor": "PlanetScope",
+      "date": "2024-10-29",
+      "native_gsd_m": 3.0,
+      "utm_zone": 52,
+      "crs": "EPSG:32752",
+      "bounding_box": [
+        130.7456,
+        -12.5634,
+        130.9456,
+        -12.3634
+      ]
+    },
+    {
+      "scene_id": "PS_20",
+      "name": "Suva",
+      "country": "Fiji",
+      "continent": "Oceania",
+      "lat": -18.1248,
+      "lon": 178.4501,
+      "sensor": "PlanetScope",
+      "date": "2024-12-04",
+      "native_gsd_m": 3.0,
+      "utm_zone": 60,
+      "crs": "EPSG:32760",
+      "bounding_box": [
+        178.3501,
+        -18.2248,
+        178.5501,
+        -18.0248
+      ]
+    },
+    {
+      "scene_id": "S2C_LC_01",
+      "name": "Austin",
+      "country": "USA",
+      "continent": "North America",
+      "lat": 30.2672,
+      "lon": -97.7431,
+      "sensor": "Sentinel-2A",
+      "date": "2023-01-25",
+      "native_gsd_m": 10.0,
+      "utm_zone": 14,
+      "crs": "EPSG:32614",
+      "bounding_box": [
+        -97.8431,
+        30.1672,
+        -97.6431,
+        30.3672
+      ]
+    },
+    {
+      "scene_id": "S2C_LC_02",
+      "name": "Edmonton",
+      "country": "Canada",
+      "continent": "North America",
+      "lat": 53.5461,
+      "lon": -113.4938,
+      "sensor": "Sentinel-2B",
+      "date": "2023-03-02",
+      "native_gsd_m": 10.0,
+      "utm_zone": 12,
+      "crs": "EPSG:32612",
+      "bounding_box": [
+        -113.5938,
+        53.4461,
+        -113.3938,
+        53.6461
+      ]
+    },
+    {
+      "scene_id": "S2C_LC_03",
+      "name": "Cordoba",
+      "country": "Argentina",
+      "continent": "South America",
+      "lat": -31.4201,
+      "lon": -64.1888,
+      "sensor": "Sentinel-2A",
+      "date": "2023-04-10",
+      "native_gsd_m": 10.0,
+      "utm_zone": 20,
+      "crs": "EPSG:32720",
+      "bounding_box": [
+        -64.2888,
+        -31.5201,
+        -64.0888,
+        -31.3201
+      ]
+    },
+    {
+      "scene_id": "S2C_LC_04",
+      "name": "Seville",
+      "country": "Spain",
+      "continent": "Europe",
+      "lat": 37.3891,
+      "lon": -5.9845,
+      "sensor": "Sentinel-2B",
+      "date": "2023-05-18",
+      "native_gsd_m": 10.0,
+      "utm_zone": 30,
+      "crs": "EPSG:32630",
+      "bounding_box": [
+        -6.0845,
+        37.2891,
+        -5.8845,
+        37.4891
+      ]
+    },
+    {
+      "scene_id": "S2C_LC_05",
+      "name": "Poznan",
+      "country": "Poland",
+      "continent": "Europe",
+      "lat": 52.4064,
+      "lon": 16.9252,
+      "sensor": "Sentinel-2A",
+      "date": "2023-06-25",
+      "native_gsd_m": 10.0,
+      "utm_zone": 33,
+      "crs": "EPSG:32633",
+      "bounding_box": [
+        16.8252,
+        52.3064,
+        17.0252,
+        52.5064
+      ]
+    },
+    {
+      "scene_id": "S2C_LC_06",
+      "name": "Cape Town",
+      "country": "South Africa",
+      "continent": "Africa",
+      "lat": -33.9249,
+      "lon": 18.4241,
+      "sensor": "Sentinel-2B",
+      "date": "2023-08-01",
+      "native_gsd_m": 10.0,
+      "utm_zone": 34,
+      "crs": "EPSG:32734",
+      "bounding_box": [
+        18.3241,
+        -34.0249,
+        18.5241,
+        -33.8249
+      ]
+    },
+    {
+      "scene_id": "S2C_LC_07",
+      "name": "Accra",
+      "country": "Ghana",
+      "continent": "Africa",
+      "lat": 5.6037,
+      "lon": -0.187,
+      "sensor": "Sentinel-2A",
+      "date": "2023-09-08",
+      "native_gsd_m": 10.0,
+      "utm_zone": 30,
+      "crs": "EPSG:32630",
+      "bounding_box": [
+        -0.287,
+        5.5037,
+        -0.087,
+        5.7037
+      ]
+    },
+    {
+      "scene_id": "S2C_LC_08",
+      "name": "Jaipur",
+      "country": "India",
+      "continent": "Asia",
+      "lat": 26.9124,
+      "lon": 75.7873,
+      "sensor": "Sentinel-2B",
+      "date": "2023-10-15",
+      "native_gsd_m": 10.0,
+      "utm_zone": 43,
+      "crs": "EPSG:32643",
+      "bounding_box": [
+        75.6873,
+        26.8124,
+        75.8873,
+        27.0124
+      ]
+    },
+    {
+      "scene_id": "S2C_LC_09",
+      "name": "Wuhan",
+      "country": "China",
+      "continent": "Asia",
+      "lat": 30.5928,
+      "lon": 114.3055,
+      "sensor": "Sentinel-2A",
+      "date": "2023-11-22",
+      "native_gsd_m": 10.0,
+      "utm_zone": 50,
+      "crs": "EPSG:32650",
+      "bounding_box": [
+        114.2055,
+        30.4928,
+        114.4055,
+        30.6928
+      ]
+    },
+    {
+      "scene_id": "S2C_LC_10",
+      "name": "Brisbane",
+      "country": "Australia",
+      "continent": "Oceania",
+      "lat": -27.4698,
+      "lon": 153.0251,
+      "sensor": "Sentinel-2B",
+      "date": "2023-12-30",
+      "native_gsd_m": 10.0,
+      "utm_zone": 56,
+      "crs": "EPSG:32756",
+      "bounding_box": [
+        152.9251,
+        -27.5698,
+        153.1251,
+        -27.3698
+      ]
+    },
+    {
+      "scene_id": "S2C_CD_01",
+      "name": "Montreal",
+      "country": "Canada",
+      "continent": "North America",
+      "lat": 45.5017,
+      "lon": -73.5673,
+      "sensor": "Sentinel-2A",
+      "date": "2023-02-05",
+      "native_gsd_m": 10.0,
+      "utm_zone": 18,
+      "crs": "EPSG:32618",
+      "bounding_box": [
+        -73.6673,
+        45.4017,
+        -73.4673,
+        45.6017
+      ]
+    },
+    {
+      "scene_id": "S2C_CD_02",
+      "name": "Mexico City",
+      "country": "Mexico",
+      "continent": "North America",
+      "lat": 19.4326,
+      "lon": -99.1332,
+      "sensor": "Sentinel-2B",
+      "date": "2023-03-12",
+      "native_gsd_m": 10.0,
+      "utm_zone": 14,
+      "crs": "EPSG:32614",
+      "bounding_box": [
+        -99.2332,
+        19.3326,
+        -99.0332,
+        19.5326
+      ]
+    },
+    {
+      "scene_id": "S2C_CD_03",
+      "name": "Belo Horizonte",
+      "country": "Brazil",
+      "continent": "South America",
+      "lat": -19.9167,
+      "lon": -43.9345,
+      "sensor": "Sentinel-2A",
+      "date": "2023-04-20",
+      "native_gsd_m": 10.0,
+      "utm_zone": 23,
+      "crs": "EPSG:32723",
+      "bounding_box": [
+        -44.0345,
+        -20.0167,
+        -43.8345,
+        -19.8167
+      ]
+    },
+    {
+      "scene_id": "S2C_CD_04",
+      "name": "Bordeaux",
+      "country": "France",
+      "continent": "Europe",
+      "lat": 44.8378,
+      "lon": -0.5792,
+      "sensor": "Sentinel-2B",
+      "date": "2023-05-28",
+      "native_gsd_m": 10.0,
+      "utm_zone": 30,
+      "crs": "EPSG:32630",
+      "bounding_box": [
+        -0.6792,
+        44.7378,
+        -0.4792,
+        44.9378
+      ]
+    },
+    {
+      "scene_id": "S2C_CD_05",
+      "name": "Gothenburg",
+      "country": "Sweden",
+      "continent": "Europe",
+      "lat": 57.7089,
+      "lon": 11.9746,
+      "sensor": "Sentinel-2A",
+      "date": "2023-07-04",
+      "native_gsd_m": 10.0,
+      "utm_zone": 32,
+      "crs": "EPSG:32632",
+      "bounding_box": [
+        11.8746,
+        57.6089,
+        12.0746,
+        57.8089
+      ]
+    },
+    {
+      "scene_id": "S2C_CD_06",
+      "name": "Durban",
+      "country": "South Africa",
+      "continent": "Africa",
+      "lat": -29.8587,
+      "lon": 31.0218,
+      "sensor": "Sentinel-2B",
+      "date": "2023-08-12",
+      "native_gsd_m": 10.0,
+      "utm_zone": 36,
+      "crs": "EPSG:32736",
+      "bounding_box": [
+        30.9218,
+        -29.9587,
+        31.1218,
+        -29.7587
+      ]
+    },
+    {
+      "scene_id": "S2C_CD_07",
+      "name": "Kampala",
+      "country": "Uganda",
+      "continent": "Africa",
+      "lat": 0.3476,
+      "lon": 32.5825,
+      "sensor": "Sentinel-2A",
+      "date": "2023-09-20",
+      "native_gsd_m": 10.0,
+      "utm_zone": 36,
+      "crs": "EPSG:32636",
+      "bounding_box": [
+        32.4825,
+        0.2476,
+        32.6825,
+        0.4476
+      ]
+    },
+    {
+      "scene_id": "S2C_CD_08",
+      "name": "Pune",
+      "country": "India",
+      "continent": "Asia",
+      "lat": 18.5204,
+      "lon": 73.8567,
+      "sensor": "Sentinel-2B",
+      "date": "2023-10-29",
+      "native_gsd_m": 10.0,
+      "utm_zone": 43,
+      "crs": "EPSG:32643",
+      "bounding_box": [
+        73.7567,
+        18.4204,
+        73.9567,
+        18.6204
+      ]
+    },
+    {
+      "scene_id": "S2C_CD_09",
+      "name": "Sendai",
+      "country": "Japan",
+      "continent": "Asia",
+      "lat": 38.2682,
+      "lon": 140.8694,
+      "sensor": "Sentinel-2A",
+      "date": "2023-12-05",
+      "native_gsd_m": 10.0,
+      "utm_zone": 54,
+      "crs": "EPSG:32654",
+      "bounding_box": [
+        140.7694,
+        38.1682,
+        140.9694,
+        38.3682
+      ]
+    },
+    {
+      "scene_id": "S2C_CD_10",
+      "name": "Adelaide",
+      "country": "Australia",
+      "continent": "Oceania",
+      "lat": -34.9285,
+      "lon": 138.6007,
+      "sensor": "Sentinel-2B",
+      "date": "2024-01-12",
+      "native_gsd_m": 10.0,
+      "utm_zone": 54,
+      "crs": "EPSG:32754",
+      "bounding_box": [
+        138.5007,
+        -35.0285,
+        138.7007,
+        -34.8285
+      ]
+    }
+  ],
+  "evaluation_payloads": [
+    {
+      "payload_id": "LS_01_PAYLOAD_A",
+      "source_scene_id": "LS_01",
+      "sensor": "Landsat-8",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32613"
+    },
+    {
+      "payload_id": "LS_01_PAYLOAD_B",
+      "source_scene_id": "LS_01",
+      "sensor": "Landsat-8",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32613"
+    },
+    {
+      "payload_id": "LS_02_PAYLOAD_A",
+      "source_scene_id": "LS_02",
+      "sensor": "Landsat-9",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32611"
+    },
+    {
+      "payload_id": "LS_02_PAYLOAD_B",
+      "source_scene_id": "LS_02",
+      "sensor": "Landsat-9",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32611"
+    },
+    {
+      "payload_id": "LS_03_PAYLOAD_A",
+      "source_scene_id": "LS_03",
+      "sensor": "Landsat-8",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32612"
+    },
+    {
+      "payload_id": "LS_03_PAYLOAD_B",
+      "source_scene_id": "LS_03",
+      "sensor": "Landsat-8",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32612"
+    },
+    {
+      "payload_id": "LS_04_PAYLOAD_A",
+      "source_scene_id": "LS_04",
+      "sensor": "Landsat-9",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32618"
+    },
+    {
+      "payload_id": "LS_04_PAYLOAD_B",
+      "source_scene_id": "LS_04",
+      "sensor": "Landsat-9",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32618"
+    },
+    {
+      "payload_id": "LS_05_PAYLOAD_A",
+      "source_scene_id": "LS_05",
+      "sensor": "Landsat-8",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32723"
+    },
+    {
+      "payload_id": "LS_05_PAYLOAD_B",
+      "source_scene_id": "LS_05",
+      "sensor": "Landsat-8",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32723"
+    },
+    {
+      "payload_id": "LS_06_PAYLOAD_A",
+      "source_scene_id": "LS_06",
+      "sensor": "Landsat-9",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32719"
+    },
+    {
+      "payload_id": "LS_06_PAYLOAD_B",
+      "source_scene_id": "LS_06",
+      "sensor": "Landsat-9",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32719"
+    },
+    {
+      "payload_id": "LS_07_PAYLOAD_A",
+      "source_scene_id": "LS_07",
+      "sensor": "Landsat-8",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32630"
+    },
+    {
+      "payload_id": "LS_07_PAYLOAD_B",
+      "source_scene_id": "LS_07",
+      "sensor": "Landsat-8",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32630"
+    },
+    {
+      "payload_id": "LS_08_PAYLOAD_A",
+      "source_scene_id": "LS_08",
+      "sensor": "Landsat-9",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32634"
+    },
+    {
+      "payload_id": "LS_08_PAYLOAD_B",
+      "source_scene_id": "LS_08",
+      "sensor": "Landsat-9",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32634"
+    },
+    {
+      "payload_id": "LS_09_PAYLOAD_A",
+      "source_scene_id": "LS_09",
+      "sensor": "Landsat-8",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32634"
+    },
+    {
+      "payload_id": "LS_09_PAYLOAD_B",
+      "source_scene_id": "LS_09",
+      "sensor": "Landsat-8",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32634"
+    },
+    {
+      "payload_id": "LS_10_PAYLOAD_A",
+      "source_scene_id": "LS_10",
+      "sensor": "Landsat-9",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32628"
+    },
+    {
+      "payload_id": "LS_10_PAYLOAD_B",
+      "source_scene_id": "LS_10",
+      "sensor": "Landsat-9",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32628"
+    },
+    {
+      "payload_id": "LS_11_PAYLOAD_A",
+      "source_scene_id": "LS_11",
+      "sensor": "Landsat-8",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32737"
+    },
+    {
+      "payload_id": "LS_11_PAYLOAD_B",
+      "source_scene_id": "LS_11",
+      "sensor": "Landsat-8",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32737"
+    },
+    {
+      "payload_id": "LS_12_PAYLOAD_A",
+      "source_scene_id": "LS_12",
+      "sensor": "Landsat-9",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32733"
+    },
+    {
+      "payload_id": "LS_12_PAYLOAD_B",
+      "source_scene_id": "LS_12",
+      "sensor": "Landsat-9",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32733"
+    },
+    {
+      "payload_id": "LS_13_PAYLOAD_A",
+      "source_scene_id": "LS_13",
+      "sensor": "Landsat-8",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32636"
+    },
+    {
+      "payload_id": "LS_13_PAYLOAD_B",
+      "source_scene_id": "LS_13",
+      "sensor": "Landsat-8",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32636"
+    },
+    {
+      "payload_id": "LS_14_PAYLOAD_A",
+      "source_scene_id": "LS_14",
+      "sensor": "Landsat-9",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32638"
+    },
+    {
+      "payload_id": "LS_14_PAYLOAD_B",
+      "source_scene_id": "LS_14",
+      "sensor": "Landsat-9",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32638"
+    },
+    {
+      "payload_id": "LS_15_PAYLOAD_A",
+      "source_scene_id": "LS_15",
+      "sensor": "Landsat-8",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32643"
+    },
+    {
+      "payload_id": "LS_15_PAYLOAD_B",
+      "source_scene_id": "LS_15",
+      "sensor": "Landsat-8",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32643"
+    },
+    {
+      "payload_id": "LS_16_PAYLOAD_A",
+      "source_scene_id": "LS_16",
+      "sensor": "Landsat-9",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32644"
+    },
+    {
+      "payload_id": "LS_16_PAYLOAD_B",
+      "source_scene_id": "LS_16",
+      "sensor": "Landsat-9",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32644"
+    },
+    {
+      "payload_id": "LS_17_PAYLOAD_A",
+      "source_scene_id": "LS_17",
+      "sensor": "Landsat-8",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32648"
+    },
+    {
+      "payload_id": "LS_17_PAYLOAD_B",
+      "source_scene_id": "LS_17",
+      "sensor": "Landsat-8",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32648"
+    },
+    {
+      "payload_id": "LS_18_PAYLOAD_A",
+      "source_scene_id": "LS_18",
+      "sensor": "Landsat-9",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32654"
+    },
+    {
+      "payload_id": "LS_18_PAYLOAD_B",
+      "source_scene_id": "LS_18",
+      "sensor": "Landsat-9",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32654"
+    },
+    {
+      "payload_id": "LS_19_PAYLOAD_A",
+      "source_scene_id": "LS_19",
+      "sensor": "Landsat-8",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32753"
+    },
+    {
+      "payload_id": "LS_19_PAYLOAD_B",
+      "source_scene_id": "LS_19",
+      "sensor": "Landsat-8",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32753"
+    },
+    {
+      "payload_id": "LS_20_PAYLOAD_A",
+      "source_scene_id": "LS_20",
+      "sensor": "Landsat-9",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 30.0,
+      "spectral_bands": [
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32759"
+    },
+    {
+      "payload_id": "LS_20_PAYLOAD_B",
+      "source_scene_id": "LS_20",
+      "sensor": "Landsat-9",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "SR_B1",
+        "SR_B2",
+        "SR_B3",
+        "SR_B4",
+        "SR_B5",
+        "SR_B6",
+        "SR_B7"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32759"
+    },
+    {
+      "payload_id": "PS_01_PAYLOAD_A",
+      "source_scene_id": "PS_01",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32612",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_01_PAYLOAD_B",
+      "source_scene_id": "PS_01",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32612"
+    },
+    {
+      "payload_id": "PS_02_PAYLOAD_A",
+      "source_scene_id": "PS_02",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32614",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_02_PAYLOAD_B",
+      "source_scene_id": "PS_02",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32614"
+    },
+    {
+      "payload_id": "PS_03_PAYLOAD_A",
+      "source_scene_id": "PS_03",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32613",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_03_PAYLOAD_B",
+      "source_scene_id": "PS_03",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32613"
+    },
+    {
+      "payload_id": "PS_04_PAYLOAD_A",
+      "source_scene_id": "PS_04",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32718",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_04_PAYLOAD_B",
+      "source_scene_id": "PS_04",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32718"
+    },
+    {
+      "payload_id": "PS_05_PAYLOAD_A",
+      "source_scene_id": "PS_05",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32724",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_05_PAYLOAD_B",
+      "source_scene_id": "PS_05",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32724"
+    },
+    {
+      "payload_id": "PS_06_PAYLOAD_A",
+      "source_scene_id": "PS_06",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32719",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_06_PAYLOAD_B",
+      "source_scene_id": "PS_06",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32719"
+    },
+    {
+      "payload_id": "PS_07_PAYLOAD_A",
+      "source_scene_id": "PS_07",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32631",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_07_PAYLOAD_B",
+      "source_scene_id": "PS_07",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32631"
+    },
+    {
+      "payload_id": "PS_08_PAYLOAD_A",
+      "source_scene_id": "PS_08",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32632",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_08_PAYLOAD_B",
+      "source_scene_id": "PS_08",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32632"
+    },
+    {
+      "payload_id": "PS_09_PAYLOAD_A",
+      "source_scene_id": "PS_09",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32635",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_09_PAYLOAD_B",
+      "source_scene_id": "PS_09",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32635"
+    },
+    {
+      "payload_id": "PS_10_PAYLOAD_A",
+      "source_scene_id": "PS_10",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32629",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_10_PAYLOAD_B",
+      "source_scene_id": "PS_10",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32629"
+    },
+    {
+      "payload_id": "PS_11_PAYLOAD_A",
+      "source_scene_id": "PS_11",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32637",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_11_PAYLOAD_B",
+      "source_scene_id": "PS_11",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32637"
+    },
+    {
+      "payload_id": "PS_12_PAYLOAD_A",
+      "source_scene_id": "PS_12",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32735",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_12_PAYLOAD_B",
+      "source_scene_id": "PS_12",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32735"
+    },
+    {
+      "payload_id": "PS_13_PAYLOAD_A",
+      "source_scene_id": "PS_13",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32632",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_13_PAYLOAD_B",
+      "source_scene_id": "PS_13",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32632"
+    },
+    {
+      "payload_id": "PS_14_PAYLOAD_A",
+      "source_scene_id": "PS_14",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32640",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_14_PAYLOAD_B",
+      "source_scene_id": "PS_14",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32640"
+    },
+    {
+      "payload_id": "PS_15_PAYLOAD_A",
+      "source_scene_id": "PS_15",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32642",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_15_PAYLOAD_B",
+      "source_scene_id": "PS_15",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32642"
+    },
+    {
+      "payload_id": "PS_16_PAYLOAD_A",
+      "source_scene_id": "PS_16",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32644",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_16_PAYLOAD_B",
+      "source_scene_id": "PS_16",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32644"
+    },
+    {
+      "payload_id": "PS_17_PAYLOAD_A",
+      "source_scene_id": "PS_17",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32648",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_17_PAYLOAD_B",
+      "source_scene_id": "PS_17",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32648"
+    },
+    {
+      "payload_id": "PS_18_PAYLOAD_A",
+      "source_scene_id": "PS_18",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32652",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_18_PAYLOAD_B",
+      "source_scene_id": "PS_18",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32652"
+    },
+    {
+      "payload_id": "PS_19_PAYLOAD_A",
+      "source_scene_id": "PS_19",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32752",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_19_PAYLOAD_B",
+      "source_scene_id": "PS_19",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32752"
+    },
+    {
+      "payload_id": "PS_20_PAYLOAD_A",
+      "source_scene_id": "PS_20",
+      "sensor": "PlanetScope",
+      "stress_type": "RESOLUTION_STRESS",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 3.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_RESOLUTION_INCOMPATIBLE"
+      ],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32760",
+      "temporal_gap_days": 45.0
+    },
+    {
+      "payload_id": "PS_20_PAYLOAD_B",
+      "source_scene_id": "PS_20",
+      "sensor": "PlanetScope",
+      "stress_type": "MODALITY_SPECTRAL_STRESS",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "blue",
+        "green",
+        "red",
+        "nir"
+      ],
+      "is_valid_payload": false,
+      "expected_failure_codes": [
+        "ERR_INSUFFICIENT_BANDS"
+      ],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32760"
+    },
+    {
+      "payload_id": "S2C_LC_01_CONTROL",
+      "source_scene_id": "S2C_LC_01",
+      "sensor": "Sentinel-2A",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12",
+        "VH",
+        "VV"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32614",
+      "cloud_fraction": 0.05
+    },
+    {
+      "payload_id": "S2C_LC_02_CONTROL",
+      "source_scene_id": "S2C_LC_02",
+      "sensor": "Sentinel-2B",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12",
+        "VH",
+        "VV"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32612",
+      "cloud_fraction": 0.05
+    },
+    {
+      "payload_id": "S2C_LC_03_CONTROL",
+      "source_scene_id": "S2C_LC_03",
+      "sensor": "Sentinel-2A",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12",
+        "VH",
+        "VV"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32720",
+      "cloud_fraction": 0.05
+    },
+    {
+      "payload_id": "S2C_LC_04_CONTROL",
+      "source_scene_id": "S2C_LC_04",
+      "sensor": "Sentinel-2B",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12",
+        "VH",
+        "VV"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32630",
+      "cloud_fraction": 0.05
+    },
+    {
+      "payload_id": "S2C_LC_05_CONTROL",
+      "source_scene_id": "S2C_LC_05",
+      "sensor": "Sentinel-2A",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12",
+        "VH",
+        "VV"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32633",
+      "cloud_fraction": 0.05
+    },
+    {
+      "payload_id": "S2C_LC_06_CONTROL",
+      "source_scene_id": "S2C_LC_06",
+      "sensor": "Sentinel-2B",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12",
+        "VH",
+        "VV"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32734",
+      "cloud_fraction": 0.05
+    },
+    {
+      "payload_id": "S2C_LC_07_CONTROL",
+      "source_scene_id": "S2C_LC_07",
+      "sensor": "Sentinel-2A",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12",
+        "VH",
+        "VV"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32630",
+      "cloud_fraction": 0.05
+    },
+    {
+      "payload_id": "S2C_LC_08_CONTROL",
+      "source_scene_id": "S2C_LC_08",
+      "sensor": "Sentinel-2B",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12",
+        "VH",
+        "VV"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32643",
+      "cloud_fraction": 0.05
+    },
+    {
+      "payload_id": "S2C_LC_09_CONTROL",
+      "source_scene_id": "S2C_LC_09",
+      "sensor": "Sentinel-2A",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12",
+        "VH",
+        "VV"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32650",
+      "cloud_fraction": 0.05
+    },
+    {
+      "payload_id": "S2C_LC_10_CONTROL",
+      "source_scene_id": "S2C_LC_10",
+      "sensor": "Sentinel-2B",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "LAND_COVER_CLASSIFICATION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B06",
+        "B07",
+        "B08",
+        "B8A",
+        "B11",
+        "B12",
+        "VH",
+        "VV"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        120,
+        120
+      ],
+      "crs": "EPSG:32756",
+      "cloud_fraction": 0.05
+    },
+    {
+      "payload_id": "S2C_CD_01_CONTROL",
+      "source_scene_id": "S2C_CD_01",
+      "sensor": "Sentinel-2A",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32618",
+      "temporal_gap_days": 180.0,
+      "cloud_fraction": 0.03
+    },
+    {
+      "payload_id": "S2C_CD_02_CONTROL",
+      "source_scene_id": "S2C_CD_02",
+      "sensor": "Sentinel-2B",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32614",
+      "temporal_gap_days": 180.0,
+      "cloud_fraction": 0.03
+    },
+    {
+      "payload_id": "S2C_CD_03_CONTROL",
+      "source_scene_id": "S2C_CD_03",
+      "sensor": "Sentinel-2A",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32723",
+      "temporal_gap_days": 180.0,
+      "cloud_fraction": 0.03
+    },
+    {
+      "payload_id": "S2C_CD_04_CONTROL",
+      "source_scene_id": "S2C_CD_04",
+      "sensor": "Sentinel-2B",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32630",
+      "temporal_gap_days": 180.0,
+      "cloud_fraction": 0.03
+    },
+    {
+      "payload_id": "S2C_CD_05_CONTROL",
+      "source_scene_id": "S2C_CD_05",
+      "sensor": "Sentinel-2A",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32632",
+      "temporal_gap_days": 180.0,
+      "cloud_fraction": 0.03
+    },
+    {
+      "payload_id": "S2C_CD_06_CONTROL",
+      "source_scene_id": "S2C_CD_06",
+      "sensor": "Sentinel-2B",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32736",
+      "temporal_gap_days": 180.0,
+      "cloud_fraction": 0.03
+    },
+    {
+      "payload_id": "S2C_CD_07_CONTROL",
+      "source_scene_id": "S2C_CD_07",
+      "sensor": "Sentinel-2A",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32636",
+      "temporal_gap_days": 180.0,
+      "cloud_fraction": 0.03
+    },
+    {
+      "payload_id": "S2C_CD_08_CONTROL",
+      "source_scene_id": "S2C_CD_08",
+      "sensor": "Sentinel-2B",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32643",
+      "temporal_gap_days": 180.0,
+      "cloud_fraction": 0.03
+    },
+    {
+      "payload_id": "S2C_CD_09_CONTROL",
+      "source_scene_id": "S2C_CD_09",
+      "sensor": "Sentinel-2A",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32654",
+      "temporal_gap_days": 180.0,
+      "cloud_fraction": 0.03
+    },
+    {
+      "payload_id": "S2C_CD_10_CONTROL",
+      "source_scene_id": "S2C_CD_10",
+      "sensor": "Sentinel-2B",
+      "stress_type": "CONTROL_VALID",
+      "target_task": "CHANGE_DETECTION",
+      "gsd_m": 10.0,
+      "spectral_bands": [
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "is_valid_payload": true,
+      "expected_failure_codes": [],
+      "spatial_shape": [
+        256,
+        256
+      ],
+      "crs": "EPSG:32754",
+      "temporal_gap_days": 180.0,
+      "cloud_fraction": 0.03
+    }
+  ]
+}

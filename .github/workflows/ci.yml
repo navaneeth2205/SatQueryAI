@@ -1,0 +1,270 @@
+name: SatQuery AI CI/CD Release Validation
+
+'on':
+  push:
+    branches:
+      - main
+      - master
+      - "feature/**"
+    tags:
+      - "v*"
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+env:
+  PYTHONUNBUFFERED: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  SATQUERY_RELEASE_TAG: "v1.0.0-rc1"
+  SATQUERY_BUNDLE_SHA256: "97fa1b6d79245a4da92bfd8991d82a3f214adf56a26a5e0355bb2593196bd5c0"
+  SATQUERY_BUNDLE_NAME: "satquery-production-artifacts-v1.0.0-rc1.tar.gz"
+
+jobs:
+  # =========================================================================
+  # 1. Cryptographic Artifact Integrity Audit
+  # =========================================================================
+  verify-artifacts:
+    name: "1. Cryptographic Artifact Integrity Audit"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Restore Frozen Production Artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p "${RUNNER_TEMP}/dist_bundle"
+          if [ -f "dist_bundle/${SATQUERY_BUNDLE_NAME}" ]; then
+            echo "Using pre-staged dist_bundle/${SATQUERY_BUNDLE_NAME}"
+            ARCHIVE_PATH="dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          else
+            echo "Fetching ${SATQUERY_BUNDLE_NAME} from GitHub Release ${SATQUERY_RELEASE_TAG}..."
+            gh release download "${SATQUERY_RELEASE_TAG}" \
+              --pattern "${SATQUERY_BUNDLE_NAME}*" \
+              --dir "${RUNNER_TEMP}/dist_bundle"
+            ARCHIVE_PATH="${RUNNER_TEMP}/dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          fi
+          python scripts/restore_production_bundle.py \
+            --archive "${ARCHIVE_PATH}" \
+            --expected-sha256 "${SATQUERY_BUNDLE_SHA256}" \
+            --dest .
+
+      - name: Install CPU PyTorch and runtime dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt
+          pip install --no-deps -e .
+
+      - name: Verify 13 Production Assets against Freeze Manifest
+        run: |
+          python -m satquery.cli verify --json-output > "${RUNNER_TEMP}/artifact_verification.json"
+          cat "${RUNNER_TEMP}/artifact_verification.json"
+          python -c "import json, os; data = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'artifact_verification.json'))); assert data['all_artifacts_intact'] is True, 'Cryptographic manifest check failed!'"
+
+      - name: Check Working Tree Immutability
+        run: |
+          git checkout -- requirements.txt pyproject.toml data/starter_queries.csv 2>/dev/null || true
+          git status --porcelain
+          test -z "$(git status --porcelain)" || (echo "Working tree modified during verification!" && exit 1)
+
+  # =========================================================================
+  # 2. Dual-Runtime Regression Test Suite
+  # =========================================================================
+  test-suite:
+    name: "2. Test Suite (${{ matrix.python-version }})"
+    needs: verify-artifacts
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+        include:
+          - python-version: "3.14"
+            experimental: true
+    continue-on-error: ${{ matrix.experimental || false }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Restore Frozen Production Artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p "${RUNNER_TEMP}/dist_bundle"
+          if [ -f "dist_bundle/${SATQUERY_BUNDLE_NAME}" ]; then
+            echo "Using pre-staged dist_bundle/${SATQUERY_BUNDLE_NAME}"
+            ARCHIVE_PATH="dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          else
+            echo "Fetching ${SATQUERY_BUNDLE_NAME} from GitHub Release ${SATQUERY_RELEASE_TAG}..."
+            gh release download "${SATQUERY_RELEASE_TAG}" \
+              --pattern "${SATQUERY_BUNDLE_NAME}*" \
+              --dir "${RUNNER_TEMP}/dist_bundle"
+            ARCHIVE_PATH="${RUNNER_TEMP}/dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          fi
+          python scripts/restore_production_bundle.py \
+            --archive "${ARCHIVE_PATH}" \
+            --expected-sha256 "${SATQUERY_BUNDLE_SHA256}" \
+            --dest .
+
+      - name: Install CPU PyTorch and dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+          pip install -r requirements.txt seaborn
+          pip install --no-deps -e .
+
+      - name: Verify Cryptographic Artifact Manifest (Pre-Test)
+        run: |
+          python -m satquery.cli verify --json-output > "${RUNNER_TEMP}/pre_test_verification.json"
+          python -c "import json, os; data = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'pre_test_verification.json'))); assert data['all_artifacts_intact'] is True, 'Pre-test manifest check failed!'"
+
+      - name: Execute Core Integration & Packaging Contracts (30 Tests)
+        run: |
+          pytest tests/test_step4_multi_specialist_integration.py \
+                 tests/test_m33_selective_routing.py \
+                 tests/test_predict_cli.py \
+                 tests/test_cli_packaging.py -v
+
+      - name: Execute Full Repository Regression Suite (181 Tests)
+        run: |
+          pytest tests/ -v --junitxml="${RUNNER_TEMP}/junit-results-${{ matrix.python-version }}.xml"
+
+      - name: Verify Cryptographic Artifact Manifest (Post-Test Immutability Check)
+        run: |
+          python -m satquery.cli verify --json-output > "${RUNNER_TEMP}/post_test_verification.json"
+          python -c "import json, os; data = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'post_test_verification.json'))); assert data['all_artifacts_intact'] is True, 'CRITICAL: Test suite modified production artifacts!'"
+
+      - name: Verify Working Tree Immutability
+        run: |
+          git checkout -- requirements.txt pyproject.toml data/starter_queries.csv 2>/dev/null || true
+          git status --porcelain
+          test -z "$(git status --porcelain)" || (echo "Test suite created untracked or modified files!" && exit 1)
+
+      - name: Upload Test Results XML
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ matrix.python-version }}
+          path: ${{ runner.temp }}/junit-results-${{ matrix.python-version }}.xml
+
+  # =========================================================================
+  # 3. Docker Packaging & Live Runtime Validation
+  # =========================================================================
+  docker-validation:
+    name: "3. Docker Packaging & Live Container Inference"
+    needs: verify-artifacts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python for Artifact Restoration
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Restore Frozen Production Artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p "${RUNNER_TEMP}/dist_bundle"
+          if [ -f "dist_bundle/${SATQUERY_BUNDLE_NAME}" ]; then
+            echo "Using pre-staged dist_bundle/${SATQUERY_BUNDLE_NAME}"
+            ARCHIVE_PATH="dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          else
+            echo "Fetching ${SATQUERY_BUNDLE_NAME} from GitHub Release ${SATQUERY_RELEASE_TAG}..."
+            gh release download "${SATQUERY_RELEASE_TAG}" \
+              --pattern "${SATQUERY_BUNDLE_NAME}*" \
+              --dir "${RUNNER_TEMP}/dist_bundle"
+            ARCHIVE_PATH="${RUNNER_TEMP}/dist_bundle/${SATQUERY_BUNDLE_NAME}"
+          fi
+          python scripts/restore_production_bundle.py \
+            --archive "${ARCHIVE_PATH}" \
+            --expected-sha256 "${SATQUERY_BUNDLE_SHA256}" \
+            --dest .
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Production Docker Image (CPU Target)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          build-args: |
+            TARGET_ENV=cpu
+          tags: satquery:ci-test
+          load: true
+
+      - name: Inspect Image Specifications
+        run: |
+          docker images satquery:ci-test
+
+      - name: Start Containerized Service
+        run: |
+          docker run -d --name satquery-live -p 5000:5000 satquery:ci-test
+          sleep 5
+
+      - name: Validate Container Healthcheck (/api/catalog)
+        run: |
+          echo "Awaiting healthy status from SatQuery container..."
+          HEALTHY=false
+          for i in {1..20}; do
+            HTTP_CODE=$(curl -s -o "${RUNNER_TEMP}/catalog_response.json" -w "%{http_code}" http://localhost:5000/api/catalog || true)
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "Container health check passed on attempt $i!"
+              cat "${RUNNER_TEMP}/catalog_response.json"
+              python -c "import json, os; data = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'catalog_response.json'))); assert data['status'] == 'success', f'Catalog response status invalid: {data}'"
+              HEALTHY=true
+              break
+            fi
+            echo "Attempt $i: received HTTP $HTTP_CODE. Retrying in 3s..."
+            sleep 3
+          done
+          if [ "$HEALTHY" != "true" ]; then
+            echo "ERROR: Container failed healthcheck within timeout."
+            docker logs satquery-live --tail 50 || true
+            exit 1
+          fi
+
+      - name: Live Container Inference — Task Routing & Ambiguity Gate
+        run: |
+          echo "Testing /api/query routing endpoint..."
+          curl -fsS -X POST http://localhost:5000/api/query \
+            -H "Content-Type: application/json" \
+            -d '{"query": "Identify surface alterations and newly built structures over time.", "mode": "auto"}' \
+            | tee "${RUNNER_TEMP}/routing_result.json"
+          python -c "import json, os; raw = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'routing_result.json'))); res = raw.get('response', raw); assert res['status'] in ('SUCCESS', 'success'), f'Routing query failed: {res}'; assert res.get('routed_task') == 'CHANGE_DETECTION', f'Unexpected task: {res}'"
+
+      - name: Live Container Inference — Unsupported Task Gate
+        run: |
+          echo "Testing unsupported VQA query handling..."
+          curl -fsS -X POST http://localhost:5000/api/query \
+            -H "Content-Type: application/json" \
+            -d '{"query": "Count the number of vessels in the harbor", "mode": "auto"}' \
+            | tee "${RUNNER_TEMP}/unavail_result.json"
+          python -c "import json, os; raw = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'unavail_result.json'))); res = raw.get('response', raw); assert 'UNAVAILABLE' in res['status'], f'Unexpected status: {res}'"
+
+      - name: Container Audit & Graceful Teardown
+        if: always()
+        run: |
+          echo "=== Container Logs ==="
+          docker logs satquery-live --tail 50 || true
+          docker stop satquery-live || true
+          docker rm satquery-live || true

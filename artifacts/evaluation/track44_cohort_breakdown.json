@@ -1,0 +1,171 @@
+{
+  "defended_cohorts": [
+    {
+      "cohort_id": "cohort_1_lexical_perturbations",
+      "name": "Cohort 1: Adversarial Lexical Perturbations",
+      "threat_type": "Conflicting task keywords and out-of-domain vocabulary spoofing TF-IDF balances",
+      "total_queries": 25,
+      "false_dispatch_count": 4,
+      "false_dispatch_rate_pct": 16.0,
+      "gate_intercepted_count": 19,
+      "router_intercepted_count": 2,
+      "clopper_pearson_95_ci_pct": [
+        4.54,
+        36.08
+      ],
+      "wilson_95_ci_pct": [
+        6.4,
+        34.65
+      ]
+    },
+    {
+      "cohort_id": "cohort_2_multi_task_collisions",
+      "name": "Cohort 2: Conflicting Multi-Task Collisions",
+      "threat_type": "Blended mutually exclusive task verbs demanding simultaneous execution",
+      "total_queries": 25,
+      "false_dispatch_count": 0,
+      "false_dispatch_rate_pct": 0.0,
+      "gate_intercepted_count": 25,
+      "router_intercepted_count": 0,
+      "clopper_pearson_95_ci_pct": [
+        0.0,
+        13.72
+      ],
+      "wilson_95_ci_pct": [
+        0.0,
+        13.32
+      ]
+    },
+    {
+      "cohort_id": "cohort_3_polysemous_jargon",
+      "name": "Cohort 3: Polysemous Domain Jargon",
+      "threat_type": "Geospatial and radiometric terminology devoid of actionable operational directives",
+      "total_queries": 25,
+      "false_dispatch_count": 0,
+      "false_dispatch_rate_pct": 0.0,
+      "gate_intercepted_count": 25,
+      "router_intercepted_count": 0,
+      "clopper_pearson_95_ci_pct": [
+        0.0,
+        13.72
+      ],
+      "wilson_95_ci_pct": [
+        0.0,
+        13.32
+      ]
+    },
+    {
+      "cohort_id": "cohort_4_truncated_instructions",
+      "name": "Cohort 4: Truncated / Incomplete Instructions",
+      "threat_type": "Syntactically broken strings, fragments, abbreviations, or single-token queries",
+      "total_queries": 25,
+      "false_dispatch_count": 0,
+      "false_dispatch_rate_pct": 0.0,
+      "gate_intercepted_count": 25,
+      "router_intercepted_count": 0,
+      "clopper_pearson_95_ci_pct": [
+        0.0,
+        13.72
+      ],
+      "wilson_95_ci_pct": [
+        0.0,
+        13.32
+      ]
+    },
+    {
+      "cohort_id": "cohort_5_negation_traps",
+      "name": "Cohort 5: Negation Traps",
+      "threat_type": "Semantic negation clauses unresolvable by linear bag-of-words representations",
+      "total_queries": 25,
+      "false_dispatch_count": 0,
+      "false_dispatch_rate_pct": 0.0,
+      "gate_intercepted_count": 25,
+      "router_intercepted_count": 0,
+      "clopper_pearson_95_ci_pct": [
+        0.0,
+        13.72
+      ],
+      "wilson_95_ci_pct": [
+        0.0,
+        13.32
+      ]
+    }
+  ],
+  "ungated_cohorts": [
+    {
+      "cohort_id": "cohort_1_lexical_perturbations",
+      "name": "Cohort 1: Adversarial Lexical Perturbations",
+      "total_queries": 25,
+      "false_dispatch_count": 11,
+      "false_dispatch_rate_pct": 44.0,
+      "clopper_pearson_95_ci_pct": [
+        24.4,
+        65.07
+      ],
+      "wilson_95_ci_pct": [
+        26.67,
+        62.93
+      ]
+    },
+    {
+      "cohort_id": "cohort_2_multi_task_collisions",
+      "name": "Cohort 2: Conflicting Multi-Task Collisions",
+      "total_queries": 25,
+      "false_dispatch_count": 20,
+      "false_dispatch_rate_pct": 80.0,
+      "clopper_pearson_95_ci_pct": [
+        59.3,
+        93.17
+      ],
+      "wilson_95_ci_pct": [
+        60.87,
+        91.14
+      ]
+    },
+    {
+      "cohort_id": "cohort_3_polysemous_jargon",
+      "name": "Cohort 3: Polysemous Domain Jargon",
+      "total_queries": 25,
+      "false_dispatch_count": 8,
+      "false_dispatch_rate_pct": 32.0,
+      "clopper_pearson_95_ci_pct": [
+        14.95,
+        53.5
+      ],
+      "wilson_95_ci_pct": [
+        17.21,
+        51.59
+      ]
+    },
+    {
+      "cohort_id": "cohort_4_truncated_instructions",
+      "name": "Cohort 4: Truncated / Incomplete Instructions",
+      "total_queries": 25,
+      "false_dispatch_count": 7,
+      "false_dispatch_rate_pct": 28.0,
+      "clopper_pearson_95_ci_pct": [
+        12.07,
+        49.39
+      ],
+      "wilson_95_ci_pct": [
+        14.28,
+        47.58
+      ]
+    },
+    {
+      "cohort_id": "cohort_5_negation_traps",
+      "name": "Cohort 5: Negation Traps",
+      "total_queries": 25,
+      "false_dispatch_count": 20,
+      "false_dispatch_rate_pct": 80.0,
+      "clopper_pearson_95_ci_pct": [
+        59.3,
+        93.17
+      ],
+      "wilson_95_ci_pct": [
+        60.87,
+        91.14
+      ]
+    }
+  ]
+}

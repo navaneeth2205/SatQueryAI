@@ -1,0 +1,152 @@
+{
+  "milestone": "M3.2",
+  "milestone_status": "IMPLEMENTATION_AND_EVALUATION_COMPLETE_CERTIFICATION_TARGET_NOT_MET",
+  "task": "BITEMPORAL_CHANGE_DETECTION",
+  "dataset": "OSCD (Onera Satellite Change Detection)",
+  "protocol_freeze": "v3.0.0-freeze-rev21",
+  "certification_audit": {
+    "frozen_target_metric": "Macro F1 >= 0.50 across 10 held-out test scenes",
+    "target_macro_f1": 0.5,
+    "achieved_macro_f1": 0.3766,
+    "certification_target_met": false,
+    "certification_verdict": "FAILED_TARGET_UNMET",
+    "scenes_passing_target": 5,
+    "scenes_failing_target": 5,
+    "passing_scenes": [
+      "aguasclaras (0.5124)",
+      "brasilia (0.7268)",
+      "budapest (0.5462)",
+      "nantes (0.5384)",
+      "pisa (0.5809)"
+    ],
+    "failing_scenes": [
+      "austin (0.1479)",
+      "beihai (0.0265)",
+      "berlin (0.4671)",
+      "campinas (0.1041)",
+      "mumbai (0.1154)"
+    ],
+    "threshold_integrity": "Certification threshold (0.50) preserved strictly intact; zero post-hoc relaxation."
+  },
+  "spatial_partitioning": {
+    "dataset_origin": "Official OSCD Benchmark (Daudt et al., 2018) totaling 24 cities",
+    "original_partition": "14 training cities, 10 held-out test cities",
+    "operational_carveout": "The 14 training cities were partitioned into 10 training cities (for parameter updates) and 4 validation cities (for threshold tuning and checkpoint selection) to guarantee zero test leakage.",
+    "train_scenes": 10,
+    "val_scenes": 4,
+    "held_out_test_scenes": 10,
+    "train_cities": [
+      "beirut",
+      "berrida",
+      "bordeaux",
+      "chongqing",
+      "dubai",
+      "hong_kong",
+      "lasvegas",
+      "milano",
+      "rennes",
+      "saclay_w"
+    ],
+    "val_cities": [
+      "montpellier",
+      "paris",
+      "rio",
+      "valencia"
+    ],
+    "test_cities": [
+      "aguasclaras",
+      "austin",
+      "beihai",
+      "berlin",
+      "brasilia",
+      "budapest",
+      "campinas",
+      "mumbai",
+      "nantes",
+      "pisa"
+    ],
+    "disjoint_check": "100% disjoint; no city occurs in multiple partitions.",
+    "leakage_prevented": true,
+    "tuning_scope": "Strictly 4 validation cities (montpellier, paris, rio, valencia)",
+    "held_out_evaluation_rule": "Test split unblinded strictly once for final reporting"
+  },
+  "primary_comparison_validation_tuned": {
+    "phase2_classical_gaussian_cva": {
+      "model_family": "Normalized Change Vector Analysis (Gaussian Smoothed)",
+      "decision_threshold": 0.28,
+      "macro_f1": 0.2731,
+      "pooled_f1": 0.3393,
+      "pooled_precision": 0.397,
+      "pooled_recall": 0.2963,
+      "pooled_iou": 0.2043
+    },
+    "m32_fc_siam_diff": {
+      "model_family": "Fully Convolutional Siamese Difference (Daudt et al., 2018) [Best Evaluated Specialist]",
+      "decision_threshold": 0.25,
+      "val_macro_f1": 0.23525000000000001,
+      "training_duration_sec": 341.05,
+      "training_duration_min": 5.68,
+      "best_epoch": 11,
+      "macro_f1": 0.3766,
+      "pooled_f1": 0.3818,
+      "pooled_precision": 0.3533,
+      "pooled_recall": 0.4153,
+      "pooled_iou": 0.236,
+      "total_tp": 66068,
+      "total_fp": 120922,
+      "total_fn": 93009,
+      "total_tn": 2797937
+    },
+    "m32_bit": {
+      "model_family": "Bitemporal Image Transformer (Chen et al., 2021) [Evaluated Underperforming Architecture]",
+      "decision_threshold": 0.45,
+      "val_macro_f1": 0.114325,
+      "training_duration_sec": 379.16,
+      "training_duration_min": 6.32,
+      "best_epoch": 5,
+      "macro_f1": 0.1295,
+      "pooled_f1": 0.126,
+      "pooled_precision": 0.1879,
+      "pooled_recall": 0.0947,
+      "pooled_iou": 0.0672,
+      "total_tp": 15071,
+      "total_fp": 65145,
+      "total_fn": 144006,
+      "total_tn": 2853714
+    }
+  },
+  "secondary_comparison_default_threshold": {
+    "m32_fc_siam_diff": {
+      "threshold": 0.5,
+      "macro_f1": 0.3762,
+      "pooled_f1": 0.3855,
+      "pooled_precision": 0.3952,
+      "pooled_recall": 0.3762,
+      "pooled_iou": 0.2388,
+      "total_tp": 59851,
+      "total_fp": 91597,
+      "total_fn": 99226,
+      "total_tn": 2827262
+    },
+    "m32_bit": {
+      "threshold": 0.5,
+      "macro_f1": 0.1065,
+      "pooled_f1": 0.0875,
+      "pooled_precision": 0.2261,
+      "pooled_recall": 0.0543,
+      "pooled_iou": 0.0458,
+      "total_tp": 8635,
+      "total_fp": 29552,
+      "total_fn": 150442,
+      "total_tn": 2889307
+    }
+  },
+  "scientific_findings": {
+    "champion_evaluated_model": "FC-Siam-diff",
+    "macro_f1_gain_over_classical": 0.1035,
+    "pooled_f1_gain_over_classical": 0.0425,
+    "scenes_exceeding_target_50": 5,
+    "total_test_scenes": 10,
+    "hypotheses_on_bit_underperformance": "Plausible hypothesis: In small-sample regimes (10 training scenes in OSCD), spatial tokenizer cross-attention overfits compact semantic token spaces, whereas convolutional difference skip connections in FC-Siam-diff provide appropriate local pixel differencing inductive bias. This remains a working hypothesis subject to further large-scale pretraining validation."
+  }
+}

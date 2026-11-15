@@ -57,8 +57,16 @@ class LandCoverClassifier(BaseSpecialist):
         """Load trained baseline RF model, label encoder, and threshold configuration."""
         model_path = self.artifacts_dir / "model.joblib"
         mlb_path = self.artifacts_dir / "label_encoder.joblib"
+        if not mlb_path.exists() and (self.phase2_artifacts_dir / "label_encoder.joblib").exists():
+            mlb_path = self.phase2_artifacts_dir / "label_encoder.joblib"
+
         thresh_path = self.artifacts_dir / "threshold_config.json"
+        if not thresh_path.exists() and (self.phase2_artifacts_dir / "threshold_config.json").exists():
+            thresh_path = self.phase2_artifacts_dir / "threshold_config.json"
+
         classes_path = self.artifacts_dir / "classes.json"
+        if not classes_path.exists() and (self.phase2_artifacts_dir / "classes.json").exists():
+            classes_path = self.phase2_artifacts_dir / "classes.json"
 
         if not model_path.exists():
             raise FileNotFoundError(f"Land cover model artifact not found at {model_path}.")
@@ -66,6 +74,8 @@ class LandCoverClassifier(BaseSpecialist):
             raise FileNotFoundError(f"Label encoder artifact not found at {mlb_path}.")
         if not thresh_path.exists():
             raise FileNotFoundError(f"Threshold configuration not found at {thresh_path}.")
+        if not classes_path.exists():
+            raise FileNotFoundError(f"Classes configuration not found at {classes_path}.")
 
         self.model = joblib.load(model_path)
         self.label_encoder = joblib.load(mlb_path)

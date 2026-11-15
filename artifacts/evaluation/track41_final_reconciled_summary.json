@@ -1,0 +1,973 @@
+{
+  "audit_version": "v1.12.1-track41-final-closure",
+  "frozen_commit": "29b3a12",
+  "frozen_tag": "v1.12.1-phase4-protocol-freeze",
+  "protocol_sha256": "7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5",
+  "scientific_interpretation": "Geographic transfer evaluation under a harmonized mapped label space and resolution-filtered in-domain reference proxy, with residual cross-taxonomy and label-construction differences.",
+  "modis_lineage_and_proxy_penalty_audit": {
+    "scientific_interpretation": "Geographic transfer evaluation under a harmonized mapped label space and resolution-filtered in-domain reference proxy, with residual cross-taxonomy and label-construction differences.",
+    "taxonomic_equivalence_caveat": "Applying the 20% area-fraction threshold to in-domain CORINE annotations simulates spatial resolution aggregation under 500m MODIS, but does NOT establish taxonomic equivalence with raw MODIS MCD12Q1 IGBP classifications. Evaluation reflects a compound geographic/taxonomic comparison.",
+    "modis_product_lineage": {
+      "product_id": "MCD12Q1",
+      "version": "061",
+      "collection": "6.1",
+      "band": "LC_Type1",
+      "spatial_resolution_meters": 500,
+      "coordinate_system": "Sinusoidal"
+    },
+    "taxonomy_mapping_policy": {
+      "directly_mapped_count": 6,
+      "approximately_mapped_count": 7,
+      "quarantined_count": 3,
+      "direct_mappings": {
+        "Coniferous forest": [
+          1,
+          3
+        ],
+        "Broad-leaved forest": [
+          2,
+          4
+        ],
+        "Mixed forest": [
+          5
+        ],
+        "Arable land": [
+          12
+        ],
+        "Urban fabric": [
+          13
+        ],
+        "Inland wetlands": [
+          11
+        ]
+      },
+      "approximate_mappings": {
+        "Transitional woodland, shrub": [
+          6
+        ],
+        "Moors, heathland and sclerophyllous vegetation": [
+          7
+        ],
+        "Natural grassland and sparsely vegetated areas": [
+          8,
+          9
+        ],
+        "Pastures": [
+          10
+        ],
+        "Land principally occupied by agriculture, with significant areas of natural vegetation": [
+          14
+        ],
+        "Inland waters": [
+          17
+        ],
+        "Beaches, dunes, sands": [
+          16
+        ]
+      },
+      "quarantined_classes": {
+        "zero_based_indices": [
+          3,
+          5,
+          13
+        ],
+        "one_based_indices": [
+          4,
+          6,
+          14
+        ],
+        "names": [
+          "Complex cultivation patterns",
+          "Industrial or commercial units",
+          "Permanent crops"
+        ],
+        "rationale": "Sub-pixel parcel geometries, industrial/commercial separation from residential fabric, and orchard/vineyard distinctions cannot be resolved from 500m MODIS IGBP Class 13/12"
+      }
+    },
+    "native_corine_all16_macro_f1": 0.4553,
+    "native_corine_fixed13_macro_f1": 0.4757,
+    "harmonized_modis_proxy_fixed13_macro_f1": 0.3357,
+    "true_in_domain_proxy_penalty": 0.1399,
+    "per_patch_jaccard_mean": 0.7749,
+    "per_patch_exact_match_rate": 0.5179,
+    "total_corine_positive_labels": 7699,
+    "total_modis_positive_labels": 5267,
+    "filtered_trace_positive_labels": 2432,
+    "leave_one_tile_out_sensitivity": {
+      "leave_out_T34TCR": {
+        "excluded_tile": "T34TCR",
+        "retained_patch_count": 1644,
+        "fixed13_macro_f1": 0.3193,
+        "delta_vs_pooled_modis": -0.0164
+      },
+      "leave_out_T34TEQ": {
+        "excluded_tile": "T34TEQ",
+        "retained_patch_count": 1970,
+        "fixed13_macro_f1": 0.3312,
+        "delta_vs_pooled_modis": -0.0045
+      },
+      "leave_out_T34TFN": {
+        "excluded_tile": "T34TFN",
+        "retained_patch_count": 2882,
+        "fixed13_macro_f1": 0.3244,
+        "delta_vs_pooled_modis": -0.0114
+      }
+    },
+    "all_10_multiset_configurations": [
+      {
+        "tile_multiset": [
+          "T34TCR",
+          "T34TCR",
+          "T34TCR"
+        ],
+        "patch_count": 4812,
+        "fixed13_macro_f1": 0.2622,
+        "delta_vs_pooled_modis": -0.0735
+      },
+      {
+        "tile_multiset": [
+          "T34TCR",
+          "T34TCR",
+          "T34TEQ"
+        ],
+        "patch_count": 4486,
+        "fixed13_macro_f1": 0.3177,
+        "delta_vs_pooled_modis": -0.0181
+      },
+      {
+        "tile_multiset": [
+          "T34TCR",
+          "T34TCR",
+          "T34TFN"
+        ],
+        "patch_count": 3574,
+        "fixed13_macro_f1": 0.3149,
+        "delta_vs_pooled_modis": -0.0208
+      },
+      {
+        "tile_multiset": [
+          "T34TCR",
+          "T34TEQ",
+          "T34TEQ"
+        ],
+        "patch_count": 4160,
+        "fixed13_macro_f1": 0.3261,
+        "delta_vs_pooled_modis": -0.0096
+      },
+      {
+        "tile_multiset": [
+          "T34TCR",
+          "T34TEQ",
+          "T34TFN"
+        ],
+        "patch_count": 3248,
+        "fixed13_macro_f1": 0.3357,
+        "delta_vs_pooled_modis": 0.0
+      },
+      {
+        "tile_multiset": [
+          "T34TCR",
+          "T34TFN",
+          "T34TFN"
+        ],
+        "patch_count": 2336,
+        "fixed13_macro_f1": 0.3435,
+        "delta_vs_pooled_modis": 0.0078
+      },
+      {
+        "tile_multiset": [
+          "T34TEQ",
+          "T34TEQ",
+          "T34TEQ"
+        ],
+        "patch_count": 3834,
+        "fixed13_macro_f1": 0.3098,
+        "delta_vs_pooled_modis": -0.0259
+      },
+      {
+        "tile_multiset": [
+          "T34TEQ",
+          "T34TEQ",
+          "T34TFN"
+        ],
+        "patch_count": 2922,
+        "fixed13_macro_f1": 0.317,
+        "delta_vs_pooled_modis": -0.0187
+      },
+      {
+        "tile_multiset": [
+          "T34TEQ",
+          "T34TFN",
+          "T34TFN"
+        ],
+        "patch_count": 2010,
+        "fixed13_macro_f1": 0.3202,
+        "delta_vs_pooled_modis": -0.0155
+      },
+      {
+        "tile_multiset": [
+          "T34TFN",
+          "T34TFN",
+          "T34TFN"
+        ],
+        "patch_count": 1098,
+        "fixed13_macro_f1": 0.2722,
+        "delta_vs_pooled_modis": -0.0636
+      }
+    ],
+    "class_wise_comparison": {
+      "Arable land": {
+        "class_index_0based": 0,
+        "corine_true_count": 2009,
+        "modis_proxy_true_count": 1838,
+        "corine_f1": 0.9392,
+        "modis_proxy_f1": 0.9068,
+        "delta_f1": -0.0324
+      },
+      "Beaches, dunes, sands": {
+        "class_index_0based": 1,
+        "corine_true_count": 0,
+        "modis_proxy_true_count": 0,
+        "corine_f1": 0.0,
+        "modis_proxy_f1": 0.0,
+        "delta_f1": 0.0
+      },
+      "Broad-leaved forest": {
+        "class_index_0based": 2,
+        "corine_true_count": 1665,
+        "modis_proxy_true_count": 1434,
+        "corine_f1": 0.8948,
+        "modis_proxy_f1": 0.8276,
+        "delta_f1": -0.0672
+      },
+      "Coniferous forest": {
+        "class_index_0based": 4,
+        "corine_true_count": 41,
+        "modis_proxy_true_count": 13,
+        "corine_f1": 0.2078,
+        "modis_proxy_f1": 0.0816,
+        "delta_f1": -0.1262
+      },
+      "Inland waters": {
+        "class_index_0based": 6,
+        "corine_true_count": 361,
+        "modis_proxy_true_count": 143,
+        "corine_f1": 0.8187,
+        "modis_proxy_f1": 0.451,
+        "delta_f1": -0.3677
+      },
+      "Inland wetlands": {
+        "class_index_0based": 7,
+        "corine_true_count": 125,
+        "modis_proxy_true_count": 52,
+        "corine_f1": 0.3651,
+        "modis_proxy_f1": 0.1837,
+        "delta_f1": -0.1814
+      },
+      "Land principally occupied by agriculture, with significant areas of natural vegetation": {
+        "class_index_0based": 8,
+        "corine_true_count": 999,
+        "modis_proxy_true_count": 808,
+        "corine_f1": 0.7157,
+        "modis_proxy_f1": 0.6276,
+        "delta_f1": -0.0881
+      },
+      "Mixed forest": {
+        "class_index_0based": 9,
+        "corine_true_count": 75,
+        "modis_proxy_true_count": 29,
+        "corine_f1": 0.0863,
+        "modis_proxy_f1": 0.043,
+        "delta_f1": -0.0433
+      },
+      "Moors, heathland and sclerophyllous vegetation": {
+        "class_index_0based": 10,
+        "corine_true_count": 0,
+        "modis_proxy_true_count": 0,
+        "corine_f1": 0.0,
+        "modis_proxy_f1": 0.0,
+        "delta_f1": 0.0
+      },
+      "Natural grassland and sparsely vegetated areas": {
+        "class_index_0based": 11,
+        "corine_true_count": 256,
+        "modis_proxy_true_count": 89,
+        "corine_f1": 0.4339,
+        "modis_proxy_f1": 0.2397,
+        "delta_f1": -0.1941
+      },
+      "Pastures": {
+        "class_index_0based": 12,
+        "corine_true_count": 454,
+        "modis_proxy_true_count": 181,
+        "corine_f1": 0.3071,
+        "modis_proxy_f1": 0.197,
+        "delta_f1": -0.1101
+      },
+      "Transitional woodland, shrub": {
+        "class_index_0based": 14,
+        "corine_true_count": 1197,
+        "modis_proxy_true_count": 470,
+        "corine_f1": 0.6777,
+        "modis_proxy_f1": 0.3487,
+        "delta_f1": -0.329
+      },
+      "Urban fabric": {
+        "class_index_0based": 15,
+        "corine_true_count": 517,
+        "modis_proxy_true_count": 210,
+        "corine_f1": 0.7374,
+        "modis_proxy_f1": 0.4578,
+        "delta_f1": -0.2796
+      }
+    }
+  },
+  "screening_accounting": {
+    "Biome_1_Arid": {
+      "N_initial": 500,
+      "N_excluded_QC": 10,
+      "N_pass_QC": 490,
+      "N_excluded_temporal": 23,
+      "N_pass_temporal": 467,
+      "N_quarantined": 79,
+      "N_evaluable": 388,
+      "evaluable_retention_rate": 0.776
+    },
+    "Biome_2_Tropical_Rainforest": {
+      "N_initial": 500,
+      "N_excluded_QC": 9,
+      "N_pass_QC": 491,
+      "N_excluded_temporal": 23,
+      "N_pass_temporal": 468,
+      "N_quarantined": 42,
+      "N_evaluable": 426,
+      "evaluable_retention_rate": 0.852
+    },
+    "Biome_3_Boreal_Forest": {
+      "N_initial": 500,
+      "N_excluded_QC": 11,
+      "N_pass_QC": 489,
+      "N_excluded_temporal": 18,
+      "N_pass_temporal": 471,
+      "N_quarantined": 59,
+      "N_evaluable": 412,
+      "evaluable_retention_rate": 0.824
+    },
+    "Biome_4_Humid_Subtropical_Cropland": {
+      "N_initial": 500,
+      "N_excluded_QC": 14,
+      "N_pass_QC": 486,
+      "N_excluded_temporal": 18,
+      "N_pass_temporal": 468,
+      "N_quarantined": 36,
+      "N_evaluable": 432,
+      "evaluable_retention_rate": 0.864
+    },
+    "POOLED_OOD": {
+      "N_initial": 2000,
+      "N_excluded_QC": 44,
+      "N_pass_QC": 1956,
+      "N_excluded_temporal": 82,
+      "N_pass_temporal": 1874,
+      "N_quarantined": 216,
+      "N_evaluable": 1658,
+      "evaluable_retention_rate": 0.829
+    }
+  },
+  "ood_land_cover_evaluation": {
+    "Biome_1_Arid": {
+      "N_evaluable": 388,
+      "fixed13_macro_f1": 0.2831,
+      "delta_f1_vs_in_domain": -0.0527,
+      "present_macro_f1": 0.4089,
+      "direct6_macro_f1": 0.1006,
+      "approx7_macro_f1": 0.4395,
+      "num_absent_classes": 4,
+      "fpr_absent": 0.018041,
+      "fps_absent": 0.049645,
+      "fps_absent_display": "0.0496",
+      "absent_alarms_table": {
+        "Broad-leaved forest": {
+          "class_index_0based": 2,
+          "class_index_1based": 3,
+          "fp_count": 9,
+          "fpr": 0.023196
+        },
+        "Coniferous forest": {
+          "class_index_0based": 4,
+          "class_index_1based": 5,
+          "fp_count": 9,
+          "fpr": 0.023196
+        },
+        "Inland wetlands": {
+          "class_index_0based": 7,
+          "class_index_1based": 8,
+          "fp_count": 6,
+          "fpr": 0.015464
+        },
+        "Mixed forest": {
+          "class_index_0based": 9,
+          "class_index_1based": 10,
+          "fp_count": 4,
+          "fpr": 0.010309
+        }
+      },
+      "quarantined_diagnostic": {
+        "fps_quarantine": 0.0739,
+        "quarantined_counts": {
+          "Complex cultivation patterns": 15,
+          "Industrial or commercial units": 12,
+          "Permanent crops": 18
+        },
+        "quarantined_rates": {
+          "Complex cultivation patterns": 0.0387,
+          "Industrial or commercial units": 0.0309,
+          "Permanent crops": 0.0464
+        }
+      },
+      "subregion_cluster_f1s": {
+        "Rub_al_Khali_North": 0.1442,
+        "Rub_al_Khali_South": 0.145,
+        "Sahara_East": 0.1505,
+        "Sahara_West": 0.1796,
+        "Sinai_North": 0.1483,
+        "Sinai_South": 0.1454
+      },
+      "delta_f1_vs_modis_proxy": -0.0526
+    },
+    "Biome_2_Tropical_Rainforest": {
+      "N_evaluable": 426,
+      "fixed13_macro_f1": 0.314,
+      "delta_f1_vs_in_domain": -0.0217,
+      "present_macro_f1": 0.4082,
+      "direct6_macro_f1": 0.3917,
+      "approx7_macro_f1": 0.2475,
+      "num_absent_classes": 3,
+      "fpr_absent": 0.018779,
+      "fps_absent": 0.038278,
+      "fps_absent_display": "0.0383",
+      "absent_alarms_table": {
+        "Beaches, dunes, sands": {
+          "class_index_0based": 1,
+          "class_index_1based": 2,
+          "fp_count": 1,
+          "fpr": 0.002347
+        },
+        "Coniferous forest": {
+          "class_index_0based": 4,
+          "class_index_1based": 5,
+          "fp_count": 17,
+          "fpr": 0.039906
+        },
+        "Moors, heathland and sclerophyllous vegetation": {
+          "class_index_0based": 10,
+          "class_index_1based": 11,
+          "fp_count": 6,
+          "fpr": 0.014085
+        }
+      },
+      "quarantined_diagnostic": {
+        "fps_quarantine": 0.0739,
+        "quarantined_counts": {
+          "Complex cultivation patterns": 20,
+          "Industrial or commercial units": 16,
+          "Permanent crops": 14
+        },
+        "quarantined_rates": {
+          "Complex cultivation patterns": 0.0469,
+          "Industrial or commercial units": 0.0376,
+          "Permanent crops": 0.0329
+        }
+      },
+      "subregion_cluster_f1s": {
+        "Amazon_Acre": 0.1423,
+        "Amazon_Manaus": 0.1436,
+        "Amazon_Santarem": 0.1458,
+        "Congo_Brazzaville": 0.1426,
+        "Congo_Kinshasa": 0.1416,
+        "Congo_Kisangani": 0.1436
+      },
+      "delta_f1_vs_modis_proxy": -0.0217
+    },
+    "Biome_3_Boreal_Forest": {
+      "N_evaluable": 412,
+      "fixed13_macro_f1": 0.3961,
+      "delta_f1_vs_in_domain": 0.0604,
+      "present_macro_f1": 0.4291,
+      "direct6_macro_f1": 0.409,
+      "approx7_macro_f1": 0.3851,
+      "num_absent_classes": 1,
+      "fpr_absent": 0.012136,
+      "fps_absent": 0.006477,
+      "fps_absent_display": "0.0065",
+      "absent_alarms_table": {
+        "Beaches, dunes, sands": {
+          "class_index_0based": 1,
+          "class_index_1based": 2,
+          "fp_count": 5,
+          "fpr": 0.012136
+        }
+      },
+      "quarantined_diagnostic": {
+        "fps_quarantine": 0.0766,
+        "quarantined_counts": {
+          "Complex cultivation patterns": 24,
+          "Industrial or commercial units": 20,
+          "Permanent crops": 20
+        },
+        "quarantined_rates": {
+          "Complex cultivation patterns": 0.0583,
+          "Industrial or commercial units": 0.0485,
+          "Permanent crops": 0.0485
+        }
+      },
+      "subregion_cluster_f1s": {
+        "Alaska_Fairbanks": 0.2306,
+        "Alaska_Tanana": 0.2405,
+        "Alaska_Yukon": 0.2382,
+        "Fennoscandia_Karelia": 0.2417,
+        "Fennoscandia_Lapland": 0.2346,
+        "Fennoscandia_Vasterbotten": 0.235
+      },
+      "delta_f1_vs_modis_proxy": 0.0604
+    },
+    "Biome_4_Humid_Subtropical_Cropland": {
+      "N_evaluable": 432,
+      "fixed13_macro_f1": 0.3765,
+      "delta_f1_vs_in_domain": 0.0407,
+      "present_macro_f1": 0.4894,
+      "direct6_macro_f1": 0.3682,
+      "approx7_macro_f1": 0.3835,
+      "num_absent_classes": 3,
+      "fpr_absent": 0.008488,
+      "fps_absent": 0.013415,
+      "fps_absent_display": "0.0134",
+      "absent_alarms_table": {
+        "Beaches, dunes, sands": {
+          "class_index_0based": 1,
+          "class_index_1based": 2,
+          "fp_count": 6,
+          "fpr": 0.013889
+        },
+        "Coniferous forest": {
+          "class_index_0based": 4,
+          "class_index_1based": 5,
+          "fp_count": 3,
+          "fpr": 0.006944
+        },
+        "Moors, heathland and sclerophyllous vegetation": {
+          "class_index_0based": 10,
+          "class_index_1based": 11,
+          "fp_count": 2,
+          "fpr": 0.00463
+        }
+      },
+      "quarantined_diagnostic": {
+        "fps_quarantine": 0.0661,
+        "quarantined_counts": {
+          "Complex cultivation patterns": 23,
+          "Industrial or commercial units": 21,
+          "Permanent crops": 14
+        },
+        "quarantined_rates": {
+          "Complex cultivation patterns": 0.0532,
+          "Industrial or commercial units": 0.0486,
+          "Permanent crops": 0.0324
+        }
+      },
+      "subregion_cluster_f1s": {
+        "IndoGangetic_Bihar": 0.3773,
+        "IndoGangetic_Punjab": 0.3698,
+        "IndoGangetic_UttarPradesh": 0.3733,
+        "Mekong_AnGiang": 0.3801,
+        "Mekong_CanTho": 0.3669,
+        "Mekong_SocTrang": 0.3801
+      },
+      "delta_f1_vs_modis_proxy": 0.0408
+    }
+  },
+  "s2looking_change_detection": {
+    "per_scene": {
+      "S2L_01_CAIRO": {
+        "city": "Cairo",
+        "country": "Egypt",
+        "temporal_delta_days": 370,
+        "confusion_matrix": {
+          "tp": 19200,
+          "fp": 84800,
+          "fn": 87200,
+          "tn": 857376
+        },
+        "pixel_sum": 1048576,
+        "precision": 0.1846,
+        "recall": 0.1805,
+        "f1_score": 0.1825,
+        "iou": 0.1004,
+        "harmonic_check_diff": 0.0,
+        "iou_check_diff": 0.0
+      },
+      "S2L_02_NAIROBI": {
+        "city": "Nairobi",
+        "country": "Kenya",
+        "temporal_delta_days": 385,
+        "confusion_matrix": {
+          "tp": 14850,
+          "fp": 82150,
+          "fn": 75150,
+          "tn": 876426
+        },
+        "pixel_sum": 1048576,
+        "precision": 0.1531,
+        "recall": 0.165,
+        "f1_score": 0.1588,
+        "iou": 0.0863,
+        "harmonic_check_diff": 0.0,
+        "iou_check_diff": 1.3877787807814457e-17
+      },
+      "S2L_03_SANTIAGO": {
+        "city": "Santiago",
+        "country": "Chile",
+        "temporal_delta_days": 381,
+        "confusion_matrix": {
+          "tp": 20250,
+          "fp": 81750,
+          "fn": 88250,
+          "tn": 858326
+        },
+        "pixel_sum": 1048576,
+        "precision": 0.1985,
+        "recall": 0.1866,
+        "f1_score": 0.1924,
+        "iou": 0.1064,
+        "harmonic_check_diff": 0.0,
+        "iou_check_diff": 0.0
+      },
+      "S2L_04_ULAANBAATAR": {
+        "city": "Ulaanbaatar",
+        "country": "Mongolia",
+        "temporal_delta_days": 370,
+        "confusion_matrix": {
+          "tp": 13750,
+          "fp": 86250,
+          "fn": 77250,
+          "tn": 871326
+        },
+        "pixel_sum": 1048576,
+        "precision": 0.1375,
+        "recall": 0.1511,
+        "f1_score": 0.144,
+        "iou": 0.0776,
+        "harmonic_check_diff": 0.0,
+        "iou_check_diff": 0.0
+      },
+      "S2L_05_PERTH": {
+        "city": "Perth",
+        "country": "Australia",
+        "temporal_delta_days": 385,
+        "confusion_matrix": {
+          "tp": 23600,
+          "fp": 78400,
+          "fn": 84400,
+          "tn": 862176
+        },
+        "pixel_sum": 1048576,
+        "precision": 0.2314,
+        "recall": 0.2185,
+        "f1_score": 0.2248,
+        "iou": 0.1266,
+        "harmonic_check_diff": 0.0,
+        "iou_check_diff": 0.0
+      },
+      "S2L_06_BRISBANE": {
+        "city": "Brisbane",
+        "country": "Australia",
+        "temporal_delta_days": 381,
+        "confusion_matrix": {
+          "tp": 22550,
+          "fp": 80450,
+          "fn": 83450,
+          "tn": 862126
+        },
+        "pixel_sum": 1048576,
+        "precision": 0.2189,
+        "recall": 0.2127,
+        "f1_score": 0.2158,
+        "iou": 0.1209,
+        "harmonic_check_diff": 0.0,
+        "iou_check_diff": 0.0
+      },
+      "S2L_07_JAKARTA": {
+        "city": "Jakarta",
+        "country": "Indonesia",
+        "temporal_delta_days": 376,
+        "confusion_matrix": {
+          "tp": 17950,
+          "fp": 84050,
+          "fn": 84050,
+          "tn": 862526
+        },
+        "pixel_sum": 1048576,
+        "precision": 0.176,
+        "recall": 0.176,
+        "f1_score": 0.176,
+        "iou": 0.0965,
+        "harmonic_check_diff": 0.0,
+        "iou_check_diff": 0.0
+      },
+      "S2L_08_JOHANNESBURG": {
+        "city": "Johannesburg",
+        "country": "South Africa",
+        "temporal_delta_days": 388,
+        "confusion_matrix": {
+          "tp": 19450,
+          "fp": 82550,
+          "fn": 88550,
+          "tn": 858026
+        },
+        "pixel_sum": 1048576,
+        "precision": 0.1907,
+        "recall": 0.1801,
+        "f1_score": 0.1852,
+        "iou": 0.1021,
+        "harmonic_check_diff": 0.0,
+        "iou_check_diff": 0.0
+      },
+      "S2L_09_CALGARY": {
+        "city": "Calgary",
+        "country": "Canada",
+        "temporal_delta_days": 379,
+        "confusion_matrix": {
+          "tp": 21500,
+          "fp": 80500,
+          "fn": 86500,
+          "tn": 860076
+        },
+        "pixel_sum": 1048576,
+        "precision": 0.2108,
+        "recall": 0.1991,
+        "f1_score": 0.2048,
+        "iou": 0.1141,
+        "harmonic_check_diff": 2.7755575615628914e-17,
+        "iou_check_diff": 0.0
+      },
+      "S2L_10_TASHKENT": {
+        "city": "Tashkent",
+        "country": "Uzbekistan",
+        "temporal_delta_days": 381,
+        "confusion_matrix": {
+          "tp": 16150,
+          "fp": 83850,
+          "fn": 81850,
+          "tn": 866726
+        },
+        "pixel_sum": 1048576,
+        "precision": 0.1615,
+        "recall": 0.1648,
+        "f1_score": 0.1631,
+        "iou": 0.0888,
+        "harmonic_check_diff": 2.7755575615628914e-17,
+        "iou_check_diff": 0.0
+      }
+    },
+    "summary_statistics": {
+      "aggregation_method": "Scene-level pixel-pooled confusion matrix over full 1024x1024 rasters (N=1,048,576 px/scene)",
+      "harmonic_identity_guaranteed": true,
+      "max_harmonic_discrepancy": 2.7755575615628914e-17,
+      "max_iou_discrepancy": 1.3877787807814457e-17,
+      "total_scenes": 10,
+      "total_pixels_pooled": 10485760,
+      "pooled_confusion_matrix": {
+        "tp": 189250,
+        "fp": 824750,
+        "fn": 836650,
+        "tn": 8635110
+      },
+      "pooled_precision": 0.1866,
+      "pooled_recall": 0.1845,
+      "pooled_f1": 0.1855,
+      "pooled_iou": 0.1023,
+      "mean_f1": 0.1847,
+      "standard_error": 0.0081,
+      "median_f1": 0.1839,
+      "iqr_f1": 0.0353,
+      "min_f1": 0.144,
+      "max_f1": 0.2248
+    }
+  },
+  "reconciled_bootstrap_hypotheses": {
+    "Biome_1_Arid": {
+      "delta_observed": -0.0527,
+      "two_sided_ci_95": [
+        -0.0944,
+        0.0248
+      ],
+      "one_sided_upper_bound_95": 0.0128,
+      "one_sided_lower_bound_95": -0.0864,
+      "ci_includes_zero": true,
+      "bootstrap_se": 0.0294,
+      "p_sign_ge_0": 0.0835,
+      "raw_p_null": 0.006997,
+      "raw_p_null_display": "0.0070",
+      "count_boot_null_extreme": 13,
+      "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
+      "methodological_caveat": "Three geographic clusters provide limited independent geographic replication. The 2,000 bootstrap iterations represent numerical integration of this 10-multiset space, not 2,000 independent geographic replicates. Statistical conclusions are exploratory/descriptive and strictly conditional on the Serbian reference tiles.",
+      "holm_adjusted_p_value": 0.027986,
+      "holm_adjusted_p_display": "0.0280",
+      "statistically_significant_degradation": true
+    },
+    "Biome_2_Tropical_Rainforest": {
+      "delta_observed": -0.0217,
+      "two_sided_ci_95": [
+        -0.0464,
+        0.0518
+      ],
+      "one_sided_upper_bound_95": 0.0398,
+      "one_sided_lower_bound_95": -0.0402,
+      "ci_includes_zero": true,
+      "bootstrap_se": 0.0218,
+      "p_sign_ge_0": 0.2649,
+      "raw_p_null": 0.038981,
+      "raw_p_null_display": "0.0390",
+      "count_boot_null_extreme": 77,
+      "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
+      "methodological_caveat": "Three geographic clusters provide limited independent geographic replication. The 2,000 bootstrap iterations represent numerical integration of this 10-multiset space, not 2,000 independent geographic replicates. Statistical conclusions are exploratory/descriptive and strictly conditional on the Serbian reference tiles.",
+      "holm_adjusted_p_value": 0.116942,
+      "holm_adjusted_p_display": "0.1169",
+      "statistically_significant_degradation": false
+    },
+    "Biome_3_Boreal_Forest": {
+      "delta_observed": 0.0604,
+      "two_sided_ci_95": [
+        0.0343,
+        0.1335
+      ],
+      "one_sided_upper_bound_95": 0.1203,
+      "one_sided_lower_bound_95": 0.0394,
+      "ci_includes_zero": false,
+      "bootstrap_se": 0.0227,
+      "p_sign_ge_0": 1.0,
+      "raw_p_null": 0.951024,
+      "raw_p_null_display": "0.9510",
+      "count_boot_null_extreme": 1902,
+      "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
+      "methodological_caveat": "Three geographic clusters provide limited independent geographic replication. The 2,000 bootstrap iterations represent numerical integration of this 10-multiset space, not 2,000 independent geographic replicates. Statistical conclusions are exploratory/descriptive and strictly conditional on the Serbian reference tiles.",
+      "holm_adjusted_p_value": 1.0,
+      "holm_adjusted_p_display": "1.0000",
+      "statistically_significant_degradation": false
+    },
+    "Biome_4_Humid_Subtropical_Cropland": {
+      "delta_observed": 0.0407,
+      "two_sided_ci_95": [
+        0.0153,
+        0.1143
+      ],
+      "one_sided_upper_bound_95": 0.1022,
+      "one_sided_lower_bound_95": 0.0183,
+      "ci_includes_zero": false,
+      "bootstrap_se": 0.0243,
+      "p_sign_ge_0": 0.9985,
+      "raw_p_null": 0.891554,
+      "raw_p_null_display": "0.8916",
+      "count_boot_null_extreme": 1783,
+      "inferential_degrees_of_freedom": "df <= 2 (governed by 3 in-domain Serbian tile clusters; at most 27 ordered resamples, 10 unique multisets)",
+      "methodological_caveat": "Three geographic clusters provide limited independent geographic replication. The 2,000 bootstrap iterations represent numerical integration of this 10-multiset space, not 2,000 independent geographic replicates. Statistical conclusions are exploratory/descriptive and strictly conditional on the Serbian reference tiles.",
+      "holm_adjusted_p_value": 1.0,
+      "holm_adjusted_p_display": "1.0000",
+      "statistically_significant_degradation": false
+    }
+  },
+  "reconciled_certification_matrix": {
+    "Biome_1_Arid": {
+      "operational_floors": {
+        "fixed13_floor": 0.2,
+        "present_floor": 0.25,
+        "fpr_floor": 0.15
+      },
+      "achieved_metrics": {
+        "fixed13_macro_f1": 0.2831,
+        "present_macro_f1": 0.4089,
+        "fpr_absent": 0.018041
+      },
+      "floors_satisfied": true,
+      "delta_observed": -0.0527,
+      "two_sided_ci_95": [
+        -0.0944,
+        0.0248
+      ],
+      "one_sided_upper_bound_95": 0.0128,
+      "ci_includes_zero": true,
+      "holm_adjusted_p": "0.0280",
+      "statistically_significant_degradation": true,
+      "certification_status": "Certified Operationally with Documented Transfer Degradation"
+    },
+    "Biome_2_Tropical_Rainforest": {
+      "operational_floors": {
+        "fixed13_floor": 0.12,
+        "present_floor": 0.15,
+        "fpr_floor": 0.15
+      },
+      "achieved_metrics": {
+        "fixed13_macro_f1": 0.314,
+        "present_macro_f1": 0.4082,
+        "fpr_absent": 0.018779
+      },
+      "floors_satisfied": true,
+      "delta_observed": -0.0217,
+      "two_sided_ci_95": [
+        -0.0464,
+        0.0518
+      ],
+      "one_sided_upper_bound_95": 0.0398,
+      "ci_includes_zero": true,
+      "holm_adjusted_p": "0.1169",
+      "statistically_significant_degradation": false,
+      "certification_status": "Certified Operationally \u2014 No Significant Degradation (Conditional Reference)"
+    },
+    "Biome_3_Boreal_Forest": {
+      "operational_floors": {
+        "fixed13_floor": 0.12,
+        "present_floor": 0.15,
+        "fpr_floor": 0.15
+      },
+      "achieved_metrics": {
+        "fixed13_macro_f1": 0.3961,
+        "present_macro_f1": 0.4291,
+        "fpr_absent": 0.012136
+      },
+      "floors_satisfied": true,
+      "delta_observed": 0.0604,
+      "two_sided_ci_95": [
+        0.0343,
+        0.1335
+      ],
+      "one_sided_upper_bound_95": 0.1203,
+      "ci_includes_zero": false,
+      "holm_adjusted_p": "1.0000",
+      "statistically_significant_degradation": false,
+      "certification_status": "Certified Operationally \u2014 Domain Transfer Gain Observed"
+    },
+    "Biome_4_Humid_Subtropical_Cropland": {
+      "operational_floors": {
+        "fixed13_floor": 0.2,
+        "present_floor": 0.25,
+        "fpr_floor": 0.15
+      },
+      "achieved_metrics": {
+        "fixed13_macro_f1": 0.3765,
+        "present_macro_f1": 0.4894,
+        "fpr_absent": 0.008488
+      },
+      "floors_satisfied": true,
+      "delta_observed": 0.0407,
+      "two_sided_ci_95": [
+        0.0153,
+        0.1143
+      ],
+      "one_sided_upper_bound_95": 0.1022,
+      "ci_includes_zero": false,
+      "holm_adjusted_p": "1.0000",
+      "statistically_significant_degradation": false,
+      "certification_status": "Certified Operationally \u2014 Domain Transfer Gain Observed"
+    }
+  }
+}

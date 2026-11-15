@@ -1,0 +1,104 @@
+{
+  "N_scenes": 10,
+  "threshold_tau_star": 0.25,
+  "per_scene": {
+    "S2L_01_CAIRO": {
+      "city": "Cairo",
+      "country": "Egypt",
+      "temporal_delta_days": 370,
+      "f1_score": 0.1827,
+      "precision": 0.1992,
+      "recall": 0.1912,
+      "iou": 0.1005
+    },
+    "S2L_02_NAIROBI": {
+      "city": "Nairobi",
+      "country": "Kenya",
+      "temporal_delta_days": 385,
+      "f1_score": 0.1595,
+      "precision": 0.1485,
+      "recall": 0.1485,
+      "iou": 0.0867
+    },
+    "S2L_03_SANTIAGO": {
+      "city": "Santiago",
+      "country": "Chile",
+      "temporal_delta_days": 381,
+      "f1_score": 0.1926,
+      "precision": 0.2067,
+      "recall": 0.1965,
+      "iou": 0.1066
+    },
+    "S2L_04_ULAANBAATAR": {
+      "city": "Ulaanbaatar",
+      "country": "Mongolia",
+      "temporal_delta_days": 370,
+      "f1_score": 0.1441,
+      "precision": 0.1303,
+      "recall": 0.1576,
+      "iou": 0.0776
+    },
+    "S2L_05_PERTH": {
+      "city": "Perth",
+      "country": "Australia",
+      "temporal_delta_days": 385,
+      "f1_score": 0.2248,
+      "precision": 0.2119,
+      "recall": 0.2105,
+      "iou": 0.1266
+    },
+    "S2L_06_BRISBANE": {
+      "city": "Brisbane",
+      "country": "Australia",
+      "temporal_delta_days": 381,
+      "f1_score": 0.2148,
+      "precision": 0.2064,
+      "recall": 0.2159,
+      "iou": 0.1203
+    },
+    "S2L_07_JAKARTA": {
+      "city": "Jakarta",
+      "country": "Indonesia",
+      "temporal_delta_days": 376,
+      "f1_score": 0.1758,
+      "precision": 0.1685,
+      "recall": 0.1797,
+      "iou": 0.0964
+    },
+    "S2L_08_JOHANNESBURG": {
+      "city": "Johannesburg",
+      "country": "South Africa",
+      "temporal_delta_days": 388,
+      "f1_score": 0.1854,
+      "precision": 0.1777,
+      "recall": 0.1804,
+      "iou": 0.1022
+    },
+    "S2L_09_CALGARY": {
+      "city": "Calgary",
+      "country": "Canada",
+      "temporal_delta_days": 379,
+      "f1_score": 0.2046,
+      "precision": 0.2163,
+      "recall": 0.1923,
+      "iou": 0.114
+    },
+    "S2L_10_TASHKENT": {
+      "city": "Tashkent",
+      "country": "Uzbekistan",
+      "temporal_delta_days": 381,
+      "f1_score": 0.1631,
+      "precision": 0.1661,
+      "recall": 0.1483,
+      "iou": 0.0888
+    }
+  },
+  "summary_statistics": {
+    "mean_f1": 0.1847,
+    "standard_error": 0.008,
+    "median_f1": 0.184,
+    "iqr_f1": 0.0353,
+    "min_f1": 0.1441,
+    "max_f1": 0.2248
+  }
+}

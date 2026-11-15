@@ -1,0 +1,75 @@
+{
+  "N_total": 3248,
+  "tile_clusters": {
+    "T34TCR": 1604,
+    "T34TEQ": 1278,
+    "T34TFN": 366
+  },
+  "native_corine": {
+    "fixed13_macro_f1": 0.4757,
+    "all16_macro_f1": 0.4553,
+    "per_tile": {
+      "T34TCR": {
+        "N": 1604,
+        "fixed13_macro_f1": 0.3653
+      },
+      "T34TEQ": {
+        "N": 1278,
+        "fixed13_macro_f1": 0.4293
+      },
+      "T34TFN": {
+        "N": 366,
+        "fixed13_macro_f1": 0.4141
+      }
+    }
+  },
+  "harmonized_modis_proxy": {
+    "fixed13_macro_f1": 0.4757,
+    "present_macro_f1": 0.5622,
+    "fpr_absent": 0.000308,
+    "fps_absent": 0.000232,
+    "num_absent_classes": 2,
+    "fps_quarantine": 0.1424,
+    "per_tile": {
+      "T34TCR": {
+        "N": 1604,
+        "fixed13_macro_f1": 0.3653,
+        "present_macro_f1": 0.5937,
+        "fpr_absent": 0.008603
+      },
+      "T34TEQ": {
+        "N": 1278,
+        "fixed13_macro_f1": 0.4293,
+        "present_macro_f1": 0.5074,
+        "fpr_absent": 0.000782
+      },
+      "T34TFN": {
+        "N": 366,
+        "fixed13_macro_f1": 0.4141,
+        "present_macro_f1": 0.5383,
+        "fpr_absent": 0.0
+      }
+    }
+  },
+  "in_domain_proxy_penalty": 0.0,
+  "leave_one_tile_out_sensitivity": {
+    "leave_out_T34TCR": {
+      "excluded_tile": "T34TCR",
+      "retained_count": 1644,
+      "fixed13_macro_f1": 0.4619,
+      "delta_from_full_baseline": -0.0138
+    },
+    "leave_out_T34TEQ": {
+      "excluded_tile": "T34TEQ",
+      "retained_count": 1970,
+      "fixed13_macro_f1": 0.4857,
+      "delta_from_full_baseline": 0.01
+    },
+    "leave_out_T34TFN": {
+      "excluded_tile": "T34TFN",
+      "retained_count": 2882,
+      "fixed13_macro_f1": 0.4458,
+      "delta_from_full_baseline": -0.0298
+    }
+  }
+}

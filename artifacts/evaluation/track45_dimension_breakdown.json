@@ -1,0 +1,138 @@
+[
+  {
+    "dimension": 1,
+    "dimension_name": "Dim 1: Sensor Modality & Structure",
+    "total_payloads": 20,
+    "intercepted_count": 20,
+    "dispatched_count": 0,
+    "interception_recall_pct": 100.0,
+    "ider_pct": 0.0,
+    "clopper_pearson_95_ci_pct": [
+      0.0,
+      16.84
+    ],
+    "wilson_95_ci_pct": [
+      0.0,
+      16.11
+    ]
+  },
+  {
+    "dimension": 2,
+    "dimension_name": "Dim 2: Temporal Revisit Window",
+    "total_payloads": 15,
+    "intercepted_count": 15,
+    "dispatched_count": 0,
+    "interception_recall_pct": 100.0,
+    "ider_pct": 0.0,
+    "clopper_pearson_95_ci_pct": [
+      0.0,
+      21.8
+    ],
+    "wilson_95_ci_pct": [
+      0.0,
+      20.39
+    ]
+  },
+  {
+    "dimension": 3,
+    "dimension_name": "Dim 3: Spectral Band Adequacy",
+    "total_payloads": 10,
+    "intercepted_count": 10,
+    "dispatched_count": 0,
+    "interception_recall_pct": 100.0,
+    "ider_pct": 0.0,
+    "clopper_pearson_95_ci_pct": [
+      0.0,
+      30.85
+    ],
+    "wilson_95_ci_pct": [
+      0.0,
+      27.75
+    ]
+  },
+  {
+    "dimension": 4,
+    "dimension_name": "Dim 4: Spatial Dimensions",
+    "total_payloads": 10,
+    "intercepted_count": 10,
+    "dispatched_count": 0,
+    "interception_recall_pct": 100.0,
+    "ider_pct": 0.0,
+    "clopper_pearson_95_ci_pct": [
+      0.0,
+      30.85
+    ],
+    "wilson_95_ci_pct": [
+      0.0,
+      27.75
+    ]
+  },
+  {
+    "dimension": 5,
+    "dimension_name": "Dim 5: Geospatial CRS Consistency",
+    "total_payloads": 10,
+    "intercepted_count": 10,
+    "dispatched_count": 0,
+    "interception_recall_pct": 100.0,
+    "ider_pct": 0.0,
+    "clopper_pearson_95_ci_pct": [
+      0.0,
+      30.85
+    ],
+    "wilson_95_ci_pct": [
+      0.0,
+      27.75
+    ]
+  },
+  {
+    "dimension": 6,
+    "dimension_name": "Dim 6: Affine Alignment & Coregistration",
+    "total_payloads": 20,
+    "intercepted_count": 20,
+    "dispatched_count": 0,
+    "interception_recall_pct": 100.0,
+    "ider_pct": 0.0,
+    "clopper_pearson_95_ci_pct": [
+      0.0,
+      16.84
+    ],
+    "wilson_95_ci_pct": [
+      0.0,
+      16.11
+    ]
+  },
+  {
+    "dimension": 7,
+    "dimension_name": "Dim 7: Ground Sample Distance (GSD)",
+    "total_payloads": 10,
+    "intercepted_count": 10,
+    "dispatched_count": 0,
+    "interception_recall_pct": 100.0,
+    "ider_pct": 0.0,
+    "clopper_pearson_95_ci_pct": [
+      0.0,
+      30.85
+    ],
+    "wilson_95_ci_pct": [
+      0.0,
+      27.75
+    ]
+  },
+  {
+    "dimension": 8,
+    "dimension_name": "Dim 8: Radiometric & Cloud Guard",
+    "total_payloads": 25,
+    "intercepted_count": 25,
+    "dispatched_count": 0,
+    "interception_recall_pct": 100.0,
+    "ider_pct": 0.0,
+    "clopper_pearson_95_ci_pct": [
+      0.0,
+      13.72
+    ],
+    "wilson_95_ci_pct": [
+      0.0,
+      13.32
+    ]
+  }
+]

@@ -1,0 +1,84 @@
+{
+  "description": "Frozen perturbation operator configuration for Phase 4 Track 4.3 atmospheric and image-quality stress testing.",
+  "cloud_occlusion": {
+    "operator": "perlin_topk_nested_mask",
+    "cloud_albedo": 0.95,
+    "cloud_opacity": 0.90,
+    "mask_semantics": {
+      "occluded_value": 1,
+      "unchanged_value": 0,
+      "interpretation": "1 = occluded (blended with cloud albedo A_cloud=0.95 and opacity alpha=0.90), 0 = unchanged (unobstructed surface observation)"
+    },
+    "tie_breaking_rule": "descending_field_magnitude_with_stable_row_major_coordinate_index",
+    "severity_fractions": [0.05, 0.10, 0.15, 0.20, 0.30, 0.40, 0.50],
+    "resolutions": {
+      "land_cover": {
+        "spatial_resolution": [120, 120],
+        "pixel_counts": [720, 1440, 2160, 2880, 4320, 5760, 7200],
+        "target_channels": "10_optical_channels_only",
+        "sar_channels": "untouched_zero_modification"
+      },
+      "change_detection": {
+        "spatial_resolution": [256, 256],
+        "pixel_counts": [3276, 6553, 9830, 13107, 19660, 26214, 32768],
+        "target_image": "t2_post_event_only",
+        "t1_image": "untouched_zero_modification",
+        "target_channels": "all_3_rgb_channels"
+      }
+    },
+    "seed_policy": "42 + 100 * patch_id",
+    "subset_property": "strictly_increasing_proper_subsets"
+  },
+  "atmospheric_haze": {
+    "operator": "koschmieder_1d_scattering",
+    "atmospheric_airlight": 0.85,
+    "transmittances": [0.90, 0.70, 0.50, 0.30],
+    "severities_opacity": [0.10, 0.30, 0.50, 0.70],
+    "clean_reference_transmittance": 1.00,
+    "land_cover_channels": "10_optical_only_sar_untouched",
+    "change_detection_application": "t2_post_event_only_t1_untouched"
+  },
+  "additive_gaussian_noise": {
+    "operator": "common_random_numbers_gaussian",
+    "injection_stage": {
+      "land_cover_optical": "injected_in_scaled_0_1_reflectance_prior_to_channel_standardization",
+      "land_cover_sar": "injected_in_scaled_0_1_backscatter_prior_to_forward_pass",
+      "change_detection_rgb": "injected_in_scaled_0_1_rgb_prior_to_imagenet_normalization"
+    },
+    "domain": "scaled_0_1_pre_standardization",
+    "severity_sigmas": [0.01, 0.02, 0.05, 0.10],
+    "seed_policies": {
+      "lc_optical": "10007 + 100 * patch_id",
+      "lc_sar": "20011 + 100 * patch_id",
+      "cd_t1": "30013 + 100 * patch_id",
+      "cd_t2": "40009 + 100 * patch_id"
+    },
+    "tensor_shapes": {
+      "lc_optical": [10, 120, 120],
+      "lc_sar": [2, 120, 120],
+      "cd_t1": [3, 256, 256],
+      "cd_t2": [3, 256, 256]
+    },
+    "channel_sharing": "independent_per_channel_and_timepoint",
+    "common_random_numbers": "strict_scalar_multiplication_across_sigmas",
+    "interpretation": "normalized_tensor_numerical_sensitivity"
+  },
+  "track43_cohort_optical_reflectance_policy": {
+    "clean_baseline_domain": [0.0, 1.0],
+    "excursion_handling": "pre_evaluation_cohort_screening_exclusion",
+    "screening_exclusion_code": "N_excluded_excursion",
+    "silent_clipping_of_clean_inputs": false,
+    "target_evaluable_cohort_size": 250,
+    "clusters_count": 10,
+    "per_cluster_quota": 25,
+    "screening_order": "cluster_stratified_deterministic_sequential_quota",
+    "seed_stream": "54321 + 100 * cluster_id",
+    "accounting_metrics": [
+      "N_candidate_drawn",
+      "N_excluded_excursion",
+      "N_evaluable",
+      "empirical_excursion_rate"
+    ],
+    "rationale": "Clean baseline inputs with valid excursions in [-0.05, 0.0) or (1.0, 1.20] are excluded at cohort selection rather than silently clipped, ensuring clean baseline inputs undergo zero clipping (L_infty = 0.0) and preserving identical preprocessing between baseline and perturbed conditions. Selection is deterministic, label-independent, and conditional on the unit-interval reflectance criterion; results generalize strictly to the eligible cohort, with exclusion rates reported to characterize potential selection effects."
+  }
+}

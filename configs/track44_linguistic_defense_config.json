@@ -1,0 +1,862 @@
+{
+  "metadata": {
+    "track": "Track 4.4: Complex & Adversarial Linguistic Query Defense",
+    "protocol_reference": "SATQUERY-P4-PROTOCOL-V1.12.1-FROZEN.md",
+    "protocol_hash": "7bcb8c5ab00cfebb5f7418237e9297f7eeaf06b0477d426d0ec6b30880e71bb5",
+    "threat_model": "TF-IDF + Calibrated Logistic Regression feature space exploitation",
+    "calibration_temperature": 0.0991,
+    "tau_intent": 0.65,
+    "tau_margin": 0.15,
+    "tau_sel": 1.0,
+    "total_queries": 150,
+    "n_adversarial_queries": 125,
+    "n_control_queries": 25,
+    "n_adversarial_cohorts": 5,
+    "queries_per_adversarial_cohort": 25,
+    "certification_tiers": {
+      "Tier_1": {
+        "description": "Certified Robust Pass",
+        "pooled_fdr_max_pct": 10.0,
+        "pooled_max_false_dispatches": 12,
+        "cohort_max_false_dispatches": 5,
+        "min_control_preservation": 24
+      },
+      "Tier_2": {
+        "description": "Operational with Subsystem Reservation",
+        "pooled_fdr_max_pct": 12.0,
+        "pooled_max_false_dispatches": 15,
+        "cohort_max_false_dispatches": 6,
+        "min_control_preservation": 23
+      },
+      "Tier_3": {
+        "description": "Failed Certification",
+        "condition": "pooled_false_dispatches >= 16 OR max_kc > 6 OR control_preservation < 23"
+      }
+    }
+  },
+  "adversarial_cohorts": [
+    {
+      "cohort_id": "cohort_1_lexical_perturbations",
+      "name": "Cohort 1: Adversarial Lexical Perturbations",
+      "threat_type": "Conflicting task keywords and out-of-domain vocabulary spoofing TF-IDF balances",
+      "ground_truth_action": "REJECT_INSUFFICIENT_CONTEXT",
+      "queries": [
+        {
+          "query_id": "C1_01",
+          "query": "Classify the temporal modifications in this agricultural pasture tile.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_02",
+          "query": "Detect SAR backscatter land-cover changes across this optical scene.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_03",
+          "query": "Calculate bounding box pixel coordinates for temporal land cover deforestation.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_04",
+          "query": "Segment the scene captioning change detection masks.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_05",
+          "query": "Predict radar backscatter differences while classifying urban fabric.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_06",
+          "query": "Run biophysical land use classification on satellite orbit ephemeris data.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_07",
+          "query": "Determine whether pixel elevation contours represent forest or pasture land cover.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_08",
+          "query": "Classify agricultural cropland using atmospheric carbon dioxide ppm concentration.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_09",
+          "query": "Detect building alterations using ground penetrating radar audio acoustic logs.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_10",
+          "query": "Estimate surface change detection from thermal infrared heat island sensor drift.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_11",
+          "query": "Map CORINE biophysical categories using sub-orbital drone lidar telemetry packets.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_12",
+          "query": "Identify arable crop fields from atmospheric aerosol optical depth lookup tables.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_13",
+          "query": "Calculate deforestation rate using sea surface salinity buoys.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_14",
+          "query": "Classify urban fabric using cellular network tower signal triangulation.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_15",
+          "query": "Detect temporal surface change from gravity recovery and climate experiment GRACE mascons.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_16",
+          "query": "Predict land cover vegetation using magnetosphere geomagnetic flux readings.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_17",
+          "query": "Identify pasture land from Doppler radar weather reflectivity scans.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_18",
+          "query": "Classify wetland biomes using seismic tremor magnitude recordings.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_19",
+          "query": "Detect infrastructure modifications from AIS maritime ship beacon transponders.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_20",
+          "query": "Determine cropland boundaries using stratospheric ozone depletion column density.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_21",
+          "query": "Classify forest canopy cover from solar wind geomagnetic storm indices.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_22",
+          "query": "Map water bodies using aircraft transponder flight path logs.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_23",
+          "query": "Detect urban building growth from nightlight luminosity wattage meters.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_24",
+          "query": "Classify industrial surfaces using ionospheric total electron content maps.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C1_25",
+          "query": "Identify transitional woodland from soil moisture active passive SMAP radiometer counts.",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        }
+      ]
+    },
+    {
+      "cohort_id": "cohort_2_multi_task_collisions",
+      "name": "Cohort 2: Conflicting Multi-Task Collisions",
+      "threat_type": "Blended mutually exclusive task verbs demanding simultaneous execution",
+      "ground_truth_action": "CLARIFY_AMBIGUOUS",
+      "queries": [
+        {
+          "query_id": "C2_01",
+          "query": "Classify land cover classes and detect modifications between 2020 and 2024 simultaneously.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_02",
+          "query": "Determine both the CORINE land cover categories and temporal building changes over time.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_03",
+          "query": "Perform optical-SAR fusion and bitemporal change detection on this observation.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_04",
+          "query": "Execute land-cover classification and bounding box visual grounding on storage tanks.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_05",
+          "query": "Provide a descriptive scene caption and detect all surface modifications across dates.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_06",
+          "query": "Count airport aircraft and classify agricultural crop types in this image.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_07",
+          "query": "Detect building change and count how many ships are docked in the harbor.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_08",
+          "query": "Map forest and arable land cover while localizing coordinates for all runways.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_09",
+          "query": "Generate a caption for the landscape and classify every pixel into CORINE classes.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_10",
+          "query": "Perform visual grounding on industrial buildings and detect temporal modifications.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_11",
+          "query": "Fuse radar and optical imagery to detect changed structures between observation dates.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_12",
+          "query": "Answer how many buildings are damaged and classify surrounding biophysical land use.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_13",
+          "query": "Detect deforestation over time and localize pixel coordinates of remaining tree stands.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_14",
+          "query": "Describe this scene in detail and detect whether new buildings were constructed.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_15",
+          "query": "Classify pastures and arable land while counting aircraft on the taxiway.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_16",
+          "query": "Localize bounding box coordinates for vehicles and detect temporal road changes.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_17",
+          "query": "Perform SAR polarization fusion while identifying crop types and urban sprawl.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_18",
+          "query": "Detect surface alterations between dates and provide a concise caption of the area.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_19",
+          "query": "Classify water bodies and wetlands while answering how many bridges are visible.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_20",
+          "query": "Identify urban fabric and calculate bounding box coordinates for fuel tanks.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_21",
+          "query": "Detect newly built structures over time and classify the underlying soil biome.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_22",
+          "query": "Describe the terrain landscape and execute optical-SAR backscatter fusion.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_23",
+          "query": "Classify cropland and detect modification between pre-event and post-event passes.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_24",
+          "query": "Localize all aircraft with bounding boxes and detect ground changes since 2021.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C2_25",
+          "query": "Determine biophysical land cover categories and count storage containers in the yard.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        }
+      ]
+    },
+    {
+      "cohort_id": "cohort_3_polysemous_jargon",
+      "name": "Cohort 3: Polysemous Domain Jargon",
+      "threat_type": "Geospatial and radiometric terminology devoid of actionable operational directives",
+      "ground_truth_action": "CLARIFY_AMBIGUOUS",
+      "queries": [
+        {
+          "query_id": "C3_01",
+          "query": "Spectral reflectance signatures across the biophysical canopy.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_02",
+          "query": "Top-of-atmosphere radiance and bottom-of-atmosphere surface reflectance.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_03",
+          "query": "Radiometric calibration profiles and Sentinel-2 Level-2A metadata.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_04",
+          "query": "Geospatial coordinate reference system EPSG:32632 projection parameters.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_05",
+          "query": "High-resolution orthorectified multispectral imagery.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_06",
+          "query": "Atmospheric transmission windows and Rayleigh scattering coefficients.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_07",
+          "query": "Sentinel-1 Synthetic Aperture Radar interferometric coherence phase.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_08",
+          "query": "Ground sample distance and subpixel spatial resolution characteristics.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_09",
+          "query": "Sun glint specular reflection and bidirectional reflectance distribution function.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_10",
+          "query": "Digital elevation model slope, aspect, and topographic terrain contours.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_11",
+          "query": "Normalized Difference Vegetation Index red and near-infrared spectral bands.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_12",
+          "query": "Cloud shadow radiometric overcorrection and dark pixel atmospheric correction.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_13",
+          "query": "Shortwave infrared SWIR band atmospheric aerosol absorption profiles.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_14",
+          "query": "Copernicus Space Component Sentinel-2 MSI instrument spectral response functions.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_15",
+          "query": "Dual polarization VV and VH backscatter scattering matrix components.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_16",
+          "query": "Orthorectification rational polynomial coefficients and sensor telemetry.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_17",
+          "query": "Radiometric quantization levels and 12-bit digital number scaling offsets.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_18",
+          "query": "Spatial modulation transfer function and point spread function calibration.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_19",
+          "query": "Temporal revisit frequency and sun-synchronous orbital ground track.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_20",
+          "query": "Geometric distortion affine transformation matrix coefficients.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_21",
+          "query": "Albedo reflectance across visible blue green and red channels.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_22",
+          "query": "Panchromatic sharpening spectral band resampling algorithms.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_23",
+          "query": "Thermal infrared radiative heat transfer equations.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_24",
+          "query": "Multispectral swath width and nadir viewing angle geometry.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C3_25",
+          "query": "Atmospheric water vapor column absorption and cirrus cloud screening.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        }
+      ]
+    },
+    {
+      "cohort_id": "cohort_4_truncated_instructions",
+      "name": "Cohort 4: Truncated / Incomplete Instructions",
+      "threat_type": "Syntactically broken strings, fragments, abbreviations, or single-token queries",
+      "ground_truth_action": "REJECT_INSUFFICIENT_CONTEXT",
+      "queries": [
+        {
+          "query_id": "C4_01",
+          "query": "change",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_02",
+          "query": "forest",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_03",
+          "query": "satellite",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_04",
+          "query": "detect",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_05",
+          "query": "analyze",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_06",
+          "query": "pasture",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_07",
+          "query": "run model",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_08",
+          "query": "2024",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_09",
+          "query": "Sentinel-2",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_10",
+          "query": "imagery",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_11",
+          "query": "classify",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_12",
+          "query": "tile",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_13",
+          "query": "patch",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_14",
+          "query": "view",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_15",
+          "query": "process",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_16",
+          "query": "urban",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_17",
+          "query": "crop",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_18",
+          "query": "data",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_19",
+          "query": "run",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_20",
+          "query": "what is",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_21",
+          "query": "compare",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_22",
+          "query": "image",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_23",
+          "query": "difference",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_24",
+          "query": "map",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        },
+        {
+          "query_id": "C4_25",
+          "query": "help",
+          "ground_truth": "REJECT_INSUFFICIENT_CONTEXT"
+        }
+      ]
+    },
+    {
+      "cohort_id": "cohort_5_negation_traps",
+      "name": "Cohort 5: Negation Traps",
+      "threat_type": "Semantic negation clauses unresolvable by linear bag-of-words representations",
+      "ground_truth_action": "CLARIFY_AMBIGUOUS",
+      "queries": [
+        {
+          "query_id": "C5_01",
+          "query": "Do not detect changes, only inspect the static satellite image.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_02",
+          "query": "Do not classify land cover, ignore all vegetation and forest types.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_03",
+          "query": "Never perform change detection between these two acquisition dates.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_04",
+          "query": "Avoid land cover classification and do not categorize biophysical surfaces.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_05",
+          "query": "Do not localize bounding boxes or count objects in this image.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_06",
+          "query": "Do not detect modifications over time, just look at the single picture.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_07",
+          "query": "Skip change detection completely and refrain from finding alterations.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_08",
+          "query": "Never classify crop types or arable agricultural land in this tile.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_09",
+          "query": "Do not run land-cover classification on this observation.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_10",
+          "query": "Refrain from detecting temporal changes across the years.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_11",
+          "query": "Avoid classifying urban fabric and pastures in this scene.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_12",
+          "query": "Do not detect new building constructions between the dates.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_13",
+          "query": "Do not produce a land cover map for this satellite patch.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_14",
+          "query": "Never identify deforestation or vegetation change in this area.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_15",
+          "query": "Do not perform optical-SAR fusion on these radar bands.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_16",
+          "query": "Avoid detecting any modifications between pre-event and post-event imagery.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_17",
+          "query": "Refrain from classifying the biome or soil category here.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_18",
+          "query": "Do not highlight change detection areas between 2020 and 2024.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_19",
+          "query": "Never classify this scene as forest or cropland.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_20",
+          "query": "Do not look for alterations between the earlier and later images.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_21",
+          "query": "Avoid identifying biophysical land cover classes in this region.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_22",
+          "query": "Do not count aircraft on the runway and avoid VQA.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_23",
+          "query": "Refrain from detecting ground sprawl or temporal construction.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_24",
+          "query": "Do not classify whether this area is pasture or arable land.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        },
+        {
+          "query_id": "C5_25",
+          "query": "Never run change detection on this bitemporal pair.",
+          "ground_truth": "CLARIFY_AMBIGUOUS"
+        }
+      ]
+    }
+  ],
+  "control_cohort": {
+    "cohort_id": "cohort_control_in_domain",
+    "name": "In-Domain Control Cohort",
+    "threat_type": "Legitimate unambiguous in-domain satellite analysis queries",
+    "ground_truth_action": "ROUTED_TO_INTENT",
+    "queries": [
+      {
+        "query_id": "CTRL_01",
+        "query": "What type of land cover is visible in this satellite patch?",
+        "expected_task": "LAND_COVER_CLASSIFICATION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_02",
+        "query": "Classify the surface terrain and vegetation cover.",
+        "expected_task": "LAND_COVER_CLASSIFICATION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_03",
+        "query": "Identify whether this region contains arable land or forest.",
+        "expected_task": "LAND_COVER_CLASSIFICATION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_04",
+        "query": "Determine the distribution of pastures and crop fields.",
+        "expected_task": "LAND_COVER_CLASSIFICATION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_05",
+        "query": "Classify forest, arable land, and pastures in this scene.",
+        "expected_task": "LAND_COVER_CLASSIFICATION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_06",
+        "query": "What land-cover classes are present in this agricultural tile?",
+        "expected_task": "LAND_COVER_CLASSIFICATION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_07",
+        "query": "Classify vegetation types and biophysical land cover.",
+        "expected_task": "LAND_COVER_CLASSIFICATION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_08",
+        "query": "Map the distribution of arable land and coniferous forest.",
+        "expected_task": "LAND_COVER_CLASSIFICATION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_09",
+        "query": "What changed in this area between 2024 and 2026?",
+        "expected_task": "CHANGE_DETECTION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_10",
+        "query": "Detect land-cover modifications between these two acquisition dates.",
+        "expected_task": "CHANGE_DETECTION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_11",
+        "query": "Has urban expansion occurred between time T1 and T2?",
+        "expected_task": "CHANGE_DETECTION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_12",
+        "query": "Identify ground modifications between pre-event and post-event passes.",
+        "expected_task": "CHANGE_DETECTION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_13",
+        "query": "What changed between the 2021 and 2024 acquisitions?",
+        "expected_task": "CHANGE_DETECTION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_14",
+        "query": "Detect building construction and surface modifications over time.",
+        "expected_task": "CHANGE_DETECTION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_15",
+        "query": "Identify newly built structures between these two observation dates.",
+        "expected_task": "CHANGE_DETECTION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_16",
+        "query": "Detect deforestation and surface alterations across this bitemporal pair.",
+        "expected_task": "CHANGE_DETECTION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_17",
+        "query": "Did the lake surface area shrink between the two dates?",
+        "expected_task": "CHANGE_VQA",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_18",
+        "query": "How much has urban construction grown compared to the previous year?",
+        "expected_task": "CHANGE_VQA",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_19",
+        "query": "Why does the vegetation index appear lower in the second image?",
+        "expected_task": "CHANGE_VQA",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_20",
+        "query": "How many aircraft are parked on the airfield runway?",
+        "expected_task": "SINGLE_IMAGE_VQA",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_21",
+        "query": "Is there a river or reservoir present in the southern portion?",
+        "expected_task": "SINGLE_IMAGE_VQA",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_22",
+        "query": "Generate a descriptive summary of this satellite scene.",
+        "expected_task": "SCENE_CAPTIONING",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_23",
+        "query": "Describe the geographical landscape shown in this image.",
+        "expected_task": "SCENE_CAPTIONING",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_24",
+        "query": "Locate the reservoir and highlight its boundary with a mask.",
+        "expected_task": "VISUAL_GROUNDING",
+        "ground_truth": "ROUTED_TO_INTENT"
+      },
+      {
+        "query_id": "CTRL_25",
+        "query": "Compare radar backscatter and optical reflectance for this scene.",
+        "expected_task": "OPTICAL_SAR_FUSION",
+        "ground_truth": "ROUTED_TO_INTENT"
+      }
+    ]
+  }
+}

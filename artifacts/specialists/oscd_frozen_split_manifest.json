@@ -1,0 +1,204 @@
+{
+  "dataset": "OSCD (Onera Satellite Change Detection)",
+  "protocol_version": "v3.0.0-freeze-rev21",
+  "split_counts": {
+    "train_scenes": 10,
+    "val_scenes": 4,
+    "test_scenes": 10,
+    "total_scenes": 24
+  },
+  "scenes": {
+    "beirut": {
+      "split": "train",
+      "width": 582,
+      "height": 522,
+      "total_pixels": 303804,
+      "change_pixels": 3449,
+      "change_ratio": 0.011353
+    },
+    "berrida": {
+      "split": "train",
+      "width": 718,
+      "height": 776,
+      "total_pixels": 557168,
+      "change_pixels": 9130,
+      "change_ratio": 0.016386
+    },
+    "bordeaux": {
+      "split": "train",
+      "width": 563,
+      "height": 339,
+      "total_pixels": 190857,
+      "change_pixels": 4932,
+      "change_ratio": 0.025841
+    },
+    "chongqing": {
+      "split": "train",
+      "width": 788,
+      "height": 1015,
+      "total_pixels": 799820,
+      "change_pixels": 18942,
+      "change_ratio": 0.023683
+    },
+    "dubai": {
+      "split": "train",
+      "width": 525,
+      "height": 471,
+      "total_pixels": 247275,
+      "change_pixels": 4614,
+      "change_ratio": 0.018659
+    },
+    "hong_kong": {
+      "split": "train",
+      "width": 461,
+      "height": 517,
+      "total_pixels": 238337,
+      "change_pixels": 2380,
+      "change_ratio": 0.009986
+    },
+    "lasvegas": {
+      "split": "train",
+      "width": 772,
+      "height": 902,
+      "total_pixels": 696344,
+      "change_pixels": 17318,
+      "change_ratio": 0.02487
+    },
+    "milano": {
+      "split": "train",
+      "width": 540,
+      "height": 695,
+      "total_pixels": 375300,
+      "change_pixels": 13379,
+      "change_ratio": 0.035649
+    },
+    "rennes": {
+      "split": "train",
+      "width": 557,
+      "height": 858,
+      "total_pixels": 477906,
+      "change_pixels": 12244,
+      "change_ratio": 0.02562
+    },
+    "saclay_w": {
+      "split": "train",
+      "width": 360,
+      "height": 395,
+      "total_pixels": 142200,
+      "change_pixels": 1046,
+      "change_ratio": 0.007356
+    },
+    "montpellier": {
+      "split": "val",
+      "width": 1070,
+      "height": 1180,
+      "total_pixels": 1262600,
+      "change_pixels": 33918,
+      "change_ratio": 0.026864
+    },
+    "paris": {
+      "split": "val",
+      "width": 390,
+      "height": 408,
+      "total_pixels": 159120,
+      "change_pixels": 458,
+      "change_ratio": 0.002878
+    },
+    "rio": {
+      "split": "val",
+      "width": 688,
+      "height": 639,
+      "total_pixels": 439632,
+      "change_pixels": 4346,
+      "change_ratio": 0.009886
+    },
+    "valencia": {
+      "split": "val",
+      "width": 785,
+      "height": 799,
+      "total_pixels": 627215,
+      "change_pixels": 23592,
+      "change_ratio": 0.037614
+    },
+    "aguasclaras": {
+      "split": "test",
+      "width": 426,
+      "height": 353,
+      "total_pixels": 150378,
+      "change_pixels": 8552,
+      "change_ratio": 0.05687
+    },
+    "austin": {
+      "split": "test",
+      "width": 688,
+      "height": 639,
+      "total_pixels": 439632,
+      "change_pixels": 5018,
+      "change_ratio": 0.011414
+    },
+    "beihai": {
+      "split": "test",
+      "width": 476,
+      "height": 458,
+      "total_pixels": 218008,
+      "change_pixels": 969,
+      "change_ratio": 0.004445
+    },
+    "berlin": {
+      "split": "test",
+      "width": 544,
+      "height": 730,
+      "total_pixels": 397120,
+      "change_pixels": 28637,
+      "change_ratio": 0.072112
+    },
+    "brasilia": {
+      "split": "test",
+      "width": 451,
+      "height": 426,
+      "total_pixels": 192126,
+      "change_pixels": 13054,
+      "change_ratio": 0.067945
+    },
+    "budapest": {
+      "split": "test",
+      "width": 469,
+      "height": 433,
+      "total_pixels": 203077,
+      "change_pixels": 5242,
+      "change_ratio": 0.025813
+    },
+    "campinas": {
+      "split": "test",
+      "width": 385,
+      "height": 241,
+      "total_pixels": 92785,
+      "change_pixels": 1227,
+      "change_ratio": 0.013224
+    },
+    "mumbai": {
+      "split": "test",
+      "width": 634,
+      "height": 774,
+      "total_pixels": 490716,
+      "change_pixels": 48689,
+      "change_ratio": 0.09922
+    },
+    "nantes": {
+      "split": "test",
+      "width": 558,
+      "height": 545,
+      "total_pixels": 304110,
+      "change_pixels": 2419,
+      "change_ratio": 0.007954
+    },
+    "pisa": {
+      "split": "test",
+      "width": 716,
+      "height": 824,
+      "total_pixels": 589984,
+      "change_pixels": 45270,
+      "change_ratio": 0.076731
+    }
+  }
+}

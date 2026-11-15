@@ -1,0 +1,94 @@
+{
+  "Biome_1_Arid": {
+    "operational_floors": {
+      "fixed13_floor": 0.2,
+      "present_floor": 0.25,
+      "fpr_floor": 0.15
+    },
+    "achieved_metrics": {
+      "fixed13_macro_f1": 0.2831,
+      "present_macro_f1": 0.4089,
+      "fpr_absent": 0.018041
+    },
+    "floors_satisfied": true,
+    "delta_observed": -0.0527,
+    "two_sided_ci_95": [
+      -0.0944,
+      0.0248
+    ],
+    "one_sided_upper_bound_95": 0.0128,
+    "ci_includes_zero": true,
+    "holm_adjusted_p": "0.0280",
+    "statistically_significant_degradation": true,
+    "certification_status": "Certified Operationally with Documented Transfer Degradation"
+  },
+  "Biome_2_Tropical_Rainforest": {
+    "operational_floors": {
+      "fixed13_floor": 0.12,
+      "present_floor": 0.15,
+      "fpr_floor": 0.15
+    },
+    "achieved_metrics": {
+      "fixed13_macro_f1": 0.314,
+      "present_macro_f1": 0.4082,
+      "fpr_absent": 0.018779
+    },
+    "floors_satisfied": true,
+    "delta_observed": -0.0217,
+    "two_sided_ci_95": [
+      -0.0464,
+      0.0518
+    ],
+    "one_sided_upper_bound_95": 0.0398,
+    "ci_includes_zero": true,
+    "holm_adjusted_p": "0.1169",
+    "statistically_significant_degradation": false,
+    "certification_status": "Certified Operationally \u2014 No Significant Degradation (Conditional Reference)"
+  },
+  "Biome_3_Boreal_Forest": {
+    "operational_floors": {
+      "fixed13_floor": 0.12,
+      "present_floor": 0.15,
+      "fpr_floor": 0.15
+    },
+    "achieved_metrics": {
+      "fixed13_macro_f1": 0.3961,
+      "present_macro_f1": 0.4291,
+      "fpr_absent": 0.012136
+    },
+    "floors_satisfied": true,
+    "delta_observed": 0.0604,
+    "two_sided_ci_95": [
+      0.0343,
+      0.1335
+    ],
+    "one_sided_upper_bound_95": 0.1203,
+    "ci_includes_zero": false,
+    "holm_adjusted_p": "1.0000",
+    "statistically_significant_degradation": false,
+    "certification_status": "Certified Operationally \u2014 Domain Transfer Gain Observed"
+  },
+  "Biome_4_Humid_Subtropical_Cropland": {
+    "operational_floors": {
+      "fixed13_floor": 0.2,
+      "present_floor": 0.25,
+      "fpr_floor": 0.15
+    },
+    "achieved_metrics": {
+      "fixed13_macro_f1": 0.3765,
+      "present_macro_f1": 0.4894,
+      "fpr_absent": 0.008488
+    },
+    "floors_satisfied": true,
+    "delta_observed": 0.0407,
+    "two_sided_ci_95": [
+      0.0153,
+      0.1143
+    ],
+    "one_sided_upper_bound_95": 0.1022,
+    "ci_includes_zero": false,
+    "holm_adjusted_p": "1.0000",
+    "statistically_significant_degradation": false,
+    "certification_status": "Certified Operationally \u2014 Domain Transfer Gain Observed"
+  }
+}

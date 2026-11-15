@@ -1,0 +1,80 @@
+{
+  "per_cluster": {
+    "CL01_Sinai_Arid": {
+      "cluster_id": 0,
+      "N_candidate_drawn": 25,
+      "N_excluded_excursion": 0,
+      "N_evaluable": 25,
+      "excursion_rate": 0.0
+    },
+    "CL02_RubAlKhali_Arid": {
+      "cluster_id": 1,
+      "N_candidate_drawn": 28,
+      "N_excluded_excursion": 3,
+      "N_evaluable": 25,
+      "excursion_rate": 0.1071
+    },
+    "CL03_Amazon_Tropical": {
+      "cluster_id": 2,
+      "N_candidate_drawn": 27,
+      "N_excluded_excursion": 2,
+      "N_evaluable": 25,
+      "excursion_rate": 0.0741
+    },
+    "CL04_Congo_Tropical": {
+      "cluster_id": 3,
+      "N_candidate_drawn": 25,
+      "N_excluded_excursion": 0,
+      "N_evaluable": 25,
+      "excursion_rate": 0.0
+    },
+    "CL05_Lapland_Boreal": {
+      "cluster_id": 4,
+      "N_candidate_drawn": 26,
+      "N_excluded_excursion": 1,
+      "N_evaluable": 25,
+      "excursion_rate": 0.0385
+    },
+    "CL06_Alaska_Boreal": {
+      "cluster_id": 5,
+      "N_candidate_drawn": 25,
+      "N_excluded_excursion": 0,
+      "N_evaluable": 25,
+      "excursion_rate": 0.0
+    },
+    "CL07_Punjab_Cropland": {
+      "cluster_id": 6,
+      "N_candidate_drawn": 27,
+      "N_excluded_excursion": 2,
+      "N_evaluable": 25,
+      "excursion_rate": 0.0741
+    },
+    "CL08_Mekong_Cropland": {
+      "cluster_id": 7,
+      "N_candidate_drawn": 26,
+      "N_excluded_excursion": 1,
+      "N_evaluable": 25,
+      "excursion_rate": 0.0385
+    },
+    "CL09_Serbia_T34TCR": {
+      "cluster_id": 8,
+      "N_candidate_drawn": 27,
+      "N_excluded_excursion": 2,
+      "N_evaluable": 25,
+      "excursion_rate": 0.0741
+    },
+    "CL10_Serbia_T34TEQ": {
+      "cluster_id": 9,
+      "N_candidate_drawn": 26,
+      "N_excluded_excursion": 1,
+      "N_evaluable": 25,
+      "excursion_rate": 0.0385
+    }
+  },
+  "pooled": {
+    "N_candidate_drawn": 262,
+    "N_excluded_excursion": 12,
+    "N_evaluable": 250,
+    "empirical_excursion_rate": 0.0458
+  }
+}

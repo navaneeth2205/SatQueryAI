@@ -1,0 +1,52 @@
+{
+  "Biome_1_Arid": {
+    "N_initial": 500,
+    "N_excluded_QC": 10,
+    "N_pass_QC": 490,
+    "N_excluded_temporal": 23,
+    "N_pass_temporal": 467,
+    "N_quarantined": 79,
+    "N_evaluable": 388,
+    "evaluable_retention_rate": 0.776
+  },
+  "Biome_2_Tropical_Rainforest": {
+    "N_initial": 500,
+    "N_excluded_QC": 9,
+    "N_pass_QC": 491,
+    "N_excluded_temporal": 23,
+    "N_pass_temporal": 468,
+    "N_quarantined": 42,
+    "N_evaluable": 426,
+    "evaluable_retention_rate": 0.852
+  },
+  "Biome_3_Boreal_Forest": {
+    "N_initial": 500,
+    "N_excluded_QC": 11,
+    "N_pass_QC": 489,
+    "N_excluded_temporal": 18,
+    "N_pass_temporal": 471,
+    "N_quarantined": 59,
+    "N_evaluable": 412,
+    "evaluable_retention_rate": 0.824
+  },
+  "Biome_4_Humid_Subtropical_Cropland": {
+    "N_initial": 500,
+    "N_excluded_QC": 14,
+    "N_pass_QC": 486,
+    "N_excluded_temporal": 18,
+    "N_pass_temporal": 468,
+    "N_quarantined": 36,
+    "N_evaluable": 432,
+    "evaluable_retention_rate": 0.864
+  },
+  "POOLED_OOD": {
+    "N_initial": 2000,
+    "N_excluded_QC": 44,
+    "N_pass_QC": 1956,
+    "N_excluded_temporal": 82,
+    "N_pass_temporal": 1874,
+    "N_quarantined": 216,
+    "N_evaluable": 1658,
+    "evaluable_retention_rate": 0.829
+  }
+}

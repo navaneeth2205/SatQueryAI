@@ -55,6 +55,8 @@ class DeepLandCoverClassifier(BaseSpecialist):
 
         if classes_path is None:
             classes_path = repo_root / "artifacts" / "specialists" / "land_cover" / "classes.json"
+            if not classes_path.exists():
+                classes_path = repo_root / "artifacts" / "specialists" / "land_cover_phase2" / "classes.json"
         self.classes_path = Path(classes_path)
 
         if device is None:

@@ -1,0 +1,1297 @@
+{
+  "split_name": "5_fold_stratified_train_queries",
+  "total_queries": 109,
+  "random_state": 42,
+  "num_splits": 5,
+  "folds": {
+    "fold_1": {
+      "train_indices": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        9,
+        10,
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        22,
+        23,
+        24,
+        25,
+        26,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        42,
+        44,
+        45,
+        46,
+        48,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        60,
+        61,
+        62,
+        64,
+        66,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        85,
+        86,
+        87,
+        88,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        107,
+        108
+      ],
+      "val_indices": [
+        0,
+        1,
+        8,
+        12,
+        19,
+        21,
+        27,
+        28,
+        41,
+        43,
+        47,
+        49,
+        59,
+        63,
+        65,
+        67,
+        76,
+        77,
+        84,
+        89,
+        97,
+        106
+      ],
+      "val_sample_count": 22,
+      "val_class_distribution": {
+        "LAND_COVER_CLASSIFICATION": 4,
+        "SINGLE_IMAGE_VQA": 3,
+        "SCENE_CAPTIONING": 3,
+        "VISUAL_GROUNDING": 3,
+        "CHANGE_VQA": 3,
+        "OPTICAL_SAR_FUSION": 3,
+        "CHANGE_DETECTION": 3
+      },
+      "val_queries": [
+        {
+          "query_idx": 0,
+          "query": "What type of land cover is visible in this satellite patch?",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 1,
+          "query": "Classify the surface terrain and vegetation cover.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 8,
+          "query": "Does this scene show coniferous forest or broad-leaved trees?",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 12,
+          "query": "Are there residential buildings near the highway?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 19,
+          "query": "Describe the geographical landscape shown in this image.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 21,
+          "query": "Summarize the topography, water systems, and infrastructure.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 27,
+          "query": "Where is the agricultural parcel situated in this tile?",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 28,
+          "query": "Ground the river channel and trace its contour.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 41,
+          "query": "How much has urban construction grown compared to the previous year?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 43,
+          "query": "Has the river channel shifted between T1 and T2?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 47,
+          "query": "Combine Sentinel-1 SAR and Sentinel-2 optical data for soil analysis.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 49,
+          "query": "Fuse optical bands with VV/VH radar polarization channels.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 59,
+          "query": "Perform multi-label land cover classification on this observation.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 63,
+          "query": "Generate a surface alteration mask comparing these two satellite acquisitions.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 65,
+          "query": "Identify all altered pixels across this bi-temporal pair.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 67,
+          "query": "Run change vector analysis to detect altered ground features.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 76,
+          "query": "Quantify the reduction in green vegetation cover between the two years.",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 77,
+          "query": "What color is the industrial roof structure in the upper quadrant?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 84,
+          "query": "Does this image show any evidence of active flooding?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 89,
+          "query": "Write an informative caption characterizing this overhead satellite view.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 97,
+          "query": "Where is the golf course located in this aerial scene? Highlight it.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 106,
+          "query": "Fuse VV/VH polarimetric data with optical bands to estimate soil moisture.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        }
+      ]
+    },
+    "fold_2": {
+      "train_indices": [
+        0,
+        1,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        16,
+        17,
+        18,
+        19,
+        21,
+        22,
+        23,
+        25,
+        26,
+        27,
+        28,
+        30,
+        31,
+        32,
+        33,
+        35,
+        36,
+        37,
+        39,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        57,
+        58,
+        59,
+        61,
+        62,
+        63,
+        65,
+        66,
+        67,
+        68,
+        69,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        79,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        95,
+        96,
+        97,
+        98,
+        99,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107
+      ],
+      "val_indices": [
+        2,
+        15,
+        20,
+        24,
+        29,
+        34,
+        38,
+        40,
+        48,
+        55,
+        56,
+        60,
+        64,
+        70,
+        71,
+        78,
+        80,
+        87,
+        94,
+        100,
+        101,
+        108
+      ],
+      "val_sample_count": 22,
+      "val_class_distribution": {
+        "LAND_COVER_CLASSIFICATION": 4,
+        "SINGLE_IMAGE_VQA": 3,
+        "SCENE_CAPTIONING": 3,
+        "VISUAL_GROUNDING": 3,
+        "CHANGE_DETECTION": 3,
+        "CHANGE_VQA": 3,
+        "OPTICAL_SAR_FUSION": 3
+      },
+      "val_queries": [
+        {
+          "query_idx": 2,
+          "query": "Identify whether this region contains arable land or forest.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 15,
+          "query": "Is there any snow or cloud cover visible in this image?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 20,
+          "query": "Provide a detailed textual caption for this Earth observation.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 24,
+          "query": "Explain what can be seen from an overhead perspective here.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 29,
+          "query": "Pinpoint the exact location of the deforestation patch.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 34,
+          "query": "Has urban expansion occurred between time T1 and T2?",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 38,
+          "query": "Did the water body recede or expand between the two dates?",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 40,
+          "query": "Did the lake surface area shrink between the two dates?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 48,
+          "query": "Analyze surface roughness using radar alongside optical vegetation indices.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 55,
+          "query": "Predict CORINE land cover categories for this multimodal patch.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 56,
+          "query": "Is this satellite patch dominated by pastures, cropland, or natural vegetation?",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 60,
+          "query": "Assess the distribution of terrestrial land-cover categories in this scene.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 64,
+          "query": "Where have physical surface modifications occurred between the two dates?",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 70,
+          "query": "How much has the urban footprint expanded compared to the baseline observation?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 71,
+          "query": "Did the water level in the reservoir rise or drop between T1 and T2?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 78,
+          "query": "How many storage tanks are visible in the chemical facility?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 80,
+          "query": "Are solar panels installed on the rooftops in this urban sector?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 87,
+          "query": "Summarize the visual content of this satellite image into a descriptive paragraph.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 94,
+          "query": "Ground the runway strip and outline its spatial boundary.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 100,
+          "query": "Ground the patch of clear-cut deforestation and mark its contour.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 101,
+          "query": "Fuse Sentinel-1 SAR backscatter with Sentinel-2 optical reflectance.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 108,
+          "query": "Analyze cross-modal SAR backscatter and optical spectral signatures jointly.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        }
+      ]
+    },
+    "fold_3": {
+      "train_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        7,
+        8,
+        9,
+        10,
+        12,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        24,
+        25,
+        27,
+        28,
+        29,
+        31,
+        32,
+        33,
+        34,
+        36,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        46,
+        47,
+        48,
+        49,
+        50,
+        52,
+        54,
+        55,
+        56,
+        58,
+        59,
+        60,
+        61,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        84,
+        85,
+        87,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        100,
+        101,
+        103,
+        105,
+        106,
+        107,
+        108
+      ],
+      "val_indices": [
+        6,
+        11,
+        13,
+        14,
+        23,
+        26,
+        30,
+        35,
+        37,
+        44,
+        45,
+        51,
+        53,
+        57,
+        62,
+        69,
+        83,
+        86,
+        88,
+        99,
+        102,
+        104
+      ],
+      "val_sample_count": 22,
+      "val_class_distribution": {
+        "SINGLE_IMAGE_VQA": 4,
+        "LAND_COVER_CLASSIFICATION": 3,
+        "SCENE_CAPTIONING": 3,
+        "VISUAL_GROUNDING": 3,
+        "CHANGE_DETECTION": 3,
+        "CHANGE_VQA": 3,
+        "OPTICAL_SAR_FUSION": 3
+      },
+      "val_queries": [
+        {
+          "query_idx": 6,
+          "query": "Predict the land-use classes for this Sentinel observation.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 11,
+          "query": "What color is the lake water in the center?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 13,
+          "query": "Is the airport runway paved or unpaved?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 14,
+          "query": "What is the approximate size of the largest agricultural parcel?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 23,
+          "query": "Describe the overall scene and surrounding terrain.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 26,
+          "query": "Find the industrial buildings and return their bounding boxes.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 30,
+          "query": "Where are the solar panel arrays located?",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 35,
+          "query": "Highlight areas of deforestation between the historical and recent passes.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 37,
+          "query": "Compare both temporal observations and detect surface alterations.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 44,
+          "query": "What caused the significant reflectance drop in the agricultural zone?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 45,
+          "query": "Was the newly cleared land converted into residential or industrial use?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 51,
+          "query": "Jointly reason over optical multispectral and radar backscatter.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 53,
+          "query": "What are the land surface types present across this observation?",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 57,
+          "query": "Classify the multi-label land use classes for this Sentinel tile.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 62,
+          "query": "Compute the pixel-level difference map between the baseline and subsequent passes.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 69,
+          "query": "Why did the forest canopy density decrease between the two dates?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 83,
+          "query": "How many airplanes are parked on the tarmac?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 86,
+          "query": "Provide a descriptive overview of the landscape, terrain, and built infrastructure.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 88,
+          "query": "Describe the spatial layout of water bodies, forests, and residential zones.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 99,
+          "query": "Locate the athletic stadium and highlight its bounding box.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 102,
+          "query": "Combine radar polarization channels and multispectral optical bands for surface analysis.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 104,
+          "query": "Cross-reference dual-pol radar intensities with optical spectral indices.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        }
+      ]
+    },
+    "fold_4": {
+      "train_indices": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        18,
+        19,
+        20,
+        21,
+        23,
+        24,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        37,
+        38,
+        40,
+        41,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        51,
+        53,
+        54,
+        55,
+        56,
+        57,
+        59,
+        60,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        76,
+        77,
+        78,
+        79,
+        80,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        93,
+        94,
+        95,
+        97,
+        99,
+        100,
+        101,
+        102,
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "val_indices": [
+        4,
+        7,
+        16,
+        17,
+        22,
+        25,
+        36,
+        39,
+        42,
+        50,
+        52,
+        58,
+        61,
+        74,
+        75,
+        81,
+        82,
+        91,
+        92,
+        96,
+        98,
+        103
+      ],
+      "val_sample_count": 22,
+      "val_class_distribution": {
+        "SINGLE_IMAGE_VQA": 4,
+        "LAND_COVER_CLASSIFICATION": 3,
+        "SCENE_CAPTIONING": 3,
+        "VISUAL_GROUNDING": 3,
+        "CHANGE_DETECTION": 3,
+        "CHANGE_VQA": 3,
+        "OPTICAL_SAR_FUSION": 3
+      },
+      "val_queries": [
+        {
+          "query_idx": 4,
+          "query": "Determine if this is an urban area, pasture, or wetland.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 7,
+          "query": "Identify the land-cover distribution in this tile.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 16,
+          "query": "Does this region appear densely populated or rural?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 17,
+          "query": "Are there ships docked along the coastline?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 22,
+          "query": "Give me a natural-language description of this remote-sensing tile.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 25,
+          "query": "Locate the reservoir and highlight its boundary with a mask.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 36,
+          "query": "Produce a binary change map between image 1 and image 2.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 39,
+          "query": "Identify newly constructed infrastructure since the baseline image.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 42,
+          "query": "Why does the vegetation index appear lower in the second image?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 50,
+          "query": "Can we penetrate through the cloud cover using the SAR image?",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 52,
+          "query": "Cross-examine the Sentinel-1 and Sentinel-2 observations.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 58,
+          "query": "Determine if industrial commercial zones or agricultural fields are present.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 61,
+          "query": "Perform binary change detection between observation T1 and observation T2.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 74,
+          "query": "How significantly has new residential construction increased over the time interval?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 75,
+          "query": "What caused the altered spectral signature in the southern sector?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 81,
+          "query": "What type of vessel is docked at the harbor?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 82,
+          "query": "Is the center reservoir filled with sediment or clear water?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 91,
+          "query": "Produce an analytical summary of the terrain and environment shown in this image.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 92,
+          "query": "Provide a structured textual overview of the visible Earth observation features.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 96,
+          "query": "Return the bounding polygon for the solar power installation.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 98,
+          "query": "Find the cluster of shipping containers and localize their perimeter.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 103,
+          "query": "Use SAR backscatter to penetrate cloud cover and augment optical observations.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        }
+      ]
+    },
+    "fold_5": {
+      "train_indices": [
+        0,
+        1,
+        2,
+        4,
+        6,
+        7,
+        8,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        67,
+        69,
+        70,
+        71,
+        74,
+        75,
+        76,
+        77,
+        78,
+        80,
+        81,
+        82,
+        83,
+        84,
+        86,
+        87,
+        88,
+        89,
+        91,
+        92,
+        94,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        106,
+        108
+      ],
+      "val_indices": [
+        3,
+        5,
+        9,
+        10,
+        18,
+        31,
+        32,
+        33,
+        46,
+        54,
+        66,
+        68,
+        72,
+        73,
+        79,
+        85,
+        90,
+        93,
+        95,
+        105,
+        107
+      ],
+      "val_sample_count": 21,
+      "val_class_distribution": {
+        "CHANGE_DETECTION": 4,
+        "LAND_COVER_CLASSIFICATION": 3,
+        "SINGLE_IMAGE_VQA": 3,
+        "SCENE_CAPTIONING": 3,
+        "VISUAL_GROUNDING": 3,
+        "OPTICAL_SAR_FUSION": 3,
+        "CHANGE_VQA": 2
+      },
+      "val_queries": [
+        {
+          "query_idx": 3,
+          "query": "What are the dominant land categories present?",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 5,
+          "query": "Is there industrial or commercial infrastructure here?",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 9,
+          "query": "How many distinct water bodies are visible in this scene?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 10,
+          "query": "Is there a river or reservoir present in the southern portion?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 18,
+          "query": "Generate a descriptive summary of this satellite scene.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 31,
+          "query": "Highlight the airport terminal on the satellite view.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 32,
+          "query": "What changed in this area between 2024 and 2026?",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 33,
+          "query": "Detect land-cover modifications between these two acquisition dates.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 46,
+          "query": "Compare radar backscatter and optical reflectance for this scene.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 54,
+          "query": "Identify whether this tile contains mixed forest, water bodies, or urban land.",
+          "task": "LAND_COVER_CLASSIFICATION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 66,
+          "query": "Highlight areas of construction or clearing between T1 and T2.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 68,
+          "query": "Determine which areas experienced surface changes between the two passes.",
+          "task": "CHANGE_DETECTION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 72,
+          "query": "What was the primary driver of change observed in this agricultural parcel?",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 73,
+          "query": "Explain why the vegetative vigor decreased between the two passes.",
+          "task": "CHANGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 79,
+          "query": "Is there an unpaved road traversing the agricultural fields?",
+          "task": "SINGLE_IMAGE_VQA",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 85,
+          "query": "Generate a comprehensive natural language description of this remote sensing scene.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 90,
+          "query": "Describe the geographical features and settlement patterns visible here.",
+          "task": "SCENE_CAPTIONING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 93,
+          "query": "Locate the water reservoir and return its bounding box coordinates.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 95,
+          "query": "Pinpoint where the bridge spans the river on this satellite view.",
+          "task": "VISUAL_GROUNDING",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 105,
+          "query": "Perform joint optical-radar multimodal analysis on this co-registered patch.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        },
+        {
+          "query_idx": 107,
+          "query": "Integrate SAR texture with optical surface reflectance for flood mapping.",
+          "task": "OPTICAL_SAR_FUSION",
+          "prompt_family": "unassigned"
+        }
+      ]
+    }
+  }
+}
