@@ -200,7 +200,7 @@ jobs:
             --dest .
 
       - name: Set up Docker Buildx
-        uses: actions/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Production Docker Image (CPU Target)
         uses: docker/build-push-action@v5
