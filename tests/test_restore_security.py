@@ -12,11 +12,22 @@ import pathlib
 import subprocess
 import sys
 import tarfile
+import os
 import pytest
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent
 RESTORE_SCRIPT = REPO_ROOT / "scripts" / "restore_production_bundle.py"
 BUNDLE_ARCHIVE = REPO_ROOT / "dist_bundle" / "satquery-production-artifacts-v1.0.0-rc1.tar.gz"
+if not BUNDLE_ARCHIVE.exists():
+    _runner_temp = os.environ.get("RUNNER_TEMP")
+    if _runner_temp:
+        for candidate in (
+            pathlib.Path(_runner_temp) / "dist_bundle" / "satquery-production-artifacts-v1.0.0-rc1.tar.gz",
+            pathlib.Path(_runner_temp) / "satquery-production-artifacts-v1.0.0-rc1.tar.gz",
+        ):
+            if candidate.exists():
+                BUNDLE_ARCHIVE = candidate
+                break
 PINNED_SHA256 = "97fa1b6d79245a4da92bfd8991d82a3f214adf56a26a5e0355bb2593196bd5c0"
 
 

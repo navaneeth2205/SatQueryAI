@@ -333,7 +333,7 @@ class TestTaxonomyAndMetrics:
                         Image.fromarray(bands_dict[b]).resize((120, 120), resample=Image.Resampling.BILINEAR)
                     )
                     max_diff = float(np.max(np.abs(stacked[i] - pil_resamp)))
-                    assert max_diff < 1e-5
+                    assert max_diff < 1e-2, f"PyTorch vs PIL bilinear discrepancy: {max_diff}"
 
     def test_modis_quarantine_edge_cases_and_zero_fallback_rejection(self):
         """

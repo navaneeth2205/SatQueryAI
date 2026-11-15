@@ -215,32 +215,49 @@ def create_app() -> Flask:
 
         if effective_mode == "change_detection":
             target_cd_idx = int(cd_idx) if cd_idx is not None else 0
+            scene_name = f"sample_scene_{target_cd_idx}"
+            split = "test"
             if not oscd_df.empty and 0 <= target_cd_idx < len(oscd_df):
                 row = oscd_df.iloc[target_cd_idx]
+                scene_name = str(row["scene_name"])
+                split = str(row.get("split", "test"))
                 t1_path = REPO_ROOT / row["t1_path"]
                 t2_path = REPO_ROOT / row["t1_path"] if synthetic_identical else REPO_ROOT / row["t2_path"]
+            else:
+                t1_path = REPO_ROOT / "data" / "oscd" / "synthetic_t1.png"
+                t2_path = REPO_ROOT / "data" / "oscd" / "synthetic_t2.png"
 
-                input_data = {
-                    "t1": str(t1_path),
-                    "t2": str(t2_path),
-                    "scene_name": str(row["scene_name"]),
-                    "product_type": "oscd_rgb",
-                    "method": cd_method
-                }
-                scene_meta = {
-                    "scene_name": str(row["scene_name"]),
-                    "split": str(row["split"]),
-                    "synthetic_identical": synthetic_identical,
-                    "method": cd_method
-                }
-
-                # Generate visual base64 thumbnails
+            if t1_path.exists() and t2_path.exists():
+                t1_in, t2_in = str(t1_path), str(t2_path)
                 try:
                     with Image.open(t1_path) as im1, Image.open(t2_path) as im2:
                         visual_assets["t1_image"] = _encode_image_base64(im1)
                         visual_assets["t2_image"] = _encode_image_base64(im2)
                 except Exception as e:
                     print(f"[API Warning] Failed to generate thumbnails: {e}")
+            else:
+                rng = np.random.RandomState(42 + target_cd_idx)
+                arr1 = (rng.uniform(50, 200, (256, 256, 3))).astype(np.uint8)
+                arr2 = arr1.copy() if synthetic_identical else (arr1 + rng.uniform(-20, 20, (256, 256, 3))).clip(0, 255).astype(np.uint8)
+                im1 = Image.fromarray(arr1)
+                im2 = Image.fromarray(arr2)
+                t1_in, t2_in = im1, im2
+                visual_assets["t1_image"] = _encode_image_base64(im1)
+                visual_assets["t2_image"] = _encode_image_base64(im2)
+
+            input_data = {
+                "t1": t1_in,
+                "t2": t2_in,
+                "scene_name": scene_name,
+                "product_type": "oscd_rgb",
+                "method": cd_method
+            }
+            scene_meta = {
+                "scene_name": scene_name,
+                "split": split,
+                "synthetic_identical": synthetic_identical,
+                "method": cd_method
+            }
 
         elif effective_mode == "land_cover":
             target_sample_idx = int(sample_idx) if sample_idx is not None else 0
@@ -253,19 +270,21 @@ def create_app() -> Flask:
                 feats = ben_features[target_sample_idx]
                 active_model_desc = "Baseline Random Forest (84 global statistical features)"
             else:
-                active_model_desc = "None"
+                rng = np.random.RandomState(42 + target_sample_idx)
+                n_feats = 488 if model_ver == "phase2" else 84
+                feats = rng.randn(n_feats).astype(np.float32)
+                active_model_desc = "Phase 2 LightGBM (488 features, synthetic demo sample)" if model_ver == "phase2" else "Baseline Random Forest (84 features, synthetic demo sample)"
 
-            if feats is not None:
-                row = ben_df.iloc[target_sample_idx] if not ben_df.empty else {}
-                input_data = {
-                    "features": feats,
-                    "patch_id": str(row.get("patch_id", f"sample_{target_sample_idx}")),
-                    "ground_truth_labels": list(row.get("labels", []))
-                }
-                visual_assets["mode"] = "land_cover"
-                visual_assets["patch_id"] = str(row.get("patch_id", f"sample_{target_sample_idx}"))
-                visual_assets["ground_truth_labels"] = list(row.get("labels", []))
-                visual_assets["active_model"] = active_model_desc
+            row = ben_df.iloc[target_sample_idx] if not ben_df.empty and target_sample_idx < len(ben_df) else {}
+            input_data = {
+                "features": feats,
+                "patch_id": str(row.get("patch_id", f"sample_{target_sample_idx}")),
+                "ground_truth_labels": list(row.get("labels", []))
+            }
+            visual_assets["mode"] = "land_cover"
+            visual_assets["patch_id"] = str(row.get("patch_id", f"sample_{target_sample_idx}"))
+            visual_assets["ground_truth_labels"] = list(row.get("labels", []))
+            visual_assets["active_model"] = active_model_desc
 
         # 4. Execute query through SatQueryEngine
         response = engine.process_query(query, input_data=input_data)
@@ -289,18 +308,19 @@ def create_app() -> Flask:
                 bbox = meta.get("largest_change_cluster_bbox_pixel")
                 from satquery.specialists.change_detection import TemporalDifferenceBaseline
                 temp_baseline = TemporalDifferenceBaseline()
-                with Image.open(input_data["t1"]) as im1, Image.open(input_data["t2"]) as im2:
-                    _, pred_mask, _ = temp_baseline.compute_change_map(
-                        np.array(im1).astype(np.float32),
-                        np.array(im2).astype(np.float32),
-                        np.ones((im1.size[1], im1.size[0]), dtype=bool),
-                        product_type="oscd_rgb",
-                        source_dtype="uint8",
-                        method=cd_method
-                    )
-                    overlay_img = _create_change_overlay(im2, pred_mask, bbox=bbox)
-                    visual_assets["change_overlay"] = _encode_image_base64(overlay_img)
-                    visual_assets["cd_method"] = cd_method
+                im1_obj = Image.open(input_data["t1"]) if isinstance(input_data["t1"], (str, Path)) else input_data["t1"]
+                im2_obj = Image.open(input_data["t2"]) if isinstance(input_data["t2"], (str, Path)) else input_data["t2"]
+                _, pred_mask, _ = temp_baseline.compute_change_map(
+                    np.array(im1_obj).astype(np.float32),
+                    np.array(im2_obj).astype(np.float32),
+                    np.ones((im1_obj.size[1], im1_obj.size[0]), dtype=bool),
+                    product_type="oscd_rgb",
+                    source_dtype="uint8",
+                    method=cd_method
+                )
+                overlay_img = _create_change_overlay(im2_obj, pred_mask, bbox=bbox)
+                visual_assets["change_overlay"] = _encode_image_base64(overlay_img)
+                visual_assets["cd_method"] = cd_method
             except Exception as e:
                 print(f"[API Warning] Failed to compute change overlay: {e}")
 

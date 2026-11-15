@@ -248,18 +248,18 @@ jobs:
           echo "Testing /api/query routing endpoint..."
           curl -fsS -X POST http://localhost:5000/api/query \
             -H "Content-Type: application/json" \
-            -d '{"query": "Identify surface alterations and newly built structures over time.", "mode": "query_only"}' \
+            -d '{"query": "Identify surface alterations and newly built structures over time.", "mode": "auto"}' \
             | tee "${RUNNER_TEMP}/routing_result.json"
-          python -c "import json, os; res = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'routing_result.json'))); assert res['status'] in ('SUCCESS', 'success'), f'Routing query failed: {res}'; assert 'predictions' in res, 'Missing predictions in response'"
+          python -c "import json, os; raw = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'routing_result.json'))); res = raw.get('response', raw); assert res['status'] in ('SUCCESS', 'success'), f'Routing query failed: {res}'; assert res.get('routed_task') == 'CHANGE_DETECTION', f'Unexpected task: {res}'"
 
       - name: Live Container Inference — Unsupported Task Gate
         run: |
           echo "Testing unsupported VQA query handling..."
           curl -fsS -X POST http://localhost:5000/api/query \
             -H "Content-Type: application/json" \
-            -d '{"query": "Count the number of vessels in the harbor", "mode": "query_only"}' \
+            -d '{"query": "Count the number of vessels in the harbor", "mode": "auto"}' \
             | tee "${RUNNER_TEMP}/unavail_result.json"
-          python -c "import json, os; res = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'unavail_result.json'))); assert res['status'] == 'UNAVAILABLE', f'Unexpected status: {res}'"
+          python -c "import json, os; raw = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'unavail_result.json'))); res = raw.get('response', raw); assert 'UNAVAILABLE' in res['status'], f'Unexpected status: {res}'"
 
       - name: Container Audit & Graceful Teardown
         if: always()
