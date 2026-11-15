@@ -2,3 +2,4 @@
 requirements.txt text eol=crlf
 pyproject.toml text eol=crlf
 data/starter_queries.csv text eol=crlf
+SATQUERY-P4-PROTOCOL-V1.12.1-FROZEN.md text eol=crlf

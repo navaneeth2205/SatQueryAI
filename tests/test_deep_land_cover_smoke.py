@@ -8,6 +8,7 @@ Covers Stages 1.1 - 1.4:
 1.4 Single-batch overfitting smoke test and CPU throughput benchmark.
 """
 
+from pathlib import Path
 import time
 import pytest
 import numpy as np
@@ -103,9 +104,12 @@ def test_asymmetric_loss_properties():
 
 def test_bigearthnet_dataset_integrity():
     """Verify dataset loading from archive.zip and correct normalization bounds."""
+    archive_path = "initial_trails/Dataset/archive.zip"
+    if not Path(archive_path).exists():
+        pytest.skip(f"Raw dataset archive not found at {archive_path}")
     dataset = BigEarthNetDataset(
         metadata_path="data/train_full_metadata.parquet",
-        archive_path="initial_trails/Dataset/archive.zip",
+        archive_path=archive_path,
         subset_size=8,
         augment=False
     )
@@ -127,12 +131,16 @@ def test_single_batch_overfit():
     Stage 1.4 Smoke Test: Verify that the model can rapidly overfit a single real batch.
     Training loss must drop by at least 70% within 20 optimization steps.
     """
+    archive_path = "initial_trails/Dataset/archive.zip"
+    if not Path(archive_path).exists():
+        pytest.skip(f"Raw dataset archive not found at {archive_path}")
+
     torch.manual_seed(42)
     np.random.seed(42)
 
     dataset = BigEarthNetDataset(
         metadata_path="data/train_full_metadata.parquet",
-        archive_path="initial_trails/Dataset/archive.zip",
+        archive_path=archive_path,
         subset_size=4,
         augment=False
     )

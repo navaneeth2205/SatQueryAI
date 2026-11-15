@@ -369,13 +369,22 @@ class TestTrack43Perturbations:
         Confirms finite logits, valid probabilities in [0, 1], and valid change masks.
         """
         repo_root = Path(__file__).resolve().parent.parent
-        ckpt_path = repo_root / "artifacts" / "specialists" / "deep_change_detection_fc_siam_diff" / "best_model.pt"
-        assert ckpt_path.exists(), f"CD Checkpoint not found at {ckpt_path}"
+        fc_ckpt = repo_root / "artifacts" / "specialists" / "deep_change_detection_fc_siam_diff" / "best_model.pt"
+        e4_ckpt = repo_root / "artifacts" / "specialists" / "change_detection_step3" / "e4_best_model.pt"
 
-        model = FCSiamDiff(in_channels=3, num_classes=1)
-        checkpoint = torch.load(ckpt_path, map_location="cpu")
-        state_dict = checkpoint["model_state_dict"] if "model_state_dict" in checkpoint else checkpoint
-        model.load_state_dict(state_dict)
+        if fc_ckpt.exists():
+            model = FCSiamDiff(in_channels=3, num_classes=1)
+            checkpoint = torch.load(fc_ckpt, map_location="cpu")
+            state_dict = checkpoint["model_state_dict"] if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint else checkpoint
+            model.load_state_dict(state_dict)
+        elif e4_ckpt.exists():
+            from satquery.specialists.models.siamese_resnet_unet import SiameseResNet18UNet
+            model = SiameseResNet18UNet(in_channels=3, num_classes=1, pretrained=False, fusion_mode="diff_cat", use_scse=True)
+            checkpoint = torch.load(e4_ckpt, map_location="cpu")
+            state_dict = checkpoint["model_state_dict"] if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint else checkpoint
+            model.load_state_dict(state_dict)
+        else:
+            pytest.skip("Neither CD specialist checkpoint found.")
         model.eval()
 
         rng = np.random.RandomState(42)

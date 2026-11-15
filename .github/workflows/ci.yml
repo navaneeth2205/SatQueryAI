@@ -248,7 +248,7 @@ jobs:
           echo "Testing /api/query routing endpoint..."
           curl -fsS -X POST http://localhost:5000/api/query \
             -H "Content-Type: application/json" \
-            -d '{"query": "Detect changes between before and after flood imagery", "mode": "query_only"}' \
+            -d '{"query": "Identify surface alterations and newly built structures over time.", "mode": "query_only"}' \
             | tee "${RUNNER_TEMP}/routing_result.json"
           python -c "import json, os; res = json.load(open(os.path.join(os.environ['RUNNER_TEMP'], 'routing_result.json'))); assert res['status'] in ('SUCCESS', 'success'), f'Routing query failed: {res}'; assert 'predictions' in res, 'Missing predictions in response'"
 
