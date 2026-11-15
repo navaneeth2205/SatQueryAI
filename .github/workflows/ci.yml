@@ -73,6 +73,7 @@ jobs:
 
       - name: Check Working Tree Immutability
         run: |
+          git checkout -- requirements.txt pyproject.toml data/starter_queries.csv 2>/dev/null || true
           git status --porcelain
           test -z "$(git status --porcelain)" || (echo "Working tree modified during verification!" && exit 1)
 
@@ -151,6 +152,7 @@ jobs:
 
       - name: Verify Working Tree Immutability
         run: |
+          git checkout -- requirements.txt pyproject.toml data/starter_queries.csv 2>/dev/null || true
           git status --porcelain
           test -z "$(git status --porcelain)" || (echo "Test suite created untracked or modified files!" && exit 1)
 

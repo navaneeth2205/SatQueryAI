@@ -158,6 +158,19 @@ def extract_secure(
 
         logger.info(f"All {len(members)} archive entries passed path safety checks. Extracting...")
         for member in members:
+            dest_file = destination / member.name
+            if dest_file.is_file() and member.isreg():
+                extracted_f = tar.extractfile(member)
+                if extracted_f:
+                    archive_bytes = extracted_f.read()
+                    try:
+                        disk_bytes = dest_file.read_bytes()
+                        if archive_bytes == disk_bytes:
+                            # Content is already bitwise identical on disk; preserve existing file and attributes
+                            extracted_members.append(member.name)
+                            continue
+                    except Exception:
+                        pass
             tar.extract(member, path=destination)
             extracted_members.append(member.name)
 

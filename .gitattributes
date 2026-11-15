@@ -1,0 +1,4 @@
+# Force CRLF line endings for frozen cryptographic manifest assets
+requirements.txt text eol=crlf
+pyproject.toml text eol=crlf
+data/starter_queries.csv text eol=crlf
